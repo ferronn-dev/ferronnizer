@@ -5,6 +5,7 @@ deps:
 libs: {}
 roots:
 - vars.lua
+sql: {}
 toc:
   Interface: 11306
   Title: Ferronnizer
