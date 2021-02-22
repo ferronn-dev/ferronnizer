@@ -1,0 +1,8 @@
+addon: Ferronnizer
+deps: {}
+libs: {}
+roots: []
+toc:
+  Interface: 11306
+  Title: Ferronnizer
+  Notes: My personal WoW addon
