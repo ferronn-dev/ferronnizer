@@ -1,7 +1,10 @@
 addon: Ferronnizer
-deps: {}
+deps:
+  vars.lua:
+  - util.lua
 libs: {}
-roots: []
+roots:
+- vars.lua
 toc:
   Interface: 11306
   Title: Ferronnizer
