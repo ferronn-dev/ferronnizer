@@ -17,6 +17,9 @@ local addonsToDisable = {
 }
 
 G.Eventer({
+  ADDON_LOADED = function()
+    RaidFrame:UnregisterAllEvents()
+  end,
   PLAYER_ENTERING_WORLD = function()
     local playerName = UnitName('player')
     local mustReload = false
@@ -29,6 +32,5 @@ G.Eventer({
     if mustReload then
       StaticPopup_Show(dialogName)
     end
-    RaidFrame:SetScript('OnEvent', nil)
   end,
 })
