@@ -1,9 +1,12 @@
 addon: Ferronnizer
 deps:
+  addonbox.lua:
+  - util.lua
   vars.lua:
   - util.lua
 libs: {}
 roots:
+- addonbox.lua
 - vars.lua
 sql: {}
 toc:
