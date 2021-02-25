@@ -18,6 +18,14 @@ function G.Eventer(handlers)
   end)
 end
 
+do
+  local parent = CreateFrame('Frame')
+  parent:Hide()
+  function G.ReparentFrame(frame)
+    frame:SetParent(parent)
+  end
+end
+
 function G.PreClickButton(name, default, func)
   local button = CreateFrame('Button', name, nil, 'SecureActionButtonTemplate')
   button:SetAttribute('type', 'macro')
