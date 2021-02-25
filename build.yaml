@@ -22,7 +22,9 @@ roots:
 - minimap.lua
 - save.lua
 - vars.lua
-sql: {}
+sql:
+  buffdb.sql:
+  - BuffDB
 toc:
   Interface: 11306
   Title: Ferronnizer
