@@ -9,8 +9,6 @@ deps:
   - util.lua
   drink.lua:
   - util.lua
-  init.lua:
-  - util.lua
   minimap.lua:
   - util.lua
   mount.lua:
@@ -27,7 +25,6 @@ roots:
 - buffs.lua
 - chatframe.lua
 - drink.lua
-- init.lua
 - minimap.lua
 - mount.lua
 - save.lua
