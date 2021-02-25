@@ -2,6 +2,9 @@ addon: Ferronnizer
 deps:
   addonbox.lua:
   - util.lua
+  buffs.lua:
+  - buffdb.lua
+  - util.lua
   drink.lua:
   - util.lua
   init.lua:
@@ -17,6 +20,7 @@ libs:
   libstub: https://repos.wowace.com/wow/libstub/trunk
 roots:
 - addonbox.lua
+- buffs.lua
 - drink.lua
 - init.lua
 - minimap.lua
