@@ -5,6 +5,8 @@ deps:
   buffs.lua:
   - buffdb.lua
   - util.lua
+  chatframe.lua:
+  - util.lua
   drink.lua:
   - util.lua
   init.lua:
@@ -23,6 +25,7 @@ libs:
 roots:
 - addonbox.lua
 - buffs.lua
+- chatframe.lua
 - drink.lua
 - init.lua
 - minimap.lua
