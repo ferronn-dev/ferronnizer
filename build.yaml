@@ -2,6 +2,8 @@ addon: Ferronnizer
 deps:
   addonbox.lua:
   - util.lua
+  drink.lua:
+  - util.lua
   init.lua:
   - util.lua
   minimap.lua:
@@ -11,6 +13,7 @@ deps:
 libs: {}
 roots:
 - addonbox.lua
+- drink.lua
 - init.lua
 - minimap.lua
 - vars.lua
