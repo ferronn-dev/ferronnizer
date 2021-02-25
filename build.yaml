@@ -8,14 +8,19 @@ deps:
   - util.lua
   minimap.lua:
   - util.lua
+  save.lua:
+  - util.lua
   vars.lua:
   - util.lua
-libs: {}
+libs:
+  libclassicgearplanner: https://github.com/ferronn-dev/lib-classic-gear-planner.git
+  libstub: https://repos.wowace.com/wow/libstub/trunk
 roots:
 - addonbox.lua
 - drink.lua
 - init.lua
 - minimap.lua
+- save.lua
 - vars.lua
 sql: {}
 toc:
