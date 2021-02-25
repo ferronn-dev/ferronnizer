@@ -11,6 +11,8 @@ deps:
   - util.lua
   minimap.lua:
   - util.lua
+  mount.lua:
+  - util.lua
   save.lua:
   - util.lua
   vars.lua:
@@ -24,6 +26,7 @@ roots:
 - drink.lua
 - init.lua
 - minimap.lua
+- mount.lua
 - save.lua
 - vars.lua
 sql:
