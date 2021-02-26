@@ -1,0 +1,7 @@
+describe('minimap module', function()
+  it('loads', function()
+    local state = require('addonloader')()
+    state:SendEvent('PLAYER_LOGIN')
+    state:SendEvent('PLAYER_ENTERING_WORLD')
+  end)
+end)
