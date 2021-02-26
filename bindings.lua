@@ -1,6 +1,8 @@
 local _, G = ...
 local bindings = {
   ['`'] = 'TOGGLEAUTORUN',
+  ['CTRL-`'] = 'ATTC_TOGGLEMINILIST',
+  ['CTRL-TAB'] = 'TOGGLEMINIMAP',
   ['ALT-B'] = 'OPENALLBAGS',
   ['ALT-C'] = 'TOGGLECHARACTER0',
   ['ALT-L'] = 'TOGGLEQUESTLOG',
