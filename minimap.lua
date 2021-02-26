@@ -2,15 +2,9 @@ local _, G = ...
 
 G.Eventer({
   PLAYER_LOGIN = function()
-    local toReparent = {
-      MainMenuBar,
-      MinimapBackdrop,
-      MinimapCluster,
-      TimeManagerClockButton,
-    }
-    for _, f in ipairs(toReparent) do
-      G.ReparentFrame(f)
-    end
+    G.ReparentFrame(MinimapBackdrop)
+    G.ReparentFrame(MinimapCluster)
+    G.ReparentFrame(TimeManagerClockButton)
     Minimap:SetParent(UIParent)
     Minimap:SetMaskTexture('Interface\\Buttons\\WHITE8X8')
     Minimap:SetScale(0.75)
