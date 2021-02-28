@@ -3,6 +3,7 @@ local _, G = ...
 local cvars = {
   alwaysShowActionBars = 0,
   autoClearAFK = 1,
+  autointeract = 0,
   autoLootDefault = 1,
   autoQuestWatch = 1,
   autoSelfCast = 1,
