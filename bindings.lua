@@ -13,6 +13,15 @@ local bindings = {
   ['MOUSEWHEELDOWN'] = 'INTERACTMOUSEOVER',
   ['SHIFT-MOUSEWHEELUP'] = 'CAMERAZOOMIN',
   ['SHIFT-MOUSEWHEELDOWN'] = 'CAMERAZOOMOUT',
+  ['ALT-1'] = 'RAIDTARGET8',
+  ['ALT-2'] = 'RAIDTARGET7',
+  ['ALT-3'] = 'RAIDTARGET6',
+  ['ALT-4'] = 'RAIDTARGET5',
+  ['ALT-Q'] = 'RAIDTARGET4',
+  ['ALT-W'] = 'RAIDTARGET3',
+  ['ALT-E'] = 'RAIDTARGET2',
+  ['ALT-R'] = 'RAIDTARGET1',
+  ['ALT-`'] = 'RAIDTARGETNONE',
 }
 local actionbar = {
   '1', '2', '3', '4', 'R', 'A',
