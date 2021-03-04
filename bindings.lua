@@ -1,4 +1,4 @@
-local _, G = ...
+local addonName, G = ...
 local bindings = {
   ['`'] = 'TOGGLEAUTORUN',
   ['CTRL-`'] = 'ATTC_TOGGLEMINILIST',
@@ -35,6 +35,49 @@ local bartender = {
   'SHIFT-A', 'SHIFT-S', 'SHIFT-D', 'SHIFT-F', 'SHIFT-G', 'SHIFT-H',
   'SHIFT-Z', 'SHIFT-X', 'SHIFT-C', 'SHIFT-V', 'SHIFT-B', 'SHIFT-N',
 }
+local multi = {
+  ['1'] = '/cast Cooking',
+  ['2'] = '/cast First Aid',
+  ['A'] = '/cast Tailoring',
+}
+
+local function setupMultiBindings()
+  local newButton = function(name)
+    return CreateFrame('Button', addonName .. 'MultiBinding' .. name, nil, 'SecureActionButtonTemplate')
+  end
+  local root = newButton('Root')
+  local buttons = {}
+  for k, v in pairs(multi) do
+    local button = newButton('Child-' .. k)
+    button:SetAttribute('type', 'macro')
+    button:SetAttribute('macrotext', v)
+    buttons[k] = button
+  end
+  local header = CreateFrame('Frame', nil, nil, 'SecureHandlerStateTemplate')
+  header:WrapScript(root, 'OnClick', 'owner:Run(start)', '')
+  header:SetFrameRef('root', root)
+  header:Execute([[
+    root = owner:GetFrameRef('root')
+    buttons = newtable()
+    start = [=[
+      owner:ClearBindings()
+      for k, v in pairs(buttons) do
+        owner:SetBindingClick(true, k, v:GetName())
+      end
+    ]=]
+    stop = [=[
+      owner:ClearBindings()
+      owner:SetBindingClick(true, 'CTRL-P', root:GetName())
+    ]=]
+    owner:Run(stop)
+  ]])
+  for k, v in pairs(buttons) do
+    header:SetFrameRef('binding-' .. k, v)
+    header:Execute(string.format([[buttons['%s'] = owner:GetFrameRef('binding-%s')]], k, k))
+    header:WrapScript(v, 'OnClick', 'owner:Run(stop)', '')
+  end
+end
+
 G.Eventer({
   PLAYER_LOGIN = function()
     for k, v in pairs(bindings) do
@@ -49,5 +92,6 @@ G.Eventer({
     for i, b in ipairs(bartender) do
       SetBinding(b, 'CLICK BT4Button' .. (i + #actionbar) .. ':LeftButton')
     end
+    setupMultiBindings()
   end,
 })
