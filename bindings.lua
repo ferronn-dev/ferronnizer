@@ -36,9 +36,15 @@ local bartender = {
   'SHIFT-Z', 'SHIFT-X', 'SHIFT-C', 'SHIFT-V', 'SHIFT-B', 'SHIFT-N',
 }
 local multi = {
-  ['1'] = '/cast Cooking',
-  ['2'] = '/cast First Aid',
-  ['A'] = '/cast Tailoring',
+  ['A'] = '/cast Alchemy',
+  ['C'] = '/cast Cooking',
+  ['D'] = '/cast Disenchant',
+  ['E'] = '/cast Enchanting',
+  ['F'] = '/cast First Aid',
+  ['R'] = '/cast Tailoring',
+  ['S'] = '/cast Smelting',
+  ['W'] = '/cast Leatherworking',
+  ['X'] = '/cast Blacksmithing',
 }
 
 local function setupMultiBindings()
