@@ -9,17 +9,23 @@ deps:
   - util.lua
   chatframe.lua:
   - util.lua
+  control.lua:
+  - partychat.lua
+  - util.lua
   drink.lua:
   - util.lua
   minimap.lua:
   - util.lua
   mount.lua:
   - util.lua
+  partychat.lua:
+  - util.lua
   save.lua:
   - util.lua
   vars.lua:
   - util.lua
 libs:
+  chatthrottlelib: https://repos.curseforge.com/wow/chatthrottlelib/trunk
   libclassicgearplanner: https://github.com/ferronn-dev/lib-classic-gear-planner.git
   libstub: https://repos.wowace.com/wow/libstub/trunk
 roots:
@@ -27,6 +33,7 @@ roots:
 - bindings.lua
 - buffs.lua
 - chatframe.lua
+- control.lua
 - drink.lua
 - minimap.lua
 - mount.lua
