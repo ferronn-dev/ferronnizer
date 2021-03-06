@@ -20,8 +20,13 @@ deps:
   - util.lua
   partychat.lua:
   - util.lua
+  playerinfo.lua:
+  - partychat.lua
+  - util.lua
   save.lua:
   - util.lua
+  tooltips.lua:
+  - playerinfo.lua
   vars.lua:
   - util.lua
 libs:
@@ -38,6 +43,7 @@ roots:
 - minimap.lua
 - mount.lua
 - save.lua
+- tooltips.lua
 - vars.lua
 sql:
   buffdb.sql:
