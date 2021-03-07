@@ -1,7 +1,7 @@
 local _, G = ...
 
 local sendFollow = G.RegisterPartyChat(function(name)
-  if name ~= UnitName('player') then
+  if not UnitIsUnit('player', name) then
     FollowUnit(name)
   end
 end)
