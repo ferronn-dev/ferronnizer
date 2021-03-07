@@ -8,5 +8,8 @@ end)
 
 G.PreClickButton('FollowButton', '', function()
   sendFollow()
-  return nil, 'follow'
+end)
+
+_G.SendEmote = G.RegisterPartyChat(function(_, emote)
+  _G.DoEmote(emote)
 end)
