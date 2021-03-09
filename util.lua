@@ -33,7 +33,7 @@ function G.NonCombatEventer(handlers)
     end
   end
   newHandlers['PLAYER_REGEN_ENABLED'] = function()
-    for callback in ipairs(queue) do
+    for _, callback in ipairs(queue) do
       callback()
     end
     queue = {}
