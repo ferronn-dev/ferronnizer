@@ -13,7 +13,7 @@ describe('MountButton', function()
   end)
 
   it('dismounts in combat', function()
-    state.inCombat = true
+    state:EnterCombat()
     state.frames['MountButton']:Click()
     assert.same({{ macro = '/dismount' }}, state.commands)
   end)
