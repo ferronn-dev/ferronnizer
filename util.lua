@@ -18,6 +18,29 @@ function G.Eventer(handlers)
   end)
 end
 
+function G.NonCombatEventer(handlers)
+  assert(handlers['PLAYER_REGEN_ENABLED'] == nil)
+  local newHandlers = {}
+  local queue = {}
+  for ev, handler in pairs(handlers) do
+    newHandlers[ev] = function(...)
+      if InCombatLockdown() then
+        local args = {...}
+        table.insert(queue, function() handler(table.unpack(args)) end)
+      else
+        handler(...)
+      end
+    end
+  end
+  newHandlers['PLAYER_REGEN_ENABLED'] = function()
+    for callback in ipairs(queue) do
+      callback()
+    end
+    queue = {}
+  end
+  G.Eventer(newHandlers)
+end
+
 do
   local parent = CreateFrame('Frame')
   parent:Hide()
@@ -61,7 +84,6 @@ end
 
 do
   local partyChangeFuncs = {}
-  local updateRequested = false
 
   local function propagateChange()
     local myname = UnitName('player')
@@ -76,25 +98,9 @@ do
     end
   end
 
-  local function onPartyChange()
-    if InCombatLockdown() then
-      updateRequested = true
-    else
-      propagateChange()
-    end
-  end
-
-  local function afterCombat()
-    if updateRequested then
-      propagateChange()
-      updateRequested = false
-    end
-  end
-
-  G.Eventer({
-    PLAYER_ENTERING_WORLD = onPartyChange,
-    GROUP_ROSTER_UPDATE = onPartyChange,
-    PLAYER_REGEN_ENABLED = afterCombat,
+  G.NonCombatEventer({
+    PLAYER_ENTERING_WORLD = propagateChange,
+    GROUP_ROSTER_UPDATE = propagateChange,
   })
 
   function G.OnPartyChangeSafely(func)
