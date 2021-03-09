@@ -19,7 +19,7 @@ describe('PartyBuffButton', function()
   end)
 
   it('issues no commands in combat', function()
-    state.inCombat = true
+    state:EnterCombat()
     state.frames['PartyBuffButton']:Click()
     assert.same({{ macro = '' }}, state.commands)
   end)
