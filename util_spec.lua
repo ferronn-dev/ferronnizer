@@ -35,13 +35,12 @@ describe('utility functions', function()
     end)
 
     it('waits till after combat to fire', function()
-      state.inCombat = true
+      state:EnterCombat()
       state:SendEvent('SKILL_LINES_CHANGED')
       assert.same(0, timesCalled)
       state:SendEvent('SKILL_LINES_CHANGED')
       assert.same(0, timesCalled)
-      state.inCombat = false
-      state:SendEvent('PLAYER_REGEN_ENABLED')
+      state:LeaveCombat()
       assert.same(2, timesCalled)
     end)
   end)
