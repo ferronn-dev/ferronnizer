@@ -1,0 +1,7 @@
+describe('addonbox', function()
+  it('does not crash on load', function()
+    local state = require('addonloader')()
+    state:SendEvent('ADDON_LOADED', 'moo')
+    state:SendEvent('PLAYER_ENTERING_WORLD')
+  end)
+end)
