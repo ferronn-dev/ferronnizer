@@ -1,0 +1,7 @@
+describe('bindings', function()
+  it('loads bindings on login', function()
+    local state = require('addonloader')()
+    state:SendEvent('PLAYER_LOGIN')
+    assert.is_not.same(next(state.bindings), nil)
+  end)
+end)
