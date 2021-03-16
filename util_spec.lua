@@ -1,47 +1,47 @@
 describe('utility functions', function()
   describe('time conversions', function()
-    local state, _, addon = require('addonloader')()
-    state.localTime = 100
-    state.serverTime = 200
-
     it('converts back and forth', function()
-      assert.same(180, addon.LocalToServer(80))
-      assert.same(80, addon.ServerToLocal(180))
+      wow.state.localTime = 100
+      wow.state.serverTime = 200
+      assert.same(180, wow.addon.LocalToServer(80))
+      assert.same(80, wow.addon.ServerToLocal(180))
     end)
 
     it('clamps to zero', function()
-      assert.same(0, addon.LocalToServer(0))
-      assert.same(0, addon.ServerToLocal(0))
+      wow.state.localTime = 100
+      wow.state.serverTime = 200
+      assert.same(0, wow.addon.LocalToServer(0))
+      assert.same(0, wow.addon.ServerToLocal(0))
     end)
   end)
 
   describe('non-combat eventer', function()
-    local state, addon, timesCalled
-    before_each(function()
-      local _
-      state, _, addon = require('addonloader')()
-      timesCalled = 0
-      addon.NonCombatEventer({
+    local function eventer(wow)
+      local x = { timesCalled = 0 }
+      wow.addon.NonCombatEventer({
         SKILL_LINES_CHANGED = function()
-          timesCalled = timesCalled + 1
+          x.timesCalled = x.timesCalled + 1
         end,
       })
-      assert.same(0, timesCalled)
-    end)
+      assert.same(0, x.timesCalled)
+      return x
+    end
 
     it('works like a normal eventer outside of combat', function()
-      state:SendEvent('SKILL_LINES_CHANGED')
-      assert.same(1, timesCalled)
+      local x = eventer(wow)
+      wow.state:SendEvent('SKILL_LINES_CHANGED')
+      assert.same(1, x.timesCalled)
     end)
 
     it('waits till after combat to fire', function()
-      state:EnterCombat()
-      state:SendEvent('SKILL_LINES_CHANGED')
-      assert.same(0, timesCalled)
-      state:SendEvent('SKILL_LINES_CHANGED')
-      assert.same(0, timesCalled)
-      state:LeaveCombat()
-      assert.same(2, timesCalled)
+      local x = eventer(wow)
+      wow.state:EnterCombat()
+      wow.state:SendEvent('SKILL_LINES_CHANGED')
+      assert.same(0, x.timesCalled)
+      wow.state:SendEvent('SKILL_LINES_CHANGED')
+      assert.same(0, x.timesCalled)
+      wow.state:LeaveCombat()
+      assert.same(2, x.timesCalled)
     end)
   end)
 end)

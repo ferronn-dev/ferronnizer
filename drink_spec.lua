@@ -1,10 +1,9 @@
 describe('drink', function()
   it('defaults to thirsty emote', function()
-    local state = require('addonloader')()
-    local button = state.frames['DrinkButton']
+    local button = wow.state.frames['DrinkButton']
     button:Click()
     assert.same('macro', button:GetAttribute('type'))
     assert.same('', button:GetAttribute('macrotext'))
-    assert.same({{ macro = '/thirsty [@none]' }}, state.commands)
+    assert.same({{ macro = '/thirsty [@none]' }}, wow.state.commands)
   end)
 end)
