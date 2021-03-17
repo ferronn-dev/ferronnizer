@@ -1,5 +1,9 @@
 local _, G = ...
 
+local function ifClassic(x)
+  return WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and x or nil
+end
+
 G.Eventer({
   PLAYER_LOGIN = function()
     G.ReparentFrame(MinimapBackdrop)
@@ -11,11 +15,11 @@ G.Eventer({
     Minimap:SetZoom(0)
     Minimap:SetPoint('TOP', UIParent, 'CENTER', 0, -200)
   end,
-  PLAYER_ENTERING_WORLD = function()
+  PLAYER_ENTERING_WORLD = ifClassic(function()
     local t = GetTrackingTexture()
     if t then
       MiniMapTrackingIcon:SetTexture(t)
       MiniMapTrackingFrame:Show()
     end
-  end,
+  end),
 })
