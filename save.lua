@@ -14,6 +14,9 @@ local function getEquipment()
 end
 
 local function getTalents()
+  if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
+    return nil
+  end
   local tabs = {}
   for i = 1, GetNumTalentTabs() do
     local tals = {}
