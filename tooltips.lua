@@ -46,6 +46,9 @@ local scriptHooks = {
   end,
   Unit = function(t)
     local unit = select(2, t:GetUnit())
+    if not unit then
+      return
+    end
     local hp, hpmax = UnitHealth(unit), UnitHealthMax(unit)
     if hp and hpmax and hpmax ~= 0 then
       t:AddDoubleLine('Health', ratio(hp, hpmax))
