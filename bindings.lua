@@ -1,7 +1,8 @@
 local addonName, G = ...
+local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 local bindings = {
   ['`'] = 'TOGGLEAUTORUN',
-  ['CTRL-`'] = 'ATTC_TOGGLEMINILIST',
+  ['CTRL-`'] = isClassic and 'ATTC_TOGGLEMINILIST' or 'ALLTHETHINGS_TOGGLEMINILIST',
   ['CTRL-TAB'] = 'TOGGLEMINIMAP',
   ['ALT-B'] = 'OPENALLBAGS',
   ['ALT-C'] = 'TOGGLECHARACTER0',
