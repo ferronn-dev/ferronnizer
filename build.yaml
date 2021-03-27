@@ -35,6 +35,7 @@ libs:
   libclassicgearplanner: https://github.com/ferronn-dev/lib-classic-gear-planner.git
   libstub: https://repos.wowace.com/wow/libstub/trunk
 roots:
+- actions.lua
 - addonbox.lua
 - bindings.lua
 - buffs.lua
