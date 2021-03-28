@@ -33,9 +33,9 @@ deps:
   - util.lua
 libs:
   chatthrottlelib: https://repos.curseforge.com/wow/chatthrottlelib/trunk
+  libclassicspellactioncount: https://github.com/Ennea/LibClassicSpellActionCount-1.0.git
   libactionbutton: https://repos.curseforge.com/wow/libactionbutton-1-0
   libclassicgearplanner: https://github.com/ferronn-dev/lib-classic-gear-planner.git
-  libclassicspellactioncount: https://github.com/Ennea/LibClassicSpellActionCount-1.0.git
   libstub: https://repos.wowace.com/wow/libstub/trunk
 roots:
 - actions.lua
