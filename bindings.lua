@@ -24,11 +24,9 @@ local bindings = {
   ['ALT-R'] = 'RAIDTARGET1',
   ['ALT-`'] = 'RAIDTARGETNONE',
 }
-local actionbar = {
+local actionbars = {
   '1', '2', '3', '4', 'R', 'A',
   'D', 'F', 'Z', 'X', 'C', 'V',
-}
-local bartender = {
   'CTRL-Q', 'CTRL-W', 'CTRL-E', 'CTRL-R', 'CTRL-T', 'CTRL-Y',
   'CTRL-1', 'CTRL-2', 'CTRL-3', 'CTRL-4', 'CTRL-5', 'CTRL-6',
   'CTRL-A', 'CTRL-S', 'CTRL-D', 'CTRL-F', 'CTRL-G', 'CTRL-H',
@@ -93,11 +91,8 @@ G.Eventer({
     for _, c in ipairs({'5', '6', '7', '8', '9', '0', '-', '='}) do
       SetBinding(c, nil)
     end
-    for i, b in ipairs(actionbar) do
-      SetBinding(b, 'ACTIONBUTTON' .. i)
-    end
-    for i, b in ipairs(bartender) do
-      SetBinding(b, 'CLICK BT4Button' .. (i + #actionbar) .. ':LeftButton')
+    for i, b in ipairs(actionbars) do
+      SetBindingClick(b, addonName .. 'ActionButton' .. i)
     end
     setupMultiBindings()
   end,
