@@ -1,5 +1,7 @@
 addon: Ferronnizer
 deps:
+  actions.lua:
+  - util.lua
   addonbox.lua:
   - util.lua
   bindings.lua:
