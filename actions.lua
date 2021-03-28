@@ -7,6 +7,7 @@ local buttons = (function()
   local buttons = {}
   for i = 1, 49 do
     local button = LAB10:CreateButton(i, prefix .. i, header)
+    button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
     button:DisableDragNDrop(true)
     table.insert(buttons, button)
   end
