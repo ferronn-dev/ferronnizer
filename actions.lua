@@ -28,8 +28,8 @@ end)()
 G.Eventer({
   PLAYER_LOGIN = function()
     G.ReparentFrame(MainMenuBar)
-    for _, button in ipairs(buttons) do
-      button:SetState(0, 'spell', 9472)
+    for i, button in ipairs(buttons) do
+      button:SetState(0, 'action', i)
     end
   end,
 })
