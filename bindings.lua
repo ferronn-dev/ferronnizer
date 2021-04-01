@@ -23,6 +23,7 @@ local bindings = {
   ['ALT-E'] = 'RAIDTARGET2',
   ['ALT-R'] = 'RAIDTARGET1',
   ['ALT-`'] = 'RAIDTARGETNONE',
+  ['CTRL-SHIFT-D'] = 'CLICK ToggleActionDragButton:LeftButton',
 }
 local actionbars = {
   '1', '2', '3', '4', 'R', 'A',
