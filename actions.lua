@@ -1,7 +1,5 @@
 local addonName, G = ...
 
-local dragNDropToggle = true
-
 local buttons = (function()
   local LAB10 = LibStub('LibActionButton-1.0')
   local prefix = addonName .. 'ActionButton'
@@ -28,12 +26,15 @@ local buttons = (function()
   return buttons
 end)()
 
-G.PreClickButton('ToggleActionDragButton', nil, function()
-  dragNDropToggle = not dragNDropToggle
-  for _, button in ipairs(buttons) do
-    button:DisableDragNDrop(dragNDropToggle)
-  end
-end)
+do
+  local dragNDropToggle = true
+  G.PreClickButton('ToggleActionDragButton', nil, function()
+    dragNDropToggle = not dragNDropToggle
+    for _, button in ipairs(buttons) do
+      button:DisableDragNDrop(dragNDropToggle)
+    end
+  end)
+end
 
 G.Eventer({
   PLAYER_LOGIN = function()
