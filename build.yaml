@@ -15,6 +15,7 @@ deps:
   - partychat.lua
   - util.lua
   drink.lua:
+  - drinkdb.lua
   - util.lua
   minimap.lua:
   - util.lua
@@ -54,6 +55,8 @@ roots:
 sql:
   buffdb.sql:
   - BuffDB
+  drinkdb.sql:
+  - DrinkDB
 toc:
   Interface: 11306
   Title: Ferronnizer
