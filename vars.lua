@@ -96,17 +96,16 @@ local cvars = {
   whisperMode = 'inline',
 }
 
-local function onSetCVar(key, value)
-  print('SetCVar('..key..','..value..')')
-end
-
-local function onVariablesLoaded()
-  for k, v in pairs(cvars) do
-    SetCVar(k, v)
-  end
-  SetConsoleKey('F12')
-  hooksecurefunc('SetCVar', onSetCVar)
-end
-
-
-G.Eventer({ VARIABLES_LOADED = onVariablesLoaded })
+G.Eventer({
+  VARIABLES_LOADED = function()
+    for k, v in pairs(cvars) do
+      SetCVar(k, v)
+    end
+    SetConsoleKey('F12')
+    C_Timer.After(15, function()
+      hooksecurefunc('SetCVar', function(key, value)
+        print('SetCVar('..key..','..value..')')
+      end)
+    end)
+  end,
+})
