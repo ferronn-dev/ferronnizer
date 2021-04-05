@@ -26,7 +26,7 @@ function G.NonCombatEventer(handlers)
     newHandlers[ev] = function(...)
       if InCombatLockdown() then
         local args = {...}
-        table.insert(queue, function() handler(table.unpack(args)) end)
+        table.insert(queue, function() handler(unpack(args)) end)
       else
         handler(...)
       end
