@@ -19,7 +19,6 @@ function G.Eventer(handlers)
 end
 
 function G.NonCombatEventer(handlers)
-  assert(handlers['PLAYER_REGEN_ENABLED'] == nil)
   local newHandlers = {}
   local queue = {}
   for ev, handler in pairs(handlers) do
@@ -32,11 +31,15 @@ function G.NonCombatEventer(handlers)
       end
     end
   end
-  newHandlers['PLAYER_REGEN_ENABLED'] = function()
+  local regen = 'PLAYER_REGEN_ENABLED'
+  newHandlers[regen] = function()
     for _, callback in ipairs(queue) do
       callback()
     end
     queue = {}
+    if handlers[regen] then
+      handlers[regen]()
+    end
   end
   G.Eventer(newHandlers)
 end

@@ -16,32 +16,43 @@ describe('utility functions', function()
   end)
 
   describe('non-combat eventer', function()
-    local function eventer(wow)
-      local x = { timesCalled = 0 }
-      wow.addon.NonCombatEventer({
-        SKILL_LINES_CHANGED = function()
-          x.timesCalled = x.timesCalled + 1
-        end,
-      })
-      assert.same(0, x.timesCalled)
-      return x
+    local function eventer(wow, events)
+      local counts = {}
+      local handlers = {}
+      for _, e in ipairs(events) do
+        handlers[e] = function()
+          counts[e] = (counts[e] or 0) + 1
+        end
+      end
+      wow.addon.NonCombatEventer(handlers)
+      assert.same({}, counts)
+      return counts
     end
 
     it('works like a normal eventer outside of combat', function()
-      local x = eventer(wow)
-      wow.state:SendEvent('SKILL_LINES_CHANGED')
-      assert.same(1, x.timesCalled)
+      local event = 'SKILL_LINES_CHANGED'
+      local counts = eventer(wow, {event})
+      wow.state:SendEvent(event)
+      assert.same({ [event] = 1 }, counts)
     end)
 
     it('waits till after combat to fire', function()
-      local x = eventer(wow)
+      local event = 'SKILL_LINES_CHANGED'
+      local counts = eventer(wow, {event})
       wow.state:EnterCombat()
-      wow.state:SendEvent('SKILL_LINES_CHANGED')
-      assert.same(0, x.timesCalled)
-      wow.state:SendEvent('SKILL_LINES_CHANGED')
-      assert.same(0, x.timesCalled)
+      wow.state:SendEvent(event)
+      assert.same({}, counts)
+      wow.state:SendEvent(event)
+      assert.same({}, counts)
       wow.state:LeaveCombat()
-      assert.same(2, x.timesCalled)
+      assert.same({ [event] = 2 }, counts)
+    end)
+
+    it('supports PLAYER_REGEN_ENABLED', function()
+      local event = 'PLAYER_REGEN_ENABLED'
+      local counts = eventer(wow, {event})
+      wow.state:SendEvent(event)
+      assert.same({ [event] = 1 }, counts)
     end)
   end)
 end)
