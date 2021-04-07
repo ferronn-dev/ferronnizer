@@ -1,5 +1,7 @@
 local _, G = ...
 
+local gearPlanner = LibStub('LibClassicGearPlanner')
+
 local bags = {}
 local equipment = {}
 local talents = {}
@@ -41,15 +43,15 @@ G.Eventer({
   PLAYER_ENTERING_WORLD = function()
     equipment = getEquipment()
     talents = getTalents()
-    url = LibStub:GetLibrary('LibClassicGearPlanner'):GenerateUrl()
+    url = gearPlanner:GenerateUrl()
   end,
   PLAYER_EQUIPMENT_CHANGED = function()
     equipment = getEquipment()
-    url = LibStub:GetLibrary('LibClassicGearPlanner'):GenerateUrl()
+    url = gearPlanner:GenerateUrl()
   end,
   CHARACTER_POINTS_CHANGED = function()
     talents = getTalents()
-    url = LibStub:GetLibrary('LibClassicGearPlanner'):GenerateUrl()
+    url = gearPlanner:GenerateUrl()
   end,
   PLAYER_LOGOUT = function()
     _G['FerronnizerPlayerData'] = {
