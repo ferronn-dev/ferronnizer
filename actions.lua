@@ -1,5 +1,24 @@
 local addonName, G = ...
 
+local buttonMixin = {
+  GetActionText = nil,
+  GetCharges = nil,
+  GetCooldown = nil,
+  GetCount = nil,
+  GetLossOfControlCooldown = nil,
+  GetSpellId = nil,
+  GetTexture = nil,
+  HasAction = nil,
+  IsAttack = nil,
+  IsAutoRepeat = nil,
+  IsConsumableOrStackable = nil,
+  IsCurrentlyActive = nil,
+  IsEquipped = nil,
+  IsUnitInRange = nil,
+  IsUsable = nil,
+  SetTooltip = nil,
+}
+
 local buttons = (function()
   local LAB10 = LibStub('LibActionButton-1.0')
   local prefix = addonName .. 'ActionButton'
@@ -9,6 +28,7 @@ local buttons = (function()
     local button = LAB10:CreateButton(i, prefix .. i, header)
     button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
     button:DisableDragNDrop(true)
+    Mixin(button, buttonMixin)
     table.insert(buttons, button)
   end
   for i, button in ipairs(buttons) do
