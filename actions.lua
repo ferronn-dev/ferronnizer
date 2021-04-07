@@ -1,5 +1,52 @@
 local addonName, G = ...
 
+--[[
+local characters = {
+  ['Shydove-Westfall'] = {
+    [1] = {
+      actionText = 'GH4',
+      mouseover = true,
+      spell = 'Greater Heal(Rank 4)',
+    },
+    [2] = {
+      actionText = 'GH2',
+      mouseover = true,
+      spell = 'Greater Heal(Rank 2)',
+    },
+    [3] = {
+      actionText = 'H4',
+      mouseover = true,
+      spell = 'Heal(Rank 4)',
+    },
+    [4] = {
+      actionText = 'Stop',
+      macro = '/stopcasting',
+      tooltip = 'Stop Casting',
+    },
+    [13] = {
+      actionText = 'FH7',
+      mouseover = true,
+      spell = 'Flash Heal(Rank 7)',
+    },
+    [14] = {
+      actionText = 'FH3',
+      mouseover = true,
+      spell = 'Flash Heal(Rank 3)',
+    },
+    [15] = {
+      actionText = 'FH2',
+      mouseover = true,
+      spell = 'Flash Heal(Rank 2)',
+    },
+    [16] = {
+      actionText = 'Stop',
+      macro = '/stopcasting',
+      tooltip = 'Stop Casting',
+    },
+  },
+}
+]]--
+
 local buttonMixin = {
   GetActionText = nil,
   GetCharges = nil,
