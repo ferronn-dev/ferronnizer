@@ -63,7 +63,7 @@ local buttonMixin = {
   GetSpellId = nil,
   GetTexture = function(self)
     local action = actions[self._state_action] or {}
-    return action.spell and _G.GetSpellTexture(action.spell) or action.texture
+    return action.spell and GetSpellTexture(action.spell) or action.texture
   end,
   HasAction = function()
     return true
