@@ -21,6 +21,7 @@ local actions = (function()
       [4] = {
         actionText = 'Stop',
         macro = '/stopcasting',
+        texture = 135768,
         tooltip = 'Stop Casting',
       },
       [13] = {
@@ -41,6 +42,7 @@ local actions = (function()
       [16] = {
         actionText = 'Stop',
         macro = '/stopcasting',
+        texture = 135768,
         tooltip = 'Stop Casting',
       },
     },
@@ -60,8 +62,8 @@ local buttonMixin = {
   GetLossOfControlCooldown = nil,
   GetSpellId = nil,
   GetTexture = function(self)
-    local action = actions[self._state_action]
-    return action and action.spell and _G.GetSpellTexture(action.spell)
+    local action = actions[self._state_action] or {}
+    return action.spell and _G.GetSpellTexture(action.spell) or action.texture
   end,
   HasAction = function()
     return true
@@ -73,8 +75,8 @@ local buttonMixin = {
   IsEquipped = nil,
   IsUnitInRange = nil,
   IsUsable = function(self)
-    local action = actions[self._state_action]
-    return action and action.spell and IsUsableSpell(action.spell)
+    local action = actions[self._state_action] or {}
+    return action.spell and IsUsableSpell(action.spell) or action.macro
   end,
   SetTooltip = nil,
 }
