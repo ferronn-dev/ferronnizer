@@ -323,8 +323,8 @@ G.Eventer({
         button:SetState(0, nil, i)
         button:SetAttribute('type', 'macro')
         button:SetAttribute('macrotext', (
-           '/dismount\n/stand\n/cast '..
-            (action.mouseover and '[@mouseover,help,nodead]' or '')..
+           '/dismount\n/stand\n/cast'..
+            (action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
             action.spell))
       elseif action.macro then
         Mixin(button, buttonMixin)
