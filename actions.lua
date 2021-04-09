@@ -333,7 +333,14 @@ local types = {
       return IsUsableSpell(spell)
     end,
     SetTooltip = function(spell)
-      return GameTooltip:SetSpellByID(select(7, GetSpellInfo(spell)))
+      local id = select(7, GetSpellInfo(spell))
+      GameTooltip:SetSpellByID(id)
+      local subtext = GetSpellSubtext(id)
+      if subtext then
+        _G.GameTooltipTextRight1:SetText(subtext)
+        _G.GameTooltipTextRight1:Show()
+        GameTooltip:Show()
+      end
     end,
   },
 }
