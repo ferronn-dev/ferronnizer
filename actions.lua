@@ -81,6 +81,12 @@ local actions = (function()
       [24] = {
         spell = 'Greater Blessing of Might',
       },
+      [39] = {
+        spell = 'Smelting',
+      },
+      [45] = {
+        item = 6948,
+      },
     },
     ['Shydove-Westfall'] = {
       [1] = {
@@ -279,6 +285,9 @@ local types = {
     IsConsumableOrStackable = function()
       return false
     end,
+    IsCurrentlyActive = function()
+      return false
+    end,
     IsUsable = function()
       return false
     end,
@@ -302,6 +311,9 @@ local types = {
       -- LAB bug
       local stack = select(8, GetItemInfo(item))
       return _G.IsConsumableItem(item) or (stack and stack > 1)
+    end,
+    IsCurrentlyActive = function(item)
+      return _G.IsCurrentItem(item)
     end,
     IsUsable = function(item)
       return _G.IsUsableItem(item)
@@ -328,6 +340,9 @@ local types = {
     end,
     IsConsumableOrStackable = function(spell)
       return _G.IsConsumableSpell(spell)
+    end,
+    IsCurrentlyActive = function(spell)
+      return _G.IsCurrentSpell(spell)
     end,
     IsUsable = function(spell)
       return IsUsableSpell(spell)
