@@ -71,6 +71,29 @@ local actions = (function()
         texture = 135768,
         tooltip = 'Stop Casting',
       },
+      [17] = {
+        spell = 'Inner Focus',
+      },
+      [18] = {
+        spell = 'Prayer of Healing',
+      },
+      -- TODO: trinkets
+      [21] = {
+        mouseover = true,
+        spell = 'Power Infusion',
+      },
+      [22] = {
+        mouseover = true,
+        spell = 'Shadow Protection',
+      },
+      [23] = {
+        mouseover = true,
+        spell = 'Power Word: Fortitude',
+      },
+      [24] = {
+        mouseover = true,
+        spell = 'Divine Spirit',
+      },
     },
   }
   local charName = UnitName('player')..'-'..GetRealmName()
