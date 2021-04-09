@@ -104,7 +104,14 @@ local buttonMixin = {
     local action = actions[self._state_action] or {}
     return action.spell and IsUsableSpell(action.spell) or action.macro
   end,
-  SetTooltip = nil,
+  SetTooltip = function(self)
+    local action = actions[self._state_action] or {}
+    if action.spell then
+      return GameTooltip:SetSpellByID(select(7, GetSpellInfo(action.spell)))
+    elseif action.tooltip then
+      return GameTooltip:SetText(action.tooltip)
+    end
+  end,
 }
 
 local buttons = (function()
