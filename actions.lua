@@ -79,7 +79,12 @@ local actions = (function()
       [18] = {
         spell = 'Prayer of Healing',
       },
-      -- TODO: trinkets
+      [19] = {
+        item = 19950,
+      },
+      [20] = {
+        item = 19990,
+      },
       [21] = {
         mouseover = true,
         spell = 'Power Infusion',
@@ -152,7 +157,18 @@ local actions = (function()
       [42] = {
         spell = 'Find Herbs',
       },
-      -- TODO: mount and consumables
+      [43] = {
+        item = 18778,
+      },
+      [44] = {
+        item = 13446,
+      },
+      [45] = {
+        item = 13444,
+      },
+      [46] = {
+        item = 8079,
+      },
       [47] = {
         spell = 'Mana Burn',
       },
@@ -256,21 +272,23 @@ G.Eventer({
     G.ReparentFrame(MainMenuBar)
     for i, button in ipairs(buttons) do
       local action = actions[i]
-      if action then
+      if not action then
+        button:SetState(0, 'action', i)
+      elseif action.item then
+        button:SetState(0, 'item', action.item)
+      elseif action.spell then
         Mixin(button, buttonMixin)
         button:SetState(0, nil, i)
-        if action.spell then
-          button:SetAttribute('type', 'macro')
-          button:SetAttribute('macrotext', (
-            '/dismount\n/stand\n/cast '..
+        button:SetAttribute('type', 'macro')
+        button:SetAttribute('macrotext', (
+           '/dismount\n/stand\n/cast '..
             (action.mouseover and '[@mouseover,help,nodead]' or '')..
             action.spell))
-        elseif action.macro then
-          button:SetAttribute('type', 'macro')
-          button:SetAttribute('macrotext', action.macro)
-        end
-      else
-        button:SetState(0, 'action', i)
+      elseif action.macro then
+        Mixin(button, buttonMixin)
+        button:SetState(0, nil, i)
+        button:SetAttribute('type', 'macro')
+        button:SetAttribute('macrotext', action.macro)
       end
     end
   end,
