@@ -317,24 +317,22 @@ G.Eventer({
       local action = actions[i]
       if not action then
         button:SetState(0, 'action', i)
-      elseif action.item then
+      else
         Mixin(button, buttonMixin)
         button:SetState(0, nil, i)
         button:SetAttribute('type', 'macro')
-        button:SetAttribute('macrotext', '/use item:'..action.item)
-      elseif action.spell then
-        Mixin(button, buttonMixin)
-        button:SetState(0, nil, i)
-        button:SetAttribute('type', 'macro')
-        button:SetAttribute('macrotext', (
-           '/dismount\n/stand\n/cast'..
-            (action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
-            action.spell))
-      elseif action.macro then
-        Mixin(button, buttonMixin)
-        button:SetState(0, nil, i)
-        button:SetAttribute('type', 'macro')
-        button:SetAttribute('macrotext', action.macro)
+        button:SetAttribute('macrotext', (function()
+          if action.item then
+            return '/use item:'..action.item
+          elseif action.spell then
+            return (
+               '/dismount\n/stand\n/cast'..
+                (action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
+                action.spell)
+          else
+            return action.macro
+          end
+        end)())
       end
     end
   end,
