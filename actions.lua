@@ -94,6 +94,44 @@ local actions = (function()
         mouseover = true,
         spell = 'Divine Spirit',
       },
+      [25] = {
+        mouseover = true,
+        spell = 'Dispel Magic',
+      },
+      [26] = {
+        mouseover = true,
+        spell = 'Abolish Disease',
+      },
+      [27] = {
+        spell = 'Fade',
+      },
+      [28] = {
+        spell = 'Desperate Prayer',
+      },
+      [29] = {
+        spell = 'Inner Fire',
+      },
+      [30] = {
+        spell = 'Shackle Undead',
+      },
+      [31] = {
+        spell = 'Perception',
+      },
+      [32] = {
+        spell = 'Holy Fire',
+      },
+      [33] = {
+        spell = 'Resurrection',
+      },
+      [34] = {
+        spell = 'Prayer of Shadow Protection',
+      },
+      [35] = {
+        spell = 'Prayer of Fortitude',
+      },
+      [36] = {
+        spell = 'Prayer of Spirit',
+      },
     },
   }
   local charName = UnitName('player')..'-'..GetRealmName()
