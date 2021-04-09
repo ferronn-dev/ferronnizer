@@ -1,5 +1,7 @@
 local addonName, G = ...
 
+local libCount = LibStub('LibClassicSpellActionCount-1.0')
+
 local actions = (function()
   local characters = {
     ['Shydove-Westfall'] = {
@@ -145,7 +147,10 @@ local buttonMixin = {
   end,
   GetCharges = nil,
   GetCooldown = nil,
-  GetCount = nil,
+  GetCount = function(self)
+    local action = actions[self._state_action] or {}
+    return action.spell and libCount:GetSpellReagentCount(action.spell)
+  end,
   GetLossOfControlCooldown = nil,
   GetSpellId = nil,
   GetTexture = function(self)
@@ -157,7 +162,10 @@ local buttonMixin = {
   end,
   IsAttack = nil,
   IsAutoRepeat = nil,
-  IsConsumableOrStackable = nil,
+  IsConsumableOrStackable = function(self)
+    local action = actions[self._state_action] or {}
+    return action.spell and _G.IsConsumableSpell(action.spell)
+  end,
   IsCurrentlyActive = nil,
   IsEquipped = nil,
   IsUnitInRange = nil,
