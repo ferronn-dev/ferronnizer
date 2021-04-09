@@ -127,7 +127,10 @@ G.Eventer({
         button:SetState(0, nil, i)
         if action.spell then
           button:SetAttribute('type', 'macro')
-          button:SetAttribute('macrotext', '/dismount\n/stand\n/cast '..action.spell)
+          button:SetAttribute('macrotext', (
+            '/dismount\n/stand\n/cast '..
+            (action.mouseover and '[@mouseover,help,nodead]' or '')..
+            action.spell))
         elseif action.macro then
           button:SetAttribute('type', 'macro')
           button:SetAttribute('macrotext', action.macro)
