@@ -373,21 +373,21 @@ local types = {
       return GetItemCount(item)
     end,
     GetTexture = function(item)
-      return _G.GetItemIcon(item)
+      return GetItemIcon(item)
     end,
     IsConsumableOrStackable = function(item)
       -- LAB bug
       local stack = select(8, GetItemInfo(item))
-      return _G.IsConsumableItem(item) or (stack and stack > 1)
+      return IsConsumableItem(item) or (stack and stack > 1)
     end,
     IsCurrentlyActive = function(item)
-      return _G.IsCurrentItem(item)
+      return IsCurrentItem(item)
     end,
     IsUnitInRange = function(item, unit)
-      return _G.IsItemInRange(item, unit)
+      return IsItemInRange(item, unit)
     end,
     IsUsable = function(item)
-      return _G.IsUsableItem(item)
+      return IsUsableItem(item)
     end,
     SetTooltip = function(item)
       return GameTooltip:SetHyperlink('item:'..item)
@@ -410,15 +410,15 @@ local types = {
       return GetSpellTexture(spell)
     end,
     IsConsumableOrStackable = function(spell)
-      return _G.IsConsumableSpell(spell)
+      return IsConsumableSpell(spell)
     end,
     IsCurrentlyActive = function(spell)
-      return _G.IsCurrentSpell(spell)
+      return IsCurrentSpell(spell)
     end,
     IsUnitInRange = function(spell, unit)
       local id = select(7, GetSpellInfo(spell))
-      local slot = _G.FindSpellBookSlotBySpellID(id)
-      return _G.IsSpellInRange(slot, 'spell', unit)
+      local slot = FindSpellBookSlotBySpellID(id)
+      return IsSpellInRange(slot, 'spell', unit)
     end,
     IsUsable = function(spell)
       return IsUsableSpell(spell)
@@ -428,8 +428,8 @@ local types = {
       GameTooltip:SetSpellByID(id)
       local subtext = GetSpellSubtext(id)
       if subtext then
-        _G.GameTooltipTextRight1:SetText(subtext)
-        _G.GameTooltipTextRight1:Show()
+        GameTooltipTextRight1:SetText(subtext)
+        GameTooltipTextRight1:Show()
         GameTooltip:Show()
       end
     end,
