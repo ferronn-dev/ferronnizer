@@ -134,6 +134,31 @@ local actions = (function()
       [36] = {
         spell = 'Prayer of Spirit',
       },
+      [37] = {
+        spell = 'Fishing',
+      },
+      [38] = {
+        spell = 'Tailoring',
+      },
+      [39] = {
+        spell = 'Cooking',
+      },
+      [40] = {
+        spell = 'First Aid',
+      },
+      [41] = {
+        spell = 'Mind Control',
+      },
+      [42] = {
+        spell = 'Find Herbs',
+      },
+      -- TODO: mount and consumables
+      [47] = {
+        spell = 'Mana Burn',
+      },
+      [48] = {
+        spell = 'Mind Soothe',
+      },
     },
   }
   local charName = UnitName('player')..'-'..GetRealmName()
