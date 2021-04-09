@@ -181,55 +181,97 @@ local actions = (function()
   return characters[charName] or {}
 end)()
 
-local buttonMixin = {
-  GetActionText = function(self)
-    local action = actions[self._state_action]
-    return action and action.actionText or ""
-  end,
-  GetCharges = nil,
-  GetCooldown = function(self)
-    local action = actions[self._state_action] or {}
-    if action.spell then
-      return GetSpellCooldown(action.spell)
-    else
+local types = {
+  default = {
+    GetActionText = function(action)
+      return action.actionText or ""
+    end,
+    GetCooldown = function()
       return 0, 0, 0
-    end
-  end,
-  GetCount = function(self)
-    local action = actions[self._state_action] or {}
-    return action.spell and libCount:GetSpellReagentCount(action.spell) or 0
-  end,
-  GetLossOfControlCooldown = nil,
-  GetSpellId = nil,
-  GetTexture = function(self)
-    local action = actions[self._state_action] or {}
-    return action.spell and GetSpellTexture(action.spell) or action.texture
-  end,
-  HasAction = function()
-    return true
-  end,
-  IsAttack = nil,
-  IsAutoRepeat = nil,
-  IsConsumableOrStackable = function(self)
-    local action = actions[self._state_action] or {}
-    return action.spell and _G.IsConsumableSpell(action.spell)
-  end,
-  IsCurrentlyActive = nil,
-  IsEquipped = nil,
-  IsUnitInRange = nil,
-  IsUsable = function(self)
-    local action = actions[self._state_action] or {}
-    return action.spell and IsUsableSpell(action.spell) or action.macro
-  end,
-  SetTooltip = function(self)
-    local action = actions[self._state_action] or {}
-    if action.spell then
-      return GameTooltip:SetSpellByID(select(7, GetSpellInfo(action.spell)))
-    elseif action.tooltip then
-      return GameTooltip:SetText(action.tooltip)
-    end
-  end,
+    end,
+    GetCount = function()
+      return 0
+    end,
+    GetTexture = function(action)
+      return action.texture
+    end,
+    HasAction = function()
+      return true
+    end,
+    IsConsumableOrStackable = function()
+      return false
+    end,
+    IsUsable = function()
+      return false
+    end,
+    SetTooltip = function(action)
+      if action.tooltip then
+        return GameTooltip:SetText(action.tooltip)
+      end
+    end,
+  },
+  item = {
+    GetCooldown = function(item)
+      return GetItemCooldown(item)
+    end,
+    GetCount = function(item)
+      return GetItemCount(item)
+    end,
+    GetTexture = function(item)
+      return _G.GetItemIcon(item)
+    end,
+    IsConsumableOrStackable = function(item)
+      return _G.IsConsumableItem(item)
+    end,
+    IsUsable = function(item)
+      return _G.IsUsableItem(item)
+    end,
+    SetTooltip = function(item)
+      return GameTooltip:SetHyperlink('item:'..item)
+    end,
+  },
+  macro = {
+    IsUsable = function()
+      return true
+    end,
+  },
+  spell = {
+    GetCooldown = function(spell)
+      return GetSpellCooldown(spell)
+    end,
+    GetCount = function(spell)
+      return libCount:GetSpellReagentCount(spell)
+    end,
+    GetTexture = function(spell)
+      return GetSpellTexture(spell)
+    end,
+    IsConsumableOrStackable = function(spell)
+      return _G.IsConsumableSpell(spell)
+    end,
+    IsUsable = function(spell)
+      return IsUsableSpell(spell)
+    end,
+    SetTooltip = function(spell)
+      return GameTooltip:SetSpellByID(select(7, GetSpellInfo(spell)))
+    end,
+  },
 }
+
+local buttonMixin = {}
+for k, v in pairs(types.default) do
+  buttonMixin[k] = function(self)
+    local action = actions[self._state_action] or {}
+    if action.spell and types.spell[k] then
+      return types.spell[k](action.spell)
+    elseif action.item and types.item[k] then
+      return types.item[k](action.item)
+    elseif action.macro and types.macro[k] then
+      return types.macro[k](action.macro)
+    else
+      return v(action)
+    end
+  end
+end
 
 local buttons = (function()
   local LAB10 = LibStub('LibActionButton-1.0')
