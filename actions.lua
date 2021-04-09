@@ -221,6 +221,7 @@ local types = {
       return _G.GetItemIcon(item)
     end,
     IsConsumableOrStackable = function(item)
+      -- LAB bug
       local stack = select(8, GetItemInfo(item))
       return _G.IsConsumableItem(item) or (stack and stack > 1)
     end,
@@ -241,6 +242,7 @@ local types = {
       return GetSpellCooldown(spell)
     end,
     GetCount = function(spell)
+      -- LAB bug
       return libCount:GetSpellReagentCount(spell)
     end,
     GetTexture = function(spell)
@@ -276,6 +278,12 @@ end
 
 local buttons = (function()
   local LAB10 = LibStub('LibActionButton-1.0')
+  -- LAB bug
+  G.Eventer({
+    BAG_UPDATE_DELAYED = function()
+      LAB10.eventFrame:GetScript('OnEvent')(LAB10.eventFrame, 'SPELL_UPDATE_CHARGES')
+    end,
+  })
   local prefix = addonName .. 'ActionButton'
   local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
   local buttons = {}
