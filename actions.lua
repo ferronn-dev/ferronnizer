@@ -221,7 +221,8 @@ local types = {
       return _G.GetItemIcon(item)
     end,
     IsConsumableOrStackable = function(item)
-      return _G.IsConsumableItem(item)
+      local stack = select(8, GetItemInfo(item))
+      return _G.IsConsumableItem(item) or (stack and stack > 1)
     end,
     IsUsable = function(item)
       return _G.IsUsableItem(item)
@@ -317,7 +318,10 @@ G.Eventer({
       if not action then
         button:SetState(0, 'action', i)
       elseif action.item then
-        button:SetState(0, 'item', action.item)
+        Mixin(button, buttonMixin)
+        button:SetState(0, nil, i)
+        button:SetAttribute('type', 'macro')
+        button:SetAttribute('macrotext', '/use item:'..action.item)
       elseif action.spell then
         Mixin(button, buttonMixin)
         button:SetState(0, nil, i)
