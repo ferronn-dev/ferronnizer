@@ -24,6 +24,32 @@ local actions = (function()
         texture = 135768,
         tooltip = 'Stop Casting',
       },
+      [5] = {
+        mouseover = true,
+        spell = 'Renew',
+      },
+      [6] = {
+        spell = 'Holy Nova',
+      },
+      [7] = {
+        mouseover = true,
+        spell = 'Power Word: Shield',
+      },
+      [8] = {
+        spell = '!Shoot',
+      },
+      [9] = {
+        spell = 'Smite',
+      },
+      [10] = {
+        spell = 'Shadow Word: Pain',
+      },
+      [11] = {
+        spell = 'Mind Blast',
+      },
+      [12] = {
+        spell = 'Psychic Scream',
+      },
       [13] = {
         actionText = 'FH7',
         mouseover = true,
