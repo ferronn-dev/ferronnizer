@@ -288,6 +288,9 @@ local types = {
     IsCurrentlyActive = function()
       return false
     end,
+    IsUnitInRange = function()
+      return nil
+    end,
     IsUsable = function()
       return false
     end,
@@ -314,6 +317,9 @@ local types = {
     end,
     IsCurrentlyActive = function(item)
       return _G.IsCurrentItem(item)
+    end,
+    IsUnitInRange = function(item, unit)
+      return _G.IsItemInRange(item, unit)
     end,
     IsUsable = function(item)
       return _G.IsUsableItem(item)
@@ -344,6 +350,11 @@ local types = {
     IsCurrentlyActive = function(spell)
       return _G.IsCurrentSpell(spell)
     end,
+    IsUnitInRange = function(spell, unit)
+      local id = select(7, GetSpellInfo(spell))
+      local slot = _G.FindSpellBookSlotBySpellID(id)
+      return _G.IsSpellInRange(slot, 'spell', unit)
+    end,
     IsUsable = function(spell)
       return IsUsableSpell(spell)
     end,
@@ -362,14 +373,14 @@ local types = {
 
 local buttonMixin = {}
 for k, v in pairs(types.default) do
-  buttonMixin[k] = function(self)
+  buttonMixin[k] = function(self, ...)
     local action = actions[self._state_action] or {}
     if action.spell and types.spell[k] then
-      return types.spell[k](action.spell)
+      return types.spell[k](action.spell, ...)
     elseif action.item and types.item[k] then
-      return types.item[k](action.item)
+      return types.item[k](action.item, ...)
     elseif action.macro and types.macro[k] then
-      return types.macro[k](action.macro)
+      return types.macro[k](action.macro, ...)
     else
       return v(action)
     end
