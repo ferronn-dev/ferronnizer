@@ -171,10 +171,17 @@ local buttonMixin = {
     return action and action.actionText or ""
   end,
   GetCharges = nil,
-  GetCooldown = nil,
+  GetCooldown = function(self)
+    local action = actions[self._state_action] or {}
+    if action.spell then
+      return GetSpellCooldown(action.spell)
+    else
+      return 0, 0, 0
+    end
+  end,
   GetCount = function(self)
     local action = actions[self._state_action] or {}
-    return action.spell and libCount:GetSpellReagentCount(action.spell)
+    return action.spell and libCount:GetSpellReagentCount(action.spell) or 0
   end,
   GetLossOfControlCooldown = nil,
   GetSpellId = nil,
