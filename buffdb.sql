@@ -29,6 +29,8 @@ WHERE
     a.name IN (
         'Arcane Brilliance',
         'Arcane Intellect',
+        'Blessing of Kings',
+        'Blessing of Light',
         'Blessing of Might',
         'Blessing of Salvation',
         'Blessing of Wisdom',
@@ -37,6 +39,8 @@ WHERE
         'Devotion Aura',
         'Frost Armor',
         'Gift of the Wild',
+        'Greater Blessing of Kings',
+        'Greater Blessing of Light',
         'Greater Blessing of Might',
         'Greater Blessing of Salvation',
         'Greater Blessing of Wisdom',

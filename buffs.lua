@@ -27,6 +27,14 @@ local buffSlotSpecification = {
         spell = 'Blessing of Might',
         group = 'Greater Blessing of Might',
         classes = {'Warrior', 'Rogue', 'Druid'},
+      },{
+        spell = 'Blessing of Kings',
+        group = 'Greater Blessing of Kings',
+        classes = {},  -- disabled
+      },{
+        spell = 'Blessing of Light',
+        group = 'Greater Blessing of Light',
+        classes = {},  -- disabled
       },
     },
   },{
