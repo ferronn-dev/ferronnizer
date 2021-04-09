@@ -6,44 +6,80 @@ local actions = (function()
   local characters = {
     ['Kewhand-Westfall'] = {
       [1] = {
-        spell = 'Judgement'
+        spell = 'Judgement',
       },
       [2] = {
         mouseover = true,
-        spell = 'Holy Light(Rank 8)'
+        spell = 'Holy Light(Rank 8)',
       },
       [3] = {
         mouseover = true,
-        spell = 'Flash of Light(Rank 6)'
+        spell = 'Flash of Light(Rank 6)',
       },
       [4] = {
         mouseover = true,
-        spell = 'Holy Shock(Rank 3)'
+        spell = 'Holy Shock(Rank 3)',
       },
       [5] = {
-        spell = 'Hammer of Justice'
+        spell = 'Hammer of Justice',
       },
       [6] = {
-        spell = 'Consecration'
+        spell = 'Consecration',
       },
       [7] = {
         mouseover = true,
-        spell = 'Cleanse'
+        spell = 'Cleanse',
       },
       [8] = {
-        spell = 'Divine Favor'
+        spell = 'Divine Favor',
       },
       [9] = {
-        spell = 'Exorcism'
+        spell = 'Exorcism',
       },
       [10] = {
-        spell = 'Hammer of Wrath'
+        spell = 'Hammer of Wrath',
       },
       [11] = {
-        spell = 'Holy Wrath'
+        spell = 'Holy Wrath',
       },
       [12] = {
-        spell = 'Turn Undead'
+        spell = 'Turn Undead',
+      },
+      [13] = {
+        spell = 'Devotion Aura',
+      },
+      [14] = {
+        spell = 'Retribution Aura',
+      },
+      [15] = {
+        spell = 'Concentration Aura',
+      },
+      [16] = {
+        spell = 'Frost Resistance Aura',
+      },
+      [17] = {
+        spell = 'Fire Resistance Aura',
+      },
+      [18] = {
+        spell = 'Shadow Resistance Aura',
+      },
+      [19] = {
+        spell = 'Blessing of Might',
+      },
+      [20] = {
+        spell = 'Righteous Fury',
+      },
+      [21] = {
+        spell = 'Redemption',
+      },
+      [22] = {
+        spell = 'Greater Blessing of Light',
+      },
+      [23] = {
+        spell = 'Greater Blessing of Salvation',
+      },
+      [24] = {
+        spell = 'Greater Blessing of Might',
       },
     },
     ['Shydove-Westfall'] = {
