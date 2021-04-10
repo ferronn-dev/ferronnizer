@@ -37,6 +37,7 @@ WHERE
         'Demon Armor',
         'Demon Skin',
         'Devotion Aura',
+        'Divine Spirit',
         'Frost Armor',
         'Gift of the Wild',
         'Greater Blessing of Kings',
@@ -51,8 +52,11 @@ WHERE
         'Mark of the Wild',
         'Power Word: Fortitude',
         'Prayer of Fortitude',
+        'Prayer of Shadow Protection',
+        'Prayer of Spirit',
         'Retribution Aura',
         'Righteous Fury',
+        'Shadow Protection',
         'Thorns') AND
     a.minlevel > 0
 GROUP BY a.name

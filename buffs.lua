@@ -44,6 +44,13 @@ local buffSlotSpecification = {
     },
     self = true,
   },{
+    buffs = {
+      {
+        spell = 'Divine Spirit',
+        group = 'Prayer of Spirit',
+      },
+    },
+  },{
     buffs = { { spell = 'Ice Barrier' } },
     self = true,
   },{
@@ -84,6 +91,13 @@ local buffSlotSpecification = {
       },
     },
     self = true,
+  },{
+    buffs = {
+      {
+        spell = 'Shadow Protection',
+        group = 'Prayer of Shadow Protection',
+      },
+    },
   },{
     buffs = {
       {
