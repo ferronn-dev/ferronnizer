@@ -445,6 +445,7 @@ local buttons = (function()
   local buttons = {}
   for i = 1, 49 do
     local button = LAB10:CreateButton(i, prefix .. i, header)
+    button:SetAttribute('state', 1)
     button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
     button:DisableDragNDrop(true)
     table.insert(buttons, button)
@@ -497,10 +498,10 @@ G.Eventer({
     for i, button in ipairs(buttons) do
       local action = actions[i]
       if not action then
-        button:SetState(0, 'action', i)
+        button:SetState(1, 'action', i)
       else
         Mixin(button, buttonMixin)
-        button:SetState(0, nil, i)
+        button:SetState(1, 'empty', i)
         button:SetAttribute('type', 'macro')
         button:SetAttribute('macrotext', (function()
           if action.item then
