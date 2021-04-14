@@ -3,8 +3,7 @@ describe('Actions', function()
     wow.state.player.name = 'Shydove'
     wow.state.realm = 'Westfall'
     wow.state:SendEvent('PLAYER_LOGIN')
-    local button = wow.state.frames['mooActionButton1']
-    button:Click()
+    wow.env.mooActionButton1:Click()
     local macro = (
         '/dismount\n/stand\n'..
         '/cast [@mouseover,help,nodead][] Greater Heal(Rank 4)')
@@ -19,7 +18,7 @@ describe('Actions', function()
     wow.state.player.name = 'Shydove'
     wow.state.realm = 'Westfall'
     wow.state:SendEvent('PLAYER_LOGIN')
-    wow.state.frames['mooActionButton46']:Click()
+    wow.env.mooActionButton46:Click()
     local macro = '/click DrinkButton'
     assert.same({{ macro = macro }}, wow.state.commands)
   end)
