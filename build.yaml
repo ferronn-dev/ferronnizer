@@ -1,6 +1,8 @@
 addon: Ferronnizer
 deps:
   actions.lua:
+  - toons/Kewhand-Westfall.lua
+  - toons/Shydove-Westfall.lua
   - util.lua
   addonbox.lua:
   - util.lua
