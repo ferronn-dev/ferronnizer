@@ -163,7 +163,7 @@ G.Characters['Shydove-Westfall'] = {
     item = 13444,
   },
   [46] = {
-    item = 8079,
+    drink = true,
   },
   [47] = {
     spell = 'Mana Burn',

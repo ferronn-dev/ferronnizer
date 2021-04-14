@@ -40,6 +40,23 @@ local types = {
       end
     end,
   },
+  drink = {
+    GetCount = function()
+      return 0
+    end,
+    GetMacroText = function()
+      return '/click DrinkButton'
+    end,
+    GetTexture = function()
+      return 132801
+    end,
+    IsConsumableOrStackable = function()
+      return true
+    end,
+    SetTooltip = function()
+      return GameTooltip:SetText('Drink')
+    end,
+  },
   item = {
     GetCooldown = function(action)
       return GetItemCooldown(action.item)
