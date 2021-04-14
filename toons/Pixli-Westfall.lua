@@ -16,6 +16,9 @@ G.Characters['Pixli-Westfall'] = {
   [5] = {
     spell = 'Polymorph',
   },
+  [6] = {
+    spell = 'Frost Nova',
+  },
   [18] = {
     spell = 'Escape Artist',
   },
