@@ -160,15 +160,12 @@ G.Eventer({
     for k, v in pairs(types.default) do
       buttonMixin[k] = function(self, ...)
         local action = actions[self._state_action] or {}
-        if action.spell and types.spell[k] then
-          return types.spell[k](action.spell, ...)
-        elseif action.item and types.item[k] then
-          return types.item[k](action.item, ...)
-        elseif action.macro and types.macro[k] then
-          return types.macro[k](action.macro, ...)
-        else
-          return v(action)
+        for ty in pairs(types) do
+          if action[ty] and types[ty][k] then
+            return types[ty][k](action[ty], ...)
+          end
         end
+        return v(action)
       end
     end
     for i, button in ipairs(buttons) do
