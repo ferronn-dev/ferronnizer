@@ -38,31 +38,31 @@ local types = {
     end,
   },
   item = {
-    GetCooldown = function(item)
-      return GetItemCooldown(item)
+    GetCooldown = function(action)
+      return GetItemCooldown(action.item)
     end,
-    GetCount = function(item)
-      return GetItemCount(item)
+    GetCount = function(action)
+      return GetItemCount(action.item)
     end,
-    GetTexture = function(item)
-      return GetItemIcon(item)
+    GetTexture = function(action)
+      return GetItemIcon(action.item)
     end,
-    IsConsumableOrStackable = function(item)
+    IsConsumableOrStackable = function(action)
       -- LAB bug
-      local stack = select(8, GetItemInfo(item))
-      return IsConsumableItem(item) or (stack and stack > 1)
+      local stack = select(8, GetItemInfo(action.item))
+      return IsConsumableItem(action.item) or (stack and stack > 1)
     end,
-    IsCurrentlyActive = function(item)
-      return IsCurrentItem(item)
+    IsCurrentlyActive = function(action)
+      return IsCurrentItem(action.item)
     end,
-    IsUnitInRange = function(item, unit)
-      return IsItemInRange(item, unit)
+    IsUnitInRange = function(action, unit)
+      return IsItemInRange(action.item, unit)
     end,
-    IsUsable = function(item)
-      return IsUsableItem(item)
+    IsUsable = function(action)
+      return IsUsableItem(action.item)
     end,
-    SetTooltip = function(item)
-      return GameTooltip:SetHyperlink('item:'..item)
+    SetTooltip = function(action)
+      return GameTooltip:SetHyperlink('item:'..action.item)
     end,
   },
   macro = {
@@ -71,32 +71,32 @@ local types = {
     end,
   },
   spell = {
-    GetCooldown = function(spell)
-      return GetSpellCooldown(spell)
+    GetCooldown = function(action)
+      return GetSpellCooldown(action.spell)
     end,
-    GetCount = function(spell)
+    GetCount = function(action)
       -- LAB bug
-      return libCount:GetSpellReagentCount(spell)
+      return libCount:GetSpellReagentCount(action.spell)
     end,
-    GetTexture = function(spell)
-      return GetSpellTexture(spell)
+    GetTexture = function(action)
+      return GetSpellTexture(action.spell)
     end,
-    IsConsumableOrStackable = function(spell)
-      return IsConsumableSpell(spell)
+    IsConsumableOrStackable = function(action)
+      return IsConsumableSpell(action.spell)
     end,
-    IsCurrentlyActive = function(spell)
-      return IsCurrentSpell(spell)
+    IsCurrentlyActive = function(action)
+      return IsCurrentSpell(action.spell)
     end,
-    IsUnitInRange = function(spell, unit)
-      local id = select(7, GetSpellInfo(spell))
+    IsUnitInRange = function(action, unit)
+      local id = select(7, GetSpellInfo(action.spell))
       local slot = FindSpellBookSlotBySpellID(id)
       return IsSpellInRange(slot, 'spell', unit)
     end,
-    IsUsable = function(spell)
-      return IsUsableSpell(spell)
+    IsUsable = function(action)
+      return IsUsableSpell(action.spell)
     end,
-    SetTooltip = function(spell)
-      local id = select(7, GetSpellInfo(spell))
+    SetTooltip = function(action)
+      local id = select(7, GetSpellInfo(action.spell))
       GameTooltip:SetSpellByID(id)
       local subtext = GetSpellSubtext(id)
       if subtext then
@@ -162,10 +162,10 @@ G.Eventer({
         local action = actions[self._state_action] or {}
         for ty in pairs(types) do
           if action[ty] and types[ty][k] then
-            return types[ty][k](action[ty], ...)
+            return types[ty][k](action, ...)
           end
         end
-        return v(action)
+        return v(action, ...)
       end
     end
     for i, button in ipairs(buttons) do
