@@ -13,6 +13,9 @@ local types = {
     GetCount = function()
       return 0
     end,
+    GetMacroText = function()
+      return ''
+    end,
     GetTexture = function(action)
       return action.texture
     end,
@@ -44,6 +47,9 @@ local types = {
     GetCount = function(action)
       return GetItemCount(action.item)
     end,
+    GetMacroText = function(action)
+      return '/use item:'..action.item
+    end,
     GetTexture = function(action)
       return GetItemIcon(action.item)
     end,
@@ -66,6 +72,9 @@ local types = {
     end,
   },
   macro = {
+    GetMacroText = function(action)
+      return action.macro
+    end,
     IsUsable = function()
       return true
     end,
@@ -77,6 +86,12 @@ local types = {
     GetCount = function(action)
       -- LAB bug
       return libCount:GetSpellReagentCount(action.spell)
+    end,
+    GetMacroText = function(action)
+      return (
+         '/dismount\n/stand\n/cast'..
+         (action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
+         action.spell)
     end,
     GetTexture = function(action)
       return GetSpellTexture(action.spell)
@@ -176,18 +191,7 @@ G.Eventer({
         Mixin(button, buttonMixin)
         button:SetState(1, 'empty', i)
         button:SetAttribute('type', 'macro')
-        button:SetAttribute('macrotext', (function()
-          if action.item then
-            return '/use item:'..action.item
-          elseif action.spell then
-            return (
-               '/dismount\n/stand\n/cast'..
-                (action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
-                action.spell)
-          else
-            return action.macro
-          end
-        end)())
+        button:SetAttribute('macrotext', button:GetMacroText())
       end
     end
   end,
