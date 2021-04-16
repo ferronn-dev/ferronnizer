@@ -6,7 +6,7 @@ describe('Actions', function()
     wow.env.mooActionButton1:Click()
     local macro = (
         '/dismount\n/stand\n'..
-        '/cast [@mouseover,help,nodead][] Greater Heal(Rank 4)')
+        '/cast [@mouseover,help,nodead][] Greater Heal(Rank 5)')
     assert.same({{ macro = macro }}, wow.state.commands)
   end)
   it('toggles on click', function()

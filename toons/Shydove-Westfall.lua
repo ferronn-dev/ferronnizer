@@ -2,9 +2,9 @@ local _, G = ...
 G.Characters = G.Characters or {}
 G.Characters['Shydove-Westfall'] = {
   [1] = {
-    actionText = 'GH4',
+    actionText = 'GH5',
     mouseover = true,
-    spell = 'Greater Heal(Rank 4)',
+    spell = 'Greater Heal(Rank 5)',
   },
   [2] = {
     actionText = 'GH2',
@@ -59,9 +59,9 @@ G.Characters['Shydove-Westfall'] = {
     spell = 'Flash Heal(Rank 3)',
   },
   [15] = {
-    actionText = 'FH2',
+    actionText = 'FH1',
     mouseover = true,
-    spell = 'Flash Heal(Rank 2)',
+    spell = 'Flash Heal(Rank 1)',
   },
   [16] = {
     actionText = 'Stop',
