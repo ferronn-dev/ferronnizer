@@ -133,6 +133,7 @@ local types = {
       local subtext = GetSpellSubtext(id)
       if subtext then
         GameTooltipTextRight1:SetText(subtext)
+        GameTooltipTextRight1:SetTextColor(0.5, 0.5, 0.5)
         GameTooltipTextRight1:Show()
         GameTooltip:Show()
       end
