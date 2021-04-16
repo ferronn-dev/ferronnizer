@@ -23,7 +23,7 @@ local scriptHooks = {
     if price and price > 0 and not (shown and shown > 0) then
       local count = 1
       local m = GetMouseFocus()
-      if m and m.count and m.count > 1 then
+      if m and type(m.count) == 'number' and m.count > 1 then
         count = m.count
       end
       SetTooltipMoney(t, count * price)
