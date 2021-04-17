@@ -255,13 +255,22 @@ local function GetBuffToCast(unit)
   end
 end
 
+local unitsToBuff = {
+  'player',
+  'party1',
+  'party2',
+  'party3',
+  'party4',
+  'target',
+}
+
 local function GetSpellToCast()
   for _, track in ipairs(trackingdb) do
     if IsSpellKnown(track.spell) and GetTrackingTexture() ~= track.texture then
       return track.spell, 'player'
     end
   end
-  for _, unit in ipairs({'player', 'party1', 'party2', 'party3', 'party4'}) do
+  for _, unit in ipairs(unitsToBuff) do
     if UnitExists(unit) then
       local spell = GetBuffToCast(unit)
       if spell then
