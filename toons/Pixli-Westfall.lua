@@ -19,6 +19,10 @@ G.Characters['Pixli-Westfall'] = {
   [6] = {
     spell = 'Frost Nova',
   },
+  [16] = {
+    mouseover = true,
+    spell = 'Dampen Magic',
+  },
   [18] = {
     spell = 'Escape Artist',
   },
@@ -27,6 +31,9 @@ G.Characters['Pixli-Westfall'] = {
   },
   [34] = {
     macro = '/click PartyBuffButton',
+  },
+  [35] = {
+    spell = 'Slow Fall',
   },
   [45] = {
     item = 5349,
