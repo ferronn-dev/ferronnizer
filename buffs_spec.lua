@@ -51,13 +51,22 @@ describe('PartyBuffButton', function()
   end)
 
   it('skips group spells when reagents are missing', function()
+    wow.state.inGroup = true
     wow.state.player.level = 60
     wow.state.knownSpells = {10157, 23028}
     assertCastSpell(10157)
   end)
 
-  it('prefers to cast group spells as long as reagents are available', function()
+  it('skips group spells when not in group', function()
     wow.state.player.level = 60
+    wow.state.inventory[17020] = 20
+    wow.state.knownSpells = {10157, 23028}
+    assertCastSpell(10157)
+  end)
+
+  it('prefers to cast group spells in group as long as reagents are available', function()
+    wow.state.player.level = 60
+    wow.state.inGroup = true
     wow.state.inventory[17020] = 20
     wow.state.knownSpells = {10157, 23028}
     assertCastSpell(23028)
