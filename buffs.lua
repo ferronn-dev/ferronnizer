@@ -195,9 +195,11 @@ local conjuredb = {
 }
 
 local function canCast(spell, unit)
+  local slot = FindSpellBookSlotBySpellID(spell.id)
   return IsSpellKnown(spell.id)
       and spell.level - 10 <= UnitLevel(unit)
       and (not spell.reagent or GetItemCount(spell.reagent) > 0)
+      and (not _G.SpellHasRange(slot, 'spell') or IsSpellInRange(slot, 'spell', unit))
 end
 
 local function GetBuffToCast(unit)
