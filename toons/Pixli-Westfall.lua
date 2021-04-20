@@ -19,6 +19,9 @@ G.Characters['Pixli-Westfall'] = {
   [6] = {
     spell = 'Frost Nova',
   },
+  [7] = {
+    spell = 'Arcane Explosion',
+  },
   [16] = {
     mouseover = true,
     spell = 'Dampen Magic',
