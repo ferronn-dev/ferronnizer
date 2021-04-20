@@ -83,6 +83,7 @@ function G.PreClickButton(name, default, func)
       self:SetAttribute('macrotext', default)
     end
   end)
+  return button
 end
 
 do

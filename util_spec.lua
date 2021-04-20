@@ -55,4 +55,25 @@ describe('utility functions', function()
       assert.same({ [event] = 1 }, counts)
     end)
   end)
+
+  describe('pre-click button', function()
+    it('returns the button', function()
+      local count = 0
+      local button = wow.addon.PreClickButton('Foo', 'moo', function()
+        count = count + 1
+        return 'cow' .. count
+      end)
+      assert.equal(wow.env.Foo, button)
+      button:Click()
+      wow.state:EnterCombat()
+      button:Click()
+      wow.state:LeaveCombat()
+      button:Click()
+      assert.same({
+        { macro = 'cow1' },
+        { macro = 'moo' },
+        { macro = 'cow2' },
+      }, wow.state.commands)
+    end)
+  end)
 end)
