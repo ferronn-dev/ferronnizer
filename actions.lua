@@ -2,6 +2,30 @@ local addonName, G = ...
 
 local libCount = LibStub('LibClassicSpellActionCount-1.0')
 
+-- TODO eliminate overlap with drink.lua
+local function getConsumableFn(db)
+  local function getItem()
+    for _, consumable in ipairs(db) do
+      local item = unpack(consumable)
+      if GetItemCount(item) > 0 then
+        return item
+      end
+    end
+    return db[#db][1]  -- give up and return the last thing
+  end
+  local lastItem, lastTime
+  return function()
+    local now = GetTime()
+    if now ~= lastTime then
+      lastTime = now
+      lastItem = getItem()
+    end
+    return lastItem
+  end
+end
+local getDrinkItem = getConsumableFn(G.DrinkDB)
+local getEatItem = getConsumableFn(G.FoodDB)
+
 local types = {
   default = {
     GetActionText = function(action)
@@ -41,37 +65,49 @@ local types = {
     end,
   },
   drink = {
+    GetCooldown = function()
+      return GetItemCooldown(getDrinkItem())
+    end,
     GetCount = function()
-      return 0
+      return GetItemCount(getDrinkItem())
     end,
     GetMacroText = function()
       return '/click DrinkButton'
     end,
     GetTexture = function()
-      return 132801
+      return GetItemIcon(getDrinkItem())
     end,
     IsConsumableOrStackable = function()
       return true
     end,
+    IsUsable = function()
+      return IsUsableItem(getDrinkItem())
+    end,
     SetTooltip = function()
-      return GameTooltip:SetText('Drink')
+      return GameTooltip:SetHyperlink('item:'..getDrinkItem())
     end,
   },
   eat = {
+    GetCooldown = function()
+      return GetItemCooldown(getEatItem())
+    end,
     GetCount = function()
-      return 0
+      return GetItemCount(getEatItem())
     end,
     GetMacroText = function()
       return '/click EatButton'
     end,
     GetTexture = function()
-      return 133952
+      return GetItemIcon(getEatItem())
     end,
     IsConsumableOrStackable = function()
       return true
     end,
+    IsUsable = function()
+      return IsUsableItem(getEatItem())
+    end,
     SetTooltip = function()
-      return GameTooltip:SetText('Eat')
+      return GameTooltip:SetHyperlink('item:'..getEatItem())
     end,
   },
   item = {
