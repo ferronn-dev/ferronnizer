@@ -39,7 +39,7 @@ G.Characters['Pixli-Westfall'] = {
     spell = 'Slow Fall',
   },
   [45] = {
-    item = 5349,
+    eat = true,
   },
   [46] = {
     drink = true,

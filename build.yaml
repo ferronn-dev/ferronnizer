@@ -19,6 +19,7 @@ deps:
   - util.lua
   drink.lua:
   - drinkdb.lua
+  - fooddb.lua
   - util.lua
   minimap.lua:
   - util.lua
@@ -58,6 +59,8 @@ roots:
 sql:
   buffdb.sql:
   - BuffDB
+  fooddb.sql:
+  - FoodDB
   drinkdb.sql:
   - DrinkDB
 toc:

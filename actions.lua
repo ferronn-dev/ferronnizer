@@ -57,6 +57,23 @@ local types = {
       return GameTooltip:SetText('Drink')
     end,
   },
+  eat = {
+    GetCount = function()
+      return 0
+    end,
+    GetMacroText = function()
+      return '/click EatButton'
+    end,
+    GetTexture = function()
+      return 133952
+    end,
+    IsConsumableOrStackable = function()
+      return true
+    end,
+    SetTooltip = function()
+      return GameTooltip:SetText('Eat')
+    end,
+  },
   item = {
     GetCooldown = function(action)
       return GetItemCooldown(action.item)
