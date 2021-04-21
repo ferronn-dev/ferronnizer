@@ -38,6 +38,9 @@ local buffSlotSpecification = {
       },
     },
   },{
+    buffs = { { spell = 'Dampen Magic' } },
+    solo = true,
+  },{
     buffs = {
       { spell = 'Demon Armor' },
       { spell = 'Demon Skin' },
@@ -206,7 +209,7 @@ local function GetBuffToCast(unit)
   local buffs = GetUnitBuffs(unit)
   for _, slot in ipairs(thebuffdb) do
     local id = (function()
-      if slot.self and unit ~= 'player' then
+      if unit ~= 'player' and slot.self or (slot.solo and IsInGroup()) then
         return nil
       end
       for _, buff in ipairs(slot.buffs) do

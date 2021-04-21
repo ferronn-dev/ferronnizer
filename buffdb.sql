@@ -34,6 +34,7 @@ WHERE
         'Blessing of Might',
         'Blessing of Salvation',
         'Blessing of Wisdom',
+        'Dampen Magic',
         'Demon Armor',
         'Demon Skin',
         'Devotion Aura',
