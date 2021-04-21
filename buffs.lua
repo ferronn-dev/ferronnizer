@@ -161,18 +161,33 @@ local trackingdb = {
 }
 
 local conjuredb = {
-  -- waters
+  -- drinks
   {
-    count = 40,
-    spells = {
-      {spell = 10140, item = 8079},
-      {spell = 10139, item = 8078},
-      {spell = 10138, item = 8077},
-      {spell = 6127, item = 3772},
-      {spell = 5506, item = 2136},
-      {spell = 5505, item = 2288},
-      {spell = 5504, item = 5350},
-    },
+    count = 20,
+    spells = (function()
+      local spells = {}
+      for _, e in ipairs(G.DrinkDB) do
+        local item, _, spell = unpack(e)
+        if spell then
+          table.insert(spells, {spell = spell, item = item})
+        end
+      end
+      return spells
+    end)(),
+  },
+  -- food
+  {
+    count = 10,
+    spells = (function()
+      local spells = {}
+      for _, e in ipairs(G.FoodDB) do
+        local item, _, spell = unpack(e)
+        if spell then
+          table.insert(spells, {spell = spell, item = item})
+        end
+      end
+      return spells
+    end)(),
   },
   -- managems
   {

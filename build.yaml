@@ -11,6 +11,8 @@ deps:
   - util.lua
   buffs.lua:
   - buffdb.lua
+  - drinkdb.lua
+  - fooddb.lua
   - util.lua
   chatframe.lua:
   - util.lua
