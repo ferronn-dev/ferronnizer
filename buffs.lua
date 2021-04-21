@@ -160,34 +160,27 @@ local trackingdb = {
   {spell = 2383, texture = 133939},  -- Find Herbs
 }
 
+local function consumeList(db)
+  local spells = {}
+  for _, e in ipairs(db) do
+    local item, _, spell = unpack(e)
+    if spell then
+      table.insert(spells, {spell = spell, item = item})
+    end
+  end
+  return spells
+end
+
 local conjuredb = {
   -- drinks
   {
     count = 20,
-    spells = (function()
-      local spells = {}
-      for _, e in ipairs(G.DrinkDB) do
-        local item, _, spell = unpack(e)
-        if spell then
-          table.insert(spells, {spell = spell, item = item})
-        end
-      end
-      return spells
-    end)(),
+    spells = consumeList(G.DrinkDB),
   },
   -- food
   {
     count = 10,
-    spells = (function()
-      local spells = {}
-      for _, e in ipairs(G.FoodDB) do
-        local item, _, spell = unpack(e)
-        if spell then
-          table.insert(spells, {spell = spell, item = item})
-        end
-      end
-      return spells
-    end)(),
+    spells = consumeList(G.FoodDB),
   },
   -- managems
   {
