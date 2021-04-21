@@ -3,29 +3,26 @@ local addonName, G = ...
 local libCount = LibStub('LibClassicSpellActionCount-1.0')
 
 -- TODO eliminate overlap with drink.lua
-local getDrinkItem, getEatItem = (function()
-  local function getConsumableFn(db)
-    local function getItem()
-      for _, consumable in ipairs(db) do
-        local item = unpack(consumable)
-        if GetItemCount(item) > 0 then
-          return item
-        end
+local function getConsumable(db)
+  local function getItem()
+    for _, consumable in ipairs(db) do
+      local item = unpack(consumable)
+      if GetItemCount(item) > 0 then
+        return item
       end
-      return db[#db][1]  -- give up and return the last thing
     end
-    local lastItem, lastTime
-    return function()
-      local now = GetTime()
-      if now ~= lastTime then
-        lastTime = now
-        lastItem = getItem()
-      end
-      return lastItem
-    end
+    return db[#db][1]  -- give up and return the last thing
   end
-  return getConsumableFn(G.DrinkDB), getConsumableFn(G.FoodDB)
-end)()
+  local lastItem, lastTime
+  return function()
+    local now = GetTime()
+    if now ~= lastTime then
+      lastTime = now
+      lastItem = getItem()
+    end
+    return lastItem
+  end
+end
 
 local types = {
   default = {
@@ -63,52 +60,6 @@ local types = {
       if action.tooltip then
         return GameTooltip:SetText(action.tooltip)
       end
-    end,
-  },
-  drink = {
-    GetCooldown = function()
-      return GetItemCooldown(getDrinkItem())
-    end,
-    GetCount = function()
-      return GetItemCount(getDrinkItem())
-    end,
-    GetMacroText = function()
-      return '/click DrinkButton'
-    end,
-    GetTexture = function()
-      return GetItemIcon(getDrinkItem())
-    end,
-    IsConsumableOrStackable = function()
-      return true
-    end,
-    IsUsable = function()
-      return IsUsableItem(getDrinkItem())
-    end,
-    SetTooltip = function()
-      return GameTooltip:SetHyperlink('item:'..getDrinkItem())
-    end,
-  },
-  eat = {
-    GetCooldown = function()
-      return GetItemCooldown(getEatItem())
-    end,
-    GetCount = function()
-      return GetItemCount(getEatItem())
-    end,
-    GetMacroText = function()
-      return '/click EatButton'
-    end,
-    GetTexture = function()
-      return GetItemIcon(getEatItem())
-    end,
-    IsConsumableOrStackable = function()
-      return true
-    end,
-    IsUsable = function()
-      return IsUsableItem(getEatItem())
-    end,
-    SetTooltip = function()
-      return GameTooltip:SetHyperlink('item:'..getEatItem())
     end,
   },
   item = {
@@ -195,7 +146,7 @@ local types = {
   },
 }
 
-local function makeButtons()
+local function makeButtons(actions)
   local LAB10 = LibStub('LibActionButton-1.0')
   -- LAB bug
   G.Eventer({
@@ -205,12 +156,52 @@ local function makeButtons()
   })
   local prefix = addonName .. 'ActionButton'
   local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
+  local buttonMixin = {}
+  for k, v in pairs(types.default) do
+    buttonMixin[k] = function(self, ...)
+      local action = actions[self._state_action] or {}
+      for ty in pairs(types) do
+        if action[ty] and types[ty][k] then
+          return types[ty][k](action, ...)
+        end
+      end
+      return v(action, ...)
+    end
+  end
   local buttons = {}
   for i = 1, 48 do
-    local button = LAB10:CreateButton(i, prefix .. i, header)
-    button:SetAttribute('state', 1)
+    local action = actions[i]
+    local button = (function()
+      if action and (action.drink or action.eat) then
+        local button = CreateFrame(
+            'CheckButton', prefix .. i, header, 'ActionButtonTemplate, SecureActionButtonTemplate')
+        local db = action.drink and G.DrinkDB or G.FoodDB
+        button:SetScript('OnEvent', function()
+          local item = getConsumable(db)
+          local count = GetItemCount(item)
+          button.Count:SetText(count > 9999 and '*' or count)
+          button.icon:SetTexture(GetItemIcon(item))
+        end)
+        button:RegisterEvent('BAG_UPDATE_DELAYED')
+        button:SetAttribute('type', 'macro')
+        button:SetAttribute('macrotext', '/click ' .. (action.drink and 'Drink' or 'Eat') .. 'Button')
+        return button
+      else
+        local button = LAB10:CreateButton(i, prefix .. i, header)
+        button:SetAttribute('state', 1)
+        button:DisableDragNDrop(true)
+        if not action then
+          button:SetState(1, 'action', i)
+        else
+          Mixin(button, buttonMixin)
+          button:SetState(1, 'empty', i)
+          button:SetAttribute('type', 'macro')
+          button:SetAttribute('macrotext', button:GetMacroText())
+        end
+        return button
+      end
+    end)()
     button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-    button:DisableDragNDrop(true)
     table.insert(buttons, button)
   end
   for i, button in ipairs(buttons) do
@@ -233,50 +224,7 @@ G.Eventer({
     G.ReparentFrame(MainMenuBar)
     local charName = UnitName('player')..'-'..GetRealmName()
     local actions = G.Characters[charName] or {}
-    local buttons = makeButtons()
-    local buttonMixin = {}
-    for k, v in pairs(types.default) do
-      buttonMixin[k] = function(self, ...)
-        local action = actions[self._state_action] or {}
-        for ty in pairs(types) do
-          if action[ty] and types[ty][k] then
-            return types[ty][k](action, ...)
-          end
-        end
-        return v(action, ...)
-      end
-    end
-    for i, button in ipairs(buttons) do
-      local action = actions[i]
-      if not action then
-        button:SetState(1, 'action', i)
-      else
-        Mixin(button, buttonMixin)
-        button:SetState(1, 'empty', i)
-        button:SetAttribute('type', 'macro')
-        button:SetAttribute('macrotext', button:GetMacroText())
-      end
-    end
-    -- Manually handle consume updates. We don't want to use an eventer here
-    -- because we definitely want the code to run after the LAB handler.
-    local consumes = {}
-    for _, button in ipairs(buttons) do
-      if button.drink or button.eat then
-        table.insert(consumes, button)
-      end
-    end
-    local eventFrame = LibStub('LibActionButton-1.0').eventFrame
-    eventFrame:RegisterEvent('BAG_UPDATE_DELAYED')
-    eventFrame:HookScript('OnEvent', function(_, ev)
-      if ev == 'BAG_UPDATE_DELAYED' then
-        for _, button in ipairs(consumes) do
-          local item = button.drink and getDrinkItem() or getEatItem()
-          local count = GetItemCount(item)
-          button.Count:SetText(count > 9999 and '*' or count)
-          button.icon:SetTexture(GetItemIcon(item))
-        end
-      end
-    end)
+    local buttons = makeButtons(actions)
     do
       local dragNDropToggle = true
       G.PreClickButton('ToggleActionDragButton', nil, function()
