@@ -3,28 +3,29 @@ local addonName, G = ...
 local libCount = LibStub('LibClassicSpellActionCount-1.0')
 
 -- TODO eliminate overlap with drink.lua
-local function getConsumableFn(db)
-  local function getItem()
-    for _, consumable in ipairs(db) do
-      local item = unpack(consumable)
-      if GetItemCount(item) > 0 then
-        return item
+local getDrinkItem, getEatItem = (function()
+  local function getConsumableFn(db)
+    local function getItem()
+      for _, consumable in ipairs(db) do
+        local item = unpack(consumable)
+        if GetItemCount(item) > 0 then
+          return item
+        end
       end
+      return db[#db][1]  -- give up and return the last thing
     end
-    return db[#db][1]  -- give up and return the last thing
-  end
-  local lastItem, lastTime
-  return function()
-    local now = GetTime()
-    if now ~= lastTime then
-      lastTime = now
-      lastItem = getItem()
+    local lastItem, lastTime
+    return function()
+      local now = GetTime()
+      if now ~= lastTime then
+        lastTime = now
+        lastItem = getItem()
+      end
+      return lastItem
     end
-    return lastItem
   end
-end
-local getDrinkItem = getConsumableFn(G.DrinkDB)
-local getEatItem = getConsumableFn(G.FoodDB)
+  return getConsumableFn(G.DrinkDB), getConsumableFn(G.FoodDB)
+end)()
 
 local types = {
   default = {
