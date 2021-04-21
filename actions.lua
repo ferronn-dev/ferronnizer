@@ -206,7 +206,7 @@ local buttons = (function()
   local prefix = addonName .. 'ActionButton'
   local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
   local buttons = {}
-  for i = 1, 49 do
+  for i = 1, 48 do
     local button = LAB10:CreateButton(i, prefix .. i, header)
     button:SetAttribute('state', 1)
     button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
