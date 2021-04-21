@@ -261,12 +261,12 @@ local function GetBuffToCast(unit)
 end
 
 local unitsToBuff = {
+  'target',
   'player',
   'party1',
   'party2',
   'party3',
   'party4',
-  'target',
 }
 
 local function GetSpellToCast()
