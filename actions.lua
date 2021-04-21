@@ -233,7 +233,9 @@ do
   G.PreClickButton('ToggleActionDragButton', nil, function()
     dragNDropToggle = not dragNDropToggle
     for _, button in ipairs(buttons) do
-      button:DisableDragNDrop(dragNDropToggle)
+      if button:GetAttribute('labtype-1') == 'action' then
+        button:DisableDragNDrop(dragNDropToggle)
+      end
     end
   end)
 end
