@@ -38,9 +38,6 @@ G.Characters['Pixli-Westfall'] = {
   [18] = {
     spell = 'Escape Artist',
   },
-  [33] = {
-    spell = 'Conjure Food',
-  },
   [34] = {
     macro = '/click PartyBuffButton',
   },
