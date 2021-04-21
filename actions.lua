@@ -175,6 +175,10 @@ local function makeButtons(actions)
       if action and (action.drink or action.eat) then
         local button = CreateFrame(
             'CheckButton', prefix .. i, header, 'ActionButtonTemplate, SecureActionButtonTemplate')
+	button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
+	button.HotKey:SetVertexColor(0.75, 0.75, 0.75)
+	button.HotKey:SetPoint('TOPLEFT', button, 'TOPLEFT', -2, -4)
+	button.Count:SetFont(button.Count:GetFont(), 16, 'OUTLINE')
         local db = action.drink and G.DrinkDB or G.FoodDB
         button:SetScript('OnEvent', function()
           local item = getConsumable(db)
