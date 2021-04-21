@@ -148,6 +148,7 @@ local types = {
 
 local function makeButtons(actions)
   local LAB10 = LibStub('LibActionButton-1.0')
+  local keyBound = LibStub('LibKeyBound-1.0')
   -- LAB bug
   G.Eventer({
     BAG_UPDATE_DELAYED = function()
@@ -181,15 +182,33 @@ local function makeButtons(actions)
         button.Count:SetFont(button.Count:GetFont(), 16, 'OUTLINE')
         button:SetNormalTexture('Interface\\Buttons\\UI-Quickslot2')
         button.NormalTexture:SetTexCoord(0, 0, 0, 0)
-        local getItem = action.drink and getConsumable(G.DrinkDB) or getConsumable(G.FoodDB)
-        button:SetScript('OnEvent', function()
-          local item = getItem()
-          local count = GetItemCount(item)
-          button.Count:SetText(count > 9999 and '*' or count)
-          button.icon:SetTexture(GetItemIcon(item))
-          button.icon:Show()
-        end)
-        button:RegisterEvent('BAG_UPDATE_DELAYED')
+        button:SetScript('OnEvent', (function()
+          local getItem = getConsumable(action.drink and G.DrinkDB or G.FoodDB)
+          local handlers = {
+            BAG_UPDATE_DELAYED = function()
+              local item = getItem()
+              local count = GetItemCount(item)
+              button.Count:SetText(count > 9999 and '*' or count)
+              button.icon:SetTexture(GetItemIcon(item))
+              button.icon:Show()
+            end,
+            UPDATE_BINDINGS = function()
+              local key = _G.GetBindingKey('CLICK ' .. button:GetName() .. ':LeftButton')
+              if key then
+                button.HotKey:SetText(keyBound:ToShortKey(key))
+                button.HotKey:Show()
+              else
+                button.HotKey:Hide()
+              end
+            end,
+          }
+          for ev in pairs(handlers) do
+            button:RegisterEvent(ev)
+          end
+          return function(_, ev, ...)
+            handlers[ev](...)
+          end
+        end)())
         button:SetAttribute('type', 'macro')
         button:SetAttribute('macrotext', '/click ' .. (action.drink and 'Drink' or 'Eat') .. 'Button')
         return button
