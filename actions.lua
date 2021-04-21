@@ -195,7 +195,7 @@ local types = {
   },
 }
 
-local buttons = (function()
+local function makeButtons()
   local LAB10 = LibStub('LibActionButton-1.0')
   -- LAB bug
   G.Eventer({
@@ -226,18 +226,6 @@ local buttons = (function()
   buttons[42]:SetPoint('BOTTOMRIGHT', UIParent, 'BOTTOM')
   buttons[43]:SetPoint('BOTTOMLEFT', UIParent, 'BOTTOM')
   return buttons
-end)()
-
-do
-  local dragNDropToggle = true
-  G.PreClickButton('ToggleActionDragButton', nil, function()
-    dragNDropToggle = not dragNDropToggle
-    for _, button in ipairs(buttons) do
-      if button:GetAttribute('labtype-1') == 'action' then
-        button:DisableDragNDrop(dragNDropToggle)
-      end
-    end
-  end)
 end
 
 G.Eventer({
@@ -245,6 +233,7 @@ G.Eventer({
     G.ReparentFrame(MainMenuBar)
     local charName = UnitName('player')..'-'..GetRealmName()
     local actions = G.Characters[charName] or {}
+    local buttons = makeButtons()
     local buttonMixin = {}
     for k, v in pairs(types.default) do
       buttonMixin[k] = function(self, ...)
@@ -288,5 +277,16 @@ G.Eventer({
         end
       end
     end)
+    do
+      local dragNDropToggle = true
+      G.PreClickButton('ToggleActionDragButton', nil, function()
+        dragNDropToggle = not dragNDropToggle
+        for _, button in ipairs(buttons) do
+          if button:GetAttribute('labtype-1') == 'action' then
+            button:DisableDragNDrop(dragNDropToggle)
+          end
+        end
+      end)
+    end
   end,
 })
