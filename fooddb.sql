@@ -1,4 +1,18 @@
-SELECT CAST(s.id AS INT64), CAST(e.spellid AS INT64)
-FROM itemsparse s, itemeffect e
-WHERE e.parentitemid = s.id AND e.spellcategoryid = "11"
-ORDER BY CAST(s.itemlevel AS INT64) DESC;
+SELECT
+  CAST(s.id AS INT64),
+  CAST(e.spellid AS INT64),
+  CAST(z.spellid AS INT64)
+FROM
+  itemsparse s
+JOIN
+  itemeffect e
+ON
+  e.parentitemid = s.id
+LEFT OUTER JOIN
+  spelleffect z
+ON
+  s.id = z.effectitemtype
+WHERE
+  e.spellcategoryid = "11"
+ORDER BY
+  CAST(s.itemlevel AS INT64) DESC;
