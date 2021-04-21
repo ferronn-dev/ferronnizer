@@ -266,5 +266,25 @@ G.Eventer({
         button:SetAttribute('macrotext', button:GetMacroText())
       end
     end
+    -- Manually handle consume updates. We don't want to use an eventer here
+    -- because we definitely want the code to run after the LAB handler.
+    local consumes = {}
+    for _, button in ipairs(buttons) do
+      if button.drink or button.eat then
+        table.insert(consumes, button)
+      end
+    end
+    local eventFrame = LibStub('LibActionButton-1.0').eventFrame
+    eventFrame:RegisterEvent('BAG_UPDATE_DELAYED')
+    eventFrame:HookScript('OnEvent', function(_, ev)
+      if ev == 'BAG_UPDATE_DELAYED' then
+        for _, button in ipairs(consumes) do
+          local item = button.drink and getDrinkItem() or getEatItem()
+          local count = GetItemCount(item)
+          button.Count:SetText(count > 9999 and '*' or count)
+          button.icon:SetTexture(GetItemIcon(item))
+        end
+      end
+    end)
   end,
 })
