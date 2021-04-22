@@ -268,14 +268,16 @@ local function GetBuffToCast(unit)
   end
 end
 
-local unitsToBuff = {
-  'target',
-  'player',
-  'party1',
-  'party2',
-  'party3',
-  'party4',
-}
+local unitsToBuff = (function()
+  local u = {'target', 'player'}
+  for i = 1, 4 do
+    table.insert(u, 'party' .. i)
+  end
+  for i = 1, 40 do
+    table.insert(u, 'raid' .. i)
+  end
+  return u
+end)()
 
 local function GetSpellToCast()
   for _, track in ipairs(trackingdb) do
