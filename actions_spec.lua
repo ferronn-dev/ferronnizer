@@ -28,4 +28,19 @@ describe('Actions', function()
     assert.Not.Nil(wow.env.mooActionButton48)
     assert.Nil(wow.env.mooActionButton49)
   end)
+  it('invokes macros on click', function()
+    wow.state.player.name = 'Shydove'
+    wow.state.realm = 'Westfall'
+    wow.state:SendEvent('PLAYER_LOGIN')
+    wow.env.mooActionButton34:Click()
+    local macro = '/click mooBuffButton'
+    assert.same({{ macro = macro }}, wow.state.commands)
+  end)
+  it('does not crash on events', function()
+    wow.state.player.name = 'Shydove'
+    wow.state.realm = 'Westfall'
+    wow.state:SendEvent('PLAYER_LOGIN')
+    wow.state:SendEvent('BAG_UPDATE_DELAYED')
+    wow.state:SendEvent('UPDATE_BINDINGS')
+  end)
 end)

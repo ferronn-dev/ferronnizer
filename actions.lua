@@ -93,14 +93,6 @@ local types = {
       return GameTooltip:SetHyperlink('item:'..action.item)
     end,
   },
-  macro = {
-    GetMacroText = function(action)
-      return action.macro
-    end,
-    IsUsable = function()
-      return true
-    end,
-  },
   spell = {
     GetCooldown = function(action)
       return GetSpellCooldown(action.spell)
@@ -173,7 +165,7 @@ local function makeButtons(actions)
   for i = 1, 48 do
     local action = actions[i]
     local button = (function()
-      if action and (action.drink or action.eat) then
+      if action and (action.drink or action.eat or action.macro) then
         local button = CreateFrame(
             'CheckButton', prefix .. i, header, 'ActionButtonTemplate, SecureActionButtonTemplate')
         button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
@@ -182,10 +174,19 @@ local function makeButtons(actions)
         button.Count:SetFont(button.Count:GetFont(), 16, 'OUTLINE')
         button:SetNormalTexture('Interface\\Buttons\\UI-Quickslot2')
         button.NormalTexture:SetTexCoord(0, 0, 0, 0)
+        if action.actionText then
+          button.Name:SetText(action.actionText)
+        end
+        if action.texture then
+          button.icon:SetTexture(action.texture)
+        end
         button:SetScript('OnEvent', (function()
-          local getItem = getConsumable(action.drink and G.DrinkDB or G.FoodDB)
+          local getItem = (function()
+            local db = action.drink and G.DrinkDB or action.eat and G.FoodDB
+            return db and getConsumable(db)
+          end)()
           local handlers = {
-            BAG_UPDATE_DELAYED = function()
+            BAG_UPDATE_DELAYED = getItem and function()
               local item = getItem()
               local count = GetItemCount(item)
               button.Count:SetText(count > 9999 and '*' or count)
@@ -209,9 +210,14 @@ local function makeButtons(actions)
             handlers[ev](...)
           end
         end)())
-        local toClick = addonName .. (action.drink and 'Drink' or 'Eat') .. 'Button'
         button:SetAttribute('type', 'macro')
-        button:SetAttribute('macrotext', '/click ' .. toClick)
+        button:SetAttribute('macrotext', (function()
+          if action.macro then
+            return action.macro
+          else
+            return '/click ' .. addonName .. (action.drink and 'Drink' or 'Eat') .. 'Button'
+          end
+        end)())
         return button
       else
         local button = LAB10:CreateButton(i, prefix .. i, header)
