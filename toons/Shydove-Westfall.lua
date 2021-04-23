@@ -7,14 +7,14 @@ G.Characters['Shydove-Westfall'] = {
     spell = 'Greater Heal(Rank 5)',
   },
   [2] = {
-    actionText = 'GH2',
+    actionText = 'GH1',
     mouseover = true,
-    spell = 'Greater Heal(Rank 2)',
+    spell = 'Greater Heal(Rank 1)',
   },
   [3] = {
-    actionText = 'H4',
+    actionText = 'H2',
     mouseover = true,
-    spell = 'Heal(Rank 4)',
+    spell = 'Heal(Rank 2)',
   },
   [4] = {
     actionText = 'Stop',
