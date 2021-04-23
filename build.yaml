@@ -66,6 +66,6 @@ sql:
   drinkdb.sql:
   - DrinkDB
 toc:
-  Interface: 11306
+  Interface: 11307
   Title: Ferronnizer
   Notes: My personal WoW addon
