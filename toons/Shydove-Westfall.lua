@@ -85,18 +85,6 @@ G.Characters['Shydove-Westfall'] = {
     mouseover = true,
     spell = 'Power Infusion',
   },
-  [22] = {
-    mouseover = true,
-    spell = 'Shadow Protection',
-  },
-  [23] = {
-    mouseover = true,
-    spell = 'Power Word: Fortitude',
-  },
-  [24] = {
-    mouseover = true,
-    spell = 'Divine Spirit',
-  },
   [25] = {
     mouseover = true,
     spell = 'Dispel Magic',
@@ -111,9 +99,6 @@ G.Characters['Shydove-Westfall'] = {
   [28] = {
     spell = 'Desperate Prayer',
   },
-  [29] = {
-    spell = 'Inner Fire',
-  },
   [30] = {
     spell = 'Shackle Undead',
   },
@@ -126,32 +111,11 @@ G.Characters['Shydove-Westfall'] = {
   [33] = {
     spell = 'Resurrection',
   },
-  [34] = {
-    spell = 'Prayer of Shadow Protection',
-  },
-  [35] = {
-    spell = 'Prayer of Fortitude',
-  },
-  [36] = {
-    spell = 'Prayer of Spirit',
-  },
   [37] = {
     spell = 'Fishing',
   },
-  [38] = {
-    spell = 'Tailoring',
-  },
-  [39] = {
-    spell = 'Cooking',
-  },
-  [40] = {
-    spell = 'First Aid',
-  },
   [41] = {
     spell = 'Mind Control',
-  },
-  [42] = {
-    spell = 'Find Herbs',
   },
   [43] = {
     item = 18778,
