@@ -180,29 +180,30 @@ local function makeButtons(actions)
         if action.texture then
           button.icon:SetTexture(action.texture)
         end
-        button:SetScript('OnEnter', (function()
-          local text = action.drink and 'Drink' or action.eat and 'Eat' or action.tooltip
-          return text and function()
-            GameTooltip:SetOwner(button, ANCHOR_NONE)
-            GameTooltip:SetText(text)
+        local getItem = (function()
+          local db = action.drink and G.DrinkDB or action.eat and G.FoodDB
+          return db and getConsumable(db)
+        end)()
+        button:SetScript('OnEnter', function()
+          GameTooltip:SetOwner(button, ANCHOR_NONE)
+          if getItem then
+            GameTooltip:SetHyperlink('item:' .. getItem())
+          elseif action.tooltip then
+            GameTooltip:SetText(action.tooltip)
           end
-        end)())
+        end)
         button:SetScript('OnLeave', function()
           GameTooltip:Hide()
         end)
         button:SetScript('OnEvent', (function()
           local handlers = {
-            BAG_UPDATE_DELAYED = (function()
-              local db = action.drink and G.DrinkDB or action.eat and G.FoodDB
-              local getItem = db and getConsumable(db)
-              return getItem and function()
-                local item = getItem()
-                local count = GetItemCount(item)
-                button.Count:SetText(count > 9999 and '*' or count)
-                button.icon:SetTexture(GetItemIcon(item))
-                button.icon:Show()
-              end
-            end)(),
+            BAG_UPDATE_DELAYED = getItem and function()
+              local item = getItem()
+              local count = GetItemCount(item)
+              button.Count:SetText(count > 9999 and '*' or count)
+              button.icon:SetTexture(GetItemIcon(item))
+              button.icon:Show()
+            end,
             UPDATE_BINDINGS = function()
               local key = _G.GetBindingKey('CLICK ' .. button:GetName() .. ':LeftButton')
               if key then
