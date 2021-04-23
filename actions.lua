@@ -181,18 +181,18 @@ local function makeButtons(actions)
           button.icon:SetTexture(action.texture)
         end
         button:SetScript('OnEvent', (function()
-          local getItem = (function()
-            local db = action.drink and G.DrinkDB or action.eat and G.FoodDB
-            return db and getConsumable(db)
-          end)()
           local handlers = {
-            BAG_UPDATE_DELAYED = getItem and function()
-              local item = getItem()
-              local count = GetItemCount(item)
-              button.Count:SetText(count > 9999 and '*' or count)
-              button.icon:SetTexture(GetItemIcon(item))
-              button.icon:Show()
-            end,
+            BAG_UPDATE_DELAYED = (function()
+              local db = action.drink and G.DrinkDB or action.eat and G.FoodDB
+              local getItem = db and getConsumable(db)
+              return getItem and function()
+                local item = getItem()
+                local count = GetItemCount(item)
+                button.Count:SetText(count > 9999 and '*' or count)
+                button.icon:SetTexture(GetItemIcon(item))
+                button.icon:Show()
+              end
+            end)(),
             UPDATE_BINDINGS = function()
               local key = _G.GetBindingKey('CLICK ' .. button:GetName() .. ':LeftButton')
               if key then
