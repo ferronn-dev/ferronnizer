@@ -10,6 +10,7 @@ jobs:
     - name: Run addonmaker
       uses: ferronn-dev/addonmaker@main
     - name: Upload zip
+      if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
       uses: marvinpinto/action-automatic-releases@latest
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
