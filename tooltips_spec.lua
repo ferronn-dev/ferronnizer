@@ -1,6 +1,6 @@
 describe('tooltips', function()
   it('render health/power on player', function()
-    local t = wow.state.frames['GameTooltip']
+    local t = wow.env.GameTooltip
     t:SetUnit('player')
     local expected = {
       {l = 'Health', r = '1500/2000 (75.0%)'},
@@ -9,12 +9,12 @@ describe('tooltips', function()
     assert.same(expected, t.lines)
   end)
   it('does not crash on SetItem', function()
-    local t = wow.state.frames['GameTooltip']
+    local t = wow.env.GameTooltip
     t:SetItem(11122)
     assert.same({}, t.lines)
   end)
   it('does not crash on SetSpell', function()
-    local t = wow.state.frames['GameTooltip']
+    local t = wow.env.GameTooltip
     t:SetSpell(13819)
     assert.same({}, t.lines)
   end)
