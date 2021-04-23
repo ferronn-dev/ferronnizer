@@ -51,6 +51,10 @@ local buffSlotSpecification = {
       {
         spell = 'Divine Spirit',
         group = 'Prayer of Spirit',
+        classes = {
+          'Paladin', 'Mage', 'Warlock', 'Priest',
+          'Hunter', 'Druid', 'Shaman',
+        },
       },
     },
   },{
