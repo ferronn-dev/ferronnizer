@@ -311,16 +311,17 @@ end
 
 G.PreClickButton('BuffButton', '', function()
   local spell, unit = GetSpellToCast()
-  if not spell then
-    return ''
+  if spell and GetSpellCooldown(spell) == 0 and not select(2, IsUsableSpell(spell)) then
+    local spellName, _, _, castTime = GetSpellInfo(spell)
+    if castTime == 0 or GetUnitSpeed('player') == 0 then
+      local subtext = GetSpellSubtext(spell)
+      if subtext then
+        spellName = spellName .. '(' .. subtext .. ')'
+      end
+      print('Casting ' .. spellName .. ' on ' .. UnitName(unit) .. '.')
+      return '/stand\n/cancelform\n/cast [@' .. unit .. ']' .. spellName
+    end
   end
-  local spellName = GetSpellInfo(spell)
-  local subtext = GetSpellSubtext(spell)
-  if subtext then
-    spellName = spellName .. '(' .. subtext .. ')'
-  end
-  print('Casting ' .. spellName .. ' on ' .. UnitName(unit) .. '.')
-  return '/stand\n/cancelform\n/cast [@' .. unit .. ']' .. spellName
 end)
 
 G.PreClickButton('PartyBuffButton', '', function()
