@@ -180,6 +180,16 @@ local function makeButtons(actions)
         if action.texture then
           button.icon:SetTexture(action.texture)
         end
+        button:SetScript('OnEnter', (function()
+          local text = action.drink and 'Drink' or action.eat and 'Eat' or action.tooltip
+          return text and function()
+            GameTooltip:SetOwner(button, ANCHOR_NONE)
+            GameTooltip:SetText(text)
+          end
+        end)())
+        button:SetScript('OnLeave', function()
+          GameTooltip:Hide()
+        end)
         button:SetScript('OnEvent', (function()
           local handlers = {
             BAG_UPDATE_DELAYED = (function()
