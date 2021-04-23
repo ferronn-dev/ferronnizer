@@ -1,4 +1,4 @@
-local _, G = ...
+local addonName, G = ...
 G.Characters = G.Characters or {}
 G.Characters['Shydove-Westfall'] = {
   [1] = {
@@ -110,6 +110,9 @@ G.Characters['Shydove-Westfall'] = {
   },
   [33] = {
     spell = 'Resurrection',
+  },
+  [34] = {
+    macro = '/click ' .. addonName .. 'BuffButton',
   },
   [37] = {
     spell = 'Fishing',

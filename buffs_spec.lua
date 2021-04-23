@@ -80,3 +80,13 @@ describe('PartyBuffButton', function()
     assert.same({{ macro = '/shrug [@none]' }}, wow.state.commands)
   end)
 end)
+
+describe('buff button', function()
+  it('works', function()
+    wow.state.knownSpells = {10156}
+    wow.env.mooBuffButton:Click()
+    local macro = '/stand\n/cancelform\n/cast [@player]spell10156'
+    assert.same({{ macro = macro }}, wow.state.commands)
+    assert.same('Casting spell10156 on Kewhand.\n', wow.state.printed)
+  end)
+end)

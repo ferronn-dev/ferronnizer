@@ -1,4 +1,4 @@
-local _, G = ...
+local addonName, G = ...
 G.Characters = G.Characters or {}
 G.Characters['Pixli-Westfall'] = {
   [1] = {
@@ -39,7 +39,7 @@ G.Characters['Pixli-Westfall'] = {
     spell = 'Escape Artist',
   },
   [34] = {
-    macro = '/click PartyBuffButton',
+    macro = '/click ' .. addonName .. 'BuffButton',
   },
   [35] = {
     spell = 'Slow Fall',

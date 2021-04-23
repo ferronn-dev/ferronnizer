@@ -1,4 +1,4 @@
-local _, G = ...
+local addonName, G = ...
 
 G.TheTankUnit = ''
 G.Salvation = false
@@ -308,6 +308,20 @@ local function GetSpellToCast()
     end
   end
 end
+
+G.PreClickButton(addonName .. 'BuffButton', '', function()
+  local spell, unit = GetSpellToCast()
+  if not spell then
+    return ''
+  end
+  local spellName = GetSpellInfo(spell)
+  local subtext = GetSpellSubtext(spell)
+  if subtext then
+    spellName = spellName .. '(' .. subtext .. ')'
+  end
+  print('Casting ' .. spellName .. ' on ' .. UnitName(unit) .. '.')
+  return '/stand\n/cancelform\n/cast [@' .. unit .. ']' .. spellName
+end)
 
 G.PreClickButton('PartyBuffButton', '', function()
   local spell, unit = GetSpellToCast()
