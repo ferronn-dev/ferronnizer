@@ -1,12 +1,12 @@
 describe('PartyBuffButton', function()
   local assertCastSpell = function(spell)
-    wow.state.frames['PartyBuffButton']:Click()
+    wow.env.mooPartyBuffButton:Click()
     local macro = '/stand\n/cancelform\n/cast [@player]spell'..spell
     assert.same({{ macro = macro }}, wow.state.commands)
   end
 
   it('shrugs by default', function()
-    local button = wow.state.frames['PartyBuffButton']
+    local button = wow.env.mooPartyBuffButton
     button:Click()
     assert.same('macro', button:GetAttribute('type'))
     assert.same('', button:GetAttribute('macrotext'))
@@ -15,7 +15,7 @@ describe('PartyBuffButton', function()
 
   it('issues no commands in combat', function()
     wow.state:EnterCombat()
-    wow.state.frames['PartyBuffButton']:Click()
+    wow.env.mooPartyBuffButton:Click()
     assert.same({{ macro = '' }}, wow.state.commands)
   end)
 
@@ -26,7 +26,7 @@ describe('PartyBuffButton', function()
 
   it('shrugs if we know spells but cannot cast them', function()
     wow.state.knownSpells = {10157}
-    wow.state.frames['PartyBuffButton']:Click()
+    wow.env.mooPartyBuffButton:Click()
     assert.same({{ macro = '/shrug [@none]' }}, wow.state.commands)
   end)
 
@@ -76,7 +76,7 @@ describe('PartyBuffButton', function()
     wow.state.player.level = 60
     wow.state.buffs = {10157}
     wow.state.knownSpells = {10157, 10156}
-    wow.state.frames['PartyBuffButton']:Click()
+    wow.env.mooPartyBuffButton:Click()
     assert.same({{ macro = '/shrug [@none]' }}, wow.state.commands)
   end)
 end)

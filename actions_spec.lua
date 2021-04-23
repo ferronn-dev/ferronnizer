@@ -11,15 +11,15 @@ describe('Actions', function()
   end)
   it('toggles on click', function()
     wow.state:SendEvent('PLAYER_LOGIN')
-    wow.env.ToggleActionDragButton:Click()
-    wow.env.ToggleActionDragButton:Click()
+    wow.env.mooToggleActionDragButton:Click()
+    wow.env.mooToggleActionDragButton:Click()
   end)
   it('drinks', function()
     wow.state.player.name = 'Shydove'
     wow.state.realm = 'Westfall'
     wow.state:SendEvent('PLAYER_LOGIN')
     wow.env.mooActionButton46:Click()
-    local macro = '/click DrinkButton'
+    local macro = '/click mooDrinkButton'
     assert.same({{ macro = macro }}, wow.state.commands)
   end)
   it('makes the right amount of buttons', function()

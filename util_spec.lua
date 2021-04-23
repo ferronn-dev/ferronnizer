@@ -63,7 +63,7 @@ describe('utility functions', function()
         count = count + 1
         return 'cow' .. count
       end)
-      assert.equal(wow.env.Foo, button)
+      assert.equal(wow.env.mooFoo, button)
       button:Click()
       wow.state:EnterCombat()
       button:Click()

@@ -1,4 +1,4 @@
-local _, G = ...
+local addonName, G = ...
 
 function G.LocalToServer(t)
   return t ~= 0 and GetServerTime() + t - GetTime() or 0
@@ -53,7 +53,7 @@ do
 end
 
 function G.PreClickButton(name, default, func)
-  local button = CreateFrame('Button', name, nil, 'SecureActionButtonTemplate')
+  local button = CreateFrame('Button', addonName .. name, nil, 'SecureActionButtonTemplate')
   button:SetAttribute('type', 'macro')
   button:SetAttribute('macrotext', default)
   local lastemote = nil

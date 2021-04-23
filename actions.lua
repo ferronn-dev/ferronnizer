@@ -209,8 +209,9 @@ local function makeButtons(actions)
             handlers[ev](...)
           end
         end)())
+        local toClick = addonName .. (action.drink and 'Drink' or 'Eat') .. 'Button'
         button:SetAttribute('type', 'macro')
-        button:SetAttribute('macrotext', '/click ' .. (action.drink and 'Drink' or 'Eat') .. 'Button')
+        button:SetAttribute('macrotext', '/click ' .. toClick)
         return button
       else
         local button = LAB10:CreateButton(i, prefix .. i, header)

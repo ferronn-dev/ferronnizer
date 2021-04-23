@@ -1,4 +1,4 @@
-local _, G = ...
+local addonName, G = ...
 G.Characters = G.Characters or {}
 G.Characters['Kewhand-Westfall'] = {
   [1] = {
@@ -127,12 +127,12 @@ G.Characters['Kewhand-Westfall'] = {
     spell = 'Divine Intervention',
   },
   [43] = {
-    macro = '/click MountButton',
+    macro = '/click ' .. addonName .. 'MountButton',
     texture = 132261,
     tooltip = 'Mount',
   },
   [44] = {
-    macro = '/click FollowButton',
+    macro = '/click ' .. addonName .. 'FollowButton',
     texture = 132096,
     tooltip = 'Follow Me',
   },

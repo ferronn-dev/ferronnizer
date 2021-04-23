@@ -1,4 +1,4 @@
-local addonName, G = ...
+local _, G = ...
 
 G.TheTankUnit = ''
 G.Salvation = false
@@ -309,7 +309,7 @@ local function GetSpellToCast()
   end
 end
 
-G.PreClickButton(addonName .. 'BuffButton', '', function()
+G.PreClickButton('BuffButton', '', function()
   local spell, unit = GetSpellToCast()
   if not spell then
     return ''
