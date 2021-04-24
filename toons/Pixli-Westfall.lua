@@ -28,6 +28,14 @@ G.Characters['Pixli-Westfall'] = {
   [9] = {
     spell = 'Flamestrike',
   },
+  [13] = {
+    mouseover = true,
+    spell = 'Remove Lesser Curse',
+  },
+  [15] = {
+    mouseover = true,
+    spell = 'Amplify Magic',
+  },
   [16] = {
     mouseover = true,
     spell = 'Dampen Magic',
