@@ -172,7 +172,7 @@ local function makeButtons(actions)
             end
             return db[#db][1]  -- give up and return the last thing
           end
-          local item = computeItem()
+          local item
           local function currentItem() return item end
           local function updateItem()
             item = computeItem()
@@ -180,7 +180,9 @@ local function makeButtons(actions)
             button.Count:SetText(count > 9999 and '*' or count)
             button.icon:SetTexture(GetItemIcon(item))
             button.icon:Show()
+            button:SetAttribute('macrotext', '/use item:' .. item)
           end
+          updateItem()
           return currentItem, updateItem
         end)()
         button:SetScript('OnEnter', function()
@@ -224,13 +226,9 @@ local function makeButtons(actions)
           end
         end)())
         button:SetAttribute('type', 'macro')
-        button:SetAttribute('macrotext', (function()
-          if action.macro then
-            return action.macro
-          else
-            return '/click ' .. addonName .. (action.drink and 'Drink' or 'Eat') .. 'Button'
-          end
-        end)())
+        if action.macro then
+          button:SetAttribute('macrotext', action.macro)
+        end
         return button
       else
         local button = LAB10:CreateButton(i, prefix .. i, header)
