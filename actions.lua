@@ -158,9 +158,12 @@ local function makeButtons(actions)
         if action.texture then
           button.icon:SetTexture(action.texture)
         end
-        local getItem = (function()
+        local currentItem, updateItem = (function()
           local db = action.drink and G.DrinkDB or action.eat and G.FoodDB
-          return db and function()
+          if not db then
+            return nil, nil
+          end
+          local function computeItem()
             for _, consumable in ipairs(db) do
               local item = unpack(consumable)
               if GetItemCount(item) > 0 then
@@ -169,11 +172,21 @@ local function makeButtons(actions)
             end
             return db[#db][1]  -- give up and return the last thing
           end
+          local item = computeItem()
+          local function currentItem() return item end
+          local function updateItem()
+            item = computeItem()
+            local count = GetItemCount(item)
+            button.Count:SetText(count > 9999 and '*' or count)
+            button.icon:SetTexture(GetItemIcon(item))
+            button.icon:Show()
+          end
+          return currentItem, updateItem
         end)()
         button:SetScript('OnEnter', function()
           GameTooltip:SetOwner(button, ANCHOR_NONE)
-          if getItem then
-            GameTooltip:SetHyperlink('item:' .. getItem())
+          if currentItem then
+            GameTooltip:SetHyperlink('item:' .. currentItem())
           elseif action.tooltip then
             GameTooltip:SetText(action.tooltip)
           end
@@ -184,14 +197,14 @@ local function makeButtons(actions)
         button:SetScript('PostClick', function()
           button:SetChecked(false)
         end)
+        local pending = false
         button:SetScript('OnEvent', (function()
           local handlers = {
-            BAG_UPDATE_DELAYED = getItem and function()
-              local item = getItem()
-              local count = GetItemCount(item)
-              button.Count:SetText(count > 9999 and '*' or count)
-              button.icon:SetTexture(GetItemIcon(item))
-              button.icon:Show()
+            BAG_UPDATE_DELAYED = updateItem and function()
+              if InCombatLockdown() then pending = true else updateItem() end
+            end,
+            PLAYER_REGEN_ENABLED = updateItem and function()
+              if pending then updateItem() end
             end,
             UPDATE_BINDINGS = function()
               local key = _G.GetBindingKey('CLICK ' .. button:GetName() .. ':LeftButton')
