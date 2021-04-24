@@ -4,24 +4,13 @@ local libCount = LibStub('LibClassicSpellActionCount-1.0')
 
 -- TODO eliminate overlap with drink.lua
 local function getConsumable(db)
-  local function getItem()
-    for _, consumable in ipairs(db) do
-      local item = unpack(consumable)
-      if GetItemCount(item) > 0 then
-        return item
-      end
+  for _, consumable in ipairs(db) do
+    local item = unpack(consumable)
+    if GetItemCount(item) > 0 then
+      return item
     end
-    return db[#db][1]  -- give up and return the last thing
   end
-  local lastItem, lastTime
-  return function()
-    local now = GetTime()
-    if now ~= lastTime then
-      lastTime = now
-      lastItem = getItem()
-    end
-    return lastItem
-  end
+  return db[#db][1]  -- give up and return the last thing
 end
 
 local types = {
@@ -182,7 +171,7 @@ local function makeButtons(actions)
         end
         local getItem = (function()
           local db = action.drink and G.DrinkDB or action.eat and G.FoodDB
-          return db and getConsumable(db)
+          return db and function() getConsumable(db) end
         end)()
         button:SetScript('OnEnter', function()
           GameTooltip:SetOwner(button, ANCHOR_NONE)
