@@ -47,7 +47,7 @@ G.Characters['Pixli-Westfall'] = {
     spell = 'Escape Artist',
   },
   [34] = {
-    macro = '/click ' .. addonName .. 'BuffButton',
+    buff = true,
   },
   [35] = {
     spell = 'Slow Fall',

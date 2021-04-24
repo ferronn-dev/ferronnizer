@@ -112,7 +112,7 @@ G.Characters['Shydove-Westfall'] = {
     spell = 'Resurrection',
   },
   [34] = {
-    macro = '/click ' .. addonName .. 'BuffButton',
+    buff = true,
   },
   [37] = {
     spell = 'Fishing',

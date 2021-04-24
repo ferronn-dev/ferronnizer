@@ -143,7 +143,7 @@ local function makeButtons(actions)
   for i = 1, 48 do
     local action = actions[i]
     local button = (function()
-      if action and (action.drink or action.eat or action.macro) then
+      if action and (action.drink or action.eat or action.macro or action.buff) then
         local button = CreateFrame(
             'CheckButton', prefix .. i, header, 'ActionButtonTemplate, SecureActionButtonTemplate')
         button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
@@ -157,6 +157,8 @@ local function makeButtons(actions)
         end
         if action.texture then
           button.icon:SetTexture(action.texture)
+        elseif action.buff then
+          button.icon:SetTexture(135938)
         end
         local currentItem, updateItem = (function()
           local db = action.drink and G.DrinkDB or action.eat and G.FoodDB
@@ -228,6 +230,8 @@ local function makeButtons(actions)
         button:SetAttribute('type', 'macro')
         if action.macro then
           button:SetAttribute('macrotext', action.macro)
+        elseif action.buff then
+          button:SetAttribute('macrotext', '/click ' .. addonName .. 'BuffButton')
         end
         return button
       else
