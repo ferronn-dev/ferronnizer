@@ -205,10 +205,17 @@ local function makeButtons(actions)
         button:SetScript('OnEvent', (function()
           local handlers = {
             BAG_UPDATE_DELAYED = updateItem and function()
-              if InCombatLockdown() then pending = true else updateItem() end
+              if InCombatLockdown() then
+                pending = true
+              else
+                updateItem()
+              end
             end,
             PLAYER_REGEN_ENABLED = updateItem and function()
-              if pending then updateItem() end
+              if pending then
+                pending = false
+                updateItem()
+              end
             end,
             UPDATE_BINDINGS = function()
               local key = _G.GetBindingKey('CLICK ' .. button:GetName() .. ':LeftButton')
