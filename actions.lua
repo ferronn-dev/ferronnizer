@@ -279,7 +279,9 @@ local function makeCustomActionButtons(actions)
       elseif action then
         return makeCustomLabButton(i, action)
       else
-        return CreateFrame('Button', prefix .. i, header, 'ActionButtonTemplate')
+        local button = CreateFrame('Button', prefix .. i, header, 'ActionButtonTemplate')
+        button:Hide()
+        return button
       end
     end)()
     table.insert(buttons, button)
