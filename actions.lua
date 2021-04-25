@@ -129,6 +129,10 @@ local customLabTypes = {
 }
 
 local customTypes = function(button, action)
+  local function updateCount(item)
+    local count = GetItemCount(item)
+    button.Count:SetText(count > 9999 and '*' or count)
+  end
   local function consume(db)
     local function computeItem()
       for _, consumable in ipairs(db) do
@@ -142,8 +146,7 @@ local customTypes = function(button, action)
     local item
     local function updateItem()
       item = computeItem()
-      local count = GetItemCount(item)
-      button.Count:SetText(count > 9999 and '*' or count)
+      updateCount(item)
       button.icon:SetTexture(GetItemIcon(item))
       button.icon:Show()
       button:SetAttribute('macrotext', '/use item:' .. item)
@@ -175,7 +178,11 @@ local customTypes = function(button, action)
   end
   return {
     buff = {
-      handlers = {},
+      handlers = {
+        BAG_UPDATE_DELAYED = action.reagent and function()
+          updateCount(action.reagent)
+        end,
+      },
       init = function()
         button.icon:SetTexture(135938)
         button:SetAttribute('macrotext', '/click ' .. addonName .. 'BuffButton')
