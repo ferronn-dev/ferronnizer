@@ -1,6 +1,18 @@
 local addonName, G = ...
 
+local LAB10 = LibStub('LibActionButton-1.0')
+local keyBound = LibStub('LibKeyBound-1.0')
 local libCount = LibStub('LibClassicSpellActionCount-1.0')
+
+-- LAB bug
+G.Eventer({
+  BAG_UPDATE_DELAYED = function()
+    LAB10.eventFrame:GetScript('OnEvent')(LAB10.eventFrame, 'SPELL_UPDATE_CHARGES')
+  end,
+})
+
+local prefix = addonName .. 'ActionButton'
+local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
 
 local types = {
   default = {
@@ -116,17 +128,7 @@ local types = {
   },
 }
 
-local function makeButtons(actions)
-  local LAB10 = LibStub('LibActionButton-1.0')
-  local keyBound = LibStub('LibKeyBound-1.0')
-  -- LAB bug
-  G.Eventer({
-    BAG_UPDATE_DELAYED = function()
-      LAB10.eventFrame:GetScript('OnEvent')(LAB10.eventFrame, 'SPELL_UPDATE_CHARGES')
-    end,
-  })
-  local prefix = addonName .. 'ActionButton'
-  local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
+local function makeCustomActionButtons(actions)
   local buttonMixin = {}
   for k, v in pairs(types.default) do
     buttonMixin[k] = function(self, ...)
@@ -245,21 +247,42 @@ local function makeButtons(actions)
         local button = LAB10:CreateButton(i, prefix .. i, header)
         button:SetAttribute('state', 1)
         button:DisableDragNDrop(true)
-        if not action then
-          button:SetState(1, 'action', i)
-        else
-          Mixin(button, buttonMixin)
-          button:SetState(1, 'empty', i)
-          button:SetAttribute('type', 'macro')
-          button:SetAttribute('macrotext', button:GetMacroText())
-        end
+        Mixin(button, buttonMixin)
+        button:SetState(1, 'empty', i)
+        button:SetAttribute('type', 'macro')
+        button:SetAttribute('macrotext', button:GetMacroText())
         return button
       end
     end)()
-    button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
     table.insert(buttons, button)
   end
+  return buttons
+end
+
+local function makeOnlyLabButtons()
+  local buttons = {}
+  for i = 1, 48 do
+    local button = LAB10:CreateButton(i, prefix .. i, header)
+    button:SetAttribute('state', 1)
+    button:DisableDragNDrop(true)
+    button:SetState(1, 'action', i)
+    table.insert(buttons, button)
+  end
+  -- Only create toggle button when it's just LAB action buttons.
+  local dragNDropToggle = true
+  G.PreClickButton('ToggleActionDragButton', nil, function()
+    dragNDropToggle = not dragNDropToggle
+    for _, button in ipairs(buttons) do
+      button:DisableDragNDrop(dragNDropToggle)
+    end
+  end)
+  return buttons
+end
+
+local function makeButtons(actions)
+  local buttons = actions and makeCustomActionButtons(actions) or makeOnlyLabButtons()
   for i, button in ipairs(buttons) do
+    button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
     if i <= 36 then
       button:SetPoint('BOTTOM', buttons[i + 12], 'TOP')
     end
@@ -271,25 +294,13 @@ local function makeButtons(actions)
   end
   buttons[42]:SetPoint('BOTTOMRIGHT', UIParent, 'BOTTOM')
   buttons[43]:SetPoint('BOTTOMLEFT', UIParent, 'BOTTOM')
-  return buttons
 end
 
 G.Eventer({
   PLAYER_LOGIN = function()
     G.ReparentFrame(MainMenuBar)
     local charName = UnitName('player')..'-'..GetRealmName()
-    local actions = G.Characters[charName] or {}
-    local buttons = makeButtons(actions)
-    do
-      local dragNDropToggle = true
-      G.PreClickButton('ToggleActionDragButton', nil, function()
-        dragNDropToggle = not dragNDropToggle
-        for _, button in ipairs(buttons) do
-          if button:GetAttribute('labtype-1') == 'action' then
-            button:DisableDragNDrop(dragNDropToggle)
-          end
-        end
-      end)
-    end
+    local actions = G.Characters[charName]
+    makeButtons(actions)
   end,
 })
