@@ -128,28 +128,8 @@ local customLabTypes = {
   },
 }
 
-local function makeCustomActionButton(i, action)
-  local button = CreateFrame(
-      'CheckButton', prefix .. i, header, 'ActionButtonTemplate, SecureActionButtonTemplate')
-  button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
-  button.HotKey:SetVertexColor(0.75, 0.75, 0.75)
-  button.HotKey:SetPoint('TOPLEFT', button, 'TOPLEFT', -2, -4)
-  button.Count:SetFont(button.Count:GetFont(), 16, 'OUTLINE')
-  button:SetNormalTexture('Interface\\Buttons\\UI-Quickslot2')
-  button.NormalTexture:SetTexCoord(0, 0, 0, 0)
-  if action.actionText then
-    button.Name:SetText(action.actionText)
-  end
-  if action.texture then
-    button.icon:SetTexture(action.texture)
-  elseif action.buff then
-    button.icon:SetTexture(135938)
-  end
-  local currentItem, updateItem = (function()
-    local db = action.drink and G.DrinkDB or action.eat and G.FoodDB
-    if not db then
-      return nil, nil
-    end
+local customTypes = function(button, action)
+  local function consume(db)
     local function computeItem()
       for _, consumable in ipairs(db) do
         local item = unpack(consumable)
@@ -160,7 +140,6 @@ local function makeCustomActionButton(i, action)
       return db[#db][1]  -- give up and return the last thing
     end
     local item
-    local function currentItem() return item end
     local function updateItem()
       item = computeItem()
       local count = GetItemCount(item)
@@ -169,16 +148,81 @@ local function makeCustomActionButton(i, action)
       button.icon:Show()
       button:SetAttribute('macrotext', '/use item:' .. item)
     end
-    updateItem()
-    return currentItem, updateItem
+    local pending = false
+    return {
+      handlers = {
+        BAG_UPDATE_DELAYED = function()
+          if InCombatLockdown() then
+            pending = true
+          else
+            updateItem()
+          end
+        end,
+        PLAYER_REGEN_ENABLED = function()
+          if pending then
+            pending = false
+            updateItem()
+          end
+        end,
+      },
+      init = function()
+        updateItem()
+      end,
+      setTooltip = function()
+        GameTooltip:SetHyperlink('item:' .. item)
+      end,
+    }
+  end
+  return {
+    buff = {
+      handlers = {},
+      init = function()
+        button.icon:SetTexture(135938)
+        button:SetAttribute('macrotext', '/click ' .. addonName .. 'BuffButton')
+      end,
+      setTooltip = function()
+        GameTooltip:SetText('Buff')
+      end,
+    },
+    drink = consume(G.DrinkDB),
+    eat = consume(G.FoodDB),
+    macro = {
+      handlers = {},
+      init = function()
+        if action.actionText then
+          button.Name:SetText(action.actionText)
+        end
+        button.icon:SetTexture(action.texture)
+        button:SetAttribute('macrotext', action.macro)
+      end,
+      setTooltip = function()
+        GameTooltip:SetText(action.tooltip)
+      end,
+    },
+  }
+end
+
+local function makeCustomActionButton(i, action)
+  local button = CreateFrame(
+      'CheckButton', prefix .. i, header, 'ActionButtonTemplate, SecureActionButtonTemplate')
+  local ty = (function()
+    for t, v in pairs(customTypes(button, action)) do
+      if action[t] then
+        return v
+      end
+    end
   end)()
+  button:SetAttribute('type', 'macro')
+  button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
+  button.HotKey:SetVertexColor(0.75, 0.75, 0.75)
+  button.HotKey:SetPoint('TOPLEFT', button, 'TOPLEFT', -2, -4)
+  button.Count:SetFont(button.Count:GetFont(), 16, 'OUTLINE')
+  button:SetNormalTexture('Interface\\Buttons\\UI-Quickslot2')
+  button.NormalTexture:SetTexCoord(0, 0, 0, 0)
+  ty.init(button, action)
   button:SetScript('OnEnter', function()
     GameTooltip:SetOwner(button, ANCHOR_NONE)
-    if currentItem then
-      GameTooltip:SetHyperlink('item:' .. currentItem())
-    elseif action.tooltip then
-      GameTooltip:SetText(action.tooltip)
-    end
+    ty.setTooltip(action)
   end)
   button:SetScript('OnLeave', function()
     GameTooltip:Hide()
@@ -186,32 +230,8 @@ local function makeCustomActionButton(i, action)
   button:SetScript('PostClick', function()
     button:SetChecked(false)
   end)
-  local pending = false
   button:SetScript('OnEvent', (function()
-    local handlers = {
-      BAG_UPDATE_DELAYED = updateItem and function()
-        if InCombatLockdown() then
-          pending = true
-        else
-          updateItem()
-        end
-      end,
-      PLAYER_REGEN_ENABLED = updateItem and function()
-        if pending then
-          pending = false
-          updateItem()
-        end
-      end,
-      UPDATE_BINDINGS = function()
-        local key = _G.GetBindingKey('CLICK ' .. button:GetName() .. ':LeftButton')
-        if key then
-          button.HotKey:SetText(keyBound:ToShortKey(key))
-          button.HotKey:Show()
-        else
-          button.HotKey:Hide()
-        end
-      end,
-    }
+    local handlers = ty.handlers
     for ev in pairs(handlers) do
       button:RegisterEvent(ev)
     end
@@ -219,12 +239,6 @@ local function makeCustomActionButton(i, action)
       handlers[ev](...)
     end
   end)())
-  button:SetAttribute('type', 'macro')
-  if action.macro then
-    button:SetAttribute('macrotext', action.macro)
-  elseif action.buff then
-    button:SetAttribute('macrotext', '/click ' .. addonName .. 'BuffButton')
-  end
   return button
 end
 
@@ -270,6 +284,20 @@ local function makeCustomActionButtons(actions)
     end)()
     table.insert(buttons, button)
   end
+  -- Handle generic events separately from individual button OnEvent handlers.
+  G.Eventer({
+    UPDATE_BINDINGS = function()
+      for _, button in ipairs(buttons) do
+        local key = _G.GetBindingKey('CLICK ' .. button:GetName() .. ':LeftButton')
+        if key then
+          button.HotKey:SetText(keyBound:ToShortKey(key))
+          button.HotKey:Show()
+        else
+          button.HotKey:Hide()
+        end
+      end
+    end,
+  })
   return buttons
 end
 
