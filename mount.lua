@@ -1,6 +1,6 @@
 local _, G = ...
 local spells = {23214, 13819}
-local items = {8631, 8595, 8563, 13321}
+local items = {8631, 8595, 8563, 13321, 18778}
 local function GetMount()
   for _, spell in ipairs(spells) do
     if IsSpellKnown(spell) then

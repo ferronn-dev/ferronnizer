@@ -121,7 +121,7 @@ G.Characters['Shydove-Westfall'] = {
     spell = 'Mind Control',
   },
   [43] = {
-    item = 18778,
+    mount = true,
   },
   [44] = {
     item = 13446,
