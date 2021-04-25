@@ -129,18 +129,6 @@ local types = {
 }
 
 local function makeCustomActionButtons(actions)
-  local buttonMixin = {}
-  for k, v in pairs(types.default) do
-    buttonMixin[k] = function(self, ...)
-      local action = actions[self._state_action] or {}
-      for ty in pairs(types) do
-        if action[ty] and types[ty][k] then
-          return types[ty][k](action, ...)
-        end
-      end
-      return v(action, ...)
-    end
-  end
   local buttons = {}
   for i = 1, 48 do
     local action = actions[i]
@@ -243,15 +231,30 @@ local function makeCustomActionButtons(actions)
           button:SetAttribute('macrotext', '/click ' .. addonName .. 'BuffButton')
         end
         return button
-      else
+      elseif action then
         local button = LAB10:CreateButton(i, prefix .. i, header)
         button:SetAttribute('state', 1)
         button:DisableDragNDrop(true)
-        Mixin(button, buttonMixin)
+        Mixin(button, (function()
+          local buttonMixin = {}
+          for k, v in pairs(types.default) do
+            buttonMixin[k] = function(_, ...)
+              for ty in pairs(types) do
+                if action[ty] and types[ty][k] then
+                  return types[ty][k](action, ...)
+                end
+              end
+              return v(action, ...)
+            end
+          end
+          return buttonMixin
+        end)())
         button:SetState(1, 'empty', i)
         button:SetAttribute('type', 'macro')
         button:SetAttribute('macrotext', button:GetMacroText())
         return button
+      else
+        return CreateFrame('Button', prefix .. i, header, 'ActionButtonTemplate')
       end
     end)()
     table.insert(buttons, button)
