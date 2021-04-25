@@ -199,6 +199,16 @@ local customTypes = function(button, action)
         GameTooltip:SetText(action.tooltip)
       end,
     },
+    mount = {
+      handlers = {},
+      init = function()
+        button.icon:SetTexture(132261)
+        button:SetAttribute('macrotext', '/click ' .. addonName .. 'MountButton')
+      end,
+      setTooltip = function()
+        GameTooltip:SetText('Mount')
+      end,
+    },
   }
 end
 
@@ -274,14 +284,14 @@ local function makeCustomActionButtons(actions)
   for i = 1, 48 do
     local action = actions[i]
     local button = (function()
-      if action and (action.drink or action.eat or action.macro or action.buff) then
-        return makeCustomActionButton(i, action)
-      elseif action then
-        return makeCustomLabButton(i, action)
-      else
+      if not action then
         local button = CreateFrame('Button', prefix .. i, header, 'ActionButtonTemplate')
         button:Hide()
         return button
+      elseif action.item or action.spell then
+        return makeCustomLabButton(i, action)
+      else
+        return makeCustomActionButton(i, action)
       end
     end)()
     table.insert(buttons, button)

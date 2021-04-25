@@ -127,9 +127,7 @@ G.Characters['Kewhand-Westfall'] = {
     spell = 'Divine Intervention',
   },
   [43] = {
-    macro = '/click ' .. addonName .. 'MountButton',
-    texture = 132261,
-    tooltip = 'Mount',
+    mount = true,
   },
   [44] = {
     macro = '/click ' .. addonName .. 'FollowButton',
