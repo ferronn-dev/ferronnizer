@@ -14,7 +14,7 @@ G.Eventer({
 local prefix = addonName .. 'ActionButton'
 local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
 
-local types = {
+local customLabTypes = {
   default = {
     GetActionText = function(action)
       return action.actionText or ""
@@ -234,11 +234,11 @@ local function makeCustomLabButton(i, action)
   button:DisableDragNDrop(true)
   Mixin(button, (function()
     local buttonMixin = {}
-    for k, v in pairs(types.default) do
+    for k, v in pairs(customLabTypes.default) do
       local fn = (function()
-        for ty in pairs(types) do
-          if action[ty] and types[ty][k] then
-            return types[ty][k]
+        for ty in pairs(customLabTypes) do
+          if action[ty] and customLabTypes[ty][k] then
+            return customLabTypes[ty][k]
           end
         end
         return v
