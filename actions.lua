@@ -235,13 +235,16 @@ local function makeCustomLabButton(i, action)
   Mixin(button, (function()
     local buttonMixin = {}
     for k, v in pairs(types.default) do
-      buttonMixin[k] = function(_, ...)
+      local fn = (function()
         for ty in pairs(types) do
           if action[ty] and types[ty][k] then
-            return types[ty][k](action, ...)
+            return types[ty][k]
           end
         end
-        return v(action, ...)
+        return v
+      end)()
+      buttonMixin[k] = function(_, ...)
+        return fn(action, ...)
       end
     end
     return buttonMixin
