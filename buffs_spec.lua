@@ -79,6 +79,18 @@ describe('PartyBuffButton', function()
     wow.env.mooPartyBuffButton:Click()
     assert.same({{ macro = '/shrug [@none]' }}, wow.state.commands)
   end)
+
+  it('casts solo spells', function()
+    wow.state.knownSpells = {604}
+    assertCastSpell(604)
+  end)
+
+  it('does not cast solo spells in group', function()
+    wow.state.knownSpells = {604}
+    wow.state.inGroup = true
+    wow.env.mooPartyBuffButton:Click()
+    assert.same({{ macro = '/shrug [@none]' }}, wow.state.commands)
+  end)
 end)
 
 describe('buff button', function()

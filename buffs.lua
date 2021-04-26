@@ -144,6 +144,7 @@ for _, slotSpec in ipairs(buffSlotSpecification) do
   table.insert(thebuffdb, {
     buffs = buffs,
     self = slotSpec.self,
+    solo = slotSpec.solo,
   })
 end
 
@@ -221,7 +222,10 @@ local function GetBuffToCast(unit)
   local buffs = GetUnitBuffs(unit)
   for _, slot in ipairs(thebuffdb) do
     local id = (function()
-      if unit ~= 'player' and slot.self or (slot.solo and IsInGroup()) then
+      if unit ~= 'player' and (slot.self or slot.solo) then
+        return nil
+      end
+      if slot.solo and IsInGroup() then
         return nil
       end
       for _, buff in ipairs(slot.buffs) do
