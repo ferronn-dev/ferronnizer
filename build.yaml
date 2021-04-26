@@ -56,10 +56,13 @@ roots:
 sql:
   buffdb.sql:
   - BuffDB
-  fooddb.sql:
-  - FoodDB
   drinkdb.sql:
   - DrinkDB
+  fooddb.sql:
+  - FoodDB
+  potiondb.sql:
+  - HealthPotionDB
+  - ManaPotionDB
 toc:
   Interface: 11307
   Title: Ferronnizer
