@@ -140,7 +140,13 @@ local thebuffdb = (function()
               end
               return ranks
             end)(),
-            classes = buffSpec.classes,
+            classes = buffSpec.classes and (function()
+              local t = {}
+              for _, class in ipairs(buffSpec.classes) do
+                t[class] = true
+              end
+              return t
+            end)(),
             tank = buffSpec.tank,
             flag = buffSpec.flag,
           })
@@ -236,15 +242,8 @@ local function GetBuffToCast(unit)
       end
       for _, buff in ipairs(slot.buffs) do
         local id, skip = (function()
-          if buff.classes then
-            local unitClass = UnitClass(unit)
-            local found = false
-            for _, class in ipairs(buff.classes) do
-              found = found or unitClass == class
-            end
-            if not found then
-              return nil
-            end
+          if buff.classes and not buff.classes[UnitClass(unit)] then
+            return nil
           end
           if buff.tank ~= nil
               and buff.tank ~= UnitIsUnit(unit, G.TheTankUnit) then
