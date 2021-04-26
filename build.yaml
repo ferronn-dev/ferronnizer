@@ -4,6 +4,8 @@ deps:
   - toons/Kewhand-Westfall.lua
   - toons/Pixli-Westfall.lua
   - toons/Shydove-Westfall.lua
+  - drinkdb.lua
+  - fooddb.lua
   - util.lua
   addonbox.lua:
   - util.lua
