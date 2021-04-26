@@ -91,6 +91,19 @@ describe('PartyBuffButton', function()
     wow.env.mooPartyBuffButton:Click()
     assert.same({{ macro = '/shrug [@none]' }}, wow.state.commands)
   end)
+
+  it('casts when player class is in class list', function()
+    wow.state.player.class = 2
+    wow.state.knownSpells = {14752}
+    assertCastSpell(14752)
+  end)
+
+  it('does not cast when player class is not in class list', function()
+    wow.state.player.class = 1
+    wow.state.knownSpells = {14752}
+    wow.env.mooPartyBuffButton:Click()
+    assert.same({{ macro = '/shrug [@none]' }}, wow.state.commands)
+  end)
 end)
 
 describe('buff button', function()
