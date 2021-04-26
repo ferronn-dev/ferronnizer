@@ -115,38 +115,44 @@ local buffSlotSpecification = {
   },
 }
 
-local function rankInfo(rank)
-  local id, level, reagent = unpack(rank)
-  return { id = id, level = level, reagent = reagent }
-end
-
-local thebuffdb = {}
-for _, slotSpec in ipairs(buffSlotSpecification) do
-  local buffs = {}
-  for _, buffSpec in ipairs(slotSpec.buffs) do
-    local spellData = G.BuffDB[buffSpec.spell]
-    local groupData = buffSpec.group and G.BuffDB[buffSpec.group] or {}
-    assert(#spellData >= #groupData)
-    local ranks = {}
-    for i = 1, #spellData do
-      table.insert(ranks, {
-        spell = rankInfo(spellData[i]),
-        group = groupData[i] and rankInfo(groupData[i]) or nil
-      })
-    end
-    table.insert(buffs, {
-      ranks = ranks,
-      classes = buffSpec.classes,
-      tank = buffSpec.tank,
-      flag = buffSpec.flag,
+local thebuffdb = (function()
+  local function rankInfo(rank)
+    local id, level, reagent = unpack(rank)
+    return { id = id, level = level, reagent = reagent }
+  end
+  local thebuffdb = {}
+  for _, slotSpec in ipairs(buffSlotSpecification) do
+    table.insert(thebuffdb, {
+      buffs = (function()
+        local buffs = {}
+        for _, buffSpec in ipairs(slotSpec.buffs) do
+          table.insert(buffs, {
+            ranks = (function()
+              local spellData = G.BuffDB[buffSpec.spell]
+              local groupData = buffSpec.group and G.BuffDB[buffSpec.group] or {}
+              assert(#spellData >= #groupData)
+              local ranks = {}
+              for i = 1, #spellData do
+                table.insert(ranks, {
+                  spell = rankInfo(spellData[i]),
+                  group = groupData[i] and rankInfo(groupData[i]) or nil
+                })
+              end
+              return ranks
+            end)(),
+            classes = buffSpec.classes,
+            tank = buffSpec.tank,
+            flag = buffSpec.flag,
+          })
+        end
+        return buffs
+      end)(),
+      self = slotSpec.self,
+      solo = slotSpec.solo,
     })
   end
-  table.insert(thebuffdb, {
-    buffs = buffs,
-    self = slotSpec.self,
-    solo = slotSpec.solo,
-  })
-end
+  return thebuffdb
+end)()
 
 local function GetUnitBuffs(unit)
   local result = {}
