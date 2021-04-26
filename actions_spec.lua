@@ -17,10 +17,8 @@ describe('Actions', function()
   it('drinks', function()
     wow.state.player.name = 'Shydove'
     wow.state.realm = 'Westfall'
-    wow.state.inventory[8079] = 2
     wow.state:SendEvent('PLAYER_LOGIN')
-    wow.env.mooActionButton46:Click()
-    assert.same({{ macro = '/use item:8079' }}, wow.state.commands)
+    assert.same('/use ', wow.env.mooActionButton46:GetAttribute('macrotext'):sub(1, 5))
   end)
   it('makes the right amount of buttons', function()
     wow.state:SendEvent('PLAYER_LOGIN')

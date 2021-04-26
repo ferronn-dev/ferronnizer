@@ -121,29 +121,24 @@ local function customTypes(button, action)
       updateCount(item)
       button.icon:SetTexture(GetItemIcon(item))
       button.icon:Show()
-      button:SetAttribute('macrotext', '/use item:' .. item)
     end
-    local pending = false
     return {
       getCooldown = function()
         return GetItemCooldown(item)
       end,
       handlers = {
         BAG_UPDATE_DELAYED = function()
-          if InCombatLockdown() then
-            pending = true
-          else
-            updateItem()
-          end
-        end,
-        PLAYER_REGEN_ENABLED = function()
-          if pending then
-            pending = false
-            updateItem()
-          end
+          updateItem()
         end,
       },
       init = function()
+        button:SetAttribute('macrotext', (function()
+          local s = ''
+          for _, consumable in ipairs(db) do
+            s = s .. '/use item:' .. consumable[1] .. '\n'
+          end
+          return s
+        end)())
         updateItem()
       end,
       setTooltip = function()
