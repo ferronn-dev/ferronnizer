@@ -153,6 +153,9 @@ local customTypes = function(button, action)
     end
     local pending = false
     return {
+      getCooldown = function()
+        return GetItemCooldown(item)
+      end,
       handlers = {
         BAG_UPDATE_DELAYED = function()
           if InCombatLockdown() then
@@ -176,8 +179,12 @@ local customTypes = function(button, action)
       end,
     }
   end
+  local function getGcdCooldown()
+    return GetSpellCooldown(29515)
+  end
   return {
     buff = {
+      getCooldown = getGcdCooldown,
       handlers = {
         BAG_UPDATE_DELAYED = action.reagent and function()
           updateCount(action.reagent)
@@ -194,6 +201,7 @@ local customTypes = function(button, action)
     drink = consume(G.DrinkDB),
     eat = consume(G.FoodDB),
     macro = {
+      getCooldown = function() end,
       handlers = {},
       init = function()
         if action.actionText then
@@ -207,6 +215,7 @@ local customTypes = function(button, action)
       end,
     },
     mount = {
+      getCooldown = getGcdCooldown,
       handlers = {},
       init = function()
         button.icon:SetTexture(132261)
@@ -256,7 +265,7 @@ local function makeCustomActionButton(i, action)
       handlers[ev](...)
     end
   end)())
-  return button
+  return button, ty
 end
 
 local function makeCustomLabButton(i, action)
@@ -288,9 +297,10 @@ end
 
 local function makeCustomActionButtons(actions)
   local buttons = {}
+  local customActionButtons = {}
   for i = 1, 48 do
     local action = actions[i]
-    local button = (function()
+    local button, ty = (function()
       if not action then
         local button = CreateFrame('Button', prefix .. i, header, 'ActionButtonTemplate')
         button:Hide()
@@ -302,11 +312,18 @@ local function makeCustomActionButtons(actions)
       end
     end)()
     table.insert(buttons, button)
+    customActionButtons[button] = ty
   end
   -- Handle generic events separately from individual button OnEvent handlers.
   G.Eventer({
+    SPELL_UPDATE_COOLDOWN = function()
+      for button, ty in pairs(customActionButtons) do
+        local start, duration, enable, modRate = ty.getCooldown()
+        _G.CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
+      end
+    end,
     UPDATE_BINDINGS = function()
-      for _, button in ipairs(buttons) do
+      for button in pairs(customActionButtons) do
         local key = _G.GetBindingKey('CLICK ' .. button:GetName() .. ':LeftButton')
         if key then
           button.HotKey:SetText(keyBound:ToShortKey(key))
