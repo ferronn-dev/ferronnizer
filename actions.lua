@@ -15,43 +15,6 @@ local prefix = addonName .. 'ActionButton'
 local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
 
 local customLabTypes = {
-  default = {
-    GetActionText = function(action)
-      return action.actionText or ""
-    end,
-    GetCooldown = function()
-      return 0, 0, 0
-    end,
-    GetCount = function()
-      return 0
-    end,
-    GetMacroText = function()
-      return ''
-    end,
-    GetTexture = function(action)
-      return action.texture
-    end,
-    HasAction = function()
-      return true
-    end,
-    IsConsumableOrStackable = function()
-      return false
-    end,
-    IsCurrentlyActive = function()
-      return false
-    end,
-    IsUnitInRange = function()
-      return nil
-    end,
-    IsUsable = function()
-      return false
-    end,
-    SetTooltip = function(action)
-      if action.tooltip then
-        return GameTooltip:SetText(action.tooltip)
-      end
-    end,
-  },
   item = {
     GetCooldown = function(action)
       return GetItemCooldown(action.item)
@@ -64,6 +27,9 @@ local customLabTypes = {
     end,
     GetTexture = function(action)
       return GetItemIcon(action.item)
+    end,
+    HasAction = function()
+      return true
     end,
     IsConsumableOrStackable = function(action)
       -- LAB bug
@@ -84,6 +50,9 @@ local customLabTypes = {
     end,
   },
   spell = {
+    GetActionText = function(action)
+      return action.actionText or ""
+    end,
     GetCooldown = function(action)
       return GetSpellCooldown(action.spell)
     end,
@@ -99,6 +68,9 @@ local customLabTypes = {
     end,
     GetTexture = function(action)
       return GetSpellTexture(action.spell)
+    end,
+    HasAction = function()
+      return true
     end,
     IsConsumableOrStackable = function(action)
       return IsConsumableSpell(action.spell)
@@ -128,7 +100,7 @@ local customLabTypes = {
   },
 }
 
-local customTypes = function(button, action)
+local function customTypes(button, action)
   local function updateCount(item)
     local count = GetItemCount(item)
     button.Count:SetText(count > 9999 and '*' or count)
@@ -228,16 +200,18 @@ local customTypes = function(button, action)
   }
 end
 
+local function getType(action, types)
+  for k, v in pairs(types) do
+    if action[k] then
+      return v
+    end
+  end
+end
+
 local function makeCustomActionButton(i, action)
   local button = CreateFrame(
       'CheckButton', prefix .. i, header, 'ActionButtonTemplate, SecureActionButtonTemplate')
-  local ty = (function()
-    for t, v in pairs(customTypes(button, action)) do
-      if action[t] then
-        return v
-      end
-    end
-  end)()
+  local ty = getType(action, customTypes(button, action))
   button:SetAttribute('type', 'macro')
   button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
   button.HotKey:SetVertexColor(0.75, 0.75, 0.75)
@@ -268,23 +242,15 @@ local function makeCustomActionButton(i, action)
   return button, ty
 end
 
-local function makeCustomLabButton(i, action)
+local function makeCustomLabButton(i, action, ty)
   local button = LAB10:CreateButton(i, prefix .. i, header)
   button:SetAttribute('state', 1)
   button:DisableDragNDrop(true)
   Mixin(button, (function()
     local buttonMixin = {}
-    for k, v in pairs(customLabTypes.default) do
-      local fn = (function()
-        for ty in pairs(customLabTypes) do
-          if action[ty] and customLabTypes[ty][k] then
-            return customLabTypes[ty][k]
-          end
-        end
-        return v
-      end)()
+    for k, v in pairs(ty) do
       buttonMixin[k] = function(_, ...)
-        return fn(action, ...)
+        return v(action, ...)
       end
     end
     return buttonMixin
@@ -305,8 +271,10 @@ local function makeCustomActionButtons(actions)
         local button = CreateFrame('Button', prefix .. i, header, 'ActionButtonTemplate')
         button:Hide()
         return button
-      elseif action.item or action.spell then
-        return makeCustomLabButton(i, action)
+      end
+      local labType = getType(action, customLabTypes)
+      if labType then
+        return makeCustomLabButton(i, action, labType)
       else
         return makeCustomActionButton(i, action)
       end
