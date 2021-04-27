@@ -108,7 +108,8 @@ G.Characters['Kewhand-Westfall'] = {
     spell = 'Blessing of Sacrifice',
   },
   [34] = {
-    spell = 'Blessing of Salvation',
+    buff = true,
+    reagent = 21177,
   },
   [35] = {
     spell = 'Blessing of Wisdom',
@@ -117,7 +118,10 @@ G.Characters['Kewhand-Westfall'] = {
     spell = 'Blessing of Light',
   },
   [39] = {
-    spell = 'Smelting',
+    spell = 'Blessing of Kings',
+  },
+  [40] = {
+    spell = 'Blessing of Salvation',
   },
   [41] = {
     mouseover = true,
@@ -135,10 +139,10 @@ G.Characters['Kewhand-Westfall'] = {
     tooltip = 'Follow Me',
   },
   [45] = {
-    item = 6948,
+    eat = true,
   },
   [46] = {
-    spell = 'Blessing of Kings',
+    drink = true,
   },
   [47] = {
     spell = 'Greater Blessing of Kings',
