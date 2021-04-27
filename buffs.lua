@@ -71,6 +71,9 @@ local buffSlotSpecification = {
     },
     self = true,
   },{
+    buffs = { { spell = 'Mana Shield' } },
+    self = true,
+  },{
     buffs = {
       {
         spell = 'Mark of the Wild',

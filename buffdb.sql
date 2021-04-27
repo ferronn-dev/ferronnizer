@@ -50,6 +50,7 @@ WHERE
         'Ice Barrier',
         'Inner Fire',
         'Mage Armor',
+        'Mana Shield',
         'Mark of the Wild',
         'Power Word: Fortitude',
         'Prayer of Fortitude',
