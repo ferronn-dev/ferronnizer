@@ -193,17 +193,58 @@ local function customTypes(button, action)
         GameTooltip:SetText(action.tooltip)
       end,
     },
-    mount = {
-      getCooldown = getGcdCooldown,
-      handlers = {},
-      init = function()
+    mount = (function()
+      local spells = {23214, 13819}
+      local items = {8631, 8595, 8563, 13321, 18778}
+      local tooltipFn
+      local function updateMacro(text)
+        if not InCombatLockdown() then
+          button:SetAttribute('macrotext', '/stand\n/cancelform\n' .. text)
+        end
+      end
+      local function update()
+        for _, spell in ipairs(spells) do
+          if IsSpellKnown(spell) then
+            updateMacro('/cast ' .. GetSpellInfo(spell))
+            button.icon:SetTexture(GetSpellTexture(spell))
+            tooltipFn = function()
+              GameTooltip:SetSpellByID(spell)
+            end
+            return
+          end
+        end
+        for _, item in ipairs(items) do
+          if GetItemCount(item) > 0 then
+            updateMacro('/use item:' .. item)
+            button.icon:SetTexture(GetItemIcon(item))
+            tooltipFn = function()
+              GameTooltip:SetHyperlink('item:' .. item)
+            end
+            return
+          end
+        end
+        updateMacro('')
         button.icon:SetTexture(132261)
-        button:SetAttribute('macrotext', '/click ' .. addonName .. 'MountButton')
-      end,
-      setTooltip = function()
-        GameTooltip:SetText('Mount')
-      end,
-    },
+        tooltipFn = function()
+          GameTooltip:SetText('No mount... yet.')
+        end
+      end
+      return {
+        getCooldown = getGcdCooldown,
+        handlers = {
+          BAG_UPDATE_DELAYED = update,
+          PLAYER_REGEN_DISABLED = function()
+            button:SetAttribute('macrotext', '/dismount')
+          end,
+          PLAYER_REGEN_ENABLED = update,
+          SPELLS_CHANGED = update,
+        },
+        init = update,
+        setTooltip = function()
+          tooltipFn()
+        end,
+      }
+    end)(),
   }
 end
 
