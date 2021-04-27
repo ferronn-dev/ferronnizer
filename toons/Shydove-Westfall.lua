@@ -124,11 +124,8 @@ G.Characters['Shydove-Westfall'] = {
   [43] = {
     mount = true,
   },
-  [44] = {
-    item = 13446,
-  },
   [45] = {
-    item = 13444,
+    eat = true,
   },
   [46] = {
     drink = true,
