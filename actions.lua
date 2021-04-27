@@ -105,15 +105,23 @@ local function customTypes(button, action)
     local count = GetItemCount(item)
     button.Count:SetText(count > 9999 and '*' or count)
   end
-  local function consume(db)
-    local function computeItem()
+  local function consume(mealDB, potionDB)
+    local function macroText(db)
+      local s = ''
       for _, consumable in ipairs(db) do
+        s = s .. '/use item:' .. consumable[1] .. '\n'
+      end
+      return s
+    end
+    local currentDB
+    local function computeItem()
+      for _, consumable in ipairs(currentDB) do
         local item = unpack(consumable)
         if GetItemCount(item) > 0 then
           return item
         end
       end
-      return db[#db][1]  -- give up and return the last thing
+      return currentDB[#currentDB][1]  -- give up and return the last thing
     end
     local item
     local function updateItem()
@@ -121,6 +129,11 @@ local function customTypes(button, action)
       updateCount(item)
       button.icon:SetTexture(GetItemIcon(item))
       button.icon:Show()
+    end
+    local function updateDB(db)
+      currentDB = db
+      button:SetAttribute('macrotext', macroText(db))
+      updateItem()
     end
     return {
       getCooldown = function()
@@ -130,16 +143,15 @@ local function customTypes(button, action)
         BAG_UPDATE_DELAYED = function()
           updateItem()
         end,
+        PLAYER_REGEN_DISABLED = function()
+          updateDB(potionDB)
+        end,
+        PLAYER_REGEN_ENABLED = function()
+          updateDB(mealDB)
+        end,
       },
       init = function()
-        button:SetAttribute('macrotext', (function()
-          local s = ''
-          for _, consumable in ipairs(db) do
-            s = s .. '/use item:' .. consumable[1] .. '\n'
-          end
-          return s
-        end)())
-        updateItem()
+        updateDB(mealDB)
       end,
       setTooltip = function()
         GameTooltip:SetHyperlink('item:' .. item)
@@ -165,8 +177,8 @@ local function customTypes(button, action)
         GameTooltip:SetText('Buff')
       end,
     },
-    drink = consume(G.DrinkDB),
-    eat = consume(G.FoodDB),
+    drink = consume(G.DrinkDB, G.ManaPotionDB),
+    eat = consume(G.FoodDB, G.HealthPotionDB),
     macro = {
       getCooldown = function() end,
       handlers = {},
