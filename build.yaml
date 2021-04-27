@@ -3,6 +3,7 @@ deps:
   actions.lua:
   - drinkdb.lua
   - fooddb.lua
+  - potiondb.lua
   - toons/Kewhand-Westfall.lua
   - toons/Pixli-Westfall.lua
   - toons/Shydove-Westfall.lua
