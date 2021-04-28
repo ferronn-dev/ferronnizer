@@ -167,7 +167,13 @@ local function customTypes(button, action)
           update()
         end,
         setTooltip = function()
-          GameTooltip:SetInventoryItem('player', action.invslot)
+          local item = GetInventoryItemID('player', action.invslot)
+          local spell = item and select(2, _G.GetItemSpell(item))
+          if spell and _G.IsShiftKeyDown() then
+            GameTooltip:SetSpellByID(spell)
+          else
+            GameTooltip:SetInventoryItem('player', action.invslot)
+          end
         end,
       }
     end)(),
