@@ -15,40 +15,6 @@ local prefix = addonName .. 'ActionButton'
 local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
 
 local customLabTypes = {
-  item = {
-    GetCooldown = function(action)
-      return GetItemCooldown(action.item)
-    end,
-    GetCount = function(action)
-      return GetItemCount(action.item)
-    end,
-    GetMacroText = function(action)
-      return '/use item:'..action.item
-    end,
-    GetTexture = function(action)
-      return GetItemIcon(action.item)
-    end,
-    HasAction = function()
-      return true
-    end,
-    IsConsumableOrStackable = function(action)
-      -- LAB bug
-      local stack = select(8, GetItemInfo(action.item))
-      return IsConsumableItem(action.item) or (stack and stack > 1)
-    end,
-    IsCurrentlyActive = function(action)
-      return IsCurrentItem(action.item)
-    end,
-    IsUnitInRange = function(action, unit)
-      return IsItemInRange(action.item, unit)
-    end,
-    IsUsable = function(action)
-      return IsUsableItem(action.item)
-    end,
-    SetTooltip = function(action)
-      return GameTooltip:SetHyperlink('item:'..action.item)
-    end,
-  },
   spell = {
     GetActionText = function(action)
       return action.actionText or ""
