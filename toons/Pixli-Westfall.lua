@@ -70,6 +70,9 @@ G.Characters['Pixli-Westfall'] = {
   [36] = {
     spell = 'Slow Fall',
   },
+  [43] = {
+    mount = true,
+  },
   [45] = {
     eat = true,
   },
