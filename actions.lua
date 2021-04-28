@@ -146,11 +146,7 @@ local function customTypes(button, action)
     invslot = (function()
       local function updateIcon()
         local item = GetInventoryItemID('player', action.invslot)
-        if item then
-          button.icon:SetTexture(GetItemIcon(item))
-        else
-          button.icon:SetTexture('Interface\\Buttons\\UI-Slot-Background')
-        end
+        button.icon:SetTexture(item and GetItemIcon(item) or 136528)
       end
       return {
         getCooldown = function()

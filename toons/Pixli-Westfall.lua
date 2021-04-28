@@ -53,9 +53,15 @@ G.Characters['Pixli-Westfall'] = {
     spell = 'Escape Artist',
   },
   [19] = {
-    spell = 'Cold Snap',
+    invslot = 13,
   },
   [20] = {
+    invslot = 14,
+  },
+  [21] = {
+    spell = 'Cold Snap',
+  },
+  [22] = {
     spell = 'Evocation',
   },
   [25] = {
