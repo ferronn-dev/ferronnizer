@@ -1,22 +1,27 @@
-describe('PartyBuffButton', function()
-  local assertCastSpell = function(spell)
-    wow.env.mooPartyBuffButton:Click()
+describe('BuffButton', function()
+  local function assertCastSpell(spell)
+    wow.env.mooBuffButton:Click()
     local macro = '/stand\n/cancelform\n/cast [@player]spell'..spell
+    assert.same('Casting spell' .. spell .. ' on Kewhand.\n', wow.state.printed)
     assert.same({{ macro = macro }}, wow.state.commands)
   end
 
-  it('shrugs by default', function()
-    local button = wow.env.mooPartyBuffButton
-    button:Click()
+  local function assertNoCast()
+    wow.env.mooBuffButton:Click()
+    assert.same('', wow.state.printed)
+    assert.same({{ macro = '' }}, wow.state.commands)
+  end
+
+  it('does nothing by default', function()
+    local button = wow.env.mooBuffButton
+    assertNoCast()
     assert.same('macro', button:GetAttribute('type'))
     assert.same('', button:GetAttribute('macrotext'))
-    assert.same({{ macro = '/shrug [@none]' }}, wow.state.commands)
   end)
 
   it('issues no commands in combat', function()
     wow.state:EnterCombat()
-    wow.env.mooPartyBuffButton:Click()
-    assert.same({{ macro = '' }}, wow.state.commands)
+    assertNoCast()
   end)
 
   it('can cast tracking spells', function()
@@ -24,10 +29,9 @@ describe('PartyBuffButton', function()
     assertCastSpell(2580)
   end)
 
-  it('shrugs if we know spells but cannot cast them', function()
+  it('does nothing if we know spells but cannot cast them', function()
     wow.state.knownSpells = {10157}
-    wow.env.mooPartyBuffButton:Click()
-    assert.same({{ macro = '/shrug [@none]' }}, wow.state.commands)
+    assertNoCast()
   end)
 
   it('casts first available rank', function()
@@ -76,8 +80,7 @@ describe('PartyBuffButton', function()
     wow.state.player.level = 60
     wow.state.buffs = {10157}
     wow.state.knownSpells = {10157, 10156}
-    wow.env.mooPartyBuffButton:Click()
-    assert.same({{ macro = '/shrug [@none]' }}, wow.state.commands)
+    assertNoCast()
   end)
 
   it('casts solo spells', function()
@@ -88,8 +91,7 @@ describe('PartyBuffButton', function()
   it('does not cast solo spells in group', function()
     wow.state.knownSpells = {604}
     wow.state.inGroup = true
-    wow.env.mooPartyBuffButton:Click()
-    assert.same({{ macro = '/shrug [@none]' }}, wow.state.commands)
+    assertNoCast()
   end)
 
   it('casts when player class is in class list', function()
@@ -101,17 +103,6 @@ describe('PartyBuffButton', function()
   it('does not cast when player class is not in class list', function()
     wow.state.player.class = 1
     wow.state.knownSpells = {14752}
-    wow.env.mooPartyBuffButton:Click()
-    assert.same({{ macro = '/shrug [@none]' }}, wow.state.commands)
-  end)
-end)
-
-describe('buff button', function()
-  it('works', function()
-    wow.state.knownSpells = {10156}
-    wow.env.mooBuffButton:Click()
-    local macro = '/stand\n/cancelform\n/cast [@player]spell10156'
-    assert.same({{ macro = macro }}, wow.state.commands)
-    assert.same('Casting spell10156 on Kewhand.\n', wow.state.printed)
+    assertNoCast()
   end)
 end)

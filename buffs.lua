@@ -335,26 +335,3 @@ G.PreClickButton('BuffButton', '', function()
     end
   end
 end)
-
-G.PreClickButton('PartyBuffButton', '', function()
-  local spell, unit = GetSpellToCast()
-  if not spell then
-    return nil, 'shrug'
-  end
-  if GetSpellCooldown(spell) ~= 0 then
-    return nil, 'yawn'
-  end
-  local _, nomana = IsUsableSpell(spell)
-  if nomana then
-    return nil, 'oom'
-  end
-  local spellName, _, _, castTime = GetSpellInfo(spell)
-  if castTime > 0 and GetUnitSpeed('player') > 0 then
-    return nil, 'crack'
-  end
-  local subtext = GetSpellSubtext(spell)
-  if subtext then
-    spellName = spellName..'('..subtext..')'
-  end
-  return '/stand\n/cancelform\n/cast [@'.. unit..']'..spellName
-end)
