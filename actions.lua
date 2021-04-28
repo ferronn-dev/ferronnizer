@@ -64,6 +64,11 @@ local labSpell = {
   end,
 }
 
+local function updateCooldown(button, cdfn)
+  local start, duration, enable, modRate = cdfn()
+  _G.CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
+end
+
 local function customTypes(button, action)
   local function updateCount(item)
     local count = GetItemCount(item)
@@ -88,9 +93,13 @@ local function customTypes(button, action)
       return currentDB[#currentDB][1]  -- give up and return the last thing
     end
     local item
+    local function getCooldown()
+      return GetItemCooldown(item)
+    end
     local function updateItem()
       item = computeItem()
       updateCount(item)
+      updateCooldown(button, getCooldown)
       button.icon:SetTexture(GetItemIcon(item))
       button.icon:Show()
     end
@@ -100,9 +109,7 @@ local function customTypes(button, action)
       updateItem()
     end
     return {
-      getCooldown = function()
-        return GetItemCooldown(item)
-      end,
+      getCooldown = getCooldown,
       handlers = {
         BAG_UPDATE_DELAYED = function()
           updateItem()
@@ -144,6 +151,9 @@ local function customTypes(button, action)
     drink = consume(G.DrinkDB, G.ManaPotionDB),
     eat = consume(G.FoodDB, G.HealthPotionDB),
     invslot = (function()
+      local function getCooldown()
+        return _G.GetInventoryItemCooldown('player', action.invslot)
+      end
       local function update()
         local item = GetInventoryItemID('player', action.invslot)
         button.icon:SetTexture(item and GetItemIcon(item) or 136528)
@@ -154,11 +164,10 @@ local function customTypes(button, action)
           button:Disable()
           button.icon:SetVertexColor(0.4, 0.4, 0.4)
         end
+        updateCooldown(button, getCooldown)
       end
       return {
-        getCooldown = function()
-          return _G.GetInventoryItemCooldown('player', action.invslot)
-        end,
+        getCooldown = getCooldown,
         handlers = {
           PLAYER_EQUIPMENT_CHANGED = update,
         },
@@ -337,8 +346,7 @@ local function makeCustomActionButtons(actions)
   G.Eventer({
     SPELL_UPDATE_COOLDOWN = function()
       for button, ty in pairs(customActionButtons) do
-        local start, duration, enable, modRate = ty.getCooldown()
-        _G.CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
+        updateCooldown(button, ty.getCooldown)
       end
     end,
     UPDATE_BINDINGS = function()
