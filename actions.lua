@@ -14,56 +14,54 @@ G.Eventer({
 local prefix = addonName .. 'ActionButton'
 local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
 
-local customLabTypes = {
-  spell = {
-    GetActionText = function(action)
-      return action.actionText or ""
-    end,
-    GetCooldown = function(action)
-      return GetSpellCooldown(action.spell)
-    end,
-    GetCount = function(action)
-      -- LAB bug
-      return libCount:GetSpellReagentCount(action.spell)
-    end,
-    GetMacroText = function(action)
-      return (
-         '/dismount\n/stand\n/cast'..
-         (action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
-         action.spell)
-    end,
-    GetTexture = function(action)
-      return GetSpellTexture(action.spell)
-    end,
-    HasAction = function()
-      return true
-    end,
-    IsConsumableOrStackable = function(action)
-      return IsConsumableSpell(action.spell)
-    end,
-    IsCurrentlyActive = function(action)
-      return IsCurrentSpell(action.spell)
-    end,
-    IsUnitInRange = function(action, unit)
-      local id = select(7, GetSpellInfo(action.spell))
-      local slot = FindSpellBookSlotBySpellID(id)
-      return IsSpellInRange(slot, 'spell', unit)
-    end,
-    IsUsable = function(action)
-      return IsUsableSpell(action.spell)
-    end,
-    SetTooltip = function(action)
-      local id = select(7, GetSpellInfo(action.spell))
-      GameTooltip:SetSpellByID(id)
-      local subtext = GetSpellSubtext(id)
-      if subtext then
-        GameTooltipTextRight1:SetText(subtext)
-        GameTooltipTextRight1:SetTextColor(0.5, 0.5, 0.5)
-        GameTooltipTextRight1:Show()
-        GameTooltip:Show()
-      end
-    end,
-  },
+local labSpell = {
+  GetActionText = function(action)
+    return action.actionText or ""
+  end,
+  GetCooldown = function(action)
+    return GetSpellCooldown(action.spell)
+  end,
+  GetCount = function(action)
+    -- LAB bug
+    return libCount:GetSpellReagentCount(action.spell)
+  end,
+  GetMacroText = function(action)
+    return (
+       '/dismount\n/stand\n/cast'..
+       (action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
+       action.spell)
+  end,
+  GetTexture = function(action)
+    return GetSpellTexture(action.spell)
+  end,
+  HasAction = function()
+    return true
+  end,
+  IsConsumableOrStackable = function(action)
+    return IsConsumableSpell(action.spell)
+  end,
+  IsCurrentlyActive = function(action)
+    return IsCurrentSpell(action.spell)
+  end,
+  IsUnitInRange = function(action, unit)
+    local id = select(7, GetSpellInfo(action.spell))
+    local slot = FindSpellBookSlotBySpellID(id)
+    return IsSpellInRange(slot, 'spell', unit)
+  end,
+  IsUsable = function(action)
+    return IsUsableSpell(action.spell)
+  end,
+  SetTooltip = function(action)
+    local id = select(7, GetSpellInfo(action.spell))
+    GameTooltip:SetSpellByID(id)
+    local subtext = GetSpellSubtext(id)
+    if subtext then
+      GameTooltipTextRight1:SetText(subtext)
+      GameTooltipTextRight1:SetTextColor(0.5, 0.5, 0.5)
+      GameTooltipTextRight1:Show()
+      GameTooltip:Show()
+    end
+  end,
 }
 
 local function customTypes(button, action)
@@ -278,13 +276,13 @@ local function makeCustomActionButton(i, action)
   return button, ty
 end
 
-local function makeCustomLabButton(i, action, ty)
+local function makeCustomLabButton(i, action)
   local button = LAB10:CreateButton(i, prefix .. i, header)
   button:SetAttribute('state', 1)
   button:DisableDragNDrop(true)
   Mixin(button, (function()
     local buttonMixin = {}
-    for k, v in pairs(ty) do
+    for k, v in pairs(labSpell) do
       buttonMixin[k] = function(_, ...)
         return v(action, ...)
       end
@@ -307,10 +305,8 @@ local function makeCustomActionButtons(actions)
         local button = CreateFrame('Button', prefix .. i, header, 'ActionButtonTemplate')
         button:Hide()
         return button
-      end
-      local labType = getType(action, customLabTypes)
-      if labType then
-        return makeCustomLabButton(i, action, labType)
+      elseif action.spell then
+        return makeCustomLabButton(i, action)
       else
         return makeCustomActionButton(i, action)
       end
