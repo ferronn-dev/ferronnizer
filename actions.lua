@@ -144,20 +144,27 @@ local function customTypes(button, action)
     drink = consume(G.DrinkDB, G.ManaPotionDB),
     eat = consume(G.FoodDB, G.HealthPotionDB),
     invslot = (function()
-      local function updateIcon()
+      local function update()
         local item = GetInventoryItemID('player', action.invslot)
         button.icon:SetTexture(item and GetItemIcon(item) or 136528)
+        if item and _G.GetItemSpell(item) then
+          button:Enable(true)
+          button.icon:SetVertexColor(1.0, 1.0, 1.0)
+        else
+          button:Disable()
+          button.icon:SetVertexColor(0.4, 0.4, 0.4)
+        end
       end
       return {
         getCooldown = function()
           return _G.GetInventoryItemCooldown('player', action.invslot)
         end,
         handlers = {
-          PLAYER_EQUIPMENT_CHANGED = updateIcon,
+          PLAYER_EQUIPMENT_CHANGED = update,
         },
         init = function()
           button:SetAttribute('macrotext', '/use ' .. action.invslot)
-          updateIcon()
+          update()
         end,
         setTooltip = function()
           GameTooltip:SetInventoryItem('player', action.invslot)
