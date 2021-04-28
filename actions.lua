@@ -206,6 +206,8 @@ local function customTypes(button, action)
         for _, spell in ipairs(spells) do
           if IsSpellKnown(spell) then
             updateMacro('/cast ' .. GetSpellInfo(spell))
+            button:Enable()
+            button.icon:SetVertexColor(1.0, 1.0, 1.0)
             button.icon:SetTexture(GetSpellTexture(spell))
             tooltipFn = function()
               GameTooltip:SetSpellByID(spell)
@@ -216,6 +218,8 @@ local function customTypes(button, action)
         for _, item in ipairs(items) do
           if GetItemCount(item) > 0 then
             updateMacro('/use item:' .. item)
+            button:Enable()
+            button.icon:SetVertexColor(1.0, 1.0, 1.0)
             button.icon:SetTexture(GetItemIcon(item))
             tooltipFn = function()
               GameTooltip:SetHyperlink('item:' .. item)
@@ -224,6 +228,8 @@ local function customTypes(button, action)
           end
         end
         updateMacro('')
+        button:Disable()
+        button.icon:SetVertexColor(0.4, 0.4, 0.4)
         button.icon:SetTexture(132261)
         tooltipFn = function()
           GameTooltip:SetText('No mount... yet.')
