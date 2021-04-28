@@ -183,7 +183,7 @@ local function customTypes(button, action)
       getCooldown = function()
         return _G.GetInventoryItemCooldown('player', action.invslot)
       end,
-      handlers = {},  -- capture changes
+      handlers = {},  -- TODO capture changes
       init = function()
         local item = GetInventoryItemID('player', action.invslot)
         if item then
