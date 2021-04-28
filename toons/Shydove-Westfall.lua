@@ -76,10 +76,10 @@ G.Characters['Shydove-Westfall'] = {
     spell = 'Prayer of Healing',
   },
   [19] = {
-    item = 19950,
+    invslot = 13,
   },
   [20] = {
-    item = 19990,
+    invslot = 14,
   },
   [21] = {
     mouseover = true,

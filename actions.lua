@@ -179,6 +179,22 @@ local function customTypes(button, action)
     },
     drink = consume(G.DrinkDB, G.ManaPotionDB),
     eat = consume(G.FoodDB, G.HealthPotionDB),
+    invslot = {
+      getCooldown = function()
+        return _G.GetInventoryItemCooldown('player', action.invslot)
+      end,
+      handlers = {},  -- capture changes
+      init = function()
+        local item = GetInventoryItemID('player', action.invslot)
+        if item then
+          button.icon:SetTexture(GetItemIcon(item))
+        end
+        button:SetAttribute('macrotext', '/use ' .. action.invslot)
+      end,
+      setTooltip = function()
+        GameTooltip:SetInventoryItem('player', action.invslot)
+      end,
+    },
     macro = {
       getCooldown = function() end,
       handlers = {},
