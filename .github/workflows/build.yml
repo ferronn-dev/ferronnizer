@@ -12,3 +12,5 @@ jobs:
     - name: Create/update release
       if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
       run: ./release.sh
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
