@@ -87,25 +87,22 @@ local function customTypes(button, action)
     button.Count:SetText(count > 9999 and '*' or count)
   end
   local function consume(mealDB, potionDB)
-    local mealList = {}
-    for _, meal in ipairs(mealDB) do
-      table.insert(mealList, meal[1])
-    end
     local function macroText(db)
       local s = ''
       for _, consumable in ipairs(db) do
-        s = s .. '/use item:' .. consumable .. '\n'
+        s = s .. '/use item:' .. consumable[1] .. '\n'
       end
       return s
     end
     local currentDB
     local function computeItem()
       for _, consumable in ipairs(currentDB) do
-        if GetItemCount(consumable) > 0 then
-          return consumable
+        local item = unpack(consumable)
+        if GetItemCount(item) > 0 then
+          return item
         end
       end
-      return currentDB[#currentDB]  -- give up and return the last thing
+      return currentDB[#currentDB][1]  -- give up and return the last thing
     end
     local item
     local function getCooldown()
@@ -133,11 +130,11 @@ local function customTypes(button, action)
           updateDB(potionDB)
         end,
         PLAYER_REGEN_ENABLED = function()
-          updateDB(mealList)
+          updateDB(mealDB)
         end,
       },
       init = function()
-        updateDB(mealList)
+        updateDB(mealDB)
       end,
       setTooltip = function()
         GameTooltip:SetHyperlink('item:' .. item)
@@ -223,7 +220,8 @@ local function customTypes(button, action)
         end
       end
       local function update()
-        for _, spell in ipairs(G.MountSpellDB) do
+        for _, spellx in ipairs(G.MountSpellDB) do
+          local spell = spellx[1]
           if IsSpellKnown(spell) then
             updateMacro('/cast ' .. GetSpellInfo(spell))
             button:Enable()
@@ -235,7 +233,8 @@ local function customTypes(button, action)
             return
           end
         end
-        for _, item in ipairs(G.MountItemDB) do
+        for _, itemx in ipairs(G.MountItemDB) do
+          local item = itemx[1]
           if GetItemCount(item) > 0 then
             updateMacro('/use item:' .. item)
             button:Enable()
