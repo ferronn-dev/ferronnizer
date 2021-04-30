@@ -17,10 +17,7 @@ G.Characters['Shydove-Westfall'] = {
     spell = 'Heal(Rank 2)',
   },
   [4] = {
-    actionText = 'Stop',
-    macro = '/stopcasting',
-    texture = 135768,
-    tooltip = 'Stop Casting',
+    stopcasting = true,
   },
   [5] = {
     mouseover = true,
@@ -64,10 +61,7 @@ G.Characters['Shydove-Westfall'] = {
     spell = 'Flash Heal(Rank 1)',
   },
   [16] = {
-    actionText = 'Stop',
-    macro = '/stopcasting',
-    texture = 135768,
-    tooltip = 'Stop Casting',
+    stopcasting = true,
   },
   [17] = {
     spell = 'Inner Focus',

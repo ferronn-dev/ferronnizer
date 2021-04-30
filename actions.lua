@@ -141,6 +141,22 @@ local function customTypes(button, action)
       end,
     }
   end
+  local function macroType(cfg)
+    return {
+      getCooldown = function() end,
+      handlers = {},
+      init = function()
+        if cfg.actionText then
+          button.Name:SetText(cfg.actionText)
+        end
+        button.icon:SetTexture(cfg.texture)
+        button:SetAttribute('macrotext', cfg.macro)
+      end,
+      setTooltip = function()
+        GameTooltip:SetText(cfg.tooltip)
+      end,
+    }
+  end
   local function getGcdCooldown()
     return GetSpellCooldown(29515)
   end
@@ -198,20 +214,7 @@ local function customTypes(button, action)
         end,
       }
     end)(),
-    macro = {
-      getCooldown = function() end,
-      handlers = {},
-      init = function()
-        if action.actionText then
-          button.Name:SetText(action.actionText)
-        end
-        button.icon:SetTexture(action.texture)
-        button:SetAttribute('macrotext', action.macro)
-      end,
-      setTooltip = function()
-        GameTooltip:SetText(action.tooltip)
-      end,
-    },
+    macro = macroType(action),
     mount = (function()
       local tooltipFn
       local function updateMacro(text)
@@ -270,6 +273,12 @@ local function customTypes(button, action)
         end,
       }
     end)(),
+    stopcasting = macroType({
+      actionText = 'Stop',
+      macro = '/stopcasting',
+      texture = 135768,
+      tooltip = 'Stop Casting',
+    }),
   }
 end
 
