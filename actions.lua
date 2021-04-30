@@ -87,22 +87,25 @@ local function customTypes(button, action)
     button.Count:SetText(count > 9999 and '*' or count)
   end
   local function consume(mealDB, potionDB)
+    local mealList = {}
+    for _, meal in ipairs(mealDB) do
+      table.insert(mealList, meal[1])
+    end
     local function macroText(db)
       local s = ''
       for _, consumable in ipairs(db) do
-        s = s .. '/use item:' .. consumable[1] .. '\n'
+        s = s .. '/use item:' .. consumable .. '\n'
       end
       return s
     end
     local currentDB
     local function computeItem()
       for _, consumable in ipairs(currentDB) do
-        local item = unpack(consumable)
-        if GetItemCount(item) > 0 then
-          return item
+        if GetItemCount(consumable) > 0 then
+          return consumable
         end
       end
-      return currentDB[#currentDB][1]  -- give up and return the last thing
+      return currentDB[#currentDB]  -- give up and return the last thing
     end
     local item
     local function getCooldown()
@@ -130,11 +133,11 @@ local function customTypes(button, action)
           updateDB(potionDB)
         end,
         PLAYER_REGEN_ENABLED = function()
-          updateDB(mealDB)
+          updateDB(mealList)
         end,
       },
       init = function()
-        updateDB(mealDB)
+        updateDB(mealList)
       end,
       setTooltip = function()
         GameTooltip:SetHyperlink('item:' .. item)
@@ -220,8 +223,7 @@ local function customTypes(button, action)
         end
       end
       local function update()
-        for _, spellx in ipairs(G.MountSpellDB) do
-          local spell = spellx[1]
+        for _, spell in ipairs(G.MountSpellDB) do
           if IsSpellKnown(spell) then
             updateMacro('/cast ' .. GetSpellInfo(spell))
             button:Enable()
@@ -233,8 +235,7 @@ local function customTypes(button, action)
             return
           end
         end
-        for _, itemx in ipairs(G.MountItemDB) do
-          local item = itemx[1]
+        for _, item in ipairs(G.MountItemDB) do
           if GetItemCount(item) > 0 then
             updateMacro('/use item:' .. item)
             button:Enable()
