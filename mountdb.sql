@@ -1,3 +1,4 @@
+-- MountItemDB
 SELECT
   CAST(e.parentitemid AS INT64)
 FROM
@@ -9,4 +10,17 @@ WHERE
   AND s.effectaura = "32"
 ORDER BY
   s.effectbasepoints DESC,
-  1
+  1;
+
+-- MountSpellDB
+SELECT
+  CAST(s.spellid AS INT64)
+FROM
+  spelleffect s,
+  skilllineability k
+WHERE
+  s.spellid = k.spell
+  AND s.effectaura = "32"
+ORDER BY
+  s.effectbasepoints DESC,
+  1;
