@@ -25,8 +25,6 @@ deps:
   - util.lua
   minimap.lua:
   - util.lua
-  mount.lua:
-  - util.lua
   partychat.lua:
   - util.lua
   playerinfo.lua:
@@ -53,7 +51,6 @@ roots:
 - chatframe.lua
 - control.lua
 - minimap.lua
-- mount.lua
 - save.lua
 - tooltips.lua
 - vars.lua
