@@ -41,56 +41,8 @@ G.Characters['Kewhand-Westfall'] = {
   [12] = {
     spell = 'Turn Undead',
   },
-  [13] = {
-    spell = 'Devotion Aura',
-  },
-  [14] = {
-    spell = 'Retribution Aura',
-  },
-  [15] = {
-    spell = 'Concentration Aura',
-  },
-  [16] = {
-    spell = 'Frost Resistance Aura',
-  },
-  [17] = {
-    spell = 'Fire Resistance Aura',
-  },
-  [18] = {
-    spell = 'Shadow Resistance Aura',
-  },
-  [19] = {
-    spell = 'Blessing of Might',
-  },
-  [20] = {
-    spell = 'Righteous Fury',
-  },
   [21] = {
     spell = 'Redemption',
-  },
-  [22] = {
-    spell = 'Greater Blessing of Light',
-  },
-  [23] = {
-    spell = 'Greater Blessing of Salvation',
-  },
-  [24] = {
-    spell = 'Greater Blessing of Might',
-  },
-  [25] = {
-    spell = 'Seal of Righteousness',
-  },
-  [26] = {
-    spell = 'Seal of Wisdom',
-  },
-  [27] = {
-    spell = 'Seal of the Crusader',
-  },
-  [28] = {
-    spell = 'Seal of Justice',
-  },
-  [29] = {
-    spell = 'Seal of Light',
   },
   [30] = {
     spell = 'Divine Shield',
@@ -111,18 +63,6 @@ G.Characters['Kewhand-Westfall'] = {
     buff = true,
     reagent = 21177,
   },
-  [35] = {
-    spell = 'Blessing of Wisdom',
-  },
-  [36] = {
-    spell = 'Blessing of Light',
-  },
-  [39] = {
-    spell = 'Blessing of Kings',
-  },
-  [40] = {
-    spell = 'Blessing of Salvation',
-  },
   [41] = {
     mouseover = true,
     spell = 'Lay on Hands',
@@ -133,21 +73,10 @@ G.Characters['Kewhand-Westfall'] = {
   [43] = {
     mount = true,
   },
-  [44] = {
-    macro = '/click ' .. addonName .. 'FollowButton',
-    texture = 132096,
-    tooltip = 'Follow Me',
-  },
   [45] = {
     eat = true,
   },
   [46] = {
     drink = true,
-  },
-  [47] = {
-    spell = 'Greater Blessing of Kings',
-  },
-  [48] = {
-    spell = 'Greater Blessing of Wisdom',
   },
 }
