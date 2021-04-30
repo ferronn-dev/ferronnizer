@@ -45,6 +45,12 @@ G.Characters['Kewhand-Westfall'] = {
   [12] = {
     spell = 'Turn Undead',
   },
+  [19] = {
+    invslot = 13,
+  },
+  [20] = {
+    invslot = 14,
+  },
   [21] = {
     spell = 'Redemption',
   },
