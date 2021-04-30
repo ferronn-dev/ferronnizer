@@ -2,14 +2,17 @@ local addonName, G = ...
 G.Characters = G.Characters or {}
 G.Characters['Kewhand-Westfall'] = {
   [1] = {
+    actionText = 'HL8',
     mouseover = true,
     spell = 'Holy Light(Rank 8)',
   },
   [2] = {
+    actionText = 'FoL6',
     mouseover = true,
     spell = 'Flash of Light(Rank 6)',
   },
   [3] = {
+    actionText = 'FoL1',
     mouseover = true,
     spell = 'Flash of Light(Rank 1)',
   },
