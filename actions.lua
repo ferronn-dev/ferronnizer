@@ -214,7 +214,6 @@ local function customTypes(button, action)
     },
     mount = (function()
       local spells = {23214, 13819}
-      local items = {8631, 8595, 8563, 13321, 18778}
       local tooltipFn
       local function updateMacro(text)
         if not InCombatLockdown() then
@@ -234,7 +233,8 @@ local function customTypes(button, action)
             return
           end
         end
-        for _, item in ipairs(items) do
+        for _, x in ipairs(G.MountDB) do
+          local item = x[1]
           if GetItemCount(item) > 0 then
             updateMacro('/use item:' .. item)
             button:Enable()
