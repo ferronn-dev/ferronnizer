@@ -1,4 +1,4 @@
-local _, G = ...
+local addonName, G = ...
 
 local gearPlanner = LibStub('LibClassicGearPlanner')
 
@@ -54,7 +54,7 @@ G.Eventer({
     url = gearPlanner:GenerateUrl()
   end,
   PLAYER_LOGOUT = function()
-    _G['FerronnizerPlayerData'] = {
+    _G[addonName .. 'PlayerData'] = {
       bags = bags,
       class = UnitClassBase('player'),
       equipment = equipment,

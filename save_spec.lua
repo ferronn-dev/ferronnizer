@@ -14,6 +14,6 @@ describe('save', function()
       talents = {},
       url = 'https://classic.wowhead.com/gear-planner/paladin/human/AioA',
     }
-    assert.same(expected, wow.env.FerronnizerPlayerData)
+    assert.same(expected, wow.env.mooPlayerData)
   end)
 end)
