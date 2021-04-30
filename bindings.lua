@@ -41,6 +41,7 @@ local multi = {
   ['D'] = '/cast Disenchant',
   ['E'] = '/cast Enchanting',
   ['F'] = '/cast First Aid',
+  ['Q'] = '/cast Engineering',
   ['R'] = '/cast Tailoring',
   ['S'] = '/cast Smelting',
   ['W'] = '/cast Leatherworking',
