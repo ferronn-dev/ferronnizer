@@ -11,6 +11,8 @@ if gh release download -D rel latest; then
   fi
   echo 'Deleting existing release...'
   gh release delete latest
+  git tag -d latest
+  git push origin :latest
 fi
 echo 'Creating new release...'
 gh release create -t latest latest
