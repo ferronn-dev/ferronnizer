@@ -9,10 +9,6 @@ jobs:
       uses: actions/checkout@v2
     - name: Run addonmaker
       uses: ferronn-dev/addonmaker@main
-    - name: Upload zip
+    - name: Create/update release
       if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
-      uses: marvinpinto/action-automatic-releases@latest
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        automatic_release_tag: latest
-        files: '*.zip'
+      run: ./release.sh
