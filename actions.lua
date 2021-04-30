@@ -5,11 +5,17 @@ local keyBound = LibStub('LibKeyBound-1.0')
 local libCount = LibStub('LibClassicSpellActionCount-1.0')
 
 -- LAB bug
-G.Eventer({
-  BAG_UPDATE_DELAYED = function()
-    LAB10.eventFrame:GetScript('OnEvent')(LAB10.eventFrame, 'SPELL_UPDATE_CHARGES')
-  end,
-})
+do
+  local function push(ev)
+    return function()
+      LAB10.eventFrame:GetScript('OnEvent')(LAB10.eventFrame, ev)
+    end
+  end
+  G.Eventer({
+    BAG_UPDATE_DELAYED = push('SPELL_UPDATE_CHARGES'),
+    SPELL_DATA_LOAD_RESULT = push('SPELL_UPDATE_ICON'),
+  })
+end
 
 local prefix = addonName .. 'ActionButton'
 local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
@@ -19,7 +25,13 @@ local labSpell = {
     return action.actionText or ""
   end,
   GetCooldown = function(action)
-    return GetSpellCooldown(action.spell)
+    -- LAB bug
+    local ret = {GetSpellCooldown(action.spell)}
+    if ret[1] then
+      return unpack(ret)
+    else
+      return 0, 0, 0
+    end
   end,
   GetCount = function(action)
     -- LAB bug
