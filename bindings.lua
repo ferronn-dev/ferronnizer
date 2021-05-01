@@ -46,7 +46,7 @@ local multi = {
   ['S'] = '/cast Smelting',
   ['W'] = '/cast Leatherworking',
   ['X'] = '/cast Blacksmithing',
-  ['Z'] = '/lol',
+  ['P'] = '/lol',
 }
 
 local function setupMultiBindings()
