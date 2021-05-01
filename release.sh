@@ -16,6 +16,6 @@ echo 'Creating new release...'
 gh release create -t latest latest
 gh release upload latest Ferronnizer.zip
 echo 'Moving latest tag...'
-gh tag -f latest
-gh push -f origin latest
+git tag -f latest
+git push -f origin latest
 echo 'Done.'
