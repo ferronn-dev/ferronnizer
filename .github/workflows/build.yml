@@ -1,8 +1,9 @@
 ---
 name: build
 on:
+  pull_request:
   push:
-    tags-ignore: [latest]
+    branches: [main]
   workflow_dispatch:
 jobs:
   build:
