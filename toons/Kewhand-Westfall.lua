@@ -2,9 +2,8 @@ local addonName, G = ...
 G.Characters = G.Characters or {}
 G.Characters['Kewhand-Westfall'] = {
   [1] = {
-    actionText = 'HL8',
     mouseover = true,
-    spell = 'Holy Light(Rank 8)',
+    spell = 'Holy Shock(Rank 3)',
   },
   [2] = {
     actionText = 'FoL6',
@@ -17,8 +16,7 @@ G.Characters['Kewhand-Westfall'] = {
     spell = 'Flash of Light(Rank 1)',
   },
   [4] = {
-    mouseover = true,
-    spell = 'Holy Shock(Rank 3)',
+    stopcasting = true,
   },
   [5] = {
     spell = 'Hammer of Justice',
@@ -29,9 +27,6 @@ G.Characters['Kewhand-Westfall'] = {
   [7] = {
     mouseover = true,
     spell = 'Cleanse',
-  },
-  [8] = {
-    spell = 'Divine Favor',
   },
   [9] = {
     spell = 'Exorcism',
@@ -44,6 +39,22 @@ G.Characters['Kewhand-Westfall'] = {
   },
   [12] = {
     spell = 'Turn Undead',
+  },
+  [13] = {
+    spell = 'Divine Favor',
+  },
+  [14] = {
+    actionText = 'HL8',
+    mouseover = true,
+    spell = 'Holy Light(Rank 8)',
+  },
+  [15] = {
+    actionText = 'HL4',
+    mouseover = true,
+    spell = 'Holy Light(Rank 4)',
+  },
+  [16] = {
+    stopcasting = true,
   },
   [19] = {
     invslot = 13,
