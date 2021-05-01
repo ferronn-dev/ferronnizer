@@ -89,12 +89,6 @@ local buffSlotSpecification = {
     },
   },{
     buffs = {
-      { spell = 'Retribution Aura' },
-      { spell = 'Devotion Aura' },
-    },
-    self = true,
-  },{
-    buffs = {
       {
         spell = 'Righteous Fury',
         tank = true,
