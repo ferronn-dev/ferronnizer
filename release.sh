@@ -11,10 +11,11 @@ if gh release download -D rel latest; then
   fi
   echo 'Deleting existing release...'
   gh release delete latest
-  git tag -d latest
-  git push origin :latest
 fi
 echo 'Creating new release...'
 gh release create -t latest latest
 gh release upload latest Ferronnizer.zip
+echo 'Moving latest tag...'
+gh tag -f latest
+gh push -f origin latest
 echo 'Done.'
