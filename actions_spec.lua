@@ -47,4 +47,14 @@ describe('Actions', function()
     wow.state:LeaveCombat()
     wow.state:SendEvent('BAG_UPDATE_DELAYED')
   end)
+  it('obeys stopcasting', function()
+    wow.state.player.name = 'Kewhand'
+    wow.state.realm = 'Westfall'
+    wow.state:SendEvent('PLAYER_LOGIN')
+    wow.env.mooActionButton41:Click()
+    local macro = (
+        '/dismount\n/stand\n/stopcasting\n'..
+        '/cast [@mouseover,help,nodead][] Lay on Hands')
+    assert.same({{ macro = macro }}, wow.state.commands)
+  end)
 end)

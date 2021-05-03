@@ -52,6 +52,7 @@ G.Characters['Kewhand-Westfall'] = {
   },
   [30] = {
     spell = 'Divine Shield',
+    stopcasting = true,
   },
   [31] = {
     mouseover = true,
@@ -60,6 +61,7 @@ G.Characters['Kewhand-Westfall'] = {
   [32] = {
     mouseover = true,
     spell = 'Blessing of Protection',
+    stopcasting = true,
   },
   [33] = {
     mouseover = true,
@@ -72,9 +74,11 @@ G.Characters['Kewhand-Westfall'] = {
   [41] = {
     mouseover = true,
     spell = 'Lay on Hands',
+    stopcasting = true,
   },
   [42] = {
     spell = 'Divine Intervention',
+    stopcasting = true,
   },
   [43] = {
     mount = true,

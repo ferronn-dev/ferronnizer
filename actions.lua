@@ -39,8 +39,9 @@ local labSpell = {
   end,
   GetMacroText = function(action)
     return (
-       '/dismount\n/stand\n/cast'..
-       (action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
+       '/dismount\n/stand\n'..
+       (action.stopcasting and '/stopcasting\n' or '')..
+       '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
        action.spell)
   end,
   GetTexture = function(action)
