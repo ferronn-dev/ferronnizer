@@ -31,6 +31,9 @@ G.Characters['Pixli-Westfall'] = {
   [10] = {
     spell = 'Blizzard',
   },
+  [11] = {
+    spell = 'Scorch',
+  },
   [13] = {
     mouseover = true,
     spell = 'Remove Lesser Curse',
@@ -65,10 +68,13 @@ G.Characters['Pixli-Westfall'] = {
     spell = 'Evocation',
   },
   [25] = {
-    spell = 'Fire Ward',
+    spell = 'Mana Shield',
   },
   [26] = {
-    spell = 'Mana Shield',
+    spell = 'Fire Ward',
+  },
+  [27] = {
+    spell = 'Frost Ward',
   },
   [34] = {
     buff = true,
