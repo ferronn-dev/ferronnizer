@@ -9,6 +9,7 @@ local function updateCooldown(button, cdfn)
 end
 
 local function customTypes(button, action)
+  local libCount = LibStub('LibClassicSpellActionCount-1.0')
   local function updateCount(item)
     local count = GetItemCount(item)
     button.Count:SetText(count > 9999 and '*' or count)
@@ -213,7 +214,12 @@ local function customTypes(button, action)
         getCooldown = function()
           return GetSpellCooldown(action.spell)
         end,
-        handlers = {},
+        handlers = {
+          BAG_UPDATE_DELAYED = function()
+            local count = libCount:GetSpellReagentCount(action.spell)
+            button.Count:SetText(count == nil and '' or count > 9999 and '*' or count)
+          end,
+        },
         init = function()
           button:SetAttribute('macrotext', (
              '/dismount\n/stand\n'..
