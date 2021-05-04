@@ -1,80 +1,7 @@
 local addonName, G = ...
 
-local LAB10 = LibStub('LibActionButton-1.0')
-local libCount = LibStub('LibClassicSpellActionCount-1.0')
-
--- LAB bug
-do
-  local function push(ev)
-    return function()
-      LAB10.eventFrame:GetScript('OnEvent')(LAB10.eventFrame, ev)
-    end
-  end
-  G.Eventer({
-    BAG_UPDATE_DELAYED = push('SPELL_UPDATE_CHARGES'),
-    SPELL_DATA_LOAD_RESULT = push('SPELL_UPDATE_ICON'),
-  })
-end
-
 local prefix = addonName .. 'ActionButton'
 local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
-
-local labSpell = {
-  GetActionText = function(action)
-    return action.actionText or ""
-  end,
-  GetCooldown = function(action)
-    -- LAB bug
-    local ret = {GetSpellCooldown(action.spell)}
-    if ret[1] then
-      return unpack(ret)
-    else
-      return 0, 0, 0
-    end
-  end,
-  GetCount = function(action)
-    -- LAB bug
-    return libCount:GetSpellReagentCount(action.spell)
-  end,
-  GetMacroText = function(action)
-    return (
-       '/dismount\n/stand\n'..
-       (action.stopcasting and '/stopcasting\n' or '')..
-       '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
-       action.spell)
-  end,
-  GetTexture = function(action)
-    return GetSpellTexture(action.spell)
-  end,
-  HasAction = function()
-    return true
-  end,
-  IsConsumableOrStackable = function(action)
-    return IsConsumableSpell(action.spell)
-  end,
-  IsCurrentlyActive = function(action)
-    return IsCurrentSpell(action.spell)
-  end,
-  IsUnitInRange = function(action, unit)
-    local id = select(7, GetSpellInfo(action.spell))
-    local slot = FindSpellBookSlotBySpellID(id)
-    return IsSpellInRange(slot, 'spell', unit)
-  end,
-  IsUsable = function(action)
-    return IsUsableSpell(action.spell)
-  end,
-  SetTooltip = function(action)
-    local id = select(7, GetSpellInfo(action.spell))
-    GameTooltip:SetSpellByID(id)
-    local subtext = GetSpellSubtext(id)
-    if subtext then
-      GameTooltipTextRight1:SetText(subtext)
-      GameTooltipTextRight1:SetTextColor(0.5, 0.5, 0.5)
-      GameTooltipTextRight1:Show()
-      GameTooltip:Show()
-    end
-  end,
-}
 
 local function updateCooldown(button, cdfn)
   local start, duration, enable, modRate = cdfn()
@@ -273,6 +200,36 @@ local function customTypes(button, action)
         end,
       }
     end)(),
+    spell = (function()
+      return {
+        getCooldown = function()
+          return GetSpellCooldown(action.spell)
+        end,
+        handlers = {},
+        init = function()
+          button:SetAttribute('macrotext', (
+             '/dismount\n/stand\n'..
+             (action.stopcasting and '/stopcasting\n' or '')..
+             '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
+             action.spell))
+          button.icon:SetTexture(GetSpellTexture(action.spell))
+          if action.actionText then
+            button.Name:SetText(action.actionText)
+          end
+        end,
+        setTooltip = function()
+          local id = select(7, GetSpellInfo(action.spell))
+          GameTooltip:SetSpellByID(id)
+          local subtext = GetSpellSubtext(id)
+          if subtext then
+            GameTooltipTextRight1:SetText(subtext)
+            GameTooltipTextRight1:SetTextColor(0.5, 0.5, 0.5)
+            GameTooltipTextRight1:Show()
+            GameTooltip:Show()
+          end
+        end,
+      }
+    end)(),
     stopcasting = macroType({
       actionText = 'Stop',
       macro = '/stopcasting',
@@ -283,6 +240,10 @@ local function customTypes(button, action)
 end
 
 local function getType(action, types)
+ -- spell > stopcasting
+  if action.spell then
+    return types.spell
+  end
   for k, v in pairs(types) do
     if action[k] then
       return v
@@ -326,25 +287,6 @@ local function makeCustomActionButton(i, action)
   return button, ty
 end
 
-local function makeCustomLabButton(i, action)
-  local button = LAB10:CreateButton(i, prefix .. i, header)
-  button:SetAttribute('state', 1)
-  button:DisableDragNDrop(true)
-  Mixin(button, (function()
-    local buttonMixin = {}
-    for k, v in pairs(labSpell) do
-      buttonMixin[k] = function(_, ...)
-        return v(action, ...)
-      end
-    end
-    return buttonMixin
-  end)())
-  button:SetState(1, 'empty', i)
-  button:SetAttribute('type', 'macro')
-  button:SetAttribute('macrotext', button:GetMacroText())
-  return button
-end
-
 local function makeCustomActionButtons(actions)
   local buttons = {}
   local customActionButtons = {}
@@ -355,8 +297,6 @@ local function makeCustomActionButtons(actions)
         local button = CreateFrame('Button', prefix .. i, header, 'ActionButtonTemplate')
         button:Hide()
         return button
-      elseif action.spell then
-        return makeCustomLabButton(i, action)
       else
         return makeCustomActionButton(i, action)
       end
@@ -388,6 +328,19 @@ local function makeCustomActionButtons(actions)
 end
 
 local function makeOnlyLabButtons()
+  local LAB10 = LibStub('LibActionButton-1.0')
+  -- LAB bug
+  do
+    local function push(ev)
+      return function()
+        LAB10.eventFrame:GetScript('OnEvent')(LAB10.eventFrame, ev)
+      end
+    end
+    G.Eventer({
+      BAG_UPDATE_DELAYED = push('SPELL_UPDATE_CHARGES'),
+      SPELL_DATA_LOAD_RESULT = push('SPELL_UPDATE_ICON'),
+    })
+  end
   local buttons = {}
   for i = 1, 48 do
     local button = LAB10:CreateButton(i, prefix .. i, header)
