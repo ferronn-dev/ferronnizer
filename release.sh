@@ -1,6 +1,5 @@
 #!/bin/sh
 set -e
-set -x
 if gh release download -D rel latest; then
   echo 'Checking existing release...'
   (cd rel && unzip -q Ferronnizer.zip)
