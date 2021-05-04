@@ -105,6 +105,14 @@ local function customTypes(button, action)
     },
     drink = consume(G.DrinkDB, G.ManaPotionDB),
     eat = consume(G.FoodDB, G.HealthPotionDB),
+    empty = {
+      getCooldown = function() end,
+      handlers = {},
+      init = function()
+        button:Hide()
+      end,
+      setTooltip = function() end,
+    },
     invslot = (function()
       local function getCooldown()
         return _G.GetInventoryItemCooldown('player', action.invslot)
@@ -291,16 +299,7 @@ local function makeCustomActionButtons(actions)
   local buttons = {}
   local customActionButtons = {}
   for i = 1, 48 do
-    local action = actions[i]
-    local button, ty = (function()
-      if not action then
-        local button = CreateFrame('Button', prefix .. i, header, 'ActionButtonTemplate')
-        button:Hide()
-        return button
-      else
-        return makeCustomActionButton(i, action)
-      end
-    end)()
+    local button, ty = makeCustomActionButton(i, actions[i] or { empty = true })
     table.insert(buttons, button)
     customActionButtons[button] = ty
   end
