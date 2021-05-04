@@ -1,7 +1,6 @@
 local addonName, G = ...
 
 local LAB10 = LibStub('LibActionButton-1.0')
-local keyBound = LibStub('LibKeyBound-1.0')
 local libCount = LibStub('LibClassicSpellActionCount-1.0')
 
 -- LAB bug
@@ -366,6 +365,7 @@ local function makeCustomActionButtons(actions)
     customActionButtons[button] = ty
   end
   -- Handle generic events separately from individual button OnEvent handlers.
+  local keyBound = LibStub('LibKeyBound-1.0')
   G.Eventer({
     SPELL_UPDATE_COOLDOWN = function()
       for button, ty in pairs(customActionButtons) do
