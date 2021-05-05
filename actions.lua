@@ -3,8 +3,8 @@ local addonName, G = ...
 local prefix = addonName .. 'ActionButton'
 local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
 
-local function updateCooldown(button, cdfn)
-  local start, duration, enable, modRate = cdfn(button)
+local function updateCooldown(button, cdfn, action)
+  local start, duration, enable, modRate = cdfn(action)
   CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
 end
 
@@ -114,7 +114,7 @@ local customTypes = (function()
           button:Disable()
           button.icon:SetVertexColor(0.4, 0.4, 0.4)
         end
-        updateCooldown(button, getCooldown)
+        updateCooldown(button, getCooldown, action)
       end
       return {
         getCooldown = getCooldown,
@@ -317,8 +317,8 @@ local function makeCustomActionButtons(actions)
   local keyBound = LibStub('LibKeyBound-1.0')
   G.Eventer({
     SPELL_UPDATE_COOLDOWN = function()
-      for button, ty in pairs(customActionButtons) do
-        updateCooldown(button, ty.getCooldown)
+      for i, button in ipairs(buttons) do
+        updateCooldown(button, customActionButtons[button].getCooldown, actions[i])
       end
     end,
     UPDATE_BINDINGS = function()
