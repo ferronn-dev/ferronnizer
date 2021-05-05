@@ -358,7 +358,9 @@ local function makeOnlyLabButtons()
   return buttons
 end
 
-local function makeButtons(actions)
+local function makeButtons()
+  local charName = UnitName('player')..'-'..GetRealmName()
+  local actions = G.Characters[charName]
   local buttons = actions and makeCustomActionButtons(actions) or makeOnlyLabButtons()
   for i, button in ipairs(buttons) do
     button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
@@ -378,8 +380,6 @@ end
 G.Eventer({
   PLAYER_LOGIN = function()
     G.ReparentFrame(MainMenuBar)
-    local charName = UnitName('player')..'-'..GetRealmName()
-    local actions = G.Characters[charName]
-    makeButtons(actions)
+    makeButtons()
   end,
 })
