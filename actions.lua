@@ -155,6 +155,7 @@ local function customTypes(button, action)
       local tooltipFn
       local function updateMacro(text)
         if not InCombatLockdown() then
+          button:SetEnabled(text ~= '')
           button:SetAttribute('macrotext', '/stand\n/cancelform\n' .. text)
         end
       end
@@ -163,7 +164,6 @@ local function customTypes(button, action)
           local spell = spellx[1]
           if IsSpellKnown(spell) then
             updateMacro('/cast ' .. GetSpellInfo(spell))
-            button:Enable()
             button.icon:SetVertexColor(1.0, 1.0, 1.0)
             button.icon:SetTexture(GetSpellTexture(spell))
             tooltipFn = function()
@@ -176,7 +176,6 @@ local function customTypes(button, action)
           local item = itemx[1]
           if GetItemCount(item) > 0 then
             updateMacro('/use item:' .. item)
-            button:Enable()
             button.icon:SetVertexColor(1.0, 1.0, 1.0)
             button.icon:SetTexture(GetItemIcon(item))
             tooltipFn = function()
@@ -186,7 +185,6 @@ local function customTypes(button, action)
           end
         end
         updateMacro('')
-        button:Disable()
         button.icon:SetVertexColor(0.4, 0.4, 0.4)
         button.icon:SetTexture(132261)
         tooltipFn = function()
