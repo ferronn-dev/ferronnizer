@@ -11,5 +11,5 @@ G.PreClickButton('FollowButton', '', function()
 end)
 
 _G.SendEmote = G.RegisterPartyChat(function(_, emote)
-  _G.DoEmote(emote)
+  DoEmote(emote)
 end)

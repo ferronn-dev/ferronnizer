@@ -5,7 +5,7 @@ local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandler
 
 local function updateCooldown(button, cdfn)
   local start, duration, enable, modRate = cdfn()
-  _G.CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
+  CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
 end
 
 local function customTypes(button, action)
@@ -116,12 +116,12 @@ local function customTypes(button, action)
     },
     invslot = (function()
       local function getCooldown()
-        return _G.GetInventoryItemCooldown('player', action.invslot)
+        return GetInventoryItemCooldown('player', action.invslot)
       end
       local function update()
         local item = GetInventoryItemID('player', action.invslot)
         button.icon:SetTexture(item and GetItemIcon(item) or 136528)
-        if item and _G.GetItemSpell(item) then
+        if item and GetItemSpell(item) then
           button:Enable(true)
           button.icon:SetVertexColor(1.0, 1.0, 1.0)
         else
@@ -141,8 +141,8 @@ local function customTypes(button, action)
         end,
         setTooltip = function()
           local item = GetInventoryItemID('player', action.invslot)
-          local spell = item and select(2, _G.GetItemSpell(item))
-          if spell and _G.IsShiftKeyDown() then
+          local spell = item and select(2, GetItemSpell(item))
+          if spell and IsShiftKeyDown() then
             GameTooltip:SetSpellByID(spell)
           else
             GameTooltip:SetInventoryItem('player', action.invslot)
@@ -318,7 +318,7 @@ local function makeCustomActionButtons(actions)
     end,
     UPDATE_BINDINGS = function()
       for button in pairs(customActionButtons) do
-        local key = _G.GetBindingKey('CLICK ' .. button:GetName() .. ':LeftButton')
+        local key = GetBindingKey('CLICK ' .. button:GetName() .. ':LeftButton')
         if key then
           button.HotKey:SetText(keyBound:ToShortKey(key))
           button.HotKey:Show()
