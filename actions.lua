@@ -4,13 +4,13 @@ local prefix = addonName .. 'ActionButton'
 local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
 
 local function updateCooldown(button, cdfn)
-  local start, duration, enable, modRate = cdfn()
+  local start, duration, enable, modRate = cdfn(button)
   CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
 end
 
-local function customTypes(button, action)
+local customTypes = (function()
   local libCount = LibStub('LibClassicSpellActionCount-1.0')
-  local function updateCount(item)
+  local function updateCount(button, item)
     local count = GetItemCount(item)
     button.Count:SetText(count > 9999 and '*' or count)
   end
@@ -36,52 +36,36 @@ local function customTypes(button, action)
     local function getCooldown()
       return GetItemCooldown(item)
     end
-    local function updateItem()
+    local function updateItem(button)
       item = computeItem()
-      updateCount(item)
+      updateCount(button, item)
       updateCooldown(button, getCooldown)
       button.icon:SetTexture(GetItemIcon(item))
       button.icon:Show()
     end
-    local function updateDB(db)
+    local function updateDB(button, db)
       currentDB = db
       button:SetAttribute('macrotext', macroText(db))
-      updateItem()
+      updateItem(button)
     end
     return {
       getCooldown = getCooldown,
       handlers = {
-        BAG_UPDATE_DELAYED = function()
-          updateItem()
+        BAG_UPDATE_DELAYED = function(button)
+          updateItem(button)
         end,
-        PLAYER_REGEN_DISABLED = function()
-          updateDB(potionDB)
+        PLAYER_REGEN_DISABLED = function(button)
+          updateDB(button, potionDB)
         end,
-        PLAYER_REGEN_ENABLED = function()
-          updateDB(mealDB)
+        PLAYER_REGEN_ENABLED = function(button)
+          updateDB(button, mealDB)
         end,
       },
-      init = function()
-        updateDB(mealDB)
+      init = function(button)
+        updateDB(button, mealDB)
       end,
       setTooltip = function()
         GameTooltip:SetHyperlink('item:' .. item)
-      end,
-    }
-  end
-  local function macroType(cfg)
-    return {
-      getCooldown = function() end,
-      handlers = {},
-      init = function()
-        if cfg.actionText then
-          button.Name:SetText(cfg.actionText)
-        end
-        button.icon:SetTexture(cfg.texture)
-        button:SetAttribute('macrotext', cfg.macro)
-      end,
-      setTooltip = function()
-        GameTooltip:SetText(cfg.tooltip)
       end,
     }
   end
@@ -92,11 +76,13 @@ local function customTypes(button, action)
     buff = {
       getCooldown = getGcdCooldown,
       handlers = {
-        BAG_UPDATE_DELAYED = action.reagent and function()
-          updateCount(action.reagent)
+        BAG_UPDATE_DELAYED = function(button, action)
+          if action.reagent then
+            updateCount(button, action.reagent)
+          end
         end,
       },
-      init = function()
+      init = function(button)
         button.icon:SetTexture(135938)
         button:SetAttribute('macrotext', '/click ' .. addonName .. 'BuffButton')
       end,
@@ -109,16 +95,16 @@ local function customTypes(button, action)
     empty = {
       getCooldown = function() end,
       handlers = {},
-      init = function()
+      init = function(button)
         button:Hide()
       end,
       setTooltip = function() end,
     },
     invslot = (function()
-      local function getCooldown()
+      local function getCooldown(action)
         return GetInventoryItemCooldown('player', action.invslot)
       end
-      local function update()
+      local function update(button, action)
         local item = GetInventoryItemID('player', action.invslot)
         button.icon:SetTexture(item and GetItemIcon(item) or 136528)
         if item and GetItemSpell(item) then
@@ -135,11 +121,11 @@ local function customTypes(button, action)
         handlers = {
           PLAYER_EQUIPMENT_CHANGED = update,
         },
-        init = function()
+        init = function(button, action)
           button:SetAttribute('macrotext', '/use ' .. action.invslot)
-          update()
+          update(button, action)
         end,
-        setTooltip = function()
+        setTooltip = function(action)
           local item = GetInventoryItemID('player', action.invslot)
           local spell = item and select(2, GetItemSpell(item))
           if spell and IsShiftKeyDown() then
@@ -150,20 +136,33 @@ local function customTypes(button, action)
         end,
       }
     end)(),
-    macro = macroType(action),
+    macro = {
+      getCooldown = function() end,
+      handlers = {},
+      init = function(button, action)
+        if action.actionText then
+          button.Name:SetText(action.actionText)
+        end
+        button.icon:SetTexture(action.texture)
+        button:SetAttribute('macrotext', action.macro)
+      end,
+      setTooltip = function(action)
+        GameTooltip:SetText(action.tooltip)
+      end,
+    },
     mount = (function()
       local tooltipFn
-      local function updateMacro(text)
+      local function updateMacro(button, text)
         if not InCombatLockdown() then
           button:SetEnabled(text ~= '')
           button:SetAttribute('macrotext', '/stand\n/cancelform\n' .. text)
         end
       end
-      local function update()
+      local function update(button)
         for _, spellx in ipairs(G.MountSpellDB) do
           local spell = spellx[1]
           if IsSpellKnown(spell) then
-            updateMacro('/cast ' .. GetSpellInfo(spell))
+            updateMacro(button, '/cast ' .. GetSpellInfo(spell))
             button.icon:SetVertexColor(1.0, 1.0, 1.0)
             button.icon:SetTexture(GetSpellTexture(spell))
             tooltipFn = function()
@@ -175,7 +174,7 @@ local function customTypes(button, action)
         for _, itemx in ipairs(G.MountItemDB) do
           local item = itemx[1]
           if GetItemCount(item) > 0 then
-            updateMacro('/use item:' .. item)
+            updateMacro(button, '/use item:' .. item)
             button.icon:SetVertexColor(1.0, 1.0, 1.0)
             button.icon:SetTexture(GetItemIcon(item))
             tooltipFn = function()
@@ -184,7 +183,7 @@ local function customTypes(button, action)
             return
           end
         end
-        updateMacro('')
+        updateMacro(button, '')
         button.icon:SetVertexColor(0.4, 0.4, 0.4)
         button.icon:SetTexture(132261)
         tooltipFn = function()
@@ -195,7 +194,7 @@ local function customTypes(button, action)
         getCooldown = getGcdCooldown,
         handlers = {
           BAG_UPDATE_DELAYED = update,
-          PLAYER_REGEN_DISABLED = function()
+          PLAYER_REGEN_DISABLED = function(button)
             button:SetAttribute('macrotext', '/dismount')
           end,
           PLAYER_REGEN_ENABLED = update,
@@ -209,16 +208,16 @@ local function customTypes(button, action)
     end)(),
     spell = (function()
       return {
-        getCooldown = function()
+        getCooldown = function(action)
           return GetSpellCooldown(action.spell)
         end,
         handlers = {
-          BAG_UPDATE_DELAYED = function()
+          BAG_UPDATE_DELAYED = function(button, action)
             local count = libCount:GetSpellReagentCount(action.spell)
             button.Count:SetText(count == nil and '' or count > 9999 and '*' or count)
           end,
         },
-        init = function()
+        init = function(button, action)
           button:SetAttribute('macrotext', (
              '/dismount\n/stand\n'..
              (action.stopcasting and '/stopcasting\n' or '')..
@@ -229,7 +228,7 @@ local function customTypes(button, action)
             button.Name:SetText(action.actionText)
           end
         end,
-        setTooltip = function()
+        setTooltip = function(action)
           local id = select(7, GetSpellInfo(action.spell))
           GameTooltip:SetSpellByID(id)
           local subtext = GetSpellSubtext(id)
@@ -242,21 +241,27 @@ local function customTypes(button, action)
         end,
       }
     end)(),
-    stopcasting = macroType({
-      actionText = 'Stop',
-      macro = '/stopcasting',
-      texture = 135768,
-      tooltip = 'Stop Casting',
-    }),
+    stopcasting = {
+      getCooldown = function() end,
+      handlers = {},
+      init = function(button)
+        button.Name:SetText('Stop')
+        button.icon:SetTexture(135768)
+        button:SetAttribute('macrotext', '/stopcasting')
+      end,
+      setTooltip = function()
+        GameTooltip:SetText('Stop Casting')
+      end,
+    },
   }
-end
+end)()
 
-local function getType(action, types)
- -- spell > stopcasting
+local function getType(action)
+  -- spell > stopcasting
   if action.spell then
-    return types.spell
+    return customTypes.spell
   end
-  for k, v in pairs(types) do
+  for k, v in pairs(customTypes) do
     if action[k] then
       return v
     end
@@ -266,7 +271,7 @@ end
 local function makeCustomActionButton(i, action)
   local button = CreateFrame(
       'CheckButton', prefix .. i, header, 'ActionButtonTemplate, SecureActionButtonTemplate')
-  local ty = getType(action, customTypes(button, action))
+  local ty = getType(action)
   button:SetAttribute('type', 'macro')
   button:SetMotionScriptsWhileDisabled(true)
   button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
@@ -276,7 +281,7 @@ local function makeCustomActionButton(i, action)
   button:SetNormalTexture('Interface\\Buttons\\UI-Quickslot2')
   button.NormalTexture:SetTexCoord(0, 0, 0, 0)
   button.cooldown:SetSwipeColor(0, 0, 0)
-  ty.init()
+  ty.init(button, action)
   button:SetScript('OnEnter', function()
     GameTooltip_SetDefaultAnchor(GameTooltip, button)
     ty.setTooltip()
@@ -293,8 +298,8 @@ local function makeCustomActionButton(i, action)
     for ev in pairs(handlers) do
       button:RegisterEvent(ev)
     end
-    return function(_, ev, ...)
-      handlers[ev](...)
+    return function(self, ev, ...)
+      handlers[ev](self, action, ...)
     end
   end)())
   return button, ty
