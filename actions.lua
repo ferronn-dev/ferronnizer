@@ -289,6 +289,7 @@ local function makeCustomActionButton(i, action)
   end)
   button:SetScript('OnEvent', (function()
     local handlers = ty.handlers
+    button:UnregisterAllEvents()
     for ev in pairs(handlers) do
       button:RegisterEvent(ev)
     end
