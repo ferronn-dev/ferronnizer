@@ -79,6 +79,15 @@ G.Characters['Shydove-Westfall'] = {
     mouseover = true,
     spell = 'Power Infusion',
   },
+  [22] = {
+    spell = 'Mind Vision',
+  },
+  [23] = {
+    spell = 'Mana Burn',
+  },
+  [24] = {
+    spell = 'Mind Soothe',
+  },
   [25] = {
     mouseover = true,
     spell = 'Dispel Magic',
@@ -92,6 +101,9 @@ G.Characters['Shydove-Westfall'] = {
   },
   [28] = {
     spell = 'Desperate Prayer',
+  },
+  [29] = {
+    spell = 'Mind Control',
   },
   [30] = {
     spell = 'Shackle Undead',
@@ -112,9 +124,6 @@ G.Characters['Shydove-Westfall'] = {
   [37] = {
     spell = 'Fishing',
   },
-  [41] = {
-    spell = 'Mind Control',
-  },
   [43] = {
     mount = true,
   },
@@ -123,11 +132,5 @@ G.Characters['Shydove-Westfall'] = {
   },
   [46] = {
     drink = true,
-  },
-  [47] = {
-    spell = 'Mana Burn',
-  },
-  [48] = {
-    spell = 'Mind Soothe',
   },
 }
