@@ -5,22 +5,19 @@ SELECT
             CAST(a.id AS INT64) AS id,
             a.minlevel AS level,
             CAST(b.reagent_0_ AS INT64) AS reagent)
-        ORDER BY a.rank DESC)
+        ORDER BY a.minlevel DESC)
 FROM (
     SELECT
-        s.id id,
+        n.id id,
         n.name_lang name,
-        CAST(SUBSTR(s.namesubtext_lang, 5) AS INT64) rank,
         CAST(l.baselevel AS INT64) minlevel
     FROM
-        spell s,
         spellname n,
         spelllevels l,
         skilllineability k
     WHERE
-        s.id = n.id AND
-        s.id = l.spellid AND
-        s.id = k.spell) a
+        n.id = l.spellid AND
+        n.id = k.spell) a
 LEFT OUTER JOIN
     spellreagents b
 ON
