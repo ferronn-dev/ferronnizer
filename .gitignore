@@ -1,8 +1,8 @@
-buffdb.lua
 drinkdb.lua
 fooddb.lua
 mountdb.lua
 potiondb.lua
+spelldb.lua
 Ferronnizer.toc
 Ferronnizer.zip
 .ninja_*
