@@ -15,9 +15,9 @@ deps:
   bindings.lua:
   - util.lua
   buffs.lua:
-  - buffdb.lua
   - drinkdb.lua
   - fooddb.lua
+  - spelldb.lua
   - util.lua
   chatframe.lua:
   - util.lua
@@ -56,8 +56,6 @@ roots:
 - tooltips.lua
 - vars.lua
 sql:
-  buffdb.sql:
-  - BuffDB
   drinkdb.sql:
   - DrinkDB
   fooddb.sql:
@@ -68,6 +66,8 @@ sql:
   potiondb.sql:
   - HealthPotionDB
   - ManaPotionDB
+  spelldb.sql:
+  - SpellDB
 toc:
   Interface: 11307
   Title: Ferronnizer

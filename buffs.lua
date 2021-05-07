@@ -125,8 +125,8 @@ local thebuffdb = (function()
         for _, buffSpec in ipairs(slotSpec.buffs) do
           table.insert(buffs, {
             ranks = (function()
-              local spellData = G.BuffDB[buffSpec.spell]
-              local groupData = buffSpec.group and G.BuffDB[buffSpec.group] or {}
+              local spellData = G.SpellDB[buffSpec.spell]
+              local groupData = buffSpec.group and G.SpellDB[buffSpec.group] or {}
               assert(#spellData >= #groupData)
               local ranks = {}
               for i = 1, #spellData do
