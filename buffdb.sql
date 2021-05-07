@@ -23,40 +23,6 @@ LEFT OUTER JOIN
 ON
     a.id = b.spellid
 WHERE
-    a.name IN (
-        'Arcane Brilliance',
-        'Arcane Intellect',
-        'Blessing of Kings',
-        'Blessing of Light',
-        'Blessing of Might',
-        'Blessing of Salvation',
-        'Blessing of Wisdom',
-        'Dampen Magic',
-        'Demon Armor',
-        'Demon Skin',
-        'Devotion Aura',
-        'Divine Spirit',
-        'Frost Armor',
-        'Gift of the Wild',
-        'Greater Blessing of Kings',
-        'Greater Blessing of Light',
-        'Greater Blessing of Might',
-        'Greater Blessing of Salvation',
-        'Greater Blessing of Wisdom',
-        'Ice Armor',
-        'Ice Barrier',
-        'Inner Fire',
-        'Mage Armor',
-        'Mana Shield',
-        'Mark of the Wild',
-        'Power Word: Fortitude',
-        'Prayer of Fortitude',
-        'Prayer of Shadow Protection',
-        'Prayer of Spirit',
-        'Retribution Aura',
-        'Righteous Fury',
-        'Shadow Protection',
-        'Thorns') AND
     a.minlevel > 0
 GROUP BY a.name
 ORDER BY a.name;
