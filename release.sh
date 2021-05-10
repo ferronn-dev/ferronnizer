@@ -1,10 +1,11 @@
 #!/bin/sh
 set -e
+mkdir old
+unzip -q -d new Ferronnizer.zip
 if gh release download -D rel latest; then
   echo 'Checking existing release...'
-  (cd rel && unzip -q Ferronnizer.zip)
-  unzip -q Ferronnizer.zip
-  if diff -qrN Ferronnizer/ rel/Ferronnizer/; then
+  unzip -q -d old rel/Ferronnizer.zip
+  if diff -qrN old new; then
     echo 'No difference since last release.'
     exit 0
   fi
@@ -12,7 +13,8 @@ if gh release download -D rel latest; then
   gh release delete latest
 fi
 echo 'Creating new release...'
-gh release create -t latest latest
+(echo '```'; git diff --no-index --stat=120 old new || true; echo '```') > /tmp/thediff.md
+gh release create -t latest -F /tmp/thediff.md latest
 gh release upload latest Ferronnizer.zip
 echo 'Moving latest tag...'
 git tag -f latest
