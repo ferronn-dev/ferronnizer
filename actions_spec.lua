@@ -1,3 +1,4 @@
+local lfs = require('lfs')
 describe('Actions', function()
   it('makes a button', function()
     wow.state.player.name = 'Shydove'
@@ -57,4 +58,14 @@ describe('Actions', function()
         '/cast [@mouseover,help,nodead][] Lay on Hands')
     assert.same({{ macro = macro }}, wow.state.commands)
   end)
+  for toon in lfs.dir('toons') do
+    local name, realm = string.match(toon, '^(%a+)-(%a+).lua$')
+    if name then
+      it('can initialize ' .. toon, function()
+        wow.state.player.name = name
+        wow.state.realm = realm
+        wow.state:SendEvent('PLAYER_LOGIN')
+      end)
+    end
+  end
 end)
