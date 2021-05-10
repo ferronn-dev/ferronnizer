@@ -207,13 +207,16 @@ local customTypes = (function()
       }
     end)(),
     spell = (function()
+      local function fullName(action)
+        return action.spell .. (action.rank and ('(Rank ' .. action.rank .. ')') or '')
+      end
       return {
         getCooldown = function(action)
-          return GetSpellCooldown(action.spell)
+          return GetSpellCooldown(fullName(action))
         end,
         handlers = {
           BAG_UPDATE_DELAYED = function(button, action)
-            local count = libCount:GetSpellReagentCount(action.spell)
+            local count = libCount:GetSpellReagentCount(fullName(action))
             button.Count:SetText(count == nil and '' or count > 9999 and '*' or count)
           end,
         },
@@ -222,14 +225,15 @@ local customTypes = (function()
              '/dismount\n/stand\n'..
              (action.stopcasting and '/stopcasting\n' or '')..
              '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
-             action.spell))
+             fullName(action)))
+          -- Use the spell base name for GetSpellTexture; more likely to work on login.
           button.icon:SetTexture(GetSpellTexture(action.spell))
           if action.actionText then
             button.Name:SetText(action.actionText)
           end
         end,
         setTooltip = function(action)
-          local id = select(7, GetSpellInfo(action.spell))
+          local id = select(7, GetSpellInfo(fullName(action)))
           GameTooltip:SetSpellByID(id)
           local subtext = GetSpellSubtext(id)
           if subtext then

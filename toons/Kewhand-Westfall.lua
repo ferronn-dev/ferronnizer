@@ -4,17 +4,20 @@ G.Characters['Kewhand-Westfall'] = {
   [1] = {
     actionText = 'HL8',
     mouseover = true,
-    spell = 'Holy Light(Rank 8)',
+    rank = 8,
+    spell = 'Holy Light',
   },
   [2] = {
     actionText = 'FoL6',
     mouseover = true,
-    spell = 'Flash of Light(Rank 6)',
+    rank = 6,
+    spell = 'Flash of Light',
   },
   [3] = {
     actionText = 'FoL1',
     mouseover = true,
-    spell = 'Flash of Light(Rank 1)',
+    rank = 1,
+    spell = 'Flash of Light',
   },
   [4] = {
     spell = 'Divine Favor',

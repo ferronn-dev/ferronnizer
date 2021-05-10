@@ -4,17 +4,20 @@ G.Characters['Shydove-Westfall'] = {
   [1] = {
     actionText = 'GH5',
     mouseover = true,
-    spell = 'Greater Heal(Rank 5)',
+    rank = 5,
+    spell = 'Greater Heal',
   },
   [2] = {
     actionText = 'GH1',
     mouseover = true,
-    spell = 'Greater Heal(Rank 1)',
+    rank = 1,
+    spell = 'Greater Heal',
   },
   [3] = {
     actionText = 'H2',
     mouseover = true,
-    spell = 'Heal(Rank 2)',
+    rank = 2,
+    spell = 'Heal',
   },
   [4] = {
     stopcasting = true,
@@ -48,17 +51,20 @@ G.Characters['Shydove-Westfall'] = {
   [13] = {
     actionText = 'FH7',
     mouseover = true,
-    spell = 'Flash Heal(Rank 7)',
+    rank = 7,
+    spell = 'Flash Heal',
   },
   [14] = {
     actionText = 'FH3',
     mouseover = true,
-    spell = 'Flash Heal(Rank 3)',
+    rank = 3,
+    spell = 'Flash Heal',
   },
   [15] = {
     actionText = 'FH1',
     mouseover = true,
-    spell = 'Flash Heal(Rank 1)',
+    rank = 1,
+    spell = 'Flash Heal',
   },
   [16] = {
     stopcasting = true,
