@@ -14,10 +14,12 @@ FROM (
     FROM
         spellname n,
         spelllevels l,
-        skilllineability k
+        skilllineability k,
+        spellpower p
     WHERE
         n.id = l.spellid AND
         n.id = k.spell AND
+        n.id = p.spellid AND
         CAST(l.baselevel AS INT64) > 0) a
 LEFT OUTER JOIN
     spellreagents b
