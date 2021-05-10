@@ -76,6 +76,10 @@ G.Characters['Pixli-Westfall'] = {
   [27] = {
     spell = 'Frost Ward',
   },
+  [28] = {
+    spell = 'Counterspell',
+    stopcasting = true,
+  },
   [34] = {
     buff = true,
   },
