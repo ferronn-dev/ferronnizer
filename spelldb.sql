@@ -5,7 +5,7 @@ SELECT
             CAST(a.id AS INT64) AS id,
             a.minlevel AS level,
             CAST(b.reagent_0_ AS INT64) AS reagent)
-        ORDER BY a.minlevel DESC)
+        ORDER BY a.minlevel DESC, CAST(a.id AS INT64))
 FROM (
     SELECT
         n.id id,
