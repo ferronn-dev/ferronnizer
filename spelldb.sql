@@ -17,12 +17,11 @@ FROM (
         skilllineability k
     WHERE
         n.id = l.spellid AND
-        n.id = k.spell) a
+        n.id = k.spell AND
+        CAST(l.baselevel AS INT64) > 0) a
 LEFT OUTER JOIN
     spellreagents b
 ON
     a.id = b.spellid
-WHERE
-    a.minlevel > 0
 GROUP BY a.name
 ORDER BY a.name;
