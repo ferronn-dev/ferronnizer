@@ -15,8 +15,6 @@ jobs:
         fetch-depth: 0
     - name: Run addonmaker
       uses: ferronn-dev/addonmaker@main
-    - name: Create/update release
-      if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
-      run: ./release.sh
-      env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      with:
+        command: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && 'release' || 'build' }}
+        github_token: ${{secrets.GITHUB_TOKEN}}
