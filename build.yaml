@@ -69,6 +69,5 @@ sql:
   spelldb.sql:
   - SpellDB
 toc:
-  Interface: 11307
   Title: Ferronnizer
   Notes: My personal WoW addon
