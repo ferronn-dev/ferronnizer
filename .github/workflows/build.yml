@@ -3,6 +3,8 @@ name: build
 on:
   pull_request:
   push:
+  schedule:
+  - cron: '12 3/6 * * *'
   workflow_dispatch:
 jobs:
   build:
@@ -13,5 +15,5 @@ jobs:
     - name: Run addonmaker
       uses: ferronn-dev/addonmaker@main
       with:
-        command: ${{ ((github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch') && 'release' || 'build' }}
+        command: ${{ ((github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'release' || 'build' }}
         github_token: ${{secrets.GITHUB_TOKEN}}
