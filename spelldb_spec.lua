@@ -8,7 +8,6 @@ describe('spell db', function()
       ['Divine Favor'] = true,
       ['Escape Artist'] = true,
       ['Evocation'] = true,
-      ['Fishing'] = true,
       ['Inner Focus'] = true,
       ['Lay on Hands'] = true,
       ['Perception'] = true,

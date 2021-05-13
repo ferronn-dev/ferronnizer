@@ -127,9 +127,6 @@ G.Characters['Shydove-Westfall'] = {
     buff = true,
     reagent = 17029,
   },
-  [37] = {
-    spell = 'Fishing',
-  },
   [43] = {
     mount = true,
   },
