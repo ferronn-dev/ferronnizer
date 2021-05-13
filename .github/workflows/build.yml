@@ -13,7 +13,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Run addonmaker
-      uses: ferronn-dev/addonmaker@main
-      with:
-        command: ${{ ((github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'release' || 'build' }}
-        github_token: ${{secrets.GITHUB_TOKEN}}
+      uses: docker://ghcr.io/ferronn-dev/addonmaker:sha-0910e27
+#      args:
+#      - ${{ ((github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'release' || 'build' }}
+#      - ${{secrets.GITHUB_TOKEN}}
