@@ -1,0 +1,15 @@
+name: addonmaker
+description: addonmaker by ferronn-dev
+inputs:
+  command:
+    description: command to run, '' or 'release'
+    required: false
+  github_token:
+    description: GITHUB_TOKEN, if command is release
+    required: false
+runs:
+  using: docker
+  image: docker://ghcr.io/ferronn-dev/addonmaker:sha-0a8a148
+  args:
+  - ${{ inputs.command }}
+  - ${{ inputs.github_token }}
