@@ -13,7 +13,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Run addonmaker
-      uses: ferronn-dev/addonmaker@0fde0ce9c1b974e30522f2d441e1a8dcccf8c78c
+      uses: ferronn-dev/addonmaker@8440490b6685405a3b4971e970feb5085bcd6395
       with:
         command: ${{ ((github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'release' || 'build' }}
         github_token: ${{secrets.GITHUB_TOKEN}}
