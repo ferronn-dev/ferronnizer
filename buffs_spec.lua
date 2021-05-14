@@ -44,6 +44,16 @@ describe('BuffButton', function()
     assertCastSpell(10054)
   end)
 
+  it('can conjure food', function()
+    wow.state.knownSpells = {587}
+    assertCastSpell(587)
+  end)
+
+  it('can conjure water', function()
+    wow.state.knownSpells = {5504}
+    assertCastSpell(5504)
+  end)
+
   it('can cast ice armor', function()
     wow.state.knownSpells = {10219}
     assertCastSpell(10219)

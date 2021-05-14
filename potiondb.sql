@@ -1,5 +1,5 @@
 -- HealthPotionDB
-SELECT CAST(s.id AS INT64)
+SELECT CAST(s.id AS INT64), CAST(s.requiredlevel AS INT64)
 FROM itemsparse s, itemeffect e, spelleffect z
 WHERE s.id = e.parentitemid
   AND e.spellcategoryid = "4"
@@ -8,7 +8,7 @@ WHERE s.id = e.parentitemid
 ORDER BY CAST(s.itemlevel AS INT64) DESC;
 
 -- ManaPotionDB
-SELECT CAST(s.id AS INT64)
+SELECT CAST(s.id AS INT64), CAST(s.requiredlevel AS INT64)
 FROM itemsparse s, itemeffect e, spelleffect z
 WHERE s.id = e.parentitemid
   AND e.spellcategoryid = "4"

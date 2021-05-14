@@ -177,7 +177,7 @@ local trackingdb = {
 local function consumeList(db)
   local spells = {}
   for _, e in ipairs(db) do
-    local item, _, spell = unpack(e)
+    local item, _, _, spell = unpack(e)
     if spell then
       table.insert(spells, {spell = spell, item = item})
     end

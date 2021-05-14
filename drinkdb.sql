@@ -1,5 +1,6 @@
 SELECT
   CAST(s.id AS INT64),
+  CAST(s.requiredlevel AS INT64),
   CAST(e.spellid AS INT64),
   CAST(z.spellid AS INT64)
 FROM

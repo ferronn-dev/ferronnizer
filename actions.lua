@@ -23,10 +23,11 @@ local customTypes = (function()
       return s
     end
     local currentDB
-    local function computeItem()
+    local function computeItem(levelarg)
+      local level = levelarg or UnitLevel('player')
       for _, consumable in ipairs(currentDB) do
-        local item = unpack(consumable)
-        if GetItemCount(item) > 0 then
+        local item, minlevel = unpack(consumable)
+        if level >= minlevel and GetItemCount(item) > 0 then
           return item
         end
       end
@@ -36,8 +37,8 @@ local customTypes = (function()
     local function getCooldown()
       return GetItemCooldown(item)
     end
-    local function updateItem(button)
-      item = computeItem()
+    local function updateItem(button, level)
+      item = computeItem(level)
       updateCount(button, item)
       updateCooldown(button, getCooldown)
       button.icon:SetTexture(GetItemIcon(item))
@@ -53,6 +54,9 @@ local customTypes = (function()
       handlers = {
         BAG_UPDATE_DELAYED = function(button)
           updateItem(button)
+        end,
+        PLAYER_LEVEL_UP = function(button, level)
+          updateItem(button, level)
         end,
         PLAYER_REGEN_DISABLED = function(button)
           updateDB(button, potionDB)
