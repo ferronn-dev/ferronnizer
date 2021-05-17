@@ -335,16 +335,14 @@ local function makeCustomActionButton(i, action)
       updateButton(self, handlers[ev](action, ...))
     end
   end)())
-  return button, ty
+  return button
 end
 
 local function makeCustomActionButtons(actions)
   local buttons = {}
-  local customActionButtons = {}
   for i = 1, 48 do
-    local button, ty = makeCustomActionButton(i, actions[i] or { empty = true })
+    local button = makeCustomActionButton(i, actions[i] or { empty = true })
     table.insert(buttons, button)
-    customActionButtons[button] = ty
   end
   -- Handle generic events separately from individual button OnEvent handlers.
   local keyBound = LibStub('LibKeyBound-1.0')
@@ -364,7 +362,7 @@ local function makeCustomActionButtons(actions)
       end
     end,
     UPDATE_BINDINGS = function()
-      for button in pairs(customActionButtons) do
+      for _, button in ipairs(buttons) do
         local key = GetBindingKey('CLICK ' .. button:GetName() .. ':LeftButton')
         if key then
           button.HotKey:SetText(keyBound:ToShortKey(key))
