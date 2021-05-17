@@ -66,12 +66,8 @@ local customTypes = (function()
       end,
     }
   end
-  local function getGcdCooldown()
-    return GetSpellCooldown(29515)
-  end
   return {
     buff = {
-      getCooldown = getGcdCooldown,
       handlers = {
         BAG_UPDATE_DELAYED = function(action)
           return {
@@ -90,7 +86,6 @@ local customTypes = (function()
     drink = consume(G.DrinkDB, G.ManaPotionDB),
     eat = consume(G.FoodDB, G.HealthPotionDB),
     empty = {
-      getCooldown = function() end,
       handlers = {},
       init = function()
         return { shown = false }
@@ -124,7 +119,6 @@ local customTypes = (function()
       }
     end)(),
     macro = {
-      getCooldown = function() end,
       handlers = {},
       init = function(action)
         return {
@@ -167,7 +161,6 @@ local customTypes = (function()
         }
       end
       return {
-        getCooldown = getGcdCooldown,
         handlers = {
           BAG_UPDATE_DELAYED = update,
           PLAYER_REGEN_DISABLED = function()
@@ -209,7 +202,6 @@ local customTypes = (function()
       }
     end)(),
     stopcasting = {
-      getCooldown = function() end,
       handlers = {},
       init = function()
         return {
@@ -358,7 +350,9 @@ local function makeCustomActionButtons(actions)
       local update = buttonLang.cooldown
       for i, button in ipairs(buttons) do
         local cdfn = customActionButtons[button].getCooldown
-        update(button, function() cdfn(actions[i]) end)
+        if cdfn then
+          update(button, function() cdfn(actions[i]) end)
+        end
       end
     end,
     UPDATE_BINDINGS = function()
