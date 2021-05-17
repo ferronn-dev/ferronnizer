@@ -59,7 +59,6 @@ local customTypes = (function()
   end
   return {
     buff = {
-      handlers = {},
       init = function(action)
         return {
           count = action.reagent and { item = action.reagent },
@@ -72,7 +71,6 @@ local customTypes = (function()
     drink = consume(G.DrinkDB, G.ManaPotionDB),
     eat = consume(G.FoodDB, G.HealthPotionDB),
     empty = {
-      handlers = {},
       init = function()
         return { shown = false }
       end,
@@ -101,7 +99,6 @@ local customTypes = (function()
       }
     end)(),
     macro = {
-      handlers = {},
       init = function(action)
         return {
           name = action.actionText,
@@ -157,7 +154,6 @@ local customTypes = (function()
       }
     end)(),
     spell = {
-      handlers = {},
       init = function(action)
         local fullName = action.spell .. (action.rank and ('(Rank ' .. action.rank .. ')') or '')
         return {
@@ -176,7 +172,6 @@ local customTypes = (function()
       end,
     },
     stopcasting = {
-      handlers = {},
       init = function()
         return {
           icon = 135768,
@@ -322,7 +317,7 @@ local function makeCustomActionButton(i, action)
     button:SetChecked(false)
   end)
   button:SetScript('OnEvent', (function()
-    local handlers = ty.handlers
+    local handlers = ty.handlers or {}
     button:UnregisterAllEvents()
     for ev in pairs(handlers) do
       button:RegisterEvent(ev)
