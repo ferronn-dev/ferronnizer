@@ -35,7 +35,7 @@ local customTypes = (function()
     local function updateItem(level)
       item = computeItem(level)
       return {
-        cooldown = getCooldown,
+        cooldown = {getCooldown()},
         count = formatCount(item),
         icon = GetItemIcon(item),
         tooltip = { item = item },
@@ -100,7 +100,7 @@ local customTypes = (function()
         local usable = item and GetItemSpell(item)
         return {
           color = usable and 1.0 or 0.4,
-          cooldown = function() getCooldown(action) end,
+          cooldown = {getCooldown(action)},
           enabled = usable,
           icon = item and GetItemIcon(item) or 136528,
         }
@@ -255,8 +255,8 @@ local buttonLang = {
   color = function(button, color)
     button.icon:SetVertexColor(color, color, color)
   end,
-  cooldown = function(button, fn)
-    local start, duration, enable, modRate = fn()
+  cooldown = function(button, arg)
+    local start, duration, enable, modRate = unpack(arg)
     CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
   end,
   count = function(button, count)
@@ -351,7 +351,7 @@ local function makeCustomActionButtons(actions)
       for i, button in ipairs(buttons) do
         local cdfn = customActionButtons[button].getCooldown
         if cdfn then
-          update(button, function() cdfn(actions[i]) end)
+          update(button, {cdfn(actions[i])})
         end
       end
     end,
