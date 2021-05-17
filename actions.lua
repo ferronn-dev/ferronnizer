@@ -4,11 +4,6 @@ local prefix = addonName .. 'ActionButton'
 local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
 
 local customTypes = (function()
-  local libCount = LibStub('LibClassicSpellActionCount-1.0')
-  local function formatCount(item)
-    local count = GetItemCount(item)
-    return count > 9999 and '*' or count
-  end
   local function consume(mealDB, potionDB)
     local function macroText(db)
       local s = ''
@@ -33,7 +28,7 @@ local customTypes = (function()
       item = computeItem(level)
       return {
         cooldown = { item = item },
-        count = formatCount(item),
+        count = { item = item },
         icon = GetItemIcon(item),
         tooltip = { item = item },
       }
@@ -64,15 +59,10 @@ local customTypes = (function()
   end
   return {
     buff = {
-      handlers = {
-        BAG_UPDATE_DELAYED = function(action)
-          return {
-            count = action.reagent and formatCount(action.reagent)
-          }
-        end,
-      },
-      init = function()
+      handlers = {},
+      init = function(action)
         return {
+          count = action.reagent and { item = action.reagent },
           icon = 135938,
           macro = '/click ' .. addonName .. 'BuffButton',
           tooltip = { text = 'Buff' },
@@ -171,15 +161,11 @@ local customTypes = (function()
         return action.spell .. (action.rank and ('(Rank ' .. action.rank .. ')') or '')
       end
       return {
-        handlers = {
-          BAG_UPDATE_DELAYED = function(action)
-            local count = libCount:GetSpellReagentCount(fullName(action))
-            return { count = count == nil and '' or count > 9999 and '*' or count }
-          end,
-        },
+        handlers = {},
         init = function(action)
           return {
             cooldown = { spell = fullName(action) },
+            count = { spell = fullName(action) },
             -- Use the spell base name for GetSpellTexture; more likely to work on login.
             icon = GetSpellTexture(action.spell),
             macro = (
@@ -233,6 +219,18 @@ local cooldownLang = {
 
 local cooldownData = {}
 
+local countLang = {
+  item = function(item)
+    return GetItemCount(item)
+  end,
+  spell = function(spell)
+    local libCount = LibStub('LibClassicSpellActionCount-1.0')
+    return libCount:GetSpellReagentCount(spell)
+  end,
+}
+
+local countData = {}
+
 local tooltipLang = {
   invslot = function(invslot)
     GameTooltip:SetInventoryItem('player', invslot)
@@ -265,7 +263,7 @@ local buttonLang = {
     cooldownData[button] = cooldown
   end,
   count = function(button, count)
-    button.Count:SetText(count)
+    countData[button] = count
   end,
   enabled = function(button, enabled)
     if not InCombatLockdown() then
@@ -351,6 +349,16 @@ local function makeCustomActionButtons(actions)
   -- Handle generic events separately from individual button OnEvent handlers.
   local keyBound = LibStub('LibKeyBound-1.0')
   G.Eventer({
+    BAG_UPDATE_DELAYED = function()
+      for button in pairs(customActionButtons) do
+        local cd = countData[button]
+        if cd then
+          local k, v = next(cd)
+          local count = countLang[k](v)
+          button.Count:SetText(count == nil and '' or count > 9999 and '*' or count)
+        end
+      end
+    end,
     SPELL_UPDATE_COOLDOWN = function()
       for button in pairs(customActionButtons) do
         local cd = cooldownData[button]
