@@ -38,6 +38,7 @@ local customTypes = (function()
         cooldown = getCooldown,
         count = formatCount(item),
         icon = GetItemIcon(item),
+        tooltip = { item = item },
       }
     end
     local function updateDB(db)
@@ -63,9 +64,6 @@ local customTypes = (function()
       init = function()
         return updateDB(mealDB)
       end,
-      setTooltip = function()
-        GameTooltip:SetHyperlink('item:' .. item)
-      end,
     }
   end
   local function getGcdCooldown()
@@ -85,10 +83,8 @@ local customTypes = (function()
         return {
           icon = 135938,
           macro = '/click ' .. addonName .. 'BuffButton',
+          tooltip = { text = 'Buff' },
         }
-      end,
-      setTooltip = function()
-        GameTooltip:SetText('Buff')
       end,
     },
     drink = consume(G.DrinkDB, G.ManaPotionDB),
@@ -99,7 +95,6 @@ local customTypes = (function()
       init = function()
         return { shown = false }
       end,
-      setTooltip = function() end,
     },
     invslot = (function()
       local function getCooldown(action)
@@ -121,16 +116,10 @@ local customTypes = (function()
           PLAYER_EQUIPMENT_CHANGED = update,
         },
         init = function(action)
-          return Mixin(update(action), { macro = '/use ' .. action.invslot })
-        end,
-        setTooltip = function(action)
-          local item = GetInventoryItemID('player', action.invslot)
-          local spell = item and select(2, GetItemSpell(item))
-          if spell and IsShiftKeyDown() then
-            GameTooltip:SetSpellByID(spell)
-          else
-            GameTooltip:SetInventoryItem('player', action.invslot)
-          end
+          return Mixin(update(action), {
+            macro = '/use ' .. action.invslot,
+            tooltip = { invslot = action.invslot },
+          })
         end,
       }
     end)(),
@@ -142,48 +131,39 @@ local customTypes = (function()
           name = action.actionText,
           icon = action.texture,
           macro = action.macro,
+          tooltip = { text = action.tooltip },
         }
-      end,
-      setTooltip = function(action)
-        GameTooltip:SetText(action.tooltip)
       end,
     },
     mount = (function()
-      local tooltipFn
       local function update()
         for _, spellx in ipairs(G.MountSpellDB) do
           local spell = spellx[1]
           if IsSpellKnown(spell) then
-            tooltipFn = function()
-              GameTooltip:SetSpellByID(spell)
-            end
             return {
               color = 1.0,
               icon = GetSpellTexture(spell),
               macro = '/cast ' .. GetSpellInfo(spell),
+              tooltip = { spell = spell },
             }
           end
         end
         for _, itemx in ipairs(G.MountItemDB) do
           local item = itemx[1]
           if GetItemCount(item) > 0 then
-            tooltipFn = function()
-              GameTooltip:SetHyperlink('item:' .. item)
-            end
             return {
               color = 1.0,
               icon = GetItemIcon(item),
               macro = '/use item:' .. item,
+              tooltip = { item = item },
             }
           end
-        end
-        tooltipFn = function()
-          GameTooltip:SetText('No mount... yet.')
         end
         return {
           color = 0.4,
           icon = 132261,
           macro = '',
+          tooltip = { text = 'No mount... yet.' },
         }
       end
       return {
@@ -197,9 +177,6 @@ local customTypes = (function()
           SPELLS_CHANGED = update,
         },
         init = update,
-        setTooltip = function()
-          tooltipFn()
-        end,
       }
     end)(),
     spell = (function()
@@ -226,18 +203,8 @@ local customTypes = (function()
               '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
               fullName(action)),
             name = action.actionText,
+            tooltip = { spell = select(7, GetSpellInfo(fullName(action))) },
           }
-        end,
-        setTooltip = function(action)
-          local id = select(7, GetSpellInfo(fullName(action)))
-          GameTooltip:SetSpellByID(id)
-          local subtext = GetSpellSubtext(id)
-          if subtext then
-            GameTooltipTextRight1:SetText(subtext)
-            GameTooltipTextRight1:SetTextColor(0.5, 0.5, 0.5)
-            GameTooltipTextRight1:Show()
-            GameTooltip:Show()
-          end
         end,
       }
     end)(),
@@ -249,10 +216,8 @@ local customTypes = (function()
           icon = 135768,
           macro = '/stopcasting',
           name = 'Stop',
+          tooltip = { text = 'Stop Casting' },
         }
-      end,
-      setTooltip = function()
-        GameTooltip:SetText('Stop Casting')
       end,
     },
   }
@@ -269,6 +234,30 @@ local function getType(action)
     end
   end
 end
+
+local tooltipLang = {
+  invslot = function(invslot)
+    GameTooltip:SetInventoryItem('player', invslot)
+  end,
+  item = function(item)
+    GameTooltip:SetHyperlink('item:' .. item)
+  end,
+  spell = function(spell)
+    GameTooltip:SetSpellByID(spell)
+    local subtext = GetSpellSubtext(spell)
+    if subtext then
+      GameTooltipTextRight1:SetText(subtext)
+      GameTooltipTextRight1:SetTextColor(0.5, 0.5, 0.5)
+      GameTooltipTextRight1:Show()
+      GameTooltip:Show()
+    end
+  end,
+  text = function(text)
+    GameTooltip:SetText(text)
+  end,
+}
+
+local tooltipData = {}
 
 local buttonLang = {
   color = function(button, color)
@@ -302,6 +291,9 @@ local buttonLang = {
       button:SetShown(shown)
     end
   end,
+  tooltip = function(button, tooltip)
+    tooltipData[button] = tooltip
+  end,
 }
 
 local function updateButton(button, arg)
@@ -326,7 +318,11 @@ local function makeCustomActionButton(i, action)
   updateButton(button, ty.init(action))
   button:SetScript('OnEnter', function()
     GameTooltip_SetDefaultAnchor(GameTooltip, button)
-    ty.setTooltip(action)
+    local tt = tooltipData[button]
+    if tt then
+      local k, v = next(tt)
+      tooltipLang[k](v)
+    end
   end)
   button:SetScript('OnLeave', function()
     GameTooltip:Hide()
