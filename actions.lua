@@ -77,25 +77,18 @@ local customTypes = (function()
     },
     invslot = (function()
       local function update(action)
-        local item = GetInventoryItemID('player', action.invslot)
-        local usable = item and GetItemSpell(item)
         return {
-          color = usable and 1.0 or 0.4,
-          enabled = usable,
-          icon = item and GetItemIcon(item) or 136528,
+          cooldown = { invslot = action.invslot },
+          icon = GetInventoryItemTexture('player', action.invslot) or 136528,
+          macro = '/use ' .. action.invslot,
+          tooltip = { invslot = action.invslot },
         }
       end
       return {
         handlers = {
           PLAYER_EQUIPMENT_CHANGED = update,
         },
-        init = function(action)
-          return Mixin(update(action), {
-            cooldown = { invslot = action.invslot },
-            macro = '/use ' .. action.invslot,
-            tooltip = { invslot = action.invslot },
-          })
-        end,
+        init = update,
       }
     end)(),
     macro = {
