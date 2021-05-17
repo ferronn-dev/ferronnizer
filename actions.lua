@@ -156,29 +156,25 @@ local customTypes = (function()
         init = update,
       }
     end)(),
-    spell = (function()
-      local function fullName(action)
-        return action.spell .. (action.rank and ('(Rank ' .. action.rank .. ')') or '')
-      end
-      return {
-        handlers = {},
-        init = function(action)
-          return {
-            cooldown = { spell = fullName(action) },
-            count = { spell = fullName(action) },
-            -- Use the spell base name for GetSpellTexture; more likely to work on login.
-            icon = GetSpellTexture(action.spell),
-            macro = (
-              '/dismount\n/stand\n'..
-              (action.stopcasting and '/stopcasting\n' or '')..
-              '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
-              fullName(action)),
-            name = action.actionText,
-            tooltip = { spell = select(7, GetSpellInfo(fullName(action))) },
-          }
-        end,
-      }
-    end)(),
+    spell = {
+      handlers = {},
+      init = function(action)
+        local fullName = action.spell .. (action.rank and ('(Rank ' .. action.rank .. ')') or '')
+        return {
+          cooldown = { spell = fullName },
+          count = { spell = fullName },
+          -- Use the spell base name for GetSpellTexture; more likely to work on login.
+          icon = GetSpellTexture(action.spell),
+          macro = (
+            '/dismount\n/stand\n'..
+            (action.stopcasting and '/stopcasting\n' or '')..
+            '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
+            fullName),
+          name = action.actionText,
+          tooltip = { spell = select(7, GetSpellInfo(fullName)) },
+        }
+      end,
+    },
     stopcasting = {
       handlers = {},
       init = function()
