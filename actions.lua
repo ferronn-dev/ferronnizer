@@ -303,12 +303,7 @@ local buttonLang = {
   end,
   shown = function(button, shown)
     if not InCombatLockdown() then
-      -- TODO add SetShown to addonmaker
-      if shown then
-        button:Show()
-      else
-        button:Hide()
-      end
+      button:SetShown(shown)
     end
   end,
 }
