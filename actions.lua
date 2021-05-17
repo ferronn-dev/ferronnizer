@@ -29,13 +29,10 @@ local customTypes = (function()
       return currentDB[#currentDB][1]  -- give up and return the last thing
     end
     local item
-    local function getCooldown()
-      return GetItemCooldown(item)
-    end
     local function updateItem(level)
       item = computeItem(level)
       return {
-        cooldown = {getCooldown()},
+        cooldown = { item = item },
         count = formatCount(item),
         icon = GetItemIcon(item),
         tooltip = { item = item },
@@ -46,7 +43,6 @@ local customTypes = (function()
       return Mixin(updateItem(), { macro = macroText(db) })
     end
     return {
-      getCooldown = getCooldown,
       handlers = {
         BAG_UPDATE_DELAYED = function()
           return updateItem()
@@ -92,26 +88,22 @@ local customTypes = (function()
       end,
     },
     invslot = (function()
-      local function getCooldown(action)
-        return GetInventoryItemCooldown('player', action.invslot)
-      end
       local function update(action)
         local item = GetInventoryItemID('player', action.invslot)
         local usable = item and GetItemSpell(item)
         return {
           color = usable and 1.0 or 0.4,
-          cooldown = {getCooldown(action)},
           enabled = usable,
           icon = item and GetItemIcon(item) or 136528,
         }
       end
       return {
-        getCooldown = getCooldown,
         handlers = {
           PLAYER_EQUIPMENT_CHANGED = update,
         },
         init = function(action)
           return Mixin(update(action), {
+            cooldown = { invslot = action.invslot },
             macro = '/use ' .. action.invslot,
             tooltip = { invslot = action.invslot },
           })
@@ -135,6 +127,7 @@ local customTypes = (function()
           local spell = spellx[1]
           if IsSpellKnown(spell) then
             return {
+              cooldown = { spell = spell },
               color = 1.0,
               icon = GetSpellTexture(spell),
               macro = '/cast ' .. GetSpellInfo(spell),
@@ -146,6 +139,7 @@ local customTypes = (function()
           local item = itemx[1]
           if GetItemCount(item) > 0 then
             return {
+              cooldown = { item = item },
               color = 1.0,
               icon = GetItemIcon(item),
               macro = '/use item:' .. item,
@@ -177,9 +171,6 @@ local customTypes = (function()
         return action.spell .. (action.rank and ('(Rank ' .. action.rank .. ')') or '')
       end
       return {
-        getCooldown = function(action)
-          return GetSpellCooldown(fullName(action))
-        end,
         handlers = {
           BAG_UPDATE_DELAYED = function(action)
             local count = libCount:GetSpellReagentCount(fullName(action))
@@ -188,6 +179,7 @@ local customTypes = (function()
         },
         init = function(action)
           return {
+            cooldown = { spell = fullName(action) },
             -- Use the spell base name for GetSpellTexture; more likely to work on login.
             icon = GetSpellTexture(action.spell),
             macro = (
@@ -227,6 +219,20 @@ local function getType(action)
   end
 end
 
+local cooldownLang = {
+  invslot = function(invslot)
+    return GetInventoryItemCooldown('player', invslot)
+  end,
+  item = function(item)
+    return GetItemCooldown(item)
+  end,
+  spell = function(spell)
+    return GetSpellCooldown(spell)
+  end,
+}
+
+local cooldownData = {}
+
 local tooltipLang = {
   invslot = function(invslot)
     GameTooltip:SetInventoryItem('player', invslot)
@@ -255,9 +261,8 @@ local buttonLang = {
   color = function(button, color)
     button.icon:SetVertexColor(color, color, color)
   end,
-  cooldown = function(button, arg)
-    local start, duration, enable, modRate = unpack(arg)
-    CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
+  cooldown = function(button, cooldown)
+    cooldownData[button] = cooldown
   end,
   count = function(button, count)
     button.Count:SetText(count)
@@ -347,11 +352,12 @@ local function makeCustomActionButtons(actions)
   local keyBound = LibStub('LibKeyBound-1.0')
   G.Eventer({
     SPELL_UPDATE_COOLDOWN = function()
-      local update = buttonLang.cooldown
-      for i, button in ipairs(buttons) do
-        local cdfn = customActionButtons[button].getCooldown
-        if cdfn then
-          update(button, {cdfn(actions[i])})
+      for button in pairs(customActionButtons) do
+        local cd = cooldownData[button]
+        if cd then
+          local k, v = next(cd)
+          local start, duration, enable, modRate = cooldownLang[k](v)
+          CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
         end
       end
     end,
