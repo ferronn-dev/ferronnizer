@@ -350,23 +350,17 @@ local function makeCustomActionButtons(actions)
   local keyBound = LibStub('LibKeyBound-1.0')
   G.Eventer({
     BAG_UPDATE_DELAYED = function()
-      for button in pairs(customActionButtons) do
-        local cd = countData[button]
-        if cd then
-          local k, v = next(cd)
-          local count = countLang[k](v)
-          button.Count:SetText(count == nil and '' or count > 9999 and '*' or count)
-        end
+      for button, cd in pairs(countData) do
+        local k, v = next(cd)
+        local count = countLang[k](v)
+        button.Count:SetText(count == nil and '' or count > 9999 and '*' or count)
       end
     end,
     SPELL_UPDATE_COOLDOWN = function()
-      for button in pairs(customActionButtons) do
-        local cd = cooldownData[button]
-        if cd then
-          local k, v = next(cd)
-          local start, duration, enable, modRate = cooldownLang[k](v)
-          CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
-        end
+      for button, cd in pairs(cooldownData) do
+        local k, v = next(cd)
+        local start, duration, enable, modRate = cooldownLang[k](v)
+        CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
       end
     end,
     UPDATE_BINDINGS = function()
