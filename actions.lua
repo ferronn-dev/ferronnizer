@@ -3,11 +3,6 @@ local addonName, G = ...
 local prefix = addonName .. 'ActionButton'
 local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
 
-local function updateCooldown(button, fn)
-  local start, duration, enable, modRate = fn()
-  CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
-end
-
 local customTypes = (function()
   local libCount = LibStub('LibClassicSpellActionCount-1.0')
   local function formatCount(item)
@@ -280,7 +275,8 @@ local buttonLang = {
     button.icon:SetVertexColor(color, color, color)
   end,
   cooldown = function(button, fn)
-    updateCooldown(button, fn)
+    local start, duration, enable, modRate = fn()
+    CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
   end,
   count = function(button, count)
     button.Count:SetText(count)
@@ -363,9 +359,10 @@ local function makeCustomActionButtons(actions)
   local keyBound = LibStub('LibKeyBound-1.0')
   G.Eventer({
     SPELL_UPDATE_COOLDOWN = function()
+      local update = buttonLang.cooldown
       for i, button in ipairs(buttons) do
         local cdfn = customActionButtons[button].getCooldown
-        updateCooldown(button, function() cdfn(actions[i]) end)
+        update(button, function() cdfn(actions[i]) end)
       end
     end,
     UPDATE_BINDINGS = function()
