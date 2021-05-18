@@ -378,12 +378,6 @@ end
 
 local function makeOnlyLabButtons()
   local LAB10 = LibStub('LibActionButton-1.0')
-  -- LAB bug
-  G.Eventer({
-    BAG_UPDATE_DELAYED = function()
-      LAB10.eventFrame:GetScript('OnEvent')(LAB10.eventFrame, 'SPELL_UPDATE_CHARGES')
-    end,
-  })
   local buttons = {}
   for i = 1, 48 do
     local button = LAB10:CreateButton(i, prefix .. i, header)
