@@ -42,7 +42,7 @@ local customTypes = (function()
         BAG_UPDATE_DELAYED = function()
           return updateItem()
         end,
-        PLAYER_LEVEL_UP = function(level)
+        PLAYER_LEVEL_UP = function(_, level)
           return updateItem(level)
         end,
         PLAYER_REGEN_DISABLED = function()
@@ -284,10 +284,9 @@ local function updateButton(button, arg)
   end
 end
 
-local function makeCustomActionButton(i, action)
+local function makeCustomActionButton(i)
   local button = CreateFrame(
       'CheckButton', prefix .. i, header, 'ActionButtonTemplate, SecureActionButtonTemplate')
-  local ty = getType(action)
   button:SetAttribute('type', 'macro')
   button:SetMotionScriptsWhileDisabled(true)
   button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
@@ -297,7 +296,6 @@ local function makeCustomActionButton(i, action)
   button:SetNormalTexture('Interface\\Buttons\\UI-Quickslot2')
   button.NormalTexture:SetTexCoord(0, 0, 0, 0)
   button.cooldown:SetSwipeColor(0, 0, 0)
-  updateButton(button, ty.init(action))
   button:SetScript('OnEnter', function()
     GameTooltip_SetDefaultAnchor(GameTooltip, button)
     local tt = tooltipData[button]
@@ -312,28 +310,30 @@ local function makeCustomActionButton(i, action)
   button:SetScript('PostClick', function()
     button:SetChecked(false)
   end)
-  button:SetScript('OnEvent', (function()
-    local handlers = ty.handlers or {}
-    button:UnregisterAllEvents()
-    for ev in pairs(handlers) do
-      button:RegisterEvent(ev)
-    end
-    return function(self, ev, ...)
-      updateButton(self, handlers[ev](action, ...))
-    end
-  end)())
   return button
 end
 
 local function makeCustomActionButtons(actions)
   local buttons = {}
   for i = 1, 48 do
-    local button = makeCustomActionButton(i, actions[i] or { empty = true })
-    table.insert(buttons, button)
+    table.insert(buttons, makeCustomActionButton(i))
   end
-  -- Handle generic events separately from individual button OnEvent handlers.
-  local keyBound = LibStub('LibKeyBound-1.0')
-  G.Eventer({
+  local handlers = {}
+  local function addHandler(ev, handler)
+    handlers[ev] = handlers[ev] or {}
+    table.insert(handlers[ev], handler)
+  end
+  for i, button in ipairs(buttons) do
+    local action = actions[i] or { empty = true }
+    local ty = getType(action)
+    updateButton(button, ty.init(action))
+    for ev, handler in pairs(ty.handlers or {}) do
+      addHandler(ev, function(...)
+        return updateButton(button, handler(action, ...))
+      end)
+    end
+  end
+  local genericHandlers = {
     BAG_UPDATE_DELAYED = function()
       for button, cd in pairs(countData) do
         local k, v = next(cd)
@@ -349,6 +349,7 @@ local function makeCustomActionButtons(actions)
       end
     end,
     UPDATE_BINDINGS = function()
+      local keyBound = LibStub('LibKeyBound-1.0')
       for _, button in ipairs(buttons) do
         local key = GetBindingKey('CLICK ' .. button:GetName() .. ':LeftButton')
         if key then
@@ -359,7 +360,19 @@ local function makeCustomActionButtons(actions)
         end
       end
     end,
-  })
+  }
+  for ev, handler in pairs(genericHandlers) do
+    addHandler(ev, handler)
+  end
+  local handlersHandlers = {}
+  for ev, hs in pairs(handlers) do
+    handlersHandlers[ev] = function(...)
+      for _, h in ipairs(hs) do
+        h(...)
+      end
+    end
+  end
+  G.Eventer(handlersHandlers)
   return buttons
 end
 
