@@ -160,7 +160,7 @@ local customTypes = (function()
             '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
             fullName),
           name = action.actionText,
-          tooltip = { spell = select(7, GetSpellInfo(fullName)) },
+          tooltip = { spell = fullName },
         }
       end,
     },
@@ -223,6 +223,9 @@ local tooltipLang = {
     GameTooltip:SetHyperlink('item:' .. item)
   end,
   spell = function(spell)
+    if type(spell) == 'string' then
+      spell = select(7, GetSpellInfo(spell))
+    end
     GameTooltip:SetSpellByID(spell)
     local subtext = GetSpellSubtext(spell)
     if subtext then
