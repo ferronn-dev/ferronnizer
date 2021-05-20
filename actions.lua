@@ -399,7 +399,7 @@ local function makeCustomActionButtons(actions)
   CreateFrame('Frame'):SetScript('OnUpdate', function(_, elapsed)
     updateTimer = updateTimer - elapsed
     if updateTimer <= 0 then
-      updateTimer = _G.TOOLTIP_UPDATE_TIME
+      updateTimer = TOOLTIP_UPDATE_TIME
       for button, update in pairs(updateData) do
         local k, v = next(update)
         local r, g, b = updateLang[k](v)
