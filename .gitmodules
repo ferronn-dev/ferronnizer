@@ -1,0 +1,3 @@
+[submodule "addonmaker"]
+	path = addonmaker
+	url = https://github.com/ferronn-dev/addonmaker
