@@ -14,6 +14,11 @@ G.Eventer({
     Minimap:SetScale(0.75)
     Minimap:SetZoom(0)
     Minimap:SetPoint('TOP', UIParent, 'CENTER', 0, -200)
+    if MiniMapTracking then
+      MiniMapTracking:SetParent(Minimap)
+      MiniMapTracking:ClearAllPoints()
+      MiniMapTracking:SetPoint('TOPLEFT', Minimap, 'TOPLEFT')
+    end
   end,
   PLAYER_ENTERING_WORLD = ifClassic(function()
     local t = GetTrackingTexture()
