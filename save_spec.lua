@@ -4,7 +4,7 @@ describe('save', function()
     wow.state:SendEvent('PLAYER_ENTERING_WORLD')
     wow.state:SendEvent('PLAYER_LOGOUT')
     local function ifClassic(k)
-      return WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE and k or nil
+      return WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and k or nil
     end
     local expected = {
       bags = {},
