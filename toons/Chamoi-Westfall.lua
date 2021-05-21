@@ -13,6 +13,12 @@ G.Characters['Chamoi-Westfall'] = {
   [5] = {
     spell = 'Lightning Shield',
   },
+  [6] = {
+    spell = 'Strength of Earth Totem',
+  },
+  [7] = {
+    spell = 'Searing Totem',
+  },
   [13] = {
     actionText = 'HW3',
     mouseover = true,
@@ -47,9 +53,6 @@ G.Characters['Chamoi-Westfall'] = {
   [21] = {
     mouseover = true,
     spell = 'Ancestral Spirit',
-  },
-  [25] = {
-    spell = 'Strength of Earth Totem',
   },
   [26] = {
     spell = 'Stoneskin Totem',
