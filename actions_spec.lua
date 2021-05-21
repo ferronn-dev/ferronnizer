@@ -68,4 +68,13 @@ describe('Actions', function()
       end)
     end
   end
+  it('has non-combat macrotexts that are not too long', function()
+    wow.state.player.name = 'Shydove'
+    wow.state.realm = 'Westfall'
+    wow.state:SendEvent('PLAYER_LOGIN')
+    for i = 1, 48 do
+      local t = wow.env['mooActionButton' .. i]:GetAttribute('macrotext')
+      assert.True(not t or t:len() < 1024, i)
+    end
+  end)
 end)
