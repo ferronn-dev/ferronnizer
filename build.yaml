@@ -5,6 +5,7 @@ deps:
   - fooddb.lua
   - mountdb.lua
   - potiondb.lua
+  - toons/Chamoi-Westfall.lua
   - toons/Kewhand-Westfall.lua
   - toons/Kewmelt-Westfall.lua
   - toons/Pixli-Westfall.lua
