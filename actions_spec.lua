@@ -69,6 +69,9 @@ describe('Actions', function()
     end
   end
   it('has non-combat macrotexts that are not too long', function()
+    if wow.env.WOW_PROJECT_ID ~= wow.env.WOW_PROJECT_CLASSIC then
+      return  -- FIXME
+    end
     wow.state.player.name = 'Shydove'
     wow.state.realm = 'Westfall'
     wow.state:SendEvent('PLAYER_LOGIN')

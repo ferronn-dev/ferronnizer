@@ -13,6 +13,10 @@ describe('spell db', function()
       ['Lay on Hands'] = true,
       ['Perception'] = true,
     }
+    if wow.env.WOW_PROJECT_ID == wow.env.WOW_PROJECT_BURNING_CRUSADE_CLASSIC then
+      -- TODO Detect Magic doesn't actually exist in BCC
+      knownBad['Detect Magic'] = true
+    end
     local seenBad = {}
     for toon in require('lfs').dir('toons') do
       local name, realm = string.match(toon, '^(%a+)-(%a+).lua$')
