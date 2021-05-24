@@ -15,6 +15,4 @@ jobs:
       with:
         submodules: recursive
     - name: Build and run addonmaker
-      run: sh addonmaker/run.sh ${{ ((github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'release' || 'build' }}
-      env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      run: sh addonmaker/run.sh ${{ ((github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'release' || 'build' }} ${{secrets.GITHUB_TOKEN}}
