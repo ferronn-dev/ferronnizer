@@ -14,7 +14,6 @@ LEFT OUTER JOIN
 ON
   s.id = z.effectitemtype
 WHERE
-  e.spellcategoryid = "11" AND
-  s.display_lang LIKE "Conjured%"
+  e.spellcategoryid = "11"
 ORDER BY
   CAST(s.itemlevel AS INT64) DESC;
