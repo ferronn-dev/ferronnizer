@@ -26,9 +26,11 @@ G.Characters['Shydove-Westfall'] = {
     mouseover = true,
     spell = 'Renew',
   },
-  [6] = {
-    spell = 'Holy Nova',
-  },
+  [6] = ({
+    [WOW_PROJECT_CLASSIC] = {
+      spell = 'Holy Nova',
+    },
+  })[WOW_PROJECT_ID],
   [7] = {
     mouseover = true,
     spell = 'Power Word: Shield',
@@ -81,10 +83,12 @@ G.Characters['Shydove-Westfall'] = {
   [20] = {
     invslot = 14,
   },
-  [21] = {
-    mouseover = true,
-    spell = 'Power Infusion',
-  },
+  [21] = ({
+    [WOW_PROJECT_CLASSIC] = {
+      mouseover = true,
+      spell = 'Power Infusion',
+    },
+  })[WOW_PROJECT_ID],
   [22] = {
     spell = 'Mind Vision',
   },
