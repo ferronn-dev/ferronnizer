@@ -5,13 +5,13 @@ local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandler
 
 local customTypes = (function()
   local function consume(mealDB, potionDB)
-    local function macroText(db)
+    local potionText = (function()
       local s = ''
-      for _, consumable in ipairs(db) do
+      for _, consumable in ipairs(potionDB) do
         s = s .. '/use item:' .. consumable[1] .. '\n'
       end
       return s
-    end
+    end)()
     local currentDB
     local function computeItem(levelarg)
       local level = levelarg or UnitLevel('player')
@@ -30,12 +30,13 @@ local customTypes = (function()
         cooldown = { item = item },
         count = { item = item },
         icon = GetItemIcon(item),
+        macro = currentDB == potionDB and potionText or ('/use item:' .. item),
         tooltip = { item = item },
       }
     end
     local function updateDB(db)
       currentDB = db
-      return Mixin(updateItem(), { macro = macroText(db) })
+      return updateItem()
     end
     return {
       handlers = {
