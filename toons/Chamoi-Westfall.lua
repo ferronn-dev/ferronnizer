@@ -75,6 +75,9 @@ G.Characters['Chamoi-Westfall'] = {
   [37] = {
     spell = 'Purge',
   },
+  [38] = {
+    spell = 'Cure Poison',
+  },
   [43] = {
     mount = true,
   },
