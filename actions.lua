@@ -268,8 +268,12 @@ local buttonLang = {
   cooldown = function(button, cooldown)
     cooldownData[button] = cooldown
   end,
-  count = function(button, count)
-    countData[button] = count
+  count = function(button, countProgram)
+    countData[button] = countProgram
+    -- hack to update now
+    local k, v = next(countProgram)
+    local count = countLang[k](v)
+    button.Count:SetText(count == nil and '' or count > 9999 and '*' or count)
   end,
   enabled = function(button, enabled)
     if not InCombatLockdown() then
