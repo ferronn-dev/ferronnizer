@@ -88,6 +88,10 @@ G.Characters['Shydove-Westfall'] = {
       mouseover = true,
       spell = 'Power Infusion',
     },
+    [WOW_PROJECT_BURNING_CRUSADE_CLASSIC] = {
+      mouseover = true,
+      spell = 'Fear Ward',
+    },
   })[WOW_PROJECT_ID],
   [22] = {
     spell = 'Mind Vision',
