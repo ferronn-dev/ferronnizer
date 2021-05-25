@@ -71,11 +71,6 @@ local customTypes = (function()
     },
     drink = consume(G.DrinkDB, G.ManaPotionDB),
     eat = consume(G.FoodDB, G.HealthPotionDB),
-    empty = {
-      init = function()
-        return { shown = false }
-      end,
-    },
     invslot = (function()
       local function update(action)
         return {
@@ -280,11 +275,6 @@ local buttonLang = {
     local count = countLang[k](v)
     button.Count:SetText(count == nil and '' or count > 9999 and '*' or count)
   end,
-  enabled = function(button, enabled)
-    if not InCombatLockdown() then
-      button:SetEnabled(enabled)
-    end
-  end,
   icon = function(button, icon)
     button.icon:SetTexture(icon)
   end,
@@ -295,11 +285,6 @@ local buttonLang = {
   end,
   name = function(button, name)
     button.Name:SetText(name)
-  end,
-  shown = function(button, shown)
-    if not InCombatLockdown() then
-      button:SetShown(shown)
-    end
   end,
   tooltip = function(button, tooltip)
     tooltipData[button] = tooltip
@@ -355,13 +340,17 @@ local function makeCustomActionButtons(actions)
     table.insert(handlers[ev], handler)
   end
   for i, button in ipairs(buttons) do
-    local action = actions[i] or { empty = true }
-    local ty = getType(action)
-    updateButton(button, ty.init(action))
-    for ev, handler in pairs(ty.handlers or {}) do
-      addHandler(ev, function(...)
-        return updateButton(button, handler(action, ...))
-      end)
+    local action = actions[i]
+    if not action then
+      button:Hide()
+    else
+      local ty = getType(action)
+      updateButton(button, ty.init(action))
+      for ev, handler in pairs(ty.handlers or {}) do
+        addHandler(ev, function(...)
+          return updateButton(button, handler(action, ...))
+        end)
+      end
     end
   end
   local genericHandlers = {
