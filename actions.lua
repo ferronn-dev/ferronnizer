@@ -294,10 +294,12 @@ local buttonLang = {
   end,
 }
 
-local function updateButton(button, arg)
-  for k, v in pairs(arg) do
-    buttonLang[k](button, v)
-  end
+local actionState = {}
+
+local function updateButton(i, arg)
+  actionState[i] = arg
+  -- This is where we assume that action numbers are the same as button numbers.
+  header:Execute(('buttons[%d]:CallMethod("DoUpdate", %d)'):format(i, i))
 end
 
 local function makeCustomActionButton(i)
@@ -326,6 +328,11 @@ local function makeCustomActionButton(i)
   button:SetScript('PostClick', function()
     button:SetChecked(false)
   end)
+  button.DoUpdate = function(self, id)
+    for k, v in pairs(actionState[id] or {}) do
+      buttonLang[k](self, v)
+    end
+  end
   return button
 end
 
@@ -333,6 +340,11 @@ local function makeCustomActionButtons(actions)
   local buttons = {}
   for i = 1, 48 do
     table.insert(buttons, makeCustomActionButton(i))
+  end
+  header:Execute('buttons = newtable()')
+  for i, button in ipairs(buttons) do
+    header:SetFrameRef('tmp', button)
+    header:Execute(('buttons[%d] = owner:GetFrameRef("tmp")'):format(i))
   end
   local handlers = {}
   local function addHandler(ev, handler)
@@ -345,10 +357,10 @@ local function makeCustomActionButtons(actions)
       button:Hide()
     else
       local ty = getType(action)
-      updateButton(button, ty.init(action))
+      updateButton(i, ty.init(action))
       for ev, handler in pairs(ty.handlers or {}) do
         addHandler(ev, function(...)
-          return updateButton(button, handler(action, ...))
+          return updateButton(i, handler(action, ...))
         end)
       end
     end
