@@ -76,6 +76,7 @@ G.Characters['Chamoi-Westfall'] = {
     spell = 'Purge',
   },
   [38] = {
+    mouseover = true,
     spell = 'Cure Poison',
   },
   [43] = {
