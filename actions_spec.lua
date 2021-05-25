@@ -87,4 +87,11 @@ describe('Actions', function()
       assert.True(not t or t:len() < 1024, i)
     end
   end)
+  it('hides buttons with no actions', function()
+    wow.state.player.name = 'Shydove'
+    wow.state.realm = 'Westfall'
+    wow.state:SendEvent('PLAYER_LOGIN')
+    assert.True(wow.env.mooActionButton43:IsShown())
+    assert.False(wow.env.mooActionButton44:IsShown())
+  end)
 end)
