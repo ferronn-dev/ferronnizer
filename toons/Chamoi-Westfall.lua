@@ -20,21 +20,21 @@ G.Characters['Chamoi-Westfall'] = {
     spell = 'Searing Totem',
   },
   [13] = {
+    actionText = 'HW4',
+    mouseover = true,
+    rank = 4,
+    spell = 'Healing Wave',
+  },
+  [14] = {
     actionText = 'HW3',
     mouseover = true,
     rank = 3,
     spell = 'Healing Wave',
   },
-  [14] = {
+  [15] = {
     actionText = 'HW2',
     mouseover = true,
     rank = 2,
-    spell = 'Healing Wave',
-  },
-  [15] = {
-    actionText = 'HW1',
-    mouseover = true,
-    rank = 1,
     spell = 'Healing Wave',
   },
   [16] = {
@@ -65,6 +65,9 @@ G.Characters['Chamoi-Westfall'] = {
   },
   [29] = {
     spell = 'Fire Nova Totem',
+  },
+  [30] = {
+    spell = 'Tremor Totem',
   },
   [31] = {
     spell = 'Rockbiter Weapon',
