@@ -268,6 +268,10 @@ local buttonLang = {
   end,
   cooldown = function(button, cooldown)
     cooldownData[button] = cooldown
+    -- hack to update now
+    local k, v = next(cooldown)
+    local start, duration, enable, modRate = cooldownLang[k](v)
+    CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
   end,
   count = function(button, countProgram)
     countData[button] = countProgram
