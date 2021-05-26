@@ -304,14 +304,13 @@ local function buttonUpdater(buttons)
   for _, button in pairs(buttons) do
     button.DoUpdate = doUpdate
   end
-  return function(i, arg)
+  return function(actionid, arg)
     actionUpdate = arg
     header:Execute(([=[
-      local buttonid = actions['%d']
+      local buttonid = actions['%s']
       if buttonid then buttons[buttonid]:CallMethod('DoUpdate') end
-    ]=]):format(i))
-    local k = tostring(i)
-    actionState[k] = Mixin(actionState[k] or {}, arg)
+    ]=]):format(actionid))
+    actionState[actionid] = Mixin(actionState[actionid] or {}, arg)
   end
 end
 
@@ -394,10 +393,11 @@ local function makeCustomActionButtons(actions)
       button:Hide()
     else
       local ty = getType(action)
-      updateButton(i, ty.init(action))
+      local actionid = tostring(i)
+      updateButton(actionid, ty.init(action))
       for ev, handler in pairs(ty.handlers or {}) do
         addHandler(ev, function(...)
-          return updateButton(i, handler(action, ...))
+          return updateButton(actionid, handler(action, ...))
         end)
       end
     end
