@@ -300,8 +300,8 @@ local actionUpdate
 local function updateButton(i, arg)
   actionUpdate = arg
   header:Execute(([=[
-    local button = buttons[actions[%d]]
-    if button then button:CallMethod('DoUpdate') end
+    local buttonid = actions['%d']
+    if buttonid then buttons[buttonid]:CallMethod('DoUpdate') end
   ]=]):format(i))
 end
 
@@ -352,7 +352,7 @@ local function makeCustomActionButtons(actions)
   header:Execute('actions = newtable()')
   for k in pairs(actions) do
     -- This is where we assume that action numbers are the same as button numbers.
-    header:Execute(('actions[%d] = %d'):format(k, k))
+    header:Execute(('actions["%d"] = %d'):format(k, k))
   end
   local handlers = {}
   local function addHandler(ev, handler)
