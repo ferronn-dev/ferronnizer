@@ -331,6 +331,16 @@ local function makeCustomActionButton(i)
   button:SetScript('PostClick', function()
     button:SetChecked(false)
   end)
+  button:RegisterEvent('UPDATE_BINDINGS')
+  button:SetScript('OnEvent', function(self)
+    local key = GetBindingKey('CLICK ' .. self:GetName() .. ':LeftButton')
+    if key then
+      self.HotKey:SetText(LibStub('LibKeyBound-1.0'):ToShortKey(key))
+      self.HotKey:Show()
+    else
+      self.HotKey:Hide()
+    end
+  end)
   button.DoUpdate = function(self)
     for k, v in pairs(actionUpdate) do
       buttonLang[k](self, v)
@@ -386,18 +396,6 @@ local function makeCustomActionButtons(actions)
         local k, v = next(cd)
         local start, duration, enable, modRate = cooldownLang[k](v)
         CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
-      end
-    end,
-    UPDATE_BINDINGS = function()
-      local keyBound = LibStub('LibKeyBound-1.0')
-      for _, button in ipairs(buttons) do
-        local key = GetBindingKey('CLICK ' .. button:GetName() .. ':LeftButton')
-        if key then
-          button.HotKey:SetText(keyBound:ToShortKey(key))
-          button.HotKey:Show()
-        else
-          button.HotKey:Hide()
-        end
       end
     end,
   }
