@@ -294,12 +294,13 @@ local buttonLang = {
   end,
 }
 
-local actionState = {}
+-- This is used to communicate across a header:Execute call. It should be scoped better.
+local actionUpdate
 
 local function updateButton(i, arg)
-  actionState[i] = arg
+  actionUpdate = arg
   -- This is where we assume that action numbers are the same as button numbers.
-  header:Execute(('buttons[%d]:CallMethod("DoUpdate", %d)'):format(i, i))
+  header:Execute(('buttons[%d]:CallMethod("DoUpdate")'):format(i))
 end
 
 local function makeCustomActionButton(i)
@@ -328,8 +329,8 @@ local function makeCustomActionButton(i)
   button:SetScript('PostClick', function()
     button:SetChecked(false)
   end)
-  button.DoUpdate = function(self, id)
-    for k, v in pairs(actionState[id] or {}) do
+  button.DoUpdate = function(self)
+    for k, v in pairs(actionUpdate) do
       buttonLang[k](self, v)
     end
   end
