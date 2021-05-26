@@ -313,50 +313,59 @@ local function buttonUpdater(buttons)
   end
 end
 
-local function makeCustomActionButton(i)
-  local button = CreateFrame(
+local function makeJustTheCustomActionButtons()
+  local scripts = {
+    OnEnter = function(self)
+      GameTooltip_SetDefaultAnchor(GameTooltip, self)
+      local tt = tooltipData[self]
+      if tt then
+        local k, v = next(tt)
+        tooltipLang[k](v)
+      end
+    end,
+    OnEvent = function(self)
+      local key = GetBindingKey('CLICK ' .. self:GetName() .. ':LeftButton')
+      if key then
+        self.HotKey:SetText(LibStub('LibKeyBound-1.0'):ToShortKey(key))
+        self.HotKey:Show()
+      else
+        self.HotKey:Hide()
+      end
+    end,
+    OnLeave = function()
+      GameTooltip:Hide()
+    end,
+    PostClick = function(self)
+      self:SetChecked(false)
+    end,
+  }
+  local makeButton = function(i)
+    local button = CreateFrame(
       'CheckButton', prefix .. i, header, 'ActionButtonTemplate, SecureActionButtonTemplate')
-  button:SetAttribute('type', 'macro')
-  button:SetMotionScriptsWhileDisabled(true)
-  button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
-  button.HotKey:SetVertexColor(0.75, 0.75, 0.75)
-  button.HotKey:SetPoint('TOPLEFT', button, 'TOPLEFT', -2, -4)
-  button.Count:SetFont(button.Count:GetFont(), 16, 'OUTLINE')
-  button:SetNormalTexture('Interface\\Buttons\\UI-Quickslot2')
-  button.NormalTexture:SetTexCoord(0, 0, 0, 0)
-  button.cooldown:SetSwipeColor(0, 0, 0)
-  button:SetScript('OnEnter', function()
-    GameTooltip_SetDefaultAnchor(GameTooltip, button)
-    local tt = tooltipData[button]
-    if tt then
-      local k, v = next(tt)
-      tooltipLang[k](v)
+    button:SetAttribute('type', 'macro')
+    button:SetMotionScriptsWhileDisabled(true)
+    button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
+    button.HotKey:SetVertexColor(0.75, 0.75, 0.75)
+    button.HotKey:SetPoint('TOPLEFT', button, 'TOPLEFT', -2, -4)
+    button.Count:SetFont(button.Count:GetFont(), 16, 'OUTLINE')
+    button:SetNormalTexture('Interface\\Buttons\\UI-Quickslot2')
+    button.NormalTexture:SetTexCoord(0, 0, 0, 0)
+    button.cooldown:SetSwipeColor(0, 0, 0)
+    button:RegisterEvent('UPDATE_BINDINGS')
+    for k, v in pairs(scripts) do
+      button:SetScript(k, v)
     end
-  end)
-  button:SetScript('OnLeave', function()
-    GameTooltip:Hide()
-  end)
-  button:SetScript('PostClick', function()
-    button:SetChecked(false)
-  end)
-  button:RegisterEvent('UPDATE_BINDINGS')
-  button:SetScript('OnEvent', function(self)
-    local key = GetBindingKey('CLICK ' .. self:GetName() .. ':LeftButton')
-    if key then
-      self.HotKey:SetText(LibStub('LibKeyBound-1.0'):ToShortKey(key))
-      self.HotKey:Show()
-    else
-      self.HotKey:Hide()
-    end
-  end)
-  return button
+    return button
+  end
+  local buttons = {}
+  for i = 1, 48 do
+    table.insert(buttons, makeButton(i))
+  end
+  return buttons
 end
 
 local function makeCustomActionButtons(actions)
-  local buttons = {}
-  for i = 1, 48 do
-    table.insert(buttons, makeCustomActionButton(i))
-  end
+  local buttons = makeJustTheCustomActionButtons()
   header:Execute('buttons = newtable()')
   for i, button in ipairs(buttons) do
     header:SetFrameRef('tmp', button)
