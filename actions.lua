@@ -237,8 +237,6 @@ local tooltipLang = {
   end,
 }
 
-local tooltipData = {}
-
 local updateLang = {
   spell = function(spell)
     if IsSpellInRange(spell, 'target') == 0 then
@@ -286,13 +284,15 @@ local buttonLang = {
   name = function(button, name)
     button.Name:SetText(name)
   end,
-  tooltip = function(button, tooltip)
-    tooltipData[button] = tooltip
+  tooltip = function()
+    -- Do nothing. These are handled asynchronously.
   end,
   update = function(button, update)
     updateData[button] = update
   end,
 }
+
+local actionState = {}
 
 local function buttonUpdater(buttons)
   local actionUpdate
@@ -310,17 +310,22 @@ local function buttonUpdater(buttons)
       local buttonid = actions['%d']
       if buttonid then buttons[buttonid]:CallMethod('DoUpdate') end
     ]=]):format(i))
+    local k = tostring(i)
+    actionState[k] = Mixin(actionState[k] or {}, arg)
   end
 end
 
 local function makeJustTheCustomActionButtons()
   local scripts = {
     OnEnter = function(self)
-      GameTooltip_SetDefaultAnchor(GameTooltip, self)
-      local tt = tooltipData[self]
-      if tt then
-        local k, v = next(tt)
-        tooltipLang[k](v)
+      local action = self:GetAttribute('fraction')
+      if action then
+        local tt = actionState[action].tooltip
+        if tt then
+          GameTooltip_SetDefaultAnchor(GameTooltip, self)
+          local k, v = next(tt)
+          tooltipLang[k](v)
+        end
       end
     end,
     OnEvent = function(self)
@@ -375,6 +380,7 @@ local function makeCustomActionButtons(actions)
   for k in pairs(actions) do
     -- This is where we assume that action numbers are the same as button numbers.
     header:Execute(('actions["%d"] = %d'):format(k, k))
+    header:Execute(('buttons[%d]:SetAttribute("fraction", "%d")'):format(k, k))
   end
   local handlers = {}
   local function addHandler(ev, handler)
