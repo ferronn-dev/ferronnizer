@@ -296,12 +296,13 @@ local buttonLang = {
 
 local function buttonUpdater(buttons)
   local actionUpdate
-  for _, button in pairs(buttons) do
-    button.DoUpdate = function(self)
-      for k, v in pairs(actionUpdate) do
-        buttonLang[k](self, v)
-      end
+  local doUpdate = function(self)
+    for k, v in pairs(actionUpdate) do
+      buttonLang[k](self, v)
     end
+  end
+  for _, button in pairs(buttons) do
+    button.DoUpdate = doUpdate
   end
   return function(i, arg)
     actionUpdate = arg
