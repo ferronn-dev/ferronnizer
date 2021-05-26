@@ -294,15 +294,22 @@ local buttonLang = {
   end,
 }
 
--- This is used to communicate across a header:Execute call. It should be scoped better.
-local actionUpdate
-
-local function updateButton(i, arg)
-  actionUpdate = arg
-  header:Execute(([=[
-    local buttonid = actions['%d']
-    if buttonid then buttons[buttonid]:CallMethod('DoUpdate') end
-  ]=]):format(i))
+local function buttonUpdater(buttons)
+  local actionUpdate
+  for _, button in pairs(buttons) do
+    button.DoUpdate = function(self)
+      for k, v in pairs(actionUpdate) do
+        buttonLang[k](self, v)
+      end
+    end
+  end
+  return function(i, arg)
+    actionUpdate = arg
+    header:Execute(([=[
+      local buttonid = actions['%d']
+      if buttonid then buttons[buttonid]:CallMethod('DoUpdate') end
+    ]=]):format(i))
+  end
 end
 
 local function makeCustomActionButton(i)
@@ -341,11 +348,6 @@ local function makeCustomActionButton(i)
       self.HotKey:Hide()
     end
   end)
-  button.DoUpdate = function(self)
-    for k, v in pairs(actionUpdate) do
-      buttonLang[k](self, v)
-    end
-  end
   return button
 end
 
@@ -369,6 +371,7 @@ local function makeCustomActionButtons(actions)
     handlers[ev] = handlers[ev] or {}
     table.insert(handlers[ev], handler)
   end
+  local updateButton = buttonUpdater(buttons)
   for i, button in ipairs(buttons) do
     local action = actions[i]
     if not action then
