@@ -299,8 +299,10 @@ local actionUpdate
 
 local function updateButton(i, arg)
   actionUpdate = arg
-  -- This is where we assume that action numbers are the same as button numbers.
-  header:Execute(('buttons[%d]:CallMethod("DoUpdate")'):format(i))
+  header:Execute(([=[
+    local button = buttons[actions[%d]]
+    if button then button:CallMethod('DoUpdate') end
+  ]=]):format(i))
 end
 
 local function makeCustomActionButton(i)
@@ -346,6 +348,11 @@ local function makeCustomActionButtons(actions)
   for i, button in ipairs(buttons) do
     header:SetFrameRef('tmp', button)
     header:Execute(('buttons[%d] = owner:GetFrameRef("tmp")'):format(i))
+  end
+  header:Execute('actions = newtable()')
+  for k in pairs(actions) do
+    -- This is where we assume that action numbers are the same as button numbers.
+    header:Execute(('actions[%d] = %d'):format(k, k))
   end
   local handlers = {}
   local function addHandler(ev, handler)
