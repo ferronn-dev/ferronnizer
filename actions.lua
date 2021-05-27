@@ -316,7 +316,7 @@ local actionButtons = {}
 local actionState = {}
 
 local function updateAction(actionid, actionUpdate)
-  actionState[actionid] = Mixin(actionState[actionid] or {}, actionUpdate)
+  Mixin(actionState[actionid], actionUpdate)
   local buttonUpdate = {}
   for k, v in pairs(actionUpdate) do
     Mixin(buttonUpdate, actionLang[k](v, actionid))
@@ -385,32 +385,37 @@ end
 
 local function makeCustomActionButtons(actions)
   local buttons = makeJustTheCustomActionButtons()
-  for k in pairs(actions) do
-    -- This is where we assume that action numbers are the same as button numbers.
-    local buttonid = k
-    local actionid = tostring(k)
-    buttons[buttonid]:SetAttribute('fraction', actionid)
-    actionButtons[actionid] = buttons[buttonid]
-  end
   local handlers = {}
   local function addHandler(ev, handler)
     handlers[ev] = handlers[ev] or {}
     table.insert(handlers[ev], handler)
   end
-  for i, button in ipairs(buttons) do
-    local action = actions[i]
-    if not action then
-      button:Hide()
-    else
-      local ty = getType(action)
-      local actionid = tostring(i)
-      updateAction(actionid, ty.init(action))
-      for ev, handler in pairs(ty.handlers or {}) do
-        addHandler(ev, function(...)
-          return updateAction(actionid, handler(action, ...))
-        end)
-      end
+  for k, action in pairs(actions) do
+    local actionid = tostring(k)
+    local ty = getType(action)
+    actionState[actionid] = ty.init(action)
+    for ev, handler in pairs(ty.handlers or {}) do
+      addHandler(ev, function(...)
+        return updateAction(actionid, handler(action, ...))
+      end)
     end
+  end
+  for k in pairs(actions) do
+    -- This is where we assume that action numbers are the same as button numbers.
+    local actionid = tostring(k)
+    local buttonid = k
+    buttons[buttonid]:SetAttribute('fraction', actionid)
+    actionButtons[actionid] = buttons[buttonid]
+  end
+  -- TODO change this so we show/hide securely when we attach an action.
+  for _, button in ipairs(buttons) do
+    if not button:GetAttribute('fraction') then
+      button:Hide()
+    end
+  end
+  for k in pairs(actions) do
+    local actionid = tostring(k)
+    updateAction(actionid, actionState[actionid])  -- pushes full state to buttons
   end
   local genericHandlers = {
     BAG_UPDATE_DELAYED = function()
