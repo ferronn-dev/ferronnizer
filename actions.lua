@@ -292,26 +292,17 @@ local buttonLang = {
   end,
 }
 
+local actionButtons = {}
 local actionState = {}
 
-local function buttonUpdater(buttons)
-  local actionUpdate
-  local doUpdate = function(self)
-    for k, v in pairs(actionUpdate) do
-      buttonLang[k](self, v)
+local function updateAction(actionid, arg)
+  local button = actionButtons[actionid]
+  if button then
+    for k, v in pairs(arg) do
+      buttonLang[k](button, v)
     end
   end
-  for _, button in pairs(buttons) do
-    button.DoUpdate = doUpdate
-  end
-  return function(actionid, arg)
-    actionUpdate = arg
-    header:Execute(([=[
-      local buttonid = actions['%s']
-      if buttonid then buttons[buttonid]:CallMethod('DoUpdate') end
-    ]=]):format(actionid))
-    actionState[actionid] = Mixin(actionState[actionid] or {}, arg)
-  end
+  actionState[actionid] = Mixin(actionState[actionid] or {}, arg)
 end
 
 local function makeJustTheCustomActionButtons()
@@ -370,23 +361,18 @@ end
 
 local function makeCustomActionButtons(actions)
   local buttons = makeJustTheCustomActionButtons()
-  header:Execute('buttons = newtable()')
-  for i, button in ipairs(buttons) do
-    header:SetFrameRef('tmp', button)
-    header:Execute(('buttons[%d] = owner:GetFrameRef("tmp")'):format(i))
-  end
-  header:Execute('actions = newtable()')
   for k in pairs(actions) do
     -- This is where we assume that action numbers are the same as button numbers.
-    header:Execute(('actions["%d"] = %d'):format(k, k))
-    header:Execute(('buttons[%d]:SetAttribute("fraction", "%d")'):format(k, k))
+    local buttonid = k
+    local actionid = tostring(k)
+    buttons[buttonid]:SetAttribute('fraction', actionid)
+    actionButtons[actionid] = buttons[buttonid]
   end
   local handlers = {}
   local function addHandler(ev, handler)
     handlers[ev] = handlers[ev] or {}
     table.insert(handlers[ev], handler)
   end
-  local updateButton = buttonUpdater(buttons)
   for i, button in ipairs(buttons) do
     local action = actions[i]
     if not action then
@@ -394,10 +380,10 @@ local function makeCustomActionButtons(actions)
     else
       local ty = getType(action)
       local actionid = tostring(i)
-      updateButton(actionid, ty.init(action))
+      updateAction(actionid, ty.init(action))
       for ev, handler in pairs(ty.handlers or {}) do
         addHandler(ev, function(...)
-          return updateButton(actionid, handler(action, ...))
+          return updateAction(actionid, handler(action, ...))
         end)
       end
     end
