@@ -10,6 +10,9 @@ G.Characters['Chamoi-Westfall'] = {
   [3] = {
     spell = 'Flame Shock',
   },
+  [4] = {
+    spell = 'Frost Shock',
+  },
   [5] = {
     spell = 'Lightning Shield',
   },
@@ -26,10 +29,10 @@ G.Characters['Chamoi-Westfall'] = {
     spell = 'Healing Wave',
   },
   [14] = {
-    actionText = 'HW3',
+    actionText = 'LHW1',
     mouseover = true,
-    rank = 3,
-    spell = 'Healing Wave',
+    rank = 1,
+    spell = 'Lesser Healing Wave',
   },
   [15] = {
     actionText = 'HW2',
@@ -54,6 +57,9 @@ G.Characters['Chamoi-Westfall'] = {
     mouseover = true,
     spell = 'Ancestral Spirit',
   },
+  [25] = {
+    spell = 'Ghost Wolf',
+  },
   [26] = {
     spell = 'Stoneskin Totem',
   },
@@ -74,6 +80,9 @@ G.Characters['Chamoi-Westfall'] = {
   },
   [32] = {
     spell = 'Flametongue Weapon',
+  },
+  [33] = {
+    spell = 'Frostbrand Weapon',
   },
   [37] = {
     spell = 'Purge',
