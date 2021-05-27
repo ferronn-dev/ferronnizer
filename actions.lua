@@ -255,23 +255,49 @@ local updateLang = {
 
 local updateData = {}
 
+local actionLang = {
+  color = function(color)
+    return { color = color }
+  end,
+  cooldown = function(cooldown, actionid)
+    cooldownData[actionid] = cooldown
+    -- hack to update now
+    local k, v = next(cooldown)
+    return { cooldown = { cooldownLang[k](v) } }
+  end,
+  count = function(count, actionid)
+    countData[actionid] = count
+    -- hack to update now
+    local k, v = next(count)
+    return { count = countLang[k](v) or -1 }
+  end,
+  icon = function(icon)
+    return { icon = icon }
+  end,
+  macro = function(macro)
+    return { macro = macro }
+  end,
+  name = function(name)
+    return { name = name }
+  end,
+  tooltip = function()
+    -- Do nothing. These are handled asynchronously.
+  end,
+  update = function(update, actionid)
+    updateData[actionid] = update
+  end,
+}
+
 local buttonLang = {
   color = function(button, color)
     button.icon:SetVertexColor(color, color, color)
   end,
   cooldown = function(button, cooldown)
-    cooldownData[button] = cooldown
-    -- hack to update now
-    local k, v = next(cooldown)
-    local start, duration, enable, modRate = cooldownLang[k](v)
+    local start, duration, enable, modRate = unpack(cooldown)
     CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
   end,
-  count = function(button, countProgram)
-    countData[button] = countProgram
-    -- hack to update now
-    local k, v = next(countProgram)
-    local count = countLang[k](v)
-    button.Count:SetText(count == nil and '' or count > 9999 and '*' or count)
+  count = function(button, count)
+    button.Count:SetText(count < 0 and '' or count > 9999 and '*' or count)
   end,
   icon = function(button, icon)
     button.icon:SetTexture(icon)
@@ -284,25 +310,23 @@ local buttonLang = {
   name = function(button, name)
     button.Name:SetText(name)
   end,
-  tooltip = function()
-    -- Do nothing. These are handled asynchronously.
-  end,
-  update = function(button, update)
-    updateData[button] = update
-  end,
 }
 
 local actionButtons = {}
 local actionState = {}
 
-local function updateAction(actionid, arg)
+local function updateAction(actionid, actionUpdate)
+  actionState[actionid] = Mixin(actionState[actionid] or {}, actionUpdate)
+  local buttonUpdate = {}
+  for k, v in pairs(actionUpdate) do
+    Mixin(buttonUpdate, actionLang[k](v, actionid))
+  end
   local button = actionButtons[actionid]
   if button then
-    for k, v in pairs(arg) do
+    for k, v in pairs(buttonUpdate) do
       buttonLang[k](button, v)
     end
   end
-  actionState[actionid] = Mixin(actionState[actionid] or {}, arg)
 end
 
 local function makeJustTheCustomActionButtons()
@@ -390,17 +414,21 @@ local function makeCustomActionButtons(actions)
   end
   local genericHandlers = {
     BAG_UPDATE_DELAYED = function()
-      for button, cd in pairs(countData) do
-        local k, v = next(cd)
-        local count = countLang[k](v)
-        button.Count:SetText(count == nil and '' or count > 9999 and '*' or count)
+      for actionid, cd in pairs(countData) do
+        local button = actionButtons[actionid]
+        if button then
+          local k, v = next(cd)
+          buttonLang.count(button, countLang[k](v) or -1)
+        end
       end
     end,
     SPELL_UPDATE_COOLDOWN = function()
-      for button, cd in pairs(cooldownData) do
-        local k, v = next(cd)
-        local start, duration, enable, modRate = cooldownLang[k](v)
-        CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
+      for actionid, cd in pairs(cooldownData) do
+        local button = actionButtons[actionid]
+        if button then
+          local k, v = next(cd)
+          buttonLang.cooldown(button, { cooldownLang[k](v) })
+        end
       end
     end,
   }
