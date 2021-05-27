@@ -449,10 +449,13 @@ local function makeCustomActionButtons(actions)
     updateTimer = updateTimer - elapsed
     if updateTimer <= 0 then
       updateTimer = TOOLTIP_UPDATE_TIME
-      for button, update in pairs(updateData) do
-        local k, v = next(update)
-        local r, g, b = updateLang[k](v)
-        button.icon:SetVertexColor(r, g, b)
+      for action, update in pairs(updateData) do
+        local button = actionButtons[action]
+        if button then
+          local k, v = next(update)
+          local r, g, b = updateLang[k](v)
+          button.icon:SetVertexColor(r, g, b)
+        end
       end
     end
   end)

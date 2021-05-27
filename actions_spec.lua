@@ -94,4 +94,10 @@ describe('Actions', function()
     assert.True(wow.env.mooActionButton43:IsShown())
     assert.False(wow.env.mooActionButton44:IsShown())
   end)
+  it('does not crash OnUpdate', function()
+    wow.state.player.name = 'Shydove'
+    wow.state.realm = 'Westfall'
+    wow.state:SendEvent('PLAYER_LOGIN')
+    wow.state:TickUpdate(1)
+  end)
 end)
