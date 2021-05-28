@@ -332,9 +332,9 @@ end
 local function makeJustTheCustomActionButtons()
   local scripts = {
     OnEnter = function(self)
-      local action = self:GetAttribute('fraction')
-      if action then
-        local tt = actionState[action].tooltip
+      local actionid = self:GetAttribute('fraction')
+      if actionid then
+        local tt = actionState[actionid].tooltip
         if tt then
           GameTooltip_SetDefaultAnchor(GameTooltip, self)
           local k, v = next(tt)
