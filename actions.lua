@@ -390,8 +390,7 @@ local function makeCustomActionButtons(actions)
     handlers[ev] = handlers[ev] or {}
     table.insert(handlers[ev], handler)
   end
-  for k, action in pairs(actions) do
-    local actionid = tostring(k)
+  for actionid, action in pairs(actions) do
     local ty = getType(action)
     actionState[actionid] = ty.init(action)
     for ev, handler in pairs(ty.handlers or {}) do
@@ -400,10 +399,9 @@ local function makeCustomActionButtons(actions)
       end)
     end
   end
-  for k in pairs(actions) do
+  for actionid in pairs(actions) do
     -- This is where we assume that action numbers are the same as button numbers.
-    local actionid = tostring(k)
-    local buttonid = k
+    local buttonid = tonumber(actionid)
     buttons[buttonid]:SetAttribute('fraction', actionid)
     actionButtons[actionid] = buttons[buttonid]
   end
@@ -413,8 +411,7 @@ local function makeCustomActionButtons(actions)
       button:Hide()
     end
   end
-  for k in pairs(actions) do
-    local actionid = tostring(k)
+  for actionid in pairs(actions) do
     updateAction(actionid, actionState[actionid])  -- pushes full state to buttons
   end
   local genericHandlers = {
@@ -489,8 +486,16 @@ local function makeOnlyLabButtons()
 end
 
 local function makeButtons()
-  local charName = UnitName('player')..'-'..GetRealmName()
-  local actions = G.Characters[charName]
+  local actions = (function()
+    local charActions = G.Characters[UnitName('player')..'-'..GetRealmName()]
+    if charActions then
+      local actions = {}
+      for k, v in pairs(charActions) do
+        actions[tostring(k)] = v
+      end
+      return actions
+    end
+  end)()
   local buttons = actions and makeCustomActionButtons(actions) or makeOnlyLabButtons()
   for i, button in ipairs(buttons) do
     button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
