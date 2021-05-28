@@ -374,6 +374,7 @@ local function makeJustTheCustomActionButtons()
     for k, v in pairs(scripts) do
       button:SetScript(k, v)
     end
+    button:Hide()
     return button
   end
   local buttons = {}
@@ -401,15 +402,10 @@ local function makeCustomActionButtons(actions)
   end
   for actionid in pairs(actions) do
     -- This is where we assume that action numbers are the same as button numbers.
-    local buttonid = tonumber(actionid)
-    buttons[buttonid]:SetAttribute('fraction', actionid)
-    actionButtons[actionid] = buttons[buttonid]
-  end
-  -- TODO change this so we show/hide securely when we attach an action.
-  for _, button in ipairs(buttons) do
-    if not button:GetAttribute('fraction') then
-      button:Hide()
-    end
+    local button = buttons[tonumber(actionid)]
+    button:Show()
+    button:SetAttribute('fraction', actionid)
+    actionButtons[actionid] = button
   end
   for actionid in pairs(actions) do
     updateAction(actionid, actionState[actionid])  -- pushes full state to buttons
