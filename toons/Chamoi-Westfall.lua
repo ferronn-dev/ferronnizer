@@ -22,6 +22,9 @@ G.Characters['Chamoi-Westfall'] = {
   [7] = {
     spell = 'Searing Totem',
   },
+  [8] = {
+    spell = 'Healing Stream Totem',
+  },
   [13] = {
     actionText = 'HW4',
     mouseover = true,
