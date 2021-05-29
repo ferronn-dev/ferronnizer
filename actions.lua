@@ -421,7 +421,7 @@ local function makeCustomActionButtons(actions)
     header:Execute(([[buttons[%d] = self:GetFrameRef('tmp')]]):format(i))
   end
   header:SetAttribute('moo', [=[
-    local _, buttonid, actionid = ...
+    local buttonid, actionid = ...
     local button = buttons[buttonid]
     button:SetAttribute('fraction', actionid)
     if actionid then
