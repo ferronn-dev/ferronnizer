@@ -380,6 +380,13 @@ local function makeJustTheCustomActionButtons()
       button:SetScript(k, v)
     end
     button:Hide()
+    button.Refresh = function(self)
+      local actionid = self:GetAttribute('fraction')
+      if actionid then
+        actionButtons[actionid] = self
+        updateButton(self, actionButtonState[actionid])
+      end
+    end
     return button
   end
   local buttons = {}
@@ -408,13 +415,26 @@ local function makeCustomActionButtons(actions)
       end)
     end
   end
+  header:Execute([[buttons = newtable()]])
+  for i, button in ipairs(buttons) do
+    header:SetFrameRef('tmp', button)
+    header:Execute(([[buttons[%d] = self:GetFrameRef('tmp')]]):format(i))
+  end
+  header:SetAttribute('moo', [=[
+    local _, buttonid, actionid = ...
+    local button = buttons[buttonid]
+    button:SetAttribute('fraction', actionid)
+    if actionid then
+      button:CallMethod('Refresh')
+      button:Show()
+    else
+      button:Hide()
+    end
+  ]=])
   for actionid in pairs(actions) do
     -- This is where we assume that action numbers are the same as button numbers.
-    local button = buttons[tonumber(actionid)]
-    button:Show()
-    button:SetAttribute('fraction', actionid)
-    actionButtons[actionid] = button
-    updateButton(button, actionButtonState[actionid])
+    local buttonid = tonumber(actionid)
+    header:Execute(([[self:RunAttribute('moo', %d, "%s")]]):format(buttonid, actionid))
   end
   local genericHandlers = {
     BAG_UPDATE_DELAYED = function()
