@@ -237,6 +237,8 @@ local tooltipLang = {
   end,
 }
 
+local tooltipData = {}
+
 local updateLang = {
   spell = function(spell)
     if IsSpellInRange(spell, 'target') == 0 then
@@ -280,8 +282,8 @@ local actionLang = {
   name = function(name)
     return { name = name }
   end,
-  tooltip = function()
-    -- Do nothing. These are handled asynchronously.
+  tooltip = function(tooltip, actionid)
+    tooltipData[actionid] = tooltip
   end,
   update = function(update, actionid)
     updateData[actionid] = update
@@ -313,15 +315,9 @@ local buttonLang = {
 }
 
 local actionButtons = {}
-local actionState = {}
+local actionButtonState = {}
 
-local function updateAction(actionid, actionUpdate)
-  Mixin(actionState[actionid], actionUpdate)
-  local buttonUpdate = {}
-  for k, v in pairs(actionUpdate) do
-    Mixin(buttonUpdate, actionLang[k](v, actionid))
-  end
-  local button = actionButtons[actionid]
+local function updateButton(button, buttonUpdate)
   if button then
     for k, v in pairs(buttonUpdate) do
       buttonLang[k](button, v)
@@ -329,12 +325,21 @@ local function updateAction(actionid, actionUpdate)
   end
 end
 
+local function updateAction(actionid, actionUpdate)
+  local buttonUpdate = {}
+  for k, v in pairs(actionUpdate) do
+    Mixin(buttonUpdate, actionLang[k](v, actionid))
+  end
+  Mixin(actionButtonState[actionid], buttonUpdate)
+  updateButton(actionButtons[actionid], buttonUpdate)
+end
+
 local function makeJustTheCustomActionButtons()
   local scripts = {
     OnEnter = function(self)
       local actionid = self:GetAttribute('fraction')
       if actionid then
-        local tt = actionState[actionid].tooltip
+        local tt = tooltipData[actionid]
         if tt then
           GameTooltip_SetDefaultAnchor(GameTooltip, self)
           local k, v = next(tt)
@@ -391,9 +396,12 @@ local function makeCustomActionButtons(actions)
     handlers[ev] = handlers[ev] or {}
     table.insert(handlers[ev], handler)
   end
+  for actionid in pairs(actions) do
+    actionButtonState[actionid] = {}
+  end
   for actionid, action in pairs(actions) do
     local ty = getType(action)
-    actionState[actionid] = ty.init(action)
+    updateAction(actionid, ty.init(action))
     for ev, handler in pairs(ty.handlers or {}) do
       addHandler(ev, function(...)
         return updateAction(actionid, handler(action, ...))
@@ -406,9 +414,7 @@ local function makeCustomActionButtons(actions)
     button:Show()
     button:SetAttribute('fraction', actionid)
     actionButtons[actionid] = button
-  end
-  for actionid in pairs(actions) do
-    updateAction(actionid, actionState[actionid])  -- pushes full state to buttons
+    updateButton(button, actionButtonState[actionid])
   end
   local genericHandlers = {
     BAG_UPDATE_DELAYED = function()
