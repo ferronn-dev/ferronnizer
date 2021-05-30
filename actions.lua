@@ -279,7 +279,7 @@ local actionLang = {
   macro = function(macro, actionid)
     if not InCombatLockdown() then
       header:SetAttribute('tmp', macro)
-      header:Execute(([[self:RunAttribute('cow', '%s', self:GetAttribute('tmp'))]]):format(actionid))
+      header:Execute(([[self:RunAttribute('updateActionMacro', '%s', self:GetAttribute('tmp'))]]):format(actionid))
     end
   end,
   name = function(name)
@@ -472,7 +472,7 @@ local function setupHeader(buttons)
     header:SetFrameRef('tmp', button)
     header:Execute(([[buttons[%d] = self:GetFrameRef('tmp')]]):format(i))
   end
-  header:SetAttribute('moo', [=[
+  header:SetAttribute('updateFraction', [=[
     local buttonid, actionid = ...
     local button = buttons[buttonid]
     local prevActionID = button:GetAttribute('fraction')
@@ -489,7 +489,7 @@ local function setupHeader(buttons)
       button:Hide()
     end
   ]=])
-  header:SetAttribute('cow', [=[
+  header:SetAttribute('updateActionMacro', [=[
     local actionid, macro = ...
     actionMacros[actionid] = macro
     local buttonid = actionToButton[actionid]
@@ -497,13 +497,13 @@ local function setupHeader(buttons)
       buttons[buttonid]:SetAttribute('macrotext', macro)
     end
   ]=])
-  header:SetAttribute('moocow', [=[
+  header:SetAttribute('updateActionPage', [=[
     local page = ...
     for buttonid in ipairs(buttons) do
       -- This is where we assume that action numbers are the same as button numbers.
       local maybeActionID = tostring(page == '2' and (49 - buttonid) or buttonid)
       local actionid = actionMacros[maybeActionID] and maybeActionID or nil
-      self:RunAttribute('moo', buttonid, actionid)
+      self:RunAttribute('updateFraction', buttonid, actionid)
     end
   ]=])
 end
@@ -512,7 +512,7 @@ local function makeCustomActionButtons(actions)
   local buttons = makeJustTheCustomActionButtons()
   setupHeader(buttons)
   setupActionState(actions)
-  header:Execute([[self:RunAttribute('moocow', '1')]])
+  header:Execute([[self:RunAttribute('updateActionPage', '1')]])
   return buttons
 end
 
