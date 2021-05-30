@@ -507,10 +507,6 @@ local function setupHeader(buttons)
       end
     end
   ]=])
-  header:SetAttribute('_onstate-fractionpage', [=[
-    self:RunAttribute('moocow', newstate)
-  ]=])
-  RegisterStateDriver(header, 'fractionpage', '[bar:2] 2; 1')
 end
 
 local function makeCustomActionButtons(actions)
