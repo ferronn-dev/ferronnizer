@@ -397,8 +397,7 @@ local function makeJustTheCustomActionButtons()
   return buttons
 end
 
-local function makeCustomActionButtons(actions)
-  local buttons = makeJustTheCustomActionButtons()
+local function setupActionState(actions)
   local handlers = {}
   local function addHandler(ev, handler)
     handlers[ev] = handlers[ev] or {}
@@ -415,27 +414,6 @@ local function makeCustomActionButtons(actions)
         return updateAction(actionid, handler(action, ...))
       end)
     end
-  end
-  header:Execute([[buttons = newtable()]])
-  for i, button in ipairs(buttons) do
-    header:SetFrameRef('tmp', button)
-    header:Execute(([[buttons[%d] = self:GetFrameRef('tmp')]]):format(i))
-  end
-  header:SetAttribute('moo', [=[
-    local buttonid, actionid = ...
-    local button = buttons[buttonid]
-    button:SetAttribute('fraction', actionid)
-    if actionid then
-      button:CallMethod('Refresh')
-      button:Show()
-    else
-      button:Hide()
-    end
-  ]=])
-  for actionid in pairs(actions) do
-    -- This is where we assume that action numbers are the same as button numbers.
-    local buttonid = tonumber(actionid)
-    header:Execute(([[self:RunAttribute('moo', %d, "%s")]]):format(buttonid, actionid))
   end
   local genericHandlers = {
     BAG_UPDATE_DELAYED = function()
@@ -484,6 +462,36 @@ local function makeCustomActionButtons(actions)
       end
     end
   end)
+end
+
+local function setupHeader(buttons)
+  header:Execute([[buttons = newtable()]])
+  for i, button in ipairs(buttons) do
+    header:SetFrameRef('tmp', button)
+    header:Execute(([[buttons[%d] = self:GetFrameRef('tmp')]]):format(i))
+  end
+  header:SetAttribute('moo', [=[
+    local buttonid, actionid = ...
+    local button = buttons[buttonid]
+    button:SetAttribute('fraction', actionid)
+    if actionid then
+      button:CallMethod('Refresh')
+      button:Show()
+    else
+      button:Hide()
+    end
+  ]=])
+end
+
+local function makeCustomActionButtons(actions)
+  local buttons = makeJustTheCustomActionButtons()
+  setupActionState(actions)
+  setupHeader(buttons)
+  for actionid in pairs(actions) do
+    -- This is where we assume that action numbers are the same as button numbers.
+    local buttonid = tonumber(actionid)
+    header:Execute(([[self:RunAttribute('moo', %d, "%s")]]):format(buttonid, actionid))
+  end
   return buttons
 end
 
