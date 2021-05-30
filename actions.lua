@@ -501,10 +501,9 @@ local function setupHeader(buttons)
     local page = ...
     for buttonid in ipairs(buttons) do
       -- This is where we assume that action numbers are the same as button numbers.
-      local actionid = tostring(page == '2' and (49 - buttonid) or buttonid)
-      if actionMacros[actionid] then
-        self:RunAttribute('moo', buttonid, actionid)
-      end
+      local maybeActionID = tostring(page == '2' and (49 - buttonid) or buttonid)
+      local actionid = actionMacros[maybeActionID] and maybeActionID or nil
+      self:RunAttribute('moo', buttonid, actionid)
     end
   ]=])
 end
