@@ -363,6 +363,13 @@ local function makeJustTheCustomActionButtons()
       self:SetChecked(false)
     end,
   }
+  local insecureRefresh = function(self)
+    local actionid = self:GetAttribute('fraction')
+    if actionid then
+      actionButtons[actionid] = self
+      updateButton(self, actionButtonState[actionid])
+    end
+  end
   local makeButton = function(i)
     local button = CreateFrame(
       'CheckButton', prefix .. i, header, 'ActionButtonTemplate, SecureActionButtonTemplate')
@@ -379,14 +386,8 @@ local function makeJustTheCustomActionButtons()
     for k, v in pairs(scripts) do
       button:SetScript(k, v)
     end
+    button.Refresh = insecureRefresh
     button:Hide()
-    button.Refresh = function(self)
-      local actionid = self:GetAttribute('fraction')
-      if actionid then
-        actionButtons[actionid] = self
-        updateButton(self, actionButtonState[actionid])
-      end
-    end
     return button
   end
   local buttons = {}
