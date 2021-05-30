@@ -497,17 +497,27 @@ local function setupHeader(buttons)
       buttons[buttonid]:SetAttribute('macrotext', macro)
     end
   ]=])
+  header:SetAttribute('moocow', [=[
+    local page = ...
+    for buttonid in ipairs(buttons) do
+      -- This is where we assume that action numbers are the same as button numbers.
+      local actionid = tostring(page == '2' and (49 - buttonid) or buttonid)
+      if actionMacros[actionid] then
+        self:RunAttribute('moo', buttonid, actionid)
+      end
+    end
+  ]=])
+  header:SetAttribute('_onstate-fractionpage', [=[
+    self:RunAttribute('moocow', newstate)
+  ]=])
+  RegisterStateDriver(header, 'fractionpage', '[bar:2] 2; 1')
 end
 
 local function makeCustomActionButtons(actions)
   local buttons = makeJustTheCustomActionButtons()
   setupHeader(buttons)
   setupActionState(actions)
-  for actionid in pairs(actions) do
-    -- This is where we assume that action numbers are the same as button numbers.
-    local buttonid = tonumber(actionid)
-    header:Execute(([[self:RunAttribute('moo', %d, "%s")]]):format(buttonid, actionid))
-  end
+  header:Execute([[self:RunAttribute('moocow', '1')]])
   return buttons
 end
 
