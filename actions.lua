@@ -276,8 +276,11 @@ local actionLang = {
   icon = function(icon)
     return { icon = icon }
   end,
-  macro = function(macro)
-    return { macro = macro }
+  macro = function(macro, actionid)
+    if not InCombatLockdown() then
+      header:SetAttribute('tmp', macro)
+      header:Execute(([[self:RunAttribute('cow', '%s', self:GetAttribute('tmp'))]]):format(actionid))
+    end
   end,
   name = function(name)
     return { name = name }
@@ -303,11 +306,6 @@ local buttonLang = {
   end,
   icon = function(button, icon)
     button.icon:SetTexture(icon)
-  end,
-  macro = function(button, macro)
-    if not InCombatLockdown() then
-      button:SetAttribute('macrotext', macro)
-    end
   end,
   name = function(button, name)
     button.Name:SetText(name)
@@ -465,7 +463,11 @@ local function setupActionState(actions)
 end
 
 local function setupHeader(buttons)
-  header:Execute([[buttons = newtable()]])
+  header:Execute([[
+    buttons = newtable()
+    actionToButton = newtable()
+    actionMacros = newtable()
+  ]])
   for i, button in ipairs(buttons) do
     header:SetFrameRef('tmp', button)
     header:Execute(([[buttons[%d] = self:GetFrameRef('tmp')]]):format(i))
@@ -473,20 +475,34 @@ local function setupHeader(buttons)
   header:SetAttribute('moo', [=[
     local buttonid, actionid = ...
     local button = buttons[buttonid]
+    local prevActionID = button:GetAttribute('fraction')
+    if prevActionID then
+      actionToButton[prevActionID] = nil
+    end
     button:SetAttribute('fraction', actionid)
     if actionid then
+      actionToButton[actionid] = buttonid
       button:CallMethod('Refresh')
+      button:SetAttribute('macrotext', actionMacros[actionid])
       button:Show()
     else
       button:Hide()
+    end
+  ]=])
+  header:SetAttribute('cow', [=[
+    local actionid, macro = ...
+    actionMacros[actionid] = macro
+    local buttonid = actionToButton[actionid]
+    if buttonid then
+      buttons[buttonid]:SetAttribute('macrotext', macro)
     end
   ]=])
 end
 
 local function makeCustomActionButtons(actions)
   local buttons = makeJustTheCustomActionButtons()
-  setupActionState(actions)
   setupHeader(buttons)
+  setupActionState(actions)
   for actionid in pairs(actions) do
     -- This is where we assume that action numbers are the same as button numbers.
     local buttonid = tonumber(actionid)
