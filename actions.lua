@@ -402,7 +402,11 @@ local function setupActionState(actions)
     table.insert(handlers[ev], handler)
   end
   for actionid in pairs(actions) do
-    actionButtonState[actionid] = {}
+    -- Hack to force updates on state changes.
+    actionButtonState[actionid] = {
+      count = -1,
+      name = '',
+    }
   end
   for actionid, action in pairs(actions) do
     local ty = getType(action)
