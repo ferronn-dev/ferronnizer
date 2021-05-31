@@ -365,7 +365,14 @@ local function makeJustTheCustomActionButtons()
     local actionid = self:GetAttribute('fraction')
     if actionid then
       actionButtons[actionid] = self
-      updateButton(self, actionButtonState[actionid])
+      local reset = {
+        color = 1.0,
+        cooldown = {0, 0, 0},
+        count = -1,
+        icon = 136235,  -- samwise
+        name = '',
+      }
+      updateButton(self, Mixin(reset, actionButtonState[actionid]))
     end
   end
   local makeButton = function(i)
@@ -402,11 +409,7 @@ local function setupActionState(actions)
     table.insert(handlers[ev], handler)
   end
   for actionid in pairs(actions) do
-    -- Hack to force updates on state changes.
-    actionButtonState[actionid] = {
-      count = -1,
-      name = '',
-    }
+    actionButtonState[actionid] = {}
   end
   for actionid, action in pairs(actions) do
     local ty = getType(action)
