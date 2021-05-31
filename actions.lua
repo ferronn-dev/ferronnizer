@@ -188,13 +188,13 @@ end
 
 local cooldownLang = {
   invslot = function(invslot)
-    return GetInventoryItemCooldown('player', invslot)
+    return { GetInventoryItemCooldown('player', invslot) }
   end,
   item = function(item)
-    return GetItemCooldown(item)
+    return { GetItemCooldown(item) }
   end,
   spell = function(spell)
-    return GetSpellCooldown(spell)
+    return { GetSpellCooldown(spell) }
   end,
 }
 
@@ -206,7 +206,7 @@ local countLang = {
   end,
   spell = function(spell)
     local libCount = LibStub('LibClassicSpellActionCount-1.0')
-    return libCount:GetSpellReagentCount(spell)
+    return libCount:GetSpellReagentCount(spell) or -1
   end,
 }
 
@@ -265,13 +265,13 @@ local actionLang = {
     cooldownData[actionid] = cooldown
     -- hack to update now
     local k, v = next(cooldown)
-    return { cooldown = { cooldownLang[k](v) } }
+    return { cooldown = cooldownLang[k](v) }
   end,
   count = function(count, actionid)
     countData[actionid] = count
     -- hack to update now
     local k, v = next(count)
-    return { count = countLang[k](v) or -1 }
+    return { count = countLang[k](v) }
   end,
   icon = function(icon)
     return { icon = icon }
@@ -420,25 +420,22 @@ local function setupActionState(actions)
       end)
     end
   end
+  local function updateHandler(name, data, lang)
+    return function()
+      for actionid, cd in pairs(data) do
+        local k, v = next(cd)
+        local value = lang[k](v)
+        actionButtonState[actionid][name] = value
+        local button = actionButtons[actionid]
+        if button then
+          buttonLang[name](button, value)
+        end
+      end
+    end
+  end
   local genericHandlers = {
-    BAG_UPDATE_DELAYED = function()
-      for actionid, cd in pairs(countData) do
-        local button = actionButtons[actionid]
-        if button then
-          local k, v = next(cd)
-          buttonLang.count(button, countLang[k](v) or -1)
-        end
-      end
-    end,
-    SPELL_UPDATE_COOLDOWN = function()
-      for actionid, cd in pairs(cooldownData) do
-        local button = actionButtons[actionid]
-        if button then
-          local k, v = next(cd)
-          buttonLang.cooldown(button, { cooldownLang[k](v) })
-        end
-      end
-    end,
+    BAG_UPDATE_DELAYED = updateHandler('count', countData, countLang),
+    SPELL_UPDATE_COOLDOWN = updateHandler('cooldown', cooldownData, cooldownLang),
   }
   for ev, handler in pairs(genericHandlers) do
     addHandler(ev, handler)
