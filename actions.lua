@@ -59,6 +59,17 @@ local customTypes = (function()
     }
   end
   return {
+    action = {
+      init = function(action)
+        return {
+          cooldown = { action = action.action },
+          count = { action = action.action },
+          icon = GetActionTexture(action.action),
+          tooltip = { action = action.action },
+          text = GetActionText(action.action),
+        }
+      end,
+    },
     buff = {
       init = function(action)
         return {
@@ -187,6 +198,9 @@ local function getType(action)
 end
 
 local cooldownLang = {
+  action = function(action)
+    return { GetActionCooldown(action) }
+  end,
   invslot = function(invslot)
     return { GetInventoryItemCooldown('player', invslot) }
   end,
@@ -201,6 +215,9 @@ local cooldownLang = {
 local cooldownData = {}
 
 local countLang = {
+  action = function(action)
+    GetActionCount(action)
+  end,
   item = function(item)
     return GetItemCount(item)
   end,
@@ -213,6 +230,9 @@ local countLang = {
 local countData = {}
 
 local tooltipLang = {
+  action = function(action)
+    GameTooltip:SetAction(action)
+  end,
   invslot = function(invslot)
     GameTooltip:SetInventoryItem('player', invslot)
   end,
@@ -548,6 +568,9 @@ local function makeButtons()
       local actions = {}
       for k, v in pairs(charActions) do
         actions[tostring(k)] = v
+      end
+      for i = 1, 48 do
+        actions['wa' .. (i + 48)] = { action = i }
       end
       return actions
     end
