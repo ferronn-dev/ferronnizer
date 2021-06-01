@@ -388,7 +388,10 @@ local function makeJustTheCustomActionButtons()
       self:SetChecked(false)
     end,
   }
-  local insecureRefresh = function(self, actionid)
+  local insecureRefresh = function(self, actionid, prevActionID)
+    if prevActionID then
+      actionButtons[prevActionID] = nil
+    end
     actionButtons[actionid] = self
     local reset = {
       color = {1.0, 1.0, 1.0},
@@ -407,12 +410,13 @@ local function makeJustTheCustomActionButtons()
     elseif value ~= nil then
       type_, action = 'action', value
     end
+    local prevActionID = self:GetAttribute('fraction')
     self:SetAttribute('fraction', actionid)
     self:SetAttribute('type', type_)
     self:SetAttribute('action', action)
     self:SetAttribute('macrotext', macrotext)
     if actionid then
-      self:CallMethod('Refresh', actionid)
+      self:CallMethod('Refresh', actionid, prevActionID)
       self:Show()
     else
       self:Hide()
