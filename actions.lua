@@ -359,7 +359,95 @@ local function updateAction(actionid, actionUpdate)
   updateButton(actionButtons[actionid], buttonUpdate)
 end
 
-local function makeJustTheCustomActionButtons()
+local function setupActionState(actions)
+  local handlers = {}
+  local function addHandler(ev, handler)
+    handlers[ev] = handlers[ev] or {}
+    table.insert(handlers[ev], handler)
+  end
+  for actionid in pairs(actions) do
+    actionButtonState[actionid] = {}
+  end
+  for actionid, action in pairs(actions) do
+    local ty = getType(action)
+    updateAction(actionid, ty.init(action))
+    for ev, handler in pairs(ty.handlers or {}) do
+      addHandler(ev, function(...)
+        return updateAction(actionid, handler(action, ...))
+      end)
+    end
+  end
+  local function updateHandler(name, data, lang)
+    return function()
+      for actionid, cd in pairs(data) do
+        local k, v = next(cd)
+        local value = lang[k](v)
+        actionButtonState[actionid][name] = value
+        local button = actionButtons[actionid]
+        if button then
+          buttonLang[name](button, value)
+        end
+      end
+    end
+  end
+  local genericHandlers = {
+    BAG_UPDATE_DELAYED = updateHandler('count', countData, countLang),
+    SPELL_UPDATE_COOLDOWN = updateHandler('cooldown', cooldownData, cooldownLang),
+  }
+  for ev, handler in pairs(genericHandlers) do
+    addHandler(ev, handler)
+  end
+  local handlersHandlers = {}
+  for ev, hs in pairs(handlers) do
+    handlersHandlers[ev] = function(...)
+      for _, h in ipairs(hs) do
+        h(...)
+      end
+    end
+  end
+  G.Eventer(handlersHandlers)
+  local colorUpdater = updateHandler('color', updateData, updateLang)
+  local updateTimer = -1
+  CreateFrame('Frame'):SetScript('OnUpdate', function(_, elapsed)
+    updateTimer = updateTimer - elapsed
+    if updateTimer <= 0 then
+      updateTimer = TOOLTIP_UPDATE_TIME
+      colorUpdater()
+    end
+  end)
+end
+
+local function makeActions()
+  local charActions = G.Characters[UnitName('player')..'-'..GetRealmName()]
+  local actions = {}
+  for i, v in pairs(charActions or {}) do
+    actions['fraction' .. i] = v
+  end
+  for i = 1, 48 do
+    actions['wowaction' .. i] = HasAction(i) and { action = i } or nil
+  end
+  local professions = {
+    'Alchemy',
+    'Cooking',
+    'Disenchant',
+    'Enchanting',
+    'First Aid',
+    'Engineering',
+    'Tailoring',
+    'Smelting',
+    'Leatherworking',
+    'Blacksmithing',
+  }
+  for i, spell in ipairs(professions) do
+    actions['profession' .. i] = {
+      forceactionbar = 1,
+      spell = spell,
+    }
+  end
+  return actions, (charActions and 'fraction' or 'wowaction')
+end
+
+local function makeButtons()
   local scripts = {
     OnEnter = function(self)
       local actionid = self:GetAttribute('fraction')
@@ -446,65 +534,20 @@ local function makeJustTheCustomActionButtons()
   for i = 1, 48 do
     table.insert(buttons, makeButton(i))
   end
+  for i, button in ipairs(buttons) do
+    button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+    if i <= 36 then
+      button:SetPoint('BOTTOM', buttons[i + 12], 'TOP')
+    end
+    if (i - 1) % 12 < 5 then
+      button:SetPoint('RIGHT', buttons[i + 1], 'LEFT')
+    elseif (i - 1) % 12 > 6 then
+      button:SetPoint('LEFT', buttons[i - 1], 'RIGHT')
+    end
+  end
+  buttons[42]:SetPoint('BOTTOMRIGHT', UIParent, 'BOTTOM')
+  buttons[43]:SetPoint('BOTTOMLEFT', UIParent, 'BOTTOM')
   return buttons
-end
-
-local function setupActionState(actions)
-  local handlers = {}
-  local function addHandler(ev, handler)
-    handlers[ev] = handlers[ev] or {}
-    table.insert(handlers[ev], handler)
-  end
-  for actionid in pairs(actions) do
-    actionButtonState[actionid] = {}
-  end
-  for actionid, action in pairs(actions) do
-    local ty = getType(action)
-    updateAction(actionid, ty.init(action))
-    for ev, handler in pairs(ty.handlers or {}) do
-      addHandler(ev, function(...)
-        return updateAction(actionid, handler(action, ...))
-      end)
-    end
-  end
-  local function updateHandler(name, data, lang)
-    return function()
-      for actionid, cd in pairs(data) do
-        local k, v = next(cd)
-        local value = lang[k](v)
-        actionButtonState[actionid][name] = value
-        local button = actionButtons[actionid]
-        if button then
-          buttonLang[name](button, value)
-        end
-      end
-    end
-  end
-  local genericHandlers = {
-    BAG_UPDATE_DELAYED = updateHandler('count', countData, countLang),
-    SPELL_UPDATE_COOLDOWN = updateHandler('cooldown', cooldownData, cooldownLang),
-  }
-  for ev, handler in pairs(genericHandlers) do
-    addHandler(ev, handler)
-  end
-  local handlersHandlers = {}
-  for ev, hs in pairs(handlers) do
-    handlersHandlers[ev] = function(...)
-      for _, h in ipairs(hs) do
-        h(...)
-      end
-    end
-  end
-  G.Eventer(handlersHandlers)
-  local colorUpdater = updateHandler('color', updateData, updateLang)
-  local updateTimer = -1
-  CreateFrame('Frame'):SetScript('OnUpdate', function(_, elapsed)
-    updateTimer = updateTimer - elapsed
-    if updateTimer <= 0 then
-      updateTimer = TOOLTIP_UPDATE_TIME
-      colorUpdater()
-    end
-  end)
 end
 
 local function setupHeader(buttons)
@@ -553,89 +596,17 @@ local function setupHeader(buttons)
   ]=])
 end
 
-local function makeCustomActionButtons(actions)
-  local buttons = makeJustTheCustomActionButtons()
+local function setupActionButtons()
+  local actions, page = makeActions()
+  local buttons = makeButtons()
   setupHeader(buttons)
   setupActionState(actions)
-  header:Execute([[self:RunAttribute('updateActionPage', 'fraction')]])
-  return buttons
-end
-
-local function makeOnlyLabButtons()
-  local LAB10 = LibStub('LibActionButton-1.0')
-  local buttons = {}
-  for i = 1, 48 do
-    local button = LAB10:CreateButton(i, prefix .. i, header)
-    button:SetAttribute('state', 1)
-    button:DisableDragNDrop(true)
-    button:SetState(1, 'action', i)
-    table.insert(buttons, button)
-  end
-  -- Only create toggle button when it's just LAB action buttons.
-  local dragNDropToggle = true
-  G.PreClickButton('ToggleActionDragButton', nil, function()
-    dragNDropToggle = not dragNDropToggle
-    for _, button in ipairs(buttons) do
-      button:DisableDragNDrop(dragNDropToggle)
-    end
-  end)
-  return buttons
-end
-
-local function theActions()
-  local charActions = G.Characters[UnitName('player')..'-'..GetRealmName()]
-  if not charActions then
-    return
-  end
-  local actions = {}
-  for i, v in pairs(charActions) do
-    actions['fraction' .. i] = v
-  end
-  for i = 1, 48 do
-    actions['wowaction' .. i] = HasAction(i) and { action = i } or nil
-  end
-  local professions = {
-    'Alchemy',
-    'Cooking',
-    'Disenchant',
-    'Enchanting',
-    'First Aid',
-    'Engineering',
-    'Tailoring',
-    'Smelting',
-    'Leatherworking',
-    'Blacksmithing',
-  }
-  for i, spell in ipairs(professions) do
-    actions['profession' .. i] = {
-      forceactionbar = 1,
-      spell = spell,
-    }
-  end
-  return actions
-end
-
-local function makeButtons()
-  local actions = theActions()
-  local buttons = actions and makeCustomActionButtons(actions) or makeOnlyLabButtons()
-  for i, button in ipairs(buttons) do
-    button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-    if i <= 36 then
-      button:SetPoint('BOTTOM', buttons[i + 12], 'TOP')
-    end
-    if (i - 1) % 12 < 5 then
-      button:SetPoint('RIGHT', buttons[i + 1], 'LEFT')
-    elseif (i - 1) % 12 > 6 then
-      button:SetPoint('LEFT', buttons[i - 1], 'RIGHT')
-    end
-  end
-  buttons[42]:SetPoint('BOTTOMRIGHT', UIParent, 'BOTTOM')
-  buttons[43]:SetPoint('BOTTOMLEFT', UIParent, 'BOTTOM')
+  header:Execute(([[self:RunAttribute('updateActionPage', '%s')]]):format(page))
 end
 
 G.Eventer({
   PLAYER_LOGIN = function()
     G.ReparentFrame(MainMenuBar)
-    makeButtons()
+    setupActionButtons()
   end,
 })

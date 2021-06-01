@@ -10,11 +10,6 @@ describe('Actions', function()
         '/cast [@mouseover,help,nodead][] Greater Heal(Rank 5)')
     assert.same({{ macro = macro }}, wow.state.commands)
   end)
-  it('toggles on click', function()
-    wow.state:SendEvent('PLAYER_LOGIN')
-    wow.env.mooToggleActionDragButton:Click()
-    wow.env.mooToggleActionDragButton:Click()
-  end)
   it('drinks', function()
     wow.state.player.name = 'Shydove'
     wow.state.realm = 'Westfall'
