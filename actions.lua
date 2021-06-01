@@ -66,8 +66,8 @@ local customTypes = (function()
           cooldown = { action = action.action },
           count = { action = action.action },
           icon = GetActionTexture(action.action),
+          name = GetActionText(action.action),
           tooltip = { action = action.action },
-          text = GetActionText(action.action),
         }
       end,
     },
