@@ -50,6 +50,10 @@ G.Characters['Chamoi-Westfall'] = {
     mouseover = true,
     spell = 'Gift of the Naaru',
   },
+  [18] = {
+    mouseover = true,
+    spell = 'Water Breathing',
+  },
   [19] = {
     invslot = 13,
   },
@@ -59,6 +63,9 @@ G.Characters['Chamoi-Westfall'] = {
   [21] = {
     mouseover = true,
     spell = 'Ancestral Spirit',
+  },
+  [22] = {
+    spell = 'Poison Cleansing Totem',
   },
   [25] = {
     spell = 'Ghost Wolf',
@@ -93,6 +100,10 @@ G.Characters['Chamoi-Westfall'] = {
   [38] = {
     mouseover = true,
     spell = 'Cure Poison',
+  },
+  [39] = {
+    mouseover = true,
+    spell = 'Cure Disease',
   },
   [43] = {
     mount = true,
