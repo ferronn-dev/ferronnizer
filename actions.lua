@@ -505,6 +505,7 @@ local function setupHeader(buttons)
       button:SetAttribute('macrotext', actionMacros[actionid])
       button:Show()
     else
+      button:SetAttribute('macrotext', '')
       button:Hide()
     end
   ]=])
