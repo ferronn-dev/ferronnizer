@@ -217,7 +217,7 @@ local cooldownData = {}
 
 local countLang = {
   action = function(action)
-    GetActionCount(action)
+    return GetActionCount(action)
   end,
   item = function(item)
     return GetItemCount(item)
