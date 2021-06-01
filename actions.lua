@@ -62,10 +62,10 @@ local customTypes = (function()
     action = {
       init = function(action)
         return {
+          action = action.action,
           cooldown = { action = action.action },
           count = { action = action.action },
           icon = GetActionTexture(action.action),
-          macro = '/lol',
           tooltip = { action = action.action },
           text = GetActionText(action.action),
         }
@@ -279,6 +279,11 @@ local updateLang = {
 local updateData = {}
 
 local actionLang = {
+  action = function(action, actionid)
+    if not InCombatLockdown() then
+      header:Execute(([[self:RunAttribute('updateActionAttr', '%s', %d)]]):format(actionid, action))
+    end
+  end,
   color = function(color)
     return { color = { color, color, color } }
   end,
@@ -300,7 +305,7 @@ local actionLang = {
   macro = function(macro, actionid)
     if not InCombatLockdown() then
       header:SetAttribute('tmp', macro)
-      header:Execute(([[self:RunAttribute('updateActionMacro', '%s', self:GetAttribute('tmp'))]]):format(actionid))
+      header:Execute(([[self:RunAttribute('updateActionAttr', '%s', self:GetAttribute('tmp'))]]):format(actionid))
     end
   end,
   name = function(name)
@@ -382,24 +387,39 @@ local function makeJustTheCustomActionButtons()
       self:SetChecked(false)
     end,
   }
-  local insecureRefresh = function(self)
-    local actionid = self:GetAttribute('fraction')
-    if actionid then
-      actionButtons[actionid] = self
-      local reset = {
-        color = {1.0, 1.0, 1.0},
-        cooldown = {0, 0, 0},
-        count = -1,
-        icon = 136235,  -- samwise
-        name = '',
-      }
-      updateButton(self, Mixin(reset, actionButtonState[actionid]))
-    end
+  local insecureRefresh = function(self, actionid)
+    actionButtons[actionid] = self
+    local reset = {
+      color = {1.0, 1.0, 1.0},
+      cooldown = {0, 0, 0},
+      count = -1,
+      icon = 136235,  -- samwise
+      name = '',
+    }
+    updateButton(self, Mixin(reset, actionButtonState[actionid]))
   end
+  local setFraction = [=[
+    local actionid, value = ...
+    local type_, action, macrotext
+    if type(value) == 'string' then
+      type_, macrotext = 'macro', value
+    elseif value ~= nil then
+      type_, action = 'action', value
+    end
+    self:SetAttribute('fraction', actionid)
+    self:SetAttribute('type', type_)
+    self:SetAttribute('action', action)
+    self:SetAttribute('macrotext', macrotext)
+    if actionid then
+      self:CallMethod('Refresh', actionid)
+      self:Show()
+    else
+      self:Hide()
+    end
+  ]=]
   local makeButton = function(i)
     local button = CreateFrame(
       'CheckButton', prefix .. i, header, 'ActionButtonTemplate, SecureActionButtonTemplate')
-    button:SetAttribute('type', 'macro')
     button:SetMotionScriptsWhileDisabled(true)
     button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
     button.HotKey:SetVertexColor(0.75, 0.75, 0.75)
@@ -413,6 +433,7 @@ local function makeJustTheCustomActionButtons()
       button:SetScript(k, v)
     end
     button.Refresh = insecureRefresh
+    button:SetAttribute('setFraction', setFraction)
     button:Hide()
     return button
   end
@@ -485,7 +506,7 @@ local function setupHeader(buttons)
   header:Execute([[
     buttons = newtable()
     actionToButton = newtable()
-    actionMacros = newtable()
+    actionAttrs = newtable()
   ]])
   for i, button in ipairs(buttons) do
     header:SetFrameRef('tmp', button)
@@ -498,23 +519,19 @@ local function setupHeader(buttons)
     if prevActionID then
       actionToButton[prevActionID] = nil
     end
-    button:SetAttribute('fraction', actionid)
     if actionid then
       actionToButton[actionid] = buttonid
-      button:CallMethod('Refresh')
-      button:SetAttribute('macrotext', actionMacros[actionid])
-      button:Show()
+      button:RunAttribute('setFraction', actionid, actionAttrs[actionid])
     else
-      button:SetAttribute('macrotext', '')
-      button:Hide()
+      button:RunAttribute('setFraction', nil, nil)
     end
   ]=])
-  header:SetAttribute('updateActionMacro', [=[
-    local actionid, macro = ...
-    actionMacros[actionid] = macro
+  header:SetAttribute('updateActionAttr', [=[
+    local actionid, value = ...
+    actionAttrs[actionid] = value
     local buttonid = actionToButton[actionid]
     if buttonid then
-      buttons[buttonid]:SetAttribute('macrotext', macro)
+      buttons[buttonid]:RunAttribute('setFraction', actionid, value)
     end
   ]=])
   header:SetAttribute('updateActionPage', [=[
@@ -531,7 +548,7 @@ local function setupHeader(buttons)
       else
         return
       end
-      local actionid = actionMacros[maybeActionID] and maybeActionID or nil
+      local actionid = actionAttrs[maybeActionID] and maybeActionID or nil
       self:RunAttribute('updateFraction', buttonid, actionid)
     end
   ]=])
