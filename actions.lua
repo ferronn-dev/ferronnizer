@@ -263,15 +263,15 @@ local tooltipData = {}
 local updateLang = {
   spell = function(spell)
     if IsSpellInRange(spell, 'target') == 0 then
-      return 0.8, 0.1, 0.1
+      return { 0.8, 0.1, 0.1 }
     end
     local isUsable, notEnoughMana = IsUsableSpell(spell)
     if isUsable then
-      return 1.0, 1.0, 1.0
+      return { 1.0, 1.0, 1.0 }
     elseif notEnoughMana then
-      return 0.5, 0.5, 1.0
+      return { 0.5, 0.5, 1.0 }
     else
-      return 0.4, 0.4, 0.4
+      return { 0.4, 0.4, 0.4 }
     end
   end,
 }
@@ -280,7 +280,7 @@ local updateData = {}
 
 local actionLang = {
   color = function(color)
-    return { color = color }
+    return { color = { color, color, color } }
   end,
   cooldown = function(cooldown, actionid)
     cooldownData[actionid] = cooldown
@@ -316,7 +316,7 @@ local actionLang = {
 
 local buttonLang = {
   color = function(button, color)
-    button.icon:SetVertexColor(color, color, color)
+    button.icon:SetVertexColor(unpack(color))
   end,
   cooldown = function(button, cooldown)
     local start, duration, enable, modRate = unpack(cooldown)
@@ -387,7 +387,7 @@ local function makeJustTheCustomActionButtons()
     if actionid then
       actionButtons[actionid] = self
       local reset = {
-        color = 1.0,
+        color = {1.0, 1.0, 1.0},
         cooldown = {0, 0, 0},
         count = -1,
         icon = 136235,  -- samwise
@@ -470,19 +470,13 @@ local function setupActionState(actions)
     end
   end
   G.Eventer(handlersHandlers)
+  local colorUpdater = updateHandler('color', updateData, updateLang)
   local updateTimer = -1
   CreateFrame('Frame'):SetScript('OnUpdate', function(_, elapsed)
     updateTimer = updateTimer - elapsed
     if updateTimer <= 0 then
       updateTimer = TOOLTIP_UPDATE_TIME
-      for action, update in pairs(updateData) do
-        local button = actionButtons[action]
-        if button then
-          local k, v = next(update)
-          local r, g, b = updateLang[k](v)
-          button.icon:SetVertexColor(r, g, b)
-        end
-      end
+      colorUpdater()
     end
   end)
 end
