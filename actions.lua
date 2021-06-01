@@ -537,22 +537,12 @@ local function setupHeader(buttons)
   header:SetAttribute('updateActionPage', [=[
     local page = ...
     for buttonid in ipairs(buttons) do
-      -- This is where we assume that action numbers are the same as button numbers.
-      local maybeActionID
-      if page == '1' then
-        maybeActionID = tostring(buttonid)
-      elseif page == '2' then
-        maybeActionID = tostring(49 - buttonid)
-      elseif page == '3' then
-        maybeActionID = 'wa' .. buttonid
-      else
-        return
-      end
+      local maybeActionID = page .. buttonid
       local actionid = actionAttrs[maybeActionID] and maybeActionID or nil
       self:RunAttribute('updateFraction', buttonid, actionid)
     end
   ]=])
-  RegisterStateDriver(header, 'fractionpage', '[bar:2] 2; 1')
+  RegisterStateDriver(header, 'fractionpage', '[bar:2] wowaction; fraction')
   header:SetAttribute('_onstate-fractionpage', [=[
     self:RunAttribute('updateActionPage', newstate)
   ]=])
@@ -562,7 +552,7 @@ local function makeCustomActionButtons(actions)
   local buttons = makeJustTheCustomActionButtons()
   setupHeader(buttons)
   setupActionState(actions)
-  header:Execute([[self:RunAttribute('updateActionPage', '1')]])
+  header:Execute([[self:RunAttribute('updateActionPage', 'fraction')]])
   return buttons
 end
 
@@ -592,11 +582,11 @@ local function makeButtons()
     local charActions = G.Characters[UnitName('player')..'-'..GetRealmName()]
     if charActions then
       local actions = {}
-      for k, v in pairs(charActions) do
-        actions[tostring(k)] = v
+      for i, v in pairs(charActions) do
+        actions['fraction' .. i] = v
       end
       for i = 1, 48 do
-        actions['wa' .. i] = HasAction(i) and { action = i } or nil
+        actions['wowaction' .. i] = HasAction(i) and { action = i } or nil
       end
       return actions
     end
