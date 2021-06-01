@@ -3,6 +3,7 @@ local isMainline = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local bindings = {
   ['`'] = 'TOGGLEAUTORUN',
   ['CTRL-`'] = isMainline and 'ALLTHETHINGS_TOGGLEMINILIST' or 'ATTC_TOGGLEMINILIST',
+  ['CTRL-P'] = 'ACTIONPAGE3',
   ['CTRL-TAB'] = 'TOGGLEMINIMAP',
   ['ALT-B'] = 'OPENALLBAGS',
   ['ALT-C'] = 'TOGGLECHARACTER0',
@@ -35,56 +36,6 @@ local actionbars = {
   'SHIFT-A', 'SHIFT-S', 'SHIFT-D', 'SHIFT-F', 'SHIFT-G', 'SHIFT-H',
   'SHIFT-Z', 'SHIFT-X', 'SHIFT-C', 'SHIFT-V', 'SHIFT-B', 'SHIFT-N',
 }
-local multi = {
-  ['A'] = '/cast Alchemy',
-  ['C'] = '/cast Cooking',
-  ['D'] = '/cast Disenchant',
-  ['E'] = '/cast Enchanting',
-  ['F'] = '/cast First Aid',
-  ['Q'] = '/cast Engineering',
-  ['R'] = '/cast Tailoring',
-  ['S'] = '/cast Smelting',
-  ['W'] = '/cast Leatherworking',
-  ['X'] = '/cast Blacksmithing',
-  ['P'] = '/lol',
-}
-
-local function setupMultiBindings()
-  local newButton = function(name)
-    return CreateFrame('Button', addonName .. 'MultiBinding' .. name, nil, 'SecureActionButtonTemplate')
-  end
-  local root = newButton('Root')
-  local buttons = {}
-  for k, v in pairs(multi) do
-    local button = newButton('Child-' .. k)
-    button:SetAttribute('type', 'macro')
-    button:SetAttribute('macrotext', v)
-    buttons[k] = button
-  end
-  local header = CreateFrame('Frame', nil, nil, 'SecureHandlerStateTemplate')
-  header:WrapScript(root, 'OnClick', 'owner:Run(start)', '')
-  header:SetFrameRef('root', root)
-  header:Execute([[
-    root = owner:GetFrameRef('root')
-    buttons = newtable()
-    start = [=[
-      owner:ClearBindings()
-      for k, v in pairs(buttons) do
-        owner:SetBindingClick(true, k, v:GetName())
-      end
-    ]=]
-    stop = [=[
-      owner:ClearBindings()
-      owner:SetBindingClick(true, 'CTRL-P', root:GetName())
-    ]=]
-    owner:Run(stop)
-  ]])
-  for k, v in pairs(buttons) do
-    header:SetFrameRef('binding-' .. k, v)
-    header:Execute(string.format([[buttons['%s'] = owner:GetFrameRef('binding-%s')]], k, k))
-    header:WrapScript(v, 'OnClick', 'owner:Run(stop)', '')
-  end
-end
 
 G.Eventer({
   PLAYER_LOGIN = function()
@@ -97,6 +48,5 @@ G.Eventer({
     for i, b in ipairs(actionbars) do
       SetBindingClick(b, addonName .. 'ActionButton' .. i)
     end
-    setupMultiBindings()
   end,
 })

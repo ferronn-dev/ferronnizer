@@ -165,6 +165,7 @@ local customTypes = (function()
           macro = (
             '/dismount\n/stand\n'..
             (action.stopcasting and '/stopcasting\n' or '')..
+            (action.forceactionbar and ('/changeactionbar '..action.forceactionbar..'\n') or '')..
             '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
             fullName),
           name = action.actionText,
@@ -542,7 +543,7 @@ local function setupHeader(buttons)
       self:RunAttribute('updateFraction', buttonid, actionid)
     end
   ]=])
-  RegisterStateDriver(header, 'fractionpage', '[bar:2] wowaction; fraction')
+  RegisterStateDriver(header, 'fractionpage', '[bar:2] wowaction; [bar:3] profession; fraction')
   header:SetAttribute('_onstate-fractionpage', [=[
     self:RunAttribute('updateActionPage', newstate)
   ]=])
@@ -577,20 +578,41 @@ local function makeOnlyLabButtons()
   return buttons
 end
 
+local function theActions()
+  local charActions = G.Characters[UnitName('player')..'-'..GetRealmName()]
+  if not charActions then
+    return
+  end
+  local actions = {}
+  for i, v in pairs(charActions) do
+    actions['fraction' .. i] = v
+  end
+  for i = 1, 48 do
+    actions['wowaction' .. i] = HasAction(i) and { action = i } or nil
+  end
+  local professions = {
+    'Alchemy',
+    'Cooking',
+    'Disenchant',
+    'Enchanting',
+    'First Aid',
+    'Engineering',
+    'Tailoring',
+    'Smelting',
+    'Leatherworking',
+    'Blacksmithing',
+  }
+  for i, spell in ipairs(professions) do
+    actions['profession' .. i] = {
+      forceactionbar = 1,
+      spell = spell,
+    }
+  end
+  return actions
+end
+
 local function makeButtons()
-  local actions = (function()
-    local charActions = G.Characters[UnitName('player')..'-'..GetRealmName()]
-    if charActions then
-      local actions = {}
-      for i, v in pairs(charActions) do
-        actions['fraction' .. i] = v
-      end
-      for i = 1, 48 do
-        actions['wowaction' .. i] = HasAction(i) and { action = i } or nil
-      end
-      return actions
-    end
-  end)()
+  local actions = theActions()
   local buttons = actions and makeCustomActionButtons(actions) or makeOnlyLabButtons()
   for i, button in ipairs(buttons) do
     button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
