@@ -65,6 +65,7 @@ local customTypes = (function()
           cooldown = { action = action.action },
           count = { action = action.action },
           icon = GetActionTexture(action.action),
+          macro = '/lol',
           tooltip = { action = action.action },
           text = GetActionText(action.action),
         }
@@ -525,7 +526,16 @@ local function setupHeader(buttons)
     local page = ...
     for buttonid in ipairs(buttons) do
       -- This is where we assume that action numbers are the same as button numbers.
-      local maybeActionID = tostring(page == '2' and (49 - buttonid) or buttonid)
+      local maybeActionID
+      if page == '1' then
+        maybeActionID = tostring(buttonid)
+      elseif page == '2' then
+        maybeActionID = tostring(49 - buttonid)
+      elseif page == '3' then
+        maybeActionID = 'wa' .. buttonid
+      else
+        return
+      end
       local actionid = actionMacros[maybeActionID] and maybeActionID or nil
       self:RunAttribute('updateFraction', buttonid, actionid)
     end
@@ -570,7 +580,7 @@ local function makeButtons()
         actions[tostring(k)] = v
       end
       for i = 1, 48 do
-        actions['wa' .. (i + 48)] = { action = i }
+        actions['wa' .. i] = HasAction(i) and { action = i } or nil
       end
       return actions
     end
