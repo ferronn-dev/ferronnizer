@@ -552,6 +552,10 @@ local function setupHeader(buttons)
       self:RunAttribute('updateFraction', buttonid, actionid)
     end
   ]=])
+  RegisterStateDriver(header, 'fractionpage', '[bar:2] 2; 1')
+  header:SetAttribute('_onstate-fractionpage', [=[
+    self:RunAttribute('updateActionPage', newstate)
+  ]=])
 end
 
 local function makeCustomActionButtons(actions)
