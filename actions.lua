@@ -165,7 +165,6 @@ local customTypes = (function()
           macro = (
             '/dismount\n/stand\n'..
             (action.stopcasting and '/stopcasting\n' or '')..
-            (action.forceactionbar and ('/changeactionbar '..action.forceactionbar..'\n') or '')..
             '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
             fullName),
           name = action.actionText,
@@ -439,10 +438,7 @@ local function makeActions()
     'Blacksmithing',
   }
   for i, spell in ipairs(professions) do
-    actions['profession' .. i] = {
-      forceactionbar = 1,
-      spell = spell,
-    }
+    actions['profession' .. i] = { spell = spell }
   end
   return actions, (charActions and 'fraction' or 'wowaction')
 end
