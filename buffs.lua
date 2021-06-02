@@ -289,9 +289,23 @@ local unitsToBuff = (function()
   return u
 end)()
 
+local function IsTracking(texture)
+  if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+    return GetTrackingTexture() == texture
+  else
+    for i = 1, GetNumTrackingTypes() do
+      local _, tex, active = GetTrackingInfo(i)
+      if tex == texture then
+        return active
+      end
+    end
+    return false
+  end
+end
+
 local function GetSpellToCast()
   for _, track in ipairs(trackingdb) do
-    if IsSpellKnown(track.spell) and GetTrackingTexture() ~= track.texture then
+    if IsSpellKnown(track.spell) and not IsTracking(track.texture) then
       return track.spell, 'player'
     end
   end

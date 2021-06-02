@@ -25,8 +25,10 @@ describe('BuffButton', function()
   end)
 
   it('can cast tracking spells', function()
-    wow.state.knownSpells = {2580}
-    assertCastSpell(2580)
+    if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
+      wow.state.knownSpells = {2580}
+      assertCastSpell(2580)
+    end
   end)
 
   it('does nothing if we know spells but cannot cast them', function()
