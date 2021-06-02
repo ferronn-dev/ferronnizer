@@ -155,25 +155,38 @@ local customTypes = (function()
         init = update,
       }
     end)(),
-    spell = {
-      init = function(action)
-        local fullName = action.spell .. (action.rank and ('(Rank ' .. action.rank .. ')') or '')
+    spell = (function()
+      local function getFullName(action)
+        return action.spell .. (action.rank and ('(Rank ' .. action.rank .. ')') or '')
+      end
+      local function update(action)
+        local fullName = getFullName(action)
         return {
-          cooldown = { spell = fullName },
-          count = { spell = fullName },
-          -- Use the spell base name for GetSpellTexture; more likely to work on login.
-          icon = GetSpellTexture(action.spell),
-          macro = (
+          macro = IsSpellKnown(fullName) and (
             '/dismount\n/stand\n'..
             (action.stopcasting and '/stopcasting\n' or '')..
             '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
-            fullName),
-          name = action.actionText,
-          tooltip = { spell = fullName },
-          update = { spell = fullName },
+            fullName) or '',
         }
-      end,
-    },
+      end
+      return {
+        handlers = {
+          SPELLS_CHANGED = update,
+        },
+        init = function(action)
+          local fullName = getFullName(action)
+          return Mixin(update(action), {
+            cooldown = { spell = fullName },
+            count = { spell = fullName },
+            -- Use the spell base name for GetSpellTexture; more likely to work on login.
+            icon = GetSpellTexture(action.spell),
+            name = action.actionText,
+            tooltip = { spell = fullName },
+            update = { spell = fullName },
+          })
+        end,
+      }
+    end)(),
     stopcasting = {
       init = function()
         return {
