@@ -86,6 +86,14 @@ describe('Actions', function()
     wow.state.player.name = 'Shydove'
     wow.state.realm = 'Westfall'
     wow.state:SendEvent('PLAYER_LOGIN')
+    assert.False(wow.env.mooActionButton43:IsShown())
+    assert.False(wow.env.mooActionButton44:IsShown())
+  end)
+  it('shows mount button when a mount is available', function()
+    wow.state.inventory[5663] = 1
+    wow.state.player.name = 'Shydove'
+    wow.state.realm = 'Westfall'
+    wow.state:SendEvent('PLAYER_LOGIN')
     assert.True(wow.env.mooActionButton43:IsShown())
     assert.False(wow.env.mooActionButton44:IsShown())
   end)

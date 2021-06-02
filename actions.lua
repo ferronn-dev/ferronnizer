@@ -85,10 +85,11 @@ local customTypes = (function()
     eat = consume(G.FoodDB, G.HealthPotionDB),
     invslot = (function()
       local function update(action)
+        local icon = GetInventoryItemTexture('player', action.invslot)
         return {
           cooldown = { invslot = action.invslot },
-          icon = GetInventoryItemTexture('player', action.invslot) or 136528,
-          macro = '/use ' .. action.invslot,
+          icon = icon,
+          macro = icon and ('/use ' .. action.invslot) or '',
           tooltip = { invslot = action.invslot },
         }
       end
@@ -499,7 +500,7 @@ local function makeButtons()
     self:SetAttribute('type', type_)
     self:SetAttribute('action', action)
     self:SetAttribute('macrotext', macrotext)
-    if actionid then
+    if actionid and macrotext ~= '' then
       self:CallMethod('Refresh', actionid, prevActionID)
       self:Show()
     else
