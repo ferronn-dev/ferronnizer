@@ -83,16 +83,10 @@ G.Characters['Shydove-Westfall'] = {
   [20] = {
     invslot = 14,
   },
-  [21] = ({
-    [WOW_PROJECT_CLASSIC] = {
-      mouseover = true,
-      spell = 'Power Infusion',
-    },
-    [WOW_PROJECT_BURNING_CRUSADE_CLASSIC] = {
-      mouseover = true,
-      spell = 'Fear Ward',
-    },
-  })[WOW_PROJECT_ID],
+  [21] = {
+    mouseover = true,
+    spell = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 'Power Infusion' or 'Fear Ward',
+  },
   [22] = {
     spell = 'Mind Vision',
   },
