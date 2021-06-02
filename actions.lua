@@ -609,14 +609,14 @@ end
 local function setupPaging(buttons, page)
   header:Execute(([[self:RunAttribute('updateActionPage', '%s')]]):format(page))
   for _, button in pairs(buttons) do
-    header:WrapScript(button, 'OnClick', '', ([=[
+    header:WrapScript(button, 'OnClick', 'return nil, true', ([=[
       owner:RunAttribute('updateActionPage', '%s')
     ]=]):format(page))
   end
   -- Hack to support professions for now.
-  local professionsButton = CreateFrame('Button', prefix .. 'ProfessionSwitcher')
+  local professionsButton = CreateFrame('Button', prefix .. 'ProfessionSwitcher', header, 'SecureActionButtonTemplate')
   SetOverrideBindingClick(header, true, 'CTRL-P', professionsButton:GetName())
-  header:WrapScript(professionsButton, 'OnClick', '', [=[
+  header:WrapScript(professionsButton, 'OnClick', 'return nil, true', [=[
     owner:RunAttribute('updateActionPage', 'profession')
   ]=])
 end
