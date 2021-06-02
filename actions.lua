@@ -62,7 +62,7 @@ local customTypes = (function()
     action = {
       init = function(action)
         return {
-          action = action.action,
+          action = HasAction(action.action) and action.action or '',
           cooldown = { action = action.action },
           count = { action = action.action },
           icon = GetActionTexture(action.action),
@@ -295,7 +295,8 @@ local updateData = {}
 local actionLang = {
   action = function(action, actionid)
     if not InCombatLockdown() then
-      header:Execute(([[self:RunAttribute('updateActionAttr', '%s', %d)]]):format(actionid, action))
+      local astr = action == '' and "''" or tostring(action)
+      header:Execute(([[self:RunAttribute('updateActionAttr', '%s', %s)]]):format(actionid, astr))
     end
   end,
   color = function(color)
@@ -437,7 +438,7 @@ local function makeActions()
     actions['fraction' .. i] = v
   end
   for i = 1, 48 do
-    actions['wowaction' .. i] = HasAction(i) and { action = i } or nil
+    actions['wowaction' .. i] = { action = i }
   end
   local professions = {
     'Alchemy',
