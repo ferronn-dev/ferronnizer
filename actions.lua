@@ -1,7 +1,7 @@
 local addonName, G = ...
 
 local prefix = addonName .. 'ActionButton'
-local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
+local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerBaseTemplate')
 
 local customTypes = (function()
   local function consume(mealDB, potionDB)
@@ -584,15 +584,29 @@ local function setupHeader(buttons)
   ]=])
   header:SetAttribute('updateActionPage', [=[
     local page = ...
-    for buttonid in ipairs(buttons) do
-      local maybeActionID = page .. buttonid
-      local actionid = actionAttrs[maybeActionID] and maybeActionID or nil
-      self:RunAttribute('updateFraction', buttonid, actionid)
+    if currentPage ~= page then
+      currentPage = page
+      for buttonid in ipairs(buttons) do
+        local maybeActionID = page .. buttonid
+        local actionid = actionAttrs[maybeActionID] and maybeActionID or nil
+        self:RunAttribute('updateFraction', buttonid, actionid)
+      end
     end
   ]=])
-  RegisterStateDriver(header, 'fractionpage', '[bar:2] wowaction; [bar:3] profession; fraction')
-  header:SetAttribute('_onstate-fractionpage', [=[
-    self:RunAttribute('updateActionPage', newstate)
+end
+
+local function setupPaging(buttons, page)
+  header:Execute(([[self:RunAttribute('updateActionPage', '%s')]]):format(page))
+  for _, button in pairs(buttons) do
+    header:WrapScript(button, 'OnClick', '', ([=[
+      owner:RunAttribute('updateActionPage', '%s')
+    ]=]):format(page))
+  end
+  -- Hack to support professions for now.
+  local professionsButton = CreateFrame('Button', prefix .. 'ProfessionSwitcher')
+  SetOverrideBindingClick(header, true, 'CTRL-P', professionsButton:GetName())
+  header:WrapScript(professionsButton, 'OnClick', '', [=[
+    owner:RunAttribute('updateActionPage', 'profession')
   ]=])
 end
 
@@ -601,7 +615,7 @@ local function setupActionButtons()
   local buttons = makeButtons()
   setupHeader(buttons)
   setupActionState(actions)
-  header:Execute(([[self:RunAttribute('updateActionPage', '%s')]]):format(page))
+  setupPaging(buttons, page)
 end
 
 G.Eventer({

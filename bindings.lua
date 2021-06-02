@@ -3,7 +3,6 @@ local isMainline = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local bindings = {
   ['`'] = 'TOGGLEAUTORUN',
   ['CTRL-`'] = isMainline and 'ALLTHETHINGS_TOGGLEMINILIST' or 'ATTC_TOGGLEMINILIST',
-  ['CTRL-P'] = 'ACTIONPAGE3',
   ['CTRL-TAB'] = 'TOGGLEMINIMAP',
   ['ALT-B'] = 'OPENALLBAGS',
   ['ALT-C'] = 'TOGGLECHARACTER0',
