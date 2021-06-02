@@ -160,13 +160,13 @@ local customTypes = (function()
         return action.spell .. (action.rank and ('(Rank ' .. action.rank .. ')') or '')
       end
       local function update(action)
-        local fullName = getFullName(action)
+        local spellid = select(7, GetSpellInfo(action.spell, action.rank and ('Rank ' .. action.rank) or nil))
         return {
-          macro = IsSpellKnown(fullName) and (
+          macro = spellid and IsSpellKnown(spellid) and (
             '/dismount\n/stand\n'..
             (action.stopcasting and '/stopcasting\n' or '')..
             '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
-            fullName) or '',
+            getFullName(action)) or '',
         }
       end
       return {

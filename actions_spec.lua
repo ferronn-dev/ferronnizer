@@ -1,7 +1,7 @@
 local lfs = require('lfs')
 describe('Actions', function()
   it('makes a button', function()
-    wow.state.knownSpells = {'Greater Heal(Rank 5)'}
+    wow.state.knownSpells = {23456}
     wow.state.player.name = 'Shydove'
     wow.state.realm = 'Westfall'
     wow.state:SendEvent('PLAYER_LOGIN')
@@ -45,7 +45,7 @@ describe('Actions', function()
     wow.state:SendEvent('BAG_UPDATE_DELAYED')
   end)
   it('obeys stopcasting', function()
-    wow.state.knownSpells = {'Lay on Hands'}
+    wow.state.knownSpells = {23456}
     wow.state.player.name = 'Kewhand'
     wow.state.realm = 'Westfall'
     wow.state:SendEvent('PLAYER_LOGIN')
