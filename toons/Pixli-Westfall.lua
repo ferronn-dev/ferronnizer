@@ -49,9 +49,9 @@ G.Characters['Pixli-Westfall'] = {
     mouseover = true,
     spell = 'Dampen Magic',
   },
-  [17] = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and {
-    spell = 'Detect Magic',
-  } or nil),
+  [17] = {
+    spell = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 'Detect Magic' or 'Icy Veins',
+  },
   [18] = {
     spell = 'Escape Artist',
   },
