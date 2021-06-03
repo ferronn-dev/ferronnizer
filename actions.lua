@@ -59,18 +59,29 @@ local customTypes = (function()
     }
   end
   return {
-    action = {
-      init = function(action)
+    action = (function()
+      local function update(action)
         return {
           attr = HasAction(action.action) and action.action or '',
-          cooldown = { action = action.action },
-          count = { action = action.action },
           icon = GetActionTexture(action.action),
           name = GetActionText(action.action),
-          tooltip = { action = action.action },
         }
-      end,
-    },
+      end
+      return {
+        handlers = {
+          ACTIONBAR_SLOT_CHANGED = function(action, slot)
+            return slot == action.action and update(action) or {}
+          end,
+        },
+        init = function(action)
+          return Mixin(update(action), {
+            cooldown = { action = action.action },
+            count = { action = action.action },
+            tooltip = { action = action.action },
+          })
+        end,
+      }
+    end)(),
     buff = {
       init = function(action)
         return {
