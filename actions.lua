@@ -27,10 +27,10 @@ local customTypes = (function()
     local function updateItem(level)
       item = computeItem(level)
       return {
+        attr = currentDB == potionDB and potionText or ('/use item:' .. item),
         cooldown = { item = item },
         count = { item = item },
         icon = GetItemIcon(item),
-        macro = currentDB == potionDB and potionText or ('/use item:' .. item),
         tooltip = { item = item },
       }
     end
@@ -62,7 +62,7 @@ local customTypes = (function()
     action = {
       init = function(action)
         return {
-          action = HasAction(action.action) and action.action or '',
+          attr = HasAction(action.action) and action.action or '',
           cooldown = { action = action.action },
           count = { action = action.action },
           icon = GetActionTexture(action.action),
@@ -74,9 +74,9 @@ local customTypes = (function()
     buff = {
       init = function(action)
         return {
+          attr = '/click ' .. addonName .. 'BuffButton',
           count = action.reagent and { item = action.reagent },
           icon = 135938,
-          macro = '/click ' .. addonName .. 'BuffButton',
           tooltip = { text = 'Buff' },
         }
       end,
@@ -87,9 +87,9 @@ local customTypes = (function()
       local function update(action)
         local icon = GetInventoryItemTexture('player', action.invslot)
         return {
+          attr = icon and ('/use ' .. action.invslot) or '',
           cooldown = { invslot = action.invslot },
           icon = icon,
-          macro = icon and ('/use ' .. action.invslot) or '',
           tooltip = { invslot = action.invslot },
         }
       end
@@ -103,9 +103,9 @@ local customTypes = (function()
     macro = {
       init = function(action)
         return {
-          name = action.actionText,
+          attr = action.macro,
           icon = action.texture,
-          macro = action.macro,
+          name = action.actionText,
           tooltip = { text = action.tooltip },
         }
       end,
@@ -116,10 +116,10 @@ local customTypes = (function()
           local spell = spellx[1]
           if IsSpellKnown(spell) then
             return {
+              attr = '/cast ' .. GetSpellInfo(spell),
               cooldown = { spell = spell },
               color = 1.0,
               icon = GetSpellTexture(spell),
-              macro = '/cast ' .. GetSpellInfo(spell),
               tooltip = { spell = spell },
             }
           end
@@ -128,18 +128,18 @@ local customTypes = (function()
           local item = itemx[1]
           if GetItemCount(item) > 0 then
             return {
+              attr = '/use item:' .. item,
               cooldown = { item = item },
               color = 1.0,
               icon = GetItemIcon(item),
-              macro = '/use item:' .. item,
               tooltip = { item = item },
             }
           end
         end
         return {
+          attr = '',
           color = 0.4,
           icon = 132261,
-          macro = '',
           tooltip = { text = 'No mount... yet.' },
         }
       end
@@ -147,7 +147,7 @@ local customTypes = (function()
         handlers = {
           BAG_UPDATE_DELAYED = update,
           PLAYER_REGEN_DISABLED = function()
-            return { macro = '/dismount' }
+            return { attr = '/dismount' }
           end,
           PLAYER_REGEN_ENABLED = update,
           SPELLS_CHANGED = update,
@@ -155,6 +155,16 @@ local customTypes = (function()
         init = update,
       }
     end)(),
+    page = {
+      init = function(action)
+        return {
+          attr = '#page:' .. action.page,
+          icon = action.texture,
+          name = action.actionText,
+          tooltip = { text = action.tooltip },
+        }
+      end,
+    },
     spell = (function()
       local function getFullName(action)
         return action.spell .. (action.rank and ('(Rank ' .. action.rank .. ')') or '')
@@ -162,7 +172,7 @@ local customTypes = (function()
       local function update(action)
         local spellid = select(7, GetSpellInfo(action.spell, action.rank and ('Rank ' .. action.rank) or nil))
         return {
-          macro = spellid and IsSpellKnown(spellid) and (
+          attr = spellid and IsSpellKnown(spellid) and (
             '/dismount\n/stand\n'..
             (action.stopcasting and '/stopcasting\n' or '')..
             '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
@@ -190,8 +200,8 @@ local customTypes = (function()
     stopcasting = {
       init = function()
         return {
+          attr = '/stopcasting',
           icon = 135768,
-          macro = '/stopcasting',
           name = 'Stop',
           tooltip = { text = 'Stop Casting' },
         }
@@ -293,10 +303,10 @@ local updateLang = {
 local updateData = {}
 
 local actionLang = {
-  action = function(action, actionid)
+  attr = function(attr, actionid)
     if not InCombatLockdown() then
-      local astr = action == '' and "''" or tostring(action)
-      header:Execute(([[self:RunAttribute('updateActionAttr', '%s', %s)]]):format(actionid, astr))
+      header:SetAttribute('tmp', attr)
+      header:Execute(([[self:RunAttribute('updateActionAttr', '%s', self:GetAttribute('tmp'))]]):format(actionid))
     end
   end,
   color = function(color)
@@ -316,12 +326,6 @@ local actionLang = {
   end,
   icon = function(icon)
     return { icon = icon }
-  end,
-  macro = function(macro, actionid)
-    if not InCombatLockdown() then
-      header:SetAttribute('tmp', macro)
-      header:Execute(([[self:RunAttribute('updateActionAttr', '%s', self:GetAttribute('tmp'))]]):format(actionid))
-    end
   end,
   name = function(name)
     return { name = name }
@@ -436,6 +440,13 @@ local function makeActions()
   local actions = {}
   for i, v in pairs(charActions or {}) do
     actions['fraction' .. i] = v
+    if v.page then
+      local pageName = 'fraction' .. i .. 'x'
+      for j, x in pairs(v.page) do
+        actions[pageName .. j] = x
+      end
+      v.page = pageName
+    end
   end
   for i = 1, 48 do
     actions['wowaction' .. i] = { action = i }
@@ -605,7 +616,11 @@ local function setupPaging(buttons, page)
   header:Execute(([[self:RunAttribute('updateActionPage', '%s')]]):format(page))
   for _, button in pairs(buttons) do
     header:WrapScript(button, 'OnClick', 'return nil, true', ([=[
-      owner:RunAttribute('updateActionPage', '%s')
+      local homepage = '%s'
+      local actionid = self:GetAttribute('fraction')
+      local attr = actionid and actionAttrs[actionid] or ''
+      local page = attr:sub(1, 6) == '#page:' and attr:sub(7) or homepage
+      owner:RunAttribute('updateActionPage', page)
     ]=]):format(page))
   end
   -- Hack to support professions for now.
