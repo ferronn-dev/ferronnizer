@@ -424,15 +424,7 @@ local function setupActionState(actions)
     end
   end
   G.Eventer(handlersHandlers)
-  local colorUpdater = updateHandler('color', updateData, updateLang)
-  local updateTimer = -1
-  CreateFrame('Frame'):SetScript('OnUpdate', function(_, elapsed)
-    updateTimer = updateTimer - elapsed
-    if updateTimer <= 0 then
-      updateTimer = TOOLTIP_UPDATE_TIME
-      colorUpdater()
-    end
-  end)
+  G.Updater(TOOLTIP_UPDATE_TIME, updateHandler('color', updateData, updateLang))
 end
 
 local function makeActions()

@@ -52,6 +52,17 @@ do
   end
 end
 
+function G.Updater(period, fn)
+  local updateTimer = -1
+  CreateFrame('Frame'):SetScript('OnUpdate', function(_, elapsed)
+    updateTimer = updateTimer - elapsed
+    if updateTimer <= 0 then
+      updateTimer = period
+      fn()
+    end
+  end)
+end
+
 function G.PreClickButton(name, default, func)
   local button = CreateFrame('Button', addonName .. name, nil, 'SecureActionButtonTemplate')
   button:SetAttribute('type', 'macro')
