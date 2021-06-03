@@ -645,7 +645,7 @@ local function setupPaging(buttons, page)
       local homepage = '%s'
       local actionid = self:GetAttribute('fraction')
       local attr = actionid and actionAttrs[actionid] or ''
-      local page = type(attr) == string and attr:sub(1, 6) == '#page:' and attr:sub(7) or homepage
+      local page = type(attr) == 'string' and attr:sub(1, 6) == '#page:' and attr:sub(7) or homepage
       owner:RunAttribute('updateActionPage', page)
     ]=]):format(page))
   end
