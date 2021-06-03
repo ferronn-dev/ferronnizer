@@ -89,6 +89,30 @@ G.Characters['Kewmelt-Westfall'] = {
     spell = 'Counterspell',
     stopcasting = true,
   },
+  [31] = {
+    actionText = 'Tele',
+    icon = 135757,
+    macro = '',
+    page = {
+      [1] = { spell = 'Teleport: Stormwind' },
+      [2] = { spell = 'Teleport: Ironforge' },
+      [3] = { spell = 'Teleport: Darnassus' },
+      [4] = { spell = 'Teleport: Exodar' },
+      [5] = { spell = 'Teleport: Theramore' },
+    },
+  },
+  [32] = {
+    actionText = 'Port',
+    icon = 135743,
+    macro = '',
+    page = {
+      [1] = { spell = 'Portal: Stormwind' },
+      [2] = { spell = 'Portal: Ironforge' },
+      [3] = { spell = 'Portal: Darnassus' },
+      [4] = { spell = 'Portal: Exodar' },
+      [5] = { spell = 'Portal: Theramore' },
+    },
+  },
   [34] = {
     buff = true,
   },
