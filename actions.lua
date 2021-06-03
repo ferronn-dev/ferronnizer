@@ -185,7 +185,8 @@ local customTypes = (function()
         local spellid = select(7, GetSpellInfo(action.spell, action.rank and ('Rank ' .. action.rank) or nil))
         return {
           attr = spellid and IsSpellKnown(spellid) and (
-            '/dismount\n/stand\n'..
+            (action.dismount ~= false and '/dismount\n' or '')..
+            (action.stand ~= false and '/stand\n' or '')..
             (action.stopcasting and '/stopcasting\n' or '')..
             '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
             getFullName(action)) or '',
@@ -485,7 +486,11 @@ local function makeActions()
     'Blacksmithing',
   }
   for i, spell in ipairs(professions) do
-    actions['profession' .. i] = { spell = spell }
+    actions['profession' .. i] = {
+      dismount = false,
+      spell = spell,
+      stand = false,
+    }
   end
   return actions, (charActions and 'fraction' or 'wowaction')
 end
