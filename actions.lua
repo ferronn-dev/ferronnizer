@@ -248,8 +248,7 @@ local countLang = {
     return GetItemCount(item)
   end,
   spell = function(spell)
-    local libCount = LibStub('LibClassicSpellActionCount-1.0')
-    return libCount:GetSpellReagentCount(spell) or -1
+    return IsConsumableSpell(spell) and GetSpellCount(spell) or -1
   end,
 }
 
