@@ -105,4 +105,17 @@ describe('Actions', function()
     wow.state:SendEvent('PLAYER_LOGIN')
     wow.state:TickUpdate(1)
   end)
+  it('manages button state machine for spells', function()
+    wow.state.player.name = 'Shydove'
+    wow.state.realm = 'Westfall'
+    wow.state:SendEvent('PLAYER_LOGIN')
+    assert.False(wow.env.mooActionButton1:IsShown())
+    wow.state:EnterCombat()
+    assert.False(wow.env.mooActionButton1:IsShown())
+    wow.state.knownSpells = {23456}
+    wow.state:SendEvent('SPELLS_CHANGED')
+    assert.False(wow.env.mooActionButton1:IsShown())
+    wow.state:LeaveCombat()
+    assert.True(wow.env.mooActionButton1:IsShown())
+  end)
 end)

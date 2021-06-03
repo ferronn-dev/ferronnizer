@@ -302,11 +302,19 @@ local updateLang = {
 
 local updateData = {}
 
+local pendingAttrs = {}
+
+local function updateAttr(actionid, attr)
+  header:SetAttribute('tmp', attr)
+  header:Execute(([[self:RunAttribute('updateActionAttr', '%s', self:GetAttribute('tmp'))]]):format(actionid))
+end
+
 local actionLang = {
   attr = function(attr, actionid)
-    if not InCombatLockdown() then
-      header:SetAttribute('tmp', attr)
-      header:Execute(([[self:RunAttribute('updateActionAttr', '%s', self:GetAttribute('tmp'))]]):format(actionid))
+    if InCombatLockdown() then
+      pendingAttrs[actionid] = attr
+    else
+      updateAttr(actionid, attr)
     end
   end,
   color = function(color)
@@ -422,6 +430,16 @@ local function setupActionState(actions)
         h(...)
       end
     end
+  end
+  -- Run post-combat attr updates before delivering messages to actions.
+  -- These happened earlier in time.
+  local postCombatHandler = handlersHandlers.PLAYER_REGEN_ENABLED
+  handlersHandlers.PLAYER_REGEN_ENABLED = function(...)
+    for actionid, attr in pairs(pendingAttrs) do
+      updateAttr(actionid, attr)
+    end
+    wipe(pendingAttrs)
+    return postCombatHandler and postCombatHandler(...)
   end
   G.Eventer(handlersHandlers)
   G.Updater(TOOLTIP_UPDATE_TIME, updateHandler('color', updateData, updateLang))
