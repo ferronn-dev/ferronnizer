@@ -76,4 +76,30 @@ describe('utility functions', function()
       }, wow.state.commands)
     end)
   end)
+
+  describe('updater', function()
+    it('runs on first tick', function()
+      local count = 0
+      wow.addon.Updater(10000, function()
+        count = count + 1
+      end)
+      wow.state:TickUpdate(1)
+      assert.same(1, count)
+    end)
+
+    it('respects period', function()
+      local count = 0
+      wow.addon.Updater(10000, function()
+        count = count + 1
+      end)
+      for _ = 1, 9999 do
+        wow.state:TickUpdate(1)
+      end
+      assert.same(1, count)
+      wow.state:TickUpdate(1)
+      assert.same(1, count)
+      wow.state:TickUpdate(1)
+      assert.same(2, count)
+    end)
+  end)
 end)
