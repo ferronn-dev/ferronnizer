@@ -1,10 +1,20 @@
 local lfs = require('lfs')
 describe('Actions', function()
+  local function init(wow, actions)
+    wow.addon.Characters['Moo-Cow'] = actions
+    wow.state.player.name = 'Moo'
+    wow.state.realm = 'Cow'
+    wow.state:SendEvent('PLAYER_LOGIN')
+  end
   it('makes a button', function()
     wow.state.knownSpells = {23456}
-    wow.state.player.name = 'Shydove'
-    wow.state.realm = 'Westfall'
-    wow.state:SendEvent('PLAYER_LOGIN')
+    init(wow, {
+      [1] = {
+        mouseover = true,
+        rank = 5,
+        spell = 'Greater Heal',
+      },
+    })
     wow.env.mooActionButton1:Click()
     local macro = (
         '/dismount\n/stand\n'..
@@ -12,21 +22,21 @@ describe('Actions', function()
     assert.same({{ macro = macro }}, wow.state.commands)
   end)
   it('drinks', function()
-    wow.state.player.name = 'Shydove'
-    wow.state.realm = 'Westfall'
-    wow.state:SendEvent('PLAYER_LOGIN')
+    init(wow, {
+      [46] = { drink = true },
+    })
     assert.same('/use ', wow.env.mooActionButton46:GetAttribute('macrotext'):sub(1, 5))
   end)
   it('makes the right amount of buttons', function()
-    wow.state:SendEvent('PLAYER_LOGIN')
+    init(wow, {})
     assert.Not.Nil(wow.env.mooActionButton1)
     assert.Not.Nil(wow.env.mooActionButton48)
     assert.Nil(wow.env.mooActionButton49)
   end)
   it('invokes macros on click', function()
-    wow.state.player.name = 'Shydove'
-    wow.state.realm = 'Westfall'
-    wow.state:SendEvent('PLAYER_LOGIN')
+    init(wow, {
+      [34] = { buff = true },
+    })
     wow.env.mooActionButton34:Click()
     local macro = '/click mooBuffButton'
     assert.same({{ macro = macro }}, wow.state.commands)
@@ -46,9 +56,13 @@ describe('Actions', function()
   end)
   it('obeys stopcasting', function()
     wow.state.knownSpells = {23456}
-    wow.state.player.name = 'Kewhand'
-    wow.state.realm = 'Westfall'
-    wow.state:SendEvent('PLAYER_LOGIN')
+    init(wow, {
+      [41] = {
+        mouseover = true,
+        stopcasting = true,
+        spell = 'Lay on Hands',
+      },
+    })
     wow.env.mooActionButton41:Click()
     local macro = (
         '/dismount\n/stand\n/stopcasting\n'..
@@ -85,17 +99,17 @@ describe('Actions', function()
     end
   end)
   it('hides buttons with no actions', function()
-    wow.state.player.name = 'Shydove'
-    wow.state.realm = 'Westfall'
-    wow.state:SendEvent('PLAYER_LOGIN')
+    init(wow, {
+      [43] = { mount = true },
+    })
     assert.False(wow.env.mooActionButton43:IsShown())
     assert.False(wow.env.mooActionButton44:IsShown())
   end)
   it('shows mount button when a mount is available', function()
     wow.state.inventory[5663] = 1
-    wow.state.player.name = 'Shydove'
-    wow.state.realm = 'Westfall'
-    wow.state:SendEvent('PLAYER_LOGIN')
+    init(wow, {
+      [43] = { mount = true },
+    })
     assert.True(wow.env.mooActionButton43:IsShown())
     assert.False(wow.env.mooActionButton44:IsShown())
   end)
@@ -106,9 +120,9 @@ describe('Actions', function()
     wow.state:TickUpdate(1)
   end)
   it('manages button state machine for spells', function()
-    wow.state.player.name = 'Shydove'
-    wow.state.realm = 'Westfall'
-    wow.state:SendEvent('PLAYER_LOGIN')
+    init(wow, {
+      [1] = { spell = 'Greater Heal' },
+    })
     assert.False(wow.env.mooActionButton1:IsShown())
     wow.state:EnterCombat()
     assert.False(wow.env.mooActionButton1:IsShown())
