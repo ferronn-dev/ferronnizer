@@ -571,20 +571,6 @@ local function setupHeader(buttons)
     header:SetFrameRef('tmp', button)
     header:Execute(([[buttons[%d] = self:GetFrameRef('tmp')]]):format(i))
   end
-  header:SetAttribute('updateFraction', [=[
-    local buttonid, actionid = ...
-    local button = buttons[buttonid]
-    local prevActionID = button:GetAttribute('fraction')
-    if prevActionID then
-      actionToButton[prevActionID] = nil
-    end
-    if actionid then
-      actionToButton[actionid] = buttonid
-      button:RunAttribute('setFraction', actionid, actionAttrs[actionid])
-    else
-      button:RunAttribute('setFraction', nil, nil)
-    end
-  ]=])
   header:SetAttribute('updateActionAttr', [=[
     local actionid, value = ...
     actionAttrs[actionid] = value
@@ -597,10 +583,19 @@ local function setupHeader(buttons)
     local page = ...
     if currentPage ~= page then
       currentPage = page
-      for buttonid in ipairs(buttons) do
-        local maybeActionID = page .. buttonid
-        local actionid = actionAttrs[maybeActionID] and maybeActionID or nil
-        self:RunAttribute('updateFraction', buttonid, actionid)
+      for buttonid, button in ipairs(buttons) do
+        local prevActionID = button:GetAttribute('fraction')
+        if prevActionID then
+          actionToButton[prevActionID] = nil
+        end
+        local actionid = page .. buttonid
+        local attr = actionAttrs[actionid]
+        if attr then
+          actionToButton[actionid] = buttonid
+          button:RunAttribute('setFraction', actionid, attr)
+        else
+          button:RunAttribute('setFraction', nil, nil)
+        end
       end
     end
   ]=])
