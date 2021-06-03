@@ -90,9 +90,6 @@ G.Characters['Kewmelt-Westfall'] = {
     stopcasting = true,
   },
   [31] = {
-    actionText = 'Tele',
-    icon = 135757,
-    macro = '',
     page = {
       [1] = { spell = 'Teleport: Stormwind' },
       [2] = { spell = 'Teleport: Ironforge' },
@@ -100,11 +97,11 @@ G.Characters['Kewmelt-Westfall'] = {
       [4] = { spell = 'Teleport: Exodar' },
       [5] = { spell = 'Teleport: Theramore' },
     },
+    reagent = 17031,
+    texture = 135757,
+    tooltip = 'Teleport',
   },
   [32] = {
-    actionText = 'Port',
-    icon = 135743,
-    macro = '',
     page = {
       [1] = { spell = 'Portal: Stormwind' },
       [2] = { spell = 'Portal: Ironforge' },
@@ -112,6 +109,9 @@ G.Characters['Kewmelt-Westfall'] = {
       [4] = { spell = 'Portal: Exodar' },
       [5] = { spell = 'Portal: Theramore' },
     },
+    reagent = 17032,
+    texture = 135743,
+    tooltip = 'Portal',
   },
   [34] = {
     buff = true,

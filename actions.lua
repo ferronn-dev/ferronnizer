@@ -159,9 +159,10 @@ local customTypes = (function()
       init = function(action)
         return {
           attr = '#page:' .. action.page,
+          count = action.reagent and { item = action.reagent },
           icon = action.texture,
           name = action.actionText,
-          tooltip = { text = action.tooltip },
+          tooltip = action.tooltip and { text = action.tooltip },
         }
       end,
     },
