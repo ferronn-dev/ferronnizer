@@ -42,6 +42,7 @@ local cvars = {
   lockActionBars = 0,
   lootUnderMouse = 0,
   multiBarRightVerticalLayout = 0,
+  nameplateMaxDistance = 41,
   nameplateMotion = 0,
   nameplateShowAll = 1,
   nameplateShowEnemies = 1,
