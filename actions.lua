@@ -459,20 +459,23 @@ local function setupActionState(actions)
 end
 
 local function makeActions()
-  local charActions = G.Characters[UnitName('player')..'-'..GetRealmName()]
   local actions = {}
-  for i, v in pairs(charActions or {}) do
-    actions['fraction' .. i] = v
-    if v.page then
-      local pageName = 'fraction' .. i .. 'x'
-      for j, x in pairs(v.page) do
-        actions[pageName .. j] = x
+  local charActions = G.Characters[UnitName('player')..'-'..GetRealmName()]
+  if charActions then
+    for i, v in pairs(charActions) do
+      actions['fraction' .. i] = v
+      if v.page then
+        local pageName = 'fraction' .. i .. 'x'
+        for j, x in pairs(v.page) do
+          actions[pageName .. j] = x
+        end
+        v.page = pageName
       end
-      v.page = pageName
     end
-  end
-  for i = 1, 48 do
-    actions['wowaction' .. i] = { action = i }
+  else
+    for i = 1, 48 do
+      actions['fraction' .. i] = { action = i }
+    end
   end
   local professions = {
     'Alchemy',
@@ -493,7 +496,7 @@ local function makeActions()
       stand = false,
     }
   end
-  return actions, (charActions and 'fraction' or 'wowaction')
+  return actions
 end
 
 local function makeButtons()
@@ -639,16 +642,15 @@ local function setupHeader(buttons)
   ]=])
 end
 
-local function setupPaging(buttons, page)
-  header:Execute(([[self:RunAttribute('updateActionPage', '%s')]]):format(page))
+local function setupPaging(buttons)
+  header:Execute([[self:RunAttribute('updateActionPage', 'fraction')]])
   for _, button in pairs(buttons) do
-    header:WrapScript(button, 'OnClick', 'return nil, true', ([=[
-      local homepage = '%s'
+    header:WrapScript(button, 'OnClick', 'return nil, true', [=[
       local actionid = self:GetAttribute('fraction')
       local attr = actionid and actionAttrs[actionid] or ''
-      local page = type(attr) == 'string' and attr:sub(1, 6) == '#page:' and attr:sub(7) or homepage
+      local page = type(attr) == 'string' and attr:sub(1, 6) == '#page:' and attr:sub(7) or 'fraction'
       owner:RunAttribute('updateActionPage', page)
-    ]=]):format(page))
+    ]=])
   end
   -- Hack to support professions for now.
   local professionsButton = CreateFrame('Button', prefix .. 'ProfessionSwitcher', header, 'SecureActionButtonTemplate')
@@ -659,11 +661,11 @@ local function setupPaging(buttons, page)
 end
 
 local function setupActionButtons()
-  local actions, page = makeActions()
+  local actions = makeActions()
   local buttons = makeButtons()
   setupHeader(buttons)
   setupActionState(actions)
-  setupPaging(buttons, page)
+  setupPaging(buttons)
 end
 
 G.Eventer({
