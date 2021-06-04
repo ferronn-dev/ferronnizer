@@ -8,6 +8,18 @@ describe('Actions', function()
     wow.state:SendEvent('PLAYER_LOGIN')
   end
 
+  local everything = {
+    { action = 3 },
+    { buff = true },
+    { drink = true },
+    { eat = true },
+    { invslot = 13 },
+    { macro = '/lol' },
+    { mount = true },
+    { spell = 'Cooking' },
+    { stopcasting = true },
+  }
+
   it('makes a button', function()
     wow.state.knownSpells = {23456}
     init(wow, {
@@ -48,8 +60,7 @@ describe('Actions', function()
   end)
 
   it('does not crash on events', function()
-    wow.state.player.name = 'Shydove'
-    wow.state.realm = 'Westfall'
+    init(wow, everything)
     wow.state:SendEvent('PLAYER_LOGIN')
     wow.state:SendEvent('BAG_UPDATE_DELAYED')
     wow.state:SendEvent('UPDATE_BINDINGS')
@@ -88,9 +99,7 @@ describe('Actions', function()
   end
 
   it('has non-combat macrotexts that are not too long', function()
-    wow.state.player.name = 'Shydove'
-    wow.state.realm = 'Westfall'
-    wow.state:SendEvent('PLAYER_LOGIN')
+    init(wow, everything)
     for i = 1, 48 do
       local t = wow.env['mooActionButton' .. i]:GetAttribute('macrotext')
       assert.True(not t or t:len() < 1024, i)
@@ -98,9 +107,7 @@ describe('Actions', function()
   end)
 
   it('has combat macrotexts that are not too long', function()
-    wow.state.player.name = 'Shydove'
-    wow.state.realm = 'Westfall'
-    wow.state:SendEvent('PLAYER_LOGIN')
+    init(wow, everything)
     wow.state:EnterCombat()
     for i = 1, 48 do
       local t = wow.env['mooActionButton' .. i]:GetAttribute('macrotext')
@@ -126,9 +133,7 @@ describe('Actions', function()
   end)
 
   it('does not crash OnUpdate', function()
-    wow.state.player.name = 'Shydove'
-    wow.state.realm = 'Westfall'
-    wow.state:SendEvent('PLAYER_LOGIN')
+    init(wow, everything)
     wow.state:TickUpdate(1)
   end)
 
