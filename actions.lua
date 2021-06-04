@@ -96,10 +96,11 @@ local customTypes = (function()
     eat = consume(G.FoodDB, G.HealthPotionDB),
     invslot = (function()
       local function update(action)
-        local icon = GetInventoryItemTexture('player', action.invslot)
+        local item = GetInventoryItemID('player', action.invslot)
         return {
-          attr = icon and ('/use ' .. action.invslot) or '',
-          icon = icon,
+          attr = item and ('/use ' .. action.invslot) or '',
+          color = item and IsUsableItem(item) and 1.0 or 0.4,
+          icon = item and GetItemIcon(item) or nil,
         }
       end
       return {
