@@ -129,7 +129,6 @@ local customTypes = (function()
             return {
               attr = '/cast ' .. GetSpellInfo(spell),
               cooldown = { spell = spell },
-              color = 1.0,
               icon = GetSpellTexture(spell),
               tooltip = { spell = spell },
             }
@@ -141,7 +140,6 @@ local customTypes = (function()
             return {
               attr = '/use item:' .. item,
               cooldown = { item = item },
-              color = 1.0,
               icon = GetItemIcon(item),
               tooltip = { item = item },
             }
@@ -149,7 +147,6 @@ local customTypes = (function()
         end
         return {
           attr = '',
-          color = 0.4,
           icon = 132261,
           tooltip = { text = 'No mount... yet.' },
         }
