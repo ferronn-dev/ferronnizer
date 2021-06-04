@@ -99,16 +99,19 @@ local customTypes = (function()
         local icon = GetInventoryItemTexture('player', action.invslot)
         return {
           attr = icon and ('/use ' .. action.invslot) or '',
-          cooldown = { invslot = action.invslot },
           icon = icon,
-          tooltip = { invslot = action.invslot },
         }
       end
       return {
         handlers = {
           PLAYER_EQUIPMENT_CHANGED = update,
         },
-        init = update,
+        init = function(action)
+          return Mixin(update(action), {
+            cooldown = { invslot = action.invslot },
+            tooltip = { invslot = action.invslot },
+          })
+        end,
       }
     end)(),
     macro = {
