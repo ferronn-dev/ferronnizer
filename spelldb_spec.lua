@@ -14,17 +14,13 @@ describe('spell db', function()
       ['Perception'] = true,
     }
     local seenBad = {}
-    for toon in require('lfs').dir('toons') do
-      local name, realm = string.match(toon, '^(%a+)-(%a+).lua$')
-      if name then
-        local fullname = name .. '-' .. realm
-        for _, action in pairs(wow.addon.Characters[fullname]) do
-          if action.spell then
-            if knownBad[action.spell] then
-              seenBad[action.spell] = true
-            elseif not wow.addon.SpellDB[action.spell] then
-              error(fullname .. ': ' .. action.spell)
-            end
+    for fullname, actions in pairs(wow.addon.Characters) do
+      for _, action in pairs(actions) do
+        if action.spell then
+          if knownBad[action.spell] then
+            seenBad[action.spell] = true
+          elseif not wow.addon.SpellDB[action.spell] then
+            error(fullname .. ': ' .. action.spell)
           end
         end
       end
