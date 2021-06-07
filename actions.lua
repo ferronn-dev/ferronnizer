@@ -100,19 +100,16 @@ local customTypes = (function()
         return {
           attr = item and ('/use ' .. action.invslot) or '',
           color = item and IsUsableItem(item) and 1.0 or 0.4,
+          cooldown = item and { item = item } or nil,
           icon = item and GetItemIcon(item) or nil,
+          tooltip = item and { item = item } or nil,
         }
       end
       return {
         handlers = {
           PLAYER_EQUIPMENT_CHANGED = update,
         },
-        init = function(action)
-          return Mixin(update(action), {
-            cooldown = { invslot = action.invslot },
-            tooltip = { invslot = action.invslot },
-          })
-        end,
+        init = update,
       }
     end)(),
     macro = {
@@ -240,9 +237,6 @@ local cooldownLang = {
   action = function(action)
     return { GetActionCooldown(action) }
   end,
-  invslot = function(invslot)
-    return { GetInventoryItemCooldown('player', invslot) }
-  end,
   item = function(item)
     return { GetItemCooldown(item) }
   end,
@@ -270,9 +264,6 @@ local countData = {}
 local tooltipLang = {
   action = function(action)
     GameTooltip:SetAction(action)
-  end,
-  invslot = function(invslot)
-    GameTooltip:SetInventoryItem('player', invslot)
   end,
   item = function(item)
     GameTooltip:SetHyperlink('item:' .. item)
