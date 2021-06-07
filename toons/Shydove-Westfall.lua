@@ -26,11 +26,10 @@ G.Characters['Shydove-Westfall'] = {
     mouseover = true,
     spell = 'Renew',
   },
-  [6] = ({
-    [WOW_PROJECT_CLASSIC] = {
-      spell = 'Holy Nova',
-    },
-  })[WOW_PROJECT_ID],
+  [6] = {
+    mouseover = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC,
+    spell = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 'Holy Nova' or 'Circle of Healing',
+  },
   [7] = {
     mouseover = true,
     spell = 'Power Word: Shield',
