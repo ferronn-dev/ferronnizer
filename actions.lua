@@ -454,13 +454,14 @@ local function makeActions()
   local charActions = G.Characters[UnitName('player')..'-'..GetRealmName()]
   if charActions then
     for i, v in pairs(charActions) do
-      actions['fraction' .. i] = v
-      if v.page then
+      if not v.page then
+        actions['fraction' .. i] = v
+      else
         local pageName = 'fraction' .. i .. 'x'
+        actions['fraction' .. i] = Mixin(Mixin({}, v), { page = pageName })
         for j, x in pairs(v.page) do
           actions[pageName .. j] = x
         end
-        v.page = pageName
       end
     end
   else

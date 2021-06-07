@@ -16,6 +16,7 @@ describe('Actions', function()
     { invslot = 13 },
     { macro = '/lol' },
     { mount = true },
+    { page = {} },
     { spell = 'Cooking' },
     { stopcasting = true },
   }
@@ -149,5 +150,27 @@ describe('Actions', function()
     assert.False(wow.env.mooActionButton1:IsShown())
     wow.state:LeaveCombat()
     assert.True(wow.env.mooActionButton1:IsShown())
+  end)
+
+  it('changes pages', function()
+    init(wow, {
+      [1] = {
+        page = {
+          [2] = { macro = '/lol' },
+        },
+      },
+    })
+    assert.True(wow.env.mooActionButton1:IsShown())
+    assert.False(wow.env.mooActionButton2:IsShown())
+    wow.env.mooActionButton1:Click()
+    assert.False(wow.env.mooActionButton1:IsShown())
+    assert.True(wow.env.mooActionButton2:IsShown())
+    wow.env.mooActionButton2:Click()
+    assert.True(wow.env.mooActionButton1:IsShown())
+    assert.False(wow.env.mooActionButton2:IsShown())
+    assert.same({
+      { macro = '#page:fraction1x' },
+      { macro = '/lol' },
+    }, wow.state.commands)
   end)
 end)
