@@ -50,9 +50,9 @@ G.Characters['Shydove-Westfall'] = {
     spell = 'Psychic Scream',
   },
   [13] = {
-    actionText = 'FH7',
+    actionText = 'FH8',
     mouseover = true,
-    rank = 7,
+    rank = 8,
     spell = 'Flash Heal',
   },
   [14] = {
