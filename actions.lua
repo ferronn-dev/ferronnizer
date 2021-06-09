@@ -205,20 +205,6 @@ local cooldownLang = {
 
 local cooldownData = {}
 
-local countLang = {
-  action = function(action)
-    return IsConsumableAction(action) and GetActionCount(action) or -1
-  end,
-  item = function(item)
-    return GetItemCount(item)
-  end,
-  spell = function(spell)
-    return IsConsumableSpell(spell) and GetSpellCount(spell) or -1
-  end,
-}
-
-local countData = {}
-
 local tooltipLang = {
   action = function(action)
     GameTooltip:SetAction(action)
@@ -280,9 +266,27 @@ local updateButton = (function()
       local start, duration, enable, modRate = unpack(cooldown)
       CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
     end,
-    count = function(button, count)
-      button.Count:SetText(count < 0 and '' or count > 9999 and '*' or count)
-    end,
+    count = (function()
+      local countLang = {
+        action = function(action)
+          return IsConsumableAction(action) and GetActionCount(action) or -1
+        end,
+        count = function(count)
+          return count
+        end,
+        item = function(item)
+          return GetItemCount(item)
+        end,
+        spell = function(spell)
+          return IsConsumableSpell(spell) and GetSpellCount(spell) or -1
+        end,
+      }
+      return function(button, prog)
+        local k, v = next(prog)
+        local count = countLang[k](v)
+        button.Count:SetText(count < 0 and '' or count > 9999 and '*' or count)
+      end
+    end)(),
     icon = function(button, icon)
       button.icon:SetTexture(icon)
     end,
@@ -320,11 +324,8 @@ local updateAction = (function()
       local k, v = next(cooldown)
       return { cooldown = cooldownLang[k](v) }
     end,
-    count = function(count, actionid)
-      countData[actionid] = count
-      -- hack to update now
-      local k, v = next(count)
-      return { count = countLang[k](v) }
+    count = function(count)
+      return { count = count }
     end,
     icon = function(icon)
       return { icon = icon }
@@ -378,7 +379,13 @@ local function setupActionState(actions)
     end
   end
   local genericHandlers = {
-    BAG_UPDATE_DELAYED = updateHandler('count', countData, countLang),
+    BAG_UPDATE_DELAYED = function()
+      for actionid, state in pairs(actionButtonState) do
+        if state.count then
+          updateButton(actionButtons[actionid], { count = state.count })
+        end
+      end
+    end,
     SPELL_UPDATE_COOLDOWN = updateHandler('cooldown', cooldownData, cooldownLang),
   }
   for ev, handler in pairs(genericHandlers) do
@@ -492,7 +499,7 @@ local function makeButtons()
     local reset = {
       color = {1.0, 1.0, 1.0},
       cooldown = {0, 0, 0},
-      count = -1,
+      count = { count = -1 },
       icon = 136235,  -- samwise
       name = '',
     }
