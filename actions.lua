@@ -43,7 +43,7 @@ local customTypes = (function()
         BAG_UPDATE_DELAYED = function()
           return updateItem()
         end,
-        PLAYER_LEVEL_UP = function(_, level)
+        PLAYER_LEVEL_UP = function(level)
           return updateItem(level)
         end,
         PLAYER_REGEN_DISABLED = function()
@@ -361,7 +361,7 @@ local function setupActionState(actions)
     updateAction(actionid, init)
     for ev, handler in pairs(tyhandlers or {}) do
       addHandler(ev, function(...)
-        return updateAction(actionid, handler(action, ...))
+        return updateAction(actionid, handler(...))
       end)
     end
   end
