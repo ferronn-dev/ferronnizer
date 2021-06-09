@@ -308,35 +308,36 @@ local actionLang = {
   end,
 }
 
-local buttonLang = {
-  color = function(button, color)
-    button.icon:SetVertexColor(unpack(color))
-  end,
-  cooldown = function(button, cooldown)
-    local start, duration, enable, modRate = unpack(cooldown)
-    CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
-  end,
-  count = function(button, count)
-    button.Count:SetText(count < 0 and '' or count > 9999 and '*' or count)
-  end,
-  icon = function(button, icon)
-    button.icon:SetTexture(icon)
-  end,
-  name = function(button, name)
-    button.Name:SetText(name)
-  end,
-}
+local updateButton = (function()
+  local lang = {
+    color = function(button, color)
+      button.icon:SetVertexColor(unpack(color))
+    end,
+    cooldown = function(button, cooldown)
+      local start, duration, enable, modRate = unpack(cooldown)
+      CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
+    end,
+    count = function(button, count)
+      button.Count:SetText(count < 0 and '' or count > 9999 and '*' or count)
+    end,
+    icon = function(button, icon)
+      button.icon:SetTexture(icon)
+    end,
+    name = function(button, name)
+      button.Name:SetText(name)
+    end,
+  }
+  return function(button, update)
+    if button then
+      for k, v in pairs(update) do
+        lang[k](button, v)
+      end
+    end
+  end
+end)()
 
 local actionButtons = {}
 local actionButtonState = {}
-
-local function updateButton(button, buttonUpdate)
-  if button then
-    for k, v in pairs(buttonUpdate) do
-      buttonLang[k](button, v)
-    end
-  end
-end
 
 local function updateAction(actionid, actionUpdate)
   local buttonUpdate = {}
@@ -371,10 +372,7 @@ local function setupActionState(actions)
         local k, v = next(cd)
         local value = lang[k](v)
         actionButtonState[actionid][name] = value
-        local button = actionButtons[actionid]
-        if button then
-          buttonLang[name](button, value)
-        end
+        updateButton(actionButtons[actionid], { [name] = value })
       end
     end
   end
