@@ -191,24 +191,6 @@ local function getType(action)
   end
 end
 
-local updateLang = {
-  spell = function(spell)
-    if IsSpellInRange(spell, 'target') == 0 then
-      return { 0.8, 0.1, 0.1 }
-    end
-    local isUsable, notEnoughMana = IsUsableSpell(spell)
-    if isUsable then
-      return { 1.0, 1.0, 1.0 }
-    elseif notEnoughMana then
-      return { 0.5, 0.5, 1.0 }
-    else
-      return { 0.4, 0.4, 0.4 }
-    end
-  end,
-}
-
-local updateData = {}
-
 local pendingAttrs = {}
 
 local function updateAttr(actionid, attr)
@@ -272,6 +254,27 @@ local updateButton = (function()
     tooltip = function()
       -- Do nothing. Handled by button OnEnter/OnLeave.
     end,
+    update = (function()
+      local updateLang = {
+        spell = function(spell)
+          if IsSpellInRange(spell, 'target') == 0 then
+            return 0.8, 0.1, 0.1
+          end
+          local isUsable, notEnoughMana = IsUsableSpell(spell)
+          if isUsable then
+            return 1.0, 1.0, 1.0
+          elseif notEnoughMana then
+            return 0.5, 0.5, 1.0
+          else
+            return 0.4, 0.4, 0.4
+          end
+        end,
+      }
+      return function(button, prog)
+        local k, v = next(prog)
+        button.icon:SetVertexColor(updateLang[k](v))
+      end
+    end)(),
   }
   return function(button, update)
     if button then
@@ -339,8 +342,8 @@ local updateAction = (function()
         return { tooltip = function() tooltipLang[k](v) end }
       end
     end)(),
-    update = function(update, actionid)
-      updateData[actionid] = update
+    update = function(update)
+      return { update = update }
     end,
   }
   return function(actionid, update)
@@ -371,31 +374,18 @@ local function setupActionState(actions)
       end)
     end
   end
-  local function updateHandler(name, data, lang)
+  local function updateHandler(name)
     return function()
-      for actionid, cd in pairs(data) do
-        local k, v = next(cd)
-        local value = lang[k](v)
-        actionButtonState[actionid][name] = value
-        updateButton(actionButtons[actionid], { [name] = value })
+      for actionid, state in pairs(actionButtonState) do
+        if state[name] then
+          updateButton(actionButtons[actionid], { [name] = state[name] })
+        end
       end
     end
   end
   local genericHandlers = {
-    BAG_UPDATE_DELAYED = function()
-      for actionid, state in pairs(actionButtonState) do
-        if state.count then
-          updateButton(actionButtons[actionid], { count = state.count })
-        end
-      end
-    end,
-    SPELL_UPDATE_COOLDOWN = function()
-      for actionid, state in pairs(actionButtonState) do
-        if state.cooldown then
-          updateButton(actionButtons[actionid], { cooldown = state.cooldown })
-        end
-      end
-    end,
+    BAG_UPDATE_DELAYED = updateHandler('count'),
+    SPELL_UPDATE_COOLDOWN = updateHandler('cooldown'),
   }
   for ev, handler in pairs(genericHandlers) do
     addHandler(ev, handler)
@@ -419,7 +409,7 @@ local function setupActionState(actions)
     return postCombatHandler and postCombatHandler(...)
   end
   G.Eventer(handlersHandlers)
-  G.Updater(TOOLTIP_UPDATE_TIME, updateHandler('color', updateData, updateLang))
+  G.Updater(TOOLTIP_UPDATE_TIME, updateHandler('update'))
 end
 
 local function makeActions()
