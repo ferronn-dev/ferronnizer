@@ -271,43 +271,6 @@ local function updateAttr(actionid, attr)
   header:Execute(([[self:RunAttribute('updateActionAttr', '%s', self:GetAttribute('tmp'))]]):format(actionid))
 end
 
-local actionLang = {
-  attr = function(attr, actionid)
-    if InCombatLockdown() then
-      pendingAttrs[actionid] = attr
-    else
-      updateAttr(actionid, attr)
-    end
-  end,
-  color = function(color)
-    return { color = { color, color, color } }
-  end,
-  cooldown = function(cooldown, actionid)
-    cooldownData[actionid] = cooldown
-    -- hack to update now
-    local k, v = next(cooldown)
-    return { cooldown = cooldownLang[k](v) }
-  end,
-  count = function(count, actionid)
-    countData[actionid] = count
-    -- hack to update now
-    local k, v = next(count)
-    return { count = countLang[k](v) }
-  end,
-  icon = function(icon)
-    return { icon = icon }
-  end,
-  name = function(name)
-    return { name = name }
-  end,
-  tooltip = function(tooltip, actionid)
-    tooltipData[actionid] = tooltip
-  end,
-  update = function(update, actionid)
-    updateData[actionid] = update
-  end,
-}
-
 local updateButton = (function()
   local lang = {
     color = function(button, color)
@@ -339,14 +302,52 @@ end)()
 local actionButtons = {}
 local actionButtonState = {}
 
-local function updateAction(actionid, actionUpdate)
-  local buttonUpdate = {}
-  for k, v in pairs(actionUpdate) do
-    Mixin(buttonUpdate, actionLang[k](v, actionid))
+local updateAction = (function()
+  local lang = {
+    attr = function(attr, actionid)
+      if InCombatLockdown() then
+        pendingAttrs[actionid] = attr
+      else
+        updateAttr(actionid, attr)
+      end
+    end,
+    color = function(color)
+      return { color = { color, color, color } }
+    end,
+    cooldown = function(cooldown, actionid)
+      cooldownData[actionid] = cooldown
+      -- hack to update now
+      local k, v = next(cooldown)
+      return { cooldown = cooldownLang[k](v) }
+    end,
+    count = function(count, actionid)
+      countData[actionid] = count
+      -- hack to update now
+      local k, v = next(count)
+      return { count = countLang[k](v) }
+    end,
+    icon = function(icon)
+      return { icon = icon }
+    end,
+    name = function(name)
+      return { name = name }
+    end,
+    tooltip = function(tooltip, actionid)
+      tooltipData[actionid] = tooltip
+    end,
+    update = function(update, actionid)
+      updateData[actionid] = update
+    end,
+  }
+  return function(actionid, update)
+    local buttonUpdate = {}
+    for k, v in pairs(update) do
+      Mixin(buttonUpdate, lang[k](v, actionid))
+    end
+    Mixin(actionButtonState[actionid], buttonUpdate)
+    updateButton(actionButtons[actionid], buttonUpdate)
   end
-  Mixin(actionButtonState[actionid], buttonUpdate)
-  updateButton(actionButtons[actionid], buttonUpdate)
-end
+end)()
 
 local function setupActionState(actions)
   local handlers = {}
