@@ -458,7 +458,7 @@ local function makeActions()
         actions['fraction' .. i] = v
       else
         local pageName = 'fraction' .. i .. 'x'
-        actions['fraction' .. i] = Mixin(Mixin({}, v), { page = pageName })
+        actions['fraction' .. i] = Mixin({}, v, { page = pageName })
         for j, x in pairs(v.page) do
           actions[pageName .. j] = x
         end
