@@ -38,8 +38,8 @@ local customTypes = (function()
       currentDB = db
       return updateItem()
     end
-    return {
-      handlers = {
+    return function()
+      return updateDB(mealDB), {
         BAG_UPDATE_DELAYED = function()
           return updateItem()
         end,
@@ -52,77 +52,63 @@ local customTypes = (function()
         PLAYER_REGEN_ENABLED = function()
           return updateDB(mealDB)
         end,
-      },
-      init = function()
-        return updateDB(mealDB)
-      end,
-    }
+      }
+    end
   end
   return {
-    action = (function()
-      local function update(action)
+    action = function(action)
+      local num = action.action
+      local function update()
         return {
-          attr = HasAction(action.action) and action.action or '',
-          icon = GetActionTexture(action.action),
-          name = GetActionText(action.action),
+          attr = HasAction(num) and num or '',
+          icon = GetActionTexture(num),
+          name = GetActionText(num),
         }
       end
-      return {
-        handlers = {
-          ACTIONBAR_SLOT_CHANGED = function(action, slot)
-            return slot == action.action and update(action) or {}
-          end,
-        },
-        init = function(action)
-          return Mixin(update(action), {
-            cooldown = { action = action.action },
-            count = { action = action.action },
-            tooltip = { action = action.action },
-          })
+      local init = Mixin(update(), {
+        cooldown = { action = num },
+        count = { action = num },
+        tooltip = { action = num },
+      })
+      return init, {
+        ACTIONBAR_SLOT_CHANGED = function(slot)
+          return slot == num and update() or {}
         end,
       }
-    end)(),
-    buff = {
-      init = function(action)
-        return {
-          attr = '/click ' .. addonName .. 'BuffButton',
-          count = action.reagent and { item = action.reagent },
-          icon = 135938,
-          tooltip = { text = 'Buff' },
-        }
-      end,
-    },
+    end,
+    buff = function(action)
+      return {
+        attr = '/click ' .. addonName .. 'BuffButton',
+        count = action.reagent and { item = action.reagent },
+        icon = 135938,
+        tooltip = { text = 'Buff' },
+      }
+    end,
     drink = consume(G.DrinkDB, G.ManaPotionDB),
     eat = consume(G.FoodDB, G.HealthPotionDB),
-    invslot = (function()
-      local function update(action)
-        local item = GetInventoryItemID('player', action.invslot)
+    invslot = function(action)
+      local slot = action.invslot
+      local function update()
+        local item = GetInventoryItemID('player', slot)
         return {
-          attr = item and ('/use ' .. action.invslot) or '',
+          attr = item and ('/use ' .. slot) or '',
           color = item and IsUsableItem(item) and 1.0 or 0.4,
           cooldown = item and { item = item } or nil,
           icon = item and GetItemIcon(item) or nil,
           tooltip = item and { item = item } or nil,
         }
       end
+      return update(), { PLAYER_EQUIPMENT_CHANGED = update }
+    end,
+    macro = function(action)
       return {
-        handlers = {
-          PLAYER_EQUIPMENT_CHANGED = update,
-        },
-        init = update,
+        attr = action.macro,
+        icon = action.texture,
+        name = action.actionText,
+        tooltip = { text = action.tooltip },
       }
-    end)(),
-    macro = {
-      init = function(action)
-        return {
-          attr = action.macro,
-          icon = action.texture,
-          name = action.actionText,
-          tooltip = { text = action.tooltip },
-        }
-      end,
-    },
-    mount = (function()
+    end,
+    mount = function()
       local function update()
         for _, spellx in ipairs(G.MountSpellDB) do
           local spell = spellx[1]
@@ -152,34 +138,27 @@ local customTypes = (function()
           tooltip = { text = 'No mount... yet.' },
         }
       end
-      return {
-        handlers = {
-          BAG_UPDATE_DELAYED = update,
-          PLAYER_REGEN_DISABLED = function()
-            return { attr = '/dismount' }
-          end,
-          PLAYER_REGEN_ENABLED = update,
-          SPELLS_CHANGED = update,
-        },
-        init = update,
+      return update(), {
+        BAG_UPDATE_DELAYED = update,
+        PLAYER_REGEN_DISABLED = function()
+          return { attr = '/dismount' }
+        end,
+        PLAYER_REGEN_ENABLED = update,
+        SPELLS_CHANGED = update,
       }
-    end)(),
-    page = {
-      init = function(action)
-        return {
-          attr = '#page:' .. action.page,
-          count = action.reagent and { item = action.reagent },
-          icon = action.texture,
-          name = action.actionText,
-          tooltip = action.tooltip and { text = action.tooltip },
-        }
-      end,
-    },
-    spell = (function()
-      local function getFullName(action)
-        return action.spell .. (action.rank and ('(Rank ' .. action.rank .. ')') or '')
-      end
-      local function update(action)
+    end,
+    page = function(action)
+      return {
+        attr = '#page:' .. action.page,
+        count = action.reagent and { item = action.reagent },
+        icon = action.texture,
+        name = action.actionText,
+        tooltip = action.tooltip and { text = action.tooltip },
+      }
+    end,
+    spell = function(action)
+      local fullName = action.spell .. (action.rank and ('(Rank ' .. action.rank .. ')') or '')
+      local function update()
         local spellid = select(7, GetSpellInfo(action.spell, action.rank and ('Rank ' .. action.rank) or nil))
         return {
           attr = spellid and IsSpellKnown(spellid) and (
@@ -187,34 +166,27 @@ local customTypes = (function()
             (action.stand ~= false and '/stand\n' or '')..
             (action.stopcasting and '/stopcasting\n' or '')..
             '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
-            getFullName(action)) or '',
+            fullName) or '',
         }
       end
-      return {
-        handlers = {
-          SPELLS_CHANGED = update,
-        },
-        init = function(action)
-          local fullName = getFullName(action)
-          return Mixin(update(action), {
-            cooldown = { spell = fullName },
-            count = { spell = fullName },
-            -- Use the spell base name for GetSpellTexture; more likely to work on login.
-            icon = GetSpellTexture(action.spell),
-            name = action.actionText,
-            tooltip = { spell = fullName },
-            update = { spell = fullName },
-          })
-        end,
-      }
-    end)(),
+      local init = Mixin(update(), {
+        cooldown = { spell = fullName },
+        count = { spell = fullName },
+        -- Use the spell base name for GetSpellTexture; more likely to work on login.
+        icon = GetSpellTexture(action.spell),
+        name = action.actionText,
+        tooltip = { spell = fullName },
+        update = { spell = fullName },
+      })
+      return init, { SPELLS_CHANGED = update }
+    end,
   }
 end)()
 
 local function getType(action)
   for k, v in pairs(customTypes) do
     if action[k] then
-      return v
+      return v(action)
     end
   end
 end
@@ -385,9 +357,9 @@ local function setupActionState(actions)
     actionButtonState[actionid] = {}
   end
   for actionid, action in pairs(actions) do
-    local ty = getType(action)
-    updateAction(actionid, ty.init(action))
-    for ev, handler in pairs(ty.handlers or {}) do
+    local init, tyhandlers = getType(action)
+    updateAction(actionid, init)
+    for ev, handler in pairs(tyhandlers or {}) do
       addHandler(ev, function(...)
         return updateAction(actionid, handler(action, ...))
       end)
