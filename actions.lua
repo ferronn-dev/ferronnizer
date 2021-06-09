@@ -208,24 +208,10 @@ local customTypes = (function()
         end,
       }
     end)(),
-    stopcasting = {
-      init = function()
-        return {
-          attr = '/stopcasting',
-          icon = 135768,
-          name = 'Stop',
-          tooltip = { text = 'Stop Casting' },
-        }
-      end,
-    },
   }
 end)()
 
 local function getType(action)
-  -- spell > stopcasting
-  if action.spell then
-    return customTypes.spell
-  end
   for k, v in pairs(customTypes) do
     if action[k] then
       return v
@@ -454,14 +440,21 @@ local function makeActions()
   local charActions = G.Characters[UnitName('player')..'-'..GetRealmName()]
   if charActions then
     for i, v in pairs(charActions) do
-      if not v.page then
-        actions['fraction' .. i] = v
-      else
+      if v.page then
         local pageName = 'fraction' .. i .. 'x'
         actions['fraction' .. i] = Mixin({}, v, { page = pageName })
         for j, x in pairs(v.page) do
           actions[pageName .. j] = x
         end
+      elseif v.stopcasting and not v.spell then
+        actions['fraction' .. i] = {
+          actionText = 'Stop',
+          macro = '/stopcasting',
+          texture = 135768,
+          tooltip = 'Stop Casting',
+        }
+      else
+        actions['fraction' .. i] = v
       end
     end
   else
