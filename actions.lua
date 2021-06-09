@@ -191,20 +191,6 @@ local function getType(action)
   end
 end
 
-local cooldownLang = {
-  action = function(action)
-    return { GetActionCooldown(action) }
-  end,
-  item = function(item)
-    return { GetItemCooldown(item) }
-  end,
-  spell = function(spell)
-    return { GetSpellCooldown(spell) }
-  end,
-}
-
-local cooldownData = {}
-
 local tooltipLang = {
   action = function(action)
     GameTooltip:SetAction(action)
@@ -262,20 +248,37 @@ local updateButton = (function()
     color = function(button, color)
       button.icon:SetVertexColor(unpack(color))
     end,
-    cooldown = function(button, cooldown)
-      local start, duration, enable, modRate = unpack(cooldown)
-      CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
-    end,
+    cooldown = (function()
+      local cooldownLang = {
+        action = function(action)
+          return GetActionCooldown(action)
+        end,
+        item = function(item)
+          return GetItemCooldown(item)
+        end,
+        reset = function()
+          return 0, 0, 0
+        end,
+        spell = function(spell)
+          return GetSpellCooldown(spell)
+        end,
+      }
+      return function(button, prog)
+        local k, v = next(prog)
+        local start, duration, enable, modRate = cooldownLang[k](v)
+        CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
+      end
+    end)(),
     count = (function()
       local countLang = {
         action = function(action)
           return IsConsumableAction(action) and GetActionCount(action) or -1
         end,
-        count = function(count)
-          return count
-        end,
         item = function(item)
           return GetItemCount(item)
+        end,
+        reset = function()
+          return -1
         end,
         spell = function(spell)
           return IsConsumableSpell(spell) and GetSpellCount(spell) or -1
@@ -318,11 +321,8 @@ local updateAction = (function()
     color = function(color)
       return { color = { color, color, color } }
     end,
-    cooldown = function(cooldown, actionid)
-      cooldownData[actionid] = cooldown
-      -- hack to update now
-      local k, v = next(cooldown)
-      return { cooldown = cooldownLang[k](v) }
+    cooldown = function(cooldown)
+      return { cooldown = cooldown }
     end,
     count = function(count)
       return { count = count }
@@ -386,7 +386,13 @@ local function setupActionState(actions)
         end
       end
     end,
-    SPELL_UPDATE_COOLDOWN = updateHandler('cooldown', cooldownData, cooldownLang),
+    SPELL_UPDATE_COOLDOWN = function()
+      for actionid, state in pairs(actionButtonState) do
+        if state.cooldown then
+          updateButton(actionButtons[actionid], { cooldown = state.cooldown })
+        end
+      end
+    end,
   }
   for ev, handler in pairs(genericHandlers) do
     addHandler(ev, handler)
@@ -498,8 +504,8 @@ local function makeButtons()
     actionButtons[actionid] = self
     local reset = {
       color = {1.0, 1.0, 1.0},
-      cooldown = {0, 0, 0},
-      count = { count = -1 },
+      cooldown = { reset = true },
+      count = { reset = true },
       icon = 136235,  -- samwise
       name = '',
     }
