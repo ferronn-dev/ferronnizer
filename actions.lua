@@ -201,7 +201,7 @@ end
 local updateButton = (function()
   local lang = {
     color = function(button, color)
-      button.icon:SetVertexColor(unpack(color))
+      button.icon:SetVertexColor(color, color, color)
     end,
     cooldown = (function()
       local cooldownLang = {
@@ -298,7 +298,7 @@ local updateAction = (function()
       end
     end,
     color = function(color)
-      return { color = { color, color, color } }
+      return { color = color }
     end,
     cooldown = function(cooldown)
       return { cooldown = cooldown }
@@ -495,7 +495,7 @@ local function makeButtons()
     end
     actionButtons[actionid] = self
     local reset = {
-      color = {1.0, 1.0, 1.0},
+      color = 1.0,
       cooldown = { reset = true },
       count = { reset = true },
       icon = 136235,  -- samwise
