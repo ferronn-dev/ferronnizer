@@ -323,11 +323,10 @@ local function updateAction(actionid, update)
     else
       updateAttr(actionid, update.attr)
     end
+    update.attr = nil
   end
-  local buttonUpdate = Mixin({}, update)
-  buttonUpdate.attr = nil
-  Mixin(actionButtonState[actionid], buttonUpdate)
-  updateButton(actionButtons[actionid], buttonUpdate)
+  Mixin(actionButtonState[actionid], update)
+  updateButton(actionButtons[actionid], update)
 end
 
 local function setupActionState(actions)
