@@ -314,16 +314,15 @@ local newButton, updateAttr = (function()
     buttons = newtable()
     actionToButton = newtable()
     actionAttrs = newtable()
+    currentPage = 'invalid'
     setFraction = [=[
-      local actionid, value = ...
+      local actionid, value, prevActionID = ...
       local type_, action, macrotext
       if type(value) == 'string' then
         type_, macrotext = 'macro', value
       elseif value ~= nil then
         type_, action = 'action', value
       end
-      local prevActionID = self:GetAttribute('fraction')
-      self:SetAttribute('fraction', actionid)
       self:SetAttribute('type', type_)
       self:SetAttribute('action', action)
       self:SetAttribute('macrotext', macrotext)
@@ -339,32 +338,31 @@ local newButton, updateAttr = (function()
       actionAttrs[actionid] = value
       local buttonid = actionToButton[actionid]
       if buttonid then
-        self:RunFor(buttons[buttonid], setFraction, actionid, value)
+        self:RunFor(buttons[buttonid], setFraction, actionid, value, actionid)
       end
     ]=]
     updateActionPage = [=[
       local page = ...
       if currentPage ~= page then
+        local previousPage = currentPage
         currentPage = page
         for buttonid, button in ipairs(buttons) do
-          local prevActionID = button:GetAttribute('fraction')
-          if prevActionID then
-            actionToButton[prevActionID] = nil
-          end
+          local prevActionID = previousPage .. buttonid
+          actionToButton[prevActionID] = nil
           local actionid = page .. buttonid
           local attr = actionAttrs[actionid]
           if attr then
             actionToButton[actionid] = buttonid
-            self:RunFor(button, setFraction, actionid, attr)
+            self:RunFor(button, setFraction, actionid, attr, prevActionID)
           else
-            self:RunFor(button, setFraction, nil, nil)
+            self:RunFor(button, setFraction, nil, nil, prevActionID)
           end
         end
       end
     ]=]
     updatePageOnClick = [=[
-      local actionid = ...
-      local attr = actionid and actionAttrs[actionid] or ''
+      local buttonid = ...
+      local attr = actionAttrs[currentPage .. buttonid] or ''
       local page = type(attr) == 'string' and attr:sub(1, 6) == '#page:' and attr:sub(7) or 'fraction'
       self:Run(updateActionPage, page)
     ]=]
@@ -386,9 +384,9 @@ local newButton, updateAttr = (function()
     num = num + 1
     local button = CreateFrame(
       'CheckButton', prefix .. num, header, 'ActionButtonTemplate, SecureActionButtonTemplate')
-    header:WrapScript(button, 'OnClick', 'return nil, true', [[
-      owner:Run(updatePageOnClick, self:GetAttribute('fraction'))
-    ]])
+    header:WrapScript(button, 'OnClick', 'return nil, true', ([[
+      owner:Run(updatePageOnClick, %d)
+    ]]):format(num))
     header:SetFrameRef('tmp', button)
     header:Execute([[tinsert(buttons, self:GetFrameRef('tmp'))]])
     return button
