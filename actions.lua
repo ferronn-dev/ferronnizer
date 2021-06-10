@@ -251,9 +251,37 @@ local updateButton = (function()
     name = function(button, name)
       button.Name:SetText(name)
     end,
-    tooltip = function()
-      -- Do nothing. Handled by button OnEnter/OnLeave.
-    end,
+    tooltip = (function()
+      local tooltipLang = {
+        action = function(action)
+          GameTooltip:SetAction(action)
+        end,
+        item = function(item)
+          GameTooltip:SetHyperlink('item:' .. item)
+        end,
+        spell = function(spell)
+          if type(spell) == 'string' then
+            spell = select(7, GetSpellInfo(spell))
+          end
+          GameTooltip:SetSpellByID(spell)
+          local subtext = GetSpellSubtext(spell)
+          if subtext then
+            GameTooltipTextRight1:SetText(subtext)
+            GameTooltipTextRight1:SetTextColor(0.5, 0.5, 0.5)
+            GameTooltipTextRight1:Show()
+            GameTooltip:Show()
+          end
+        end,
+        text = function(text)
+          GameTooltip:SetText(text)
+        end,
+      }
+      return function(button, tooltip)
+        local k, v = next(tooltip)
+        local fn = tooltipLang[k]
+        button.ttfn = fn and function() fn(v) end or nil
+      end
+    end)(),
     update = (function()
       local updateLang = {
         spell = function(spell)
@@ -312,36 +340,9 @@ local updateAction = (function()
     name = function(name)
       return { name = name }
     end,
-    tooltip = (function()
-      local tooltipLang = {
-        action = function(action)
-          GameTooltip:SetAction(action)
-        end,
-        item = function(item)
-          GameTooltip:SetHyperlink('item:' .. item)
-        end,
-        spell = function(spell)
-          if type(spell) == 'string' then
-            spell = select(7, GetSpellInfo(spell))
-          end
-          GameTooltip:SetSpellByID(spell)
-          local subtext = GetSpellSubtext(spell)
-          if subtext then
-            GameTooltipTextRight1:SetText(subtext)
-            GameTooltipTextRight1:SetTextColor(0.5, 0.5, 0.5)
-            GameTooltipTextRight1:Show()
-            GameTooltip:Show()
-          end
-        end,
-        text = function(text)
-          GameTooltip:SetText(text)
-        end,
-      }
-      return function(tooltip)
-        local k, v = next(tooltip)
-        return { tooltip = function() tooltipLang[k](v) end }
-      end
-    end)(),
+    tooltip = function(tooltip)
+      return { tooltip = tooltip }
+    end,
     update = function(update)
       return { update = update }
     end,
@@ -464,13 +465,9 @@ end
 local function makeButtons()
   local scripts = {
     OnEnter = function(self)
-      local actionid = self:GetAttribute('fraction')
-      if actionid then
-        local ttfn = actionButtonState[actionid].tooltip
-        if ttfn then
-          GameTooltip_SetDefaultAnchor(GameTooltip, self)
-          ttfn()
-        end
+      if self.ttfn then
+        GameTooltip_SetDefaultAnchor(GameTooltip, self)
+        self.ttfn()
       end
     end,
     OnEvent = function(self)
@@ -500,6 +497,7 @@ local function makeButtons()
       count = { reset = true },
       icon = 136235,  -- samwise
       name = '',
+      tooltip = { reset = true },
     }
     updateButton(self, Mixin(reset, actionButtonState[actionid]))
   end
