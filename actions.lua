@@ -3,7 +3,7 @@ local addonName, G = ...
 local prefix = addonName .. 'ActionButton'
 local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerBaseTemplate')
 
-local customTypes = (function()
+local makeAction = (function()
   local function consume(mealDB, potionDB)
     local potionText = (function()
       local s = ''
@@ -55,7 +55,7 @@ local customTypes = (function()
       }
     end
   end
-  return {
+  local lang = {
     action = function(action)
       local num = action.action
       local function update()
@@ -182,15 +182,14 @@ local customTypes = (function()
       return init, { SPELLS_CHANGED = update }
     end,
   }
-end)()
-
-local function getType(action)
-  for k, v in pairs(customTypes) do
-    if action[k] then
-      return v(action)
+  return function(action)
+    for k, v in pairs(lang) do
+      if action[k] then
+        return v(action)
+      end
     end
   end
-end
+end)()
 
 local pendingAttrs = {}
 
@@ -344,7 +343,7 @@ local function setupActionState(actions)
     actionButtonState[actionid] = {}
   end
   for actionid, action in pairs(actions) do
-    local init, tyhandlers = getType(action)
+    local init, tyhandlers = makeAction(action)
     updateAction(actionid, init)
     for ev, handler in pairs(tyhandlers or {}) do
       addHandler(ev, function(...)
