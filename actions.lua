@@ -69,6 +69,7 @@ local customTypes = (function()
         cooldown = { action = num },
         count = { action = num },
         tooltip = { action = num },
+        update = { action = num },
       })
       return init, {
         ACTIONBAR_SLOT_CHANGED = function(slot)
@@ -283,12 +284,12 @@ local updateButton = (function()
       end
     end)(),
     update = (function()
-      local updateLang = {
-        spell = function(spell)
-          if IsSpellInRange(spell, 'target') == 0 then
+      local function getColor(isFooInRange, isUsableFoo)
+        return function(foo)
+          if isFooInRange(foo, 'target') == 0 then
             return 0.8, 0.1, 0.1
           end
-          local isUsable, notEnoughMana = IsUsableSpell(spell)
+          local isUsable, notEnoughMana = isUsableFoo(foo)
           if isUsable then
             return 1.0, 1.0, 1.0
           elseif notEnoughMana then
@@ -296,7 +297,11 @@ local updateButton = (function()
           else
             return 0.4, 0.4, 0.4
           end
-        end,
+        end
+      end
+      local updateLang = {
+        action = getColor(IsActionInRange, IsUsableAction),
+        spell = getColor(IsSpellInRange, IsUsableSpell),
       }
       return function(button, prog)
         local k, v = next(prog)
