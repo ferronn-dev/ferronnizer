@@ -532,7 +532,7 @@ local function makeActions()
   return actions
 end
 
-local attachToIconGrid = (function()
+local attachToIconGrid, attachToTextGrid = (function()
   local width, height = 36, 18
   local frames = {}
   for _ = 1, 96 do
@@ -628,6 +628,14 @@ local function makeButtons()
   for row = 1, 4 do
     for col = 1, 12 do
       table.insert(buttons, makeButton(row, col))
+    end
+  end
+  -- TODO wire these up to the header, actions, etc
+  local parent = CreateFrame('Frame', addonName .. 'TextButtonParent', UIParent)
+  for row = 1, 8 do
+    for col = 1, 6 do
+      local frame = CreateFrame('Button', nil, parent)
+      attachToTextGrid(frame, row, col)
     end
   end
   return buttons
