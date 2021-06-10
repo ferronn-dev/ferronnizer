@@ -314,12 +314,32 @@ local newButton, updateAttr = (function()
     buttons = newtable()
     actionToButton = newtable()
     actionAttrs = newtable()
+    setFraction = [=[
+      local actionid, value = ...
+      local type_, action, macrotext
+      if type(value) == 'string' then
+        type_, macrotext = 'macro', value
+      elseif value ~= nil then
+        type_, action = 'action', value
+      end
+      local prevActionID = self:GetAttribute('fraction')
+      self:SetAttribute('fraction', actionid)
+      self:SetAttribute('type', type_)
+      self:SetAttribute('action', action)
+      self:SetAttribute('macrotext', macrotext)
+      if actionid and macrotext ~= '' then
+        self:CallMethod('Refresh', actionid, prevActionID)
+        self:Show()
+      else
+        self:Hide()
+      end
+    ]=]
     updateActionAttr = [=[
       local actionid, value = ...
       actionAttrs[actionid] = value
       local buttonid = actionToButton[actionid]
       if buttonid then
-        buttons[buttonid]:RunAttribute('setFraction', actionid, value)
+        self:RunFor(buttons[buttonid], setFraction, actionid, value)
       end
     ]=]
     updateActionPage = [=[
@@ -335,9 +355,9 @@ local newButton, updateAttr = (function()
           local attr = actionAttrs[actionid]
           if attr then
             actionToButton[actionid] = buttonid
-            button:RunAttribute('setFraction', actionid, attr)
+            self:RunFor(button, setFraction, actionid, attr)
           else
-            button:RunAttribute('setFraction', nil, nil)
+            self:RunFor(button, setFraction, nil, nil)
           end
         end
       end
@@ -553,26 +573,6 @@ local function makeButtons()
     }
     updateButton(self, Mixin(reset, actionButtonState[actionid]))
   end
-  local setFraction = [=[
-    local actionid, value = ...
-    local type_, action, macrotext
-    if type(value) == 'string' then
-      type_, macrotext = 'macro', value
-    elseif value ~= nil then
-      type_, action = 'action', value
-    end
-    local prevActionID = self:GetAttribute('fraction')
-    self:SetAttribute('fraction', actionid)
-    self:SetAttribute('type', type_)
-    self:SetAttribute('action', action)
-    self:SetAttribute('macrotext', macrotext)
-    if actionid and macrotext ~= '' then
-      self:CallMethod('Refresh', actionid, prevActionID)
-      self:Show()
-    else
-      self:Hide()
-    end
-  ]=]
   local makeButton = function()
     local button = newButton()
     button:SetMotionScriptsWhileDisabled(true)
@@ -588,7 +588,6 @@ local function makeButtons()
       button:SetScript(k, v)
     end
     button.Refresh = insecureRefresh
-    button:SetAttribute('setFraction', setFraction)
     button:Hide()
     return button
   end
