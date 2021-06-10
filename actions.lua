@@ -532,6 +532,29 @@ local function makeActions()
   return actions
 end
 
+local grid = (function()
+  local width, height = 36, 36
+  local frames = {}
+  for _ = 1, 48 do
+    local frame = CreateFrame('Frame')
+    frame:SetSize(width, height)
+    table.insert(frames, frame)
+  end
+  for i, frame in ipairs(frames) do
+    if i <= 36 then
+      frame:SetPoint('BOTTOM', frames[i + 12], 'TOP')
+    end
+    if (i - 1) % 12 < 5 then
+      frame:SetPoint('RIGHT', frames[i + 1], 'LEFT')
+    elseif (i - 1) % 12 > 6 then
+      frame:SetPoint('LEFT', frames[i - 1], 'RIGHT')
+    end
+  end
+  frames[42]:SetPoint('BOTTOMRIGHT', UIParent, 'BOTTOM')
+  frames[43]:SetPoint('BOTTOMLEFT', UIParent, 'BOTTOM')
+  return frames
+end)()
+
 local function makeButtons()
   local scripts = {
     OnEnter = function(self)
@@ -571,9 +594,11 @@ local function makeButtons()
     }
     updateButton(self, Mixin(reset, actionButtonState[actionid]))
   end
-  local makeButton = function()
+  local makeButton = function(i)
     local button = newButton()
+    button:SetAllPoints(grid[i])
     button:SetMotionScriptsWhileDisabled(true)
+    button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
     button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
     button.HotKey:SetVertexColor(0.75, 0.75, 0.75)
     button.HotKey:SetPoint('TOPLEFT', button, 'TOPLEFT', -2, -4)
@@ -590,22 +615,9 @@ local function makeButtons()
     return button
   end
   local buttons = {}
-  for _ = 1, 48 do
-    table.insert(buttons, makeButton())
+  for i = 1, 48 do
+    table.insert(buttons, makeButton(i))
   end
-  for i, button in ipairs(buttons) do
-    button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-    if i <= 36 then
-      button:SetPoint('BOTTOM', buttons[i + 12], 'TOP')
-    end
-    if (i - 1) % 12 < 5 then
-      button:SetPoint('RIGHT', buttons[i + 1], 'LEFT')
-    elseif (i - 1) % 12 > 6 then
-      button:SetPoint('LEFT', buttons[i - 1], 'RIGHT')
-    end
-  end
-  buttons[42]:SetPoint('BOTTOMRIGHT', UIParent, 'BOTTOM')
-  buttons[43]:SetPoint('BOTTOMLEFT', UIParent, 'BOTTOM')
   return buttons
 end
 
