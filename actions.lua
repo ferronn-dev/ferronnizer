@@ -191,13 +191,6 @@ local makeAction = (function()
   end
 end)()
 
-local pendingAttrs = {}
-
-local function updateAttr(actionid, attr)
-  header:SetAttribute('tmp', attr)
-  header:Execute(([[self:RunAttribute('updateActionAttr', '%s', self:GetAttribute('tmp'))]]):format(actionid))
-end
-
 local updateButton = (function()
   local lang = {
     color = function(button, color)
@@ -317,16 +310,34 @@ local updateButton = (function()
   end
 end)()
 
+local maybeSetAttr, drainPendingAttrs = (function()
+  local function updateAttr(actionid, attr)
+    header:SetAttribute('tmp', attr)
+    header:Execute(([[self:RunAttribute('updateActionAttr', '%s', self:GetAttribute('tmp'))]]):format(actionid))
+  end
+  local pendingAttrs = {}
+  local function maybeSetAttr(actionid, attr)
+    if InCombatLockdown() then
+      pendingAttrs[actionid] = attr
+    else
+      updateAttr(actionid, attr)
+    end
+  end
+  local function drainPendingAttrs()
+    for actionid, attr in pairs(pendingAttrs) do
+      updateAttr(actionid, attr)
+    end
+    wipe(pendingAttrs)
+  end
+  return maybeSetAttr, drainPendingAttrs
+end)()
+
 local actionButtons = {}
 local actionButtonState = {}
 
 local function updateAction(actionid, update)
   if update.attr then
-    if InCombatLockdown() then
-      pendingAttrs[actionid] = update.attr
-    else
-      updateAttr(actionid, update.attr)
-    end
+    maybeSetAttr(actionid, update.attr)
     update.attr = nil
   end
   Mixin(actionButtonState[actionid], update)
@@ -379,10 +390,7 @@ local function setupActionState(actions)
   -- These happened earlier in time.
   local postCombatHandler = handlersHandlers.PLAYER_REGEN_ENABLED
   handlersHandlers.PLAYER_REGEN_ENABLED = function(...)
-    for actionid, attr in pairs(pendingAttrs) do
-      updateAttr(actionid, attr)
-    end
-    wipe(pendingAttrs)
+    drainPendingAttrs()
     return postCombatHandler and postCombatHandler(...)
   end
   G.Eventer(handlersHandlers)
