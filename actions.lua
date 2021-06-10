@@ -379,6 +379,13 @@ local newButton, updateAttr = (function()
     owner:Run(updateActionPage, 'profession')
   ]=])
 
+  -- Hack to support emotes for now.
+  local emotesButton = CreateFrame('Button', prefix .. 'EmoteSwitcher', header, 'SecureActionButtonTemplate')
+  SetOverrideBindingClick(header, true, 'ALT-CTRL-E', emotesButton:GetName())
+  header:WrapScript(emotesButton, 'OnClick', 'return nil, true', [=[
+    owner:Run(updateActionPage, 'emotes')
+  ]=])
+
   local num = 0
   local function newButton()
     num = num + 1
