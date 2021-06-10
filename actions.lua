@@ -1,8 +1,5 @@
 local addonName, G = ...
 
-local prefix = addonName .. 'ActionButton'
-local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerBaseTemplate')
-
 local makeAction = (function()
   local function consume(mealDB, potionDB)
     local potionText = (function()
@@ -310,11 +307,82 @@ local updateButton = (function()
   end
 end)()
 
-local maybeSetAttr, drainPendingAttrs = (function()
+local newButton, updateAttr = (function()
+  local prefix = addonName .. 'ActionButton'
+  local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerBaseTemplate')
+  header:Execute([[
+    buttons = newtable()
+    actionToButton = newtable()
+    actionAttrs = newtable()
+    updateActionAttr = [=[
+      local actionid, value = ...
+      actionAttrs[actionid] = value
+      local buttonid = actionToButton[actionid]
+      if buttonid then
+        buttons[buttonid]:RunAttribute('setFraction', actionid, value)
+      end
+    ]=]
+    updateActionPage = [=[
+      local page = ...
+      if currentPage ~= page then
+        currentPage = page
+        for buttonid, button in ipairs(buttons) do
+          local prevActionID = button:GetAttribute('fraction')
+          if prevActionID then
+            actionToButton[prevActionID] = nil
+          end
+          local actionid = page .. buttonid
+          local attr = actionAttrs[actionid]
+          if attr then
+            actionToButton[actionid] = buttonid
+            button:RunAttribute('setFraction', actionid, attr)
+          else
+            button:RunAttribute('setFraction', nil, nil)
+          end
+        end
+      end
+    ]=]
+    updatePageOnClick = [=[
+      local actionid = ...
+      local attr = actionid and actionAttrs[actionid] or ''
+      local page = type(attr) == 'string' and attr:sub(1, 6) == '#page:' and attr:sub(7) or 'fraction'
+      self:Run(updateActionPage, page)
+    ]=]
+  ]])
+  header:RegisterEvent('PLAYER_ENTERING_WORLD')
+  header:SetScript('OnEvent', function(self)
+    self:Execute([[self:Run(updateActionPage, 'fraction')]])
+  end)
+
+  -- Hack to support professions for now.
+  local professionsButton = CreateFrame('Button', prefix .. 'ProfessionSwitcher', header, 'SecureActionButtonTemplate')
+  SetOverrideBindingClick(header, true, 'CTRL-P', professionsButton:GetName())
+  header:WrapScript(professionsButton, 'OnClick', 'return nil, true', [=[
+    owner:Run(updateActionPage, 'profession')
+  ]=])
+
+  local num = 0
+  local function newButton()
+    num = num + 1
+    local button = CreateFrame(
+      'CheckButton', prefix .. num, header, 'ActionButtonTemplate, SecureActionButtonTemplate')
+    header:WrapScript(button, 'OnClick', 'return nil, true', [[
+      owner:Run(updatePageOnClick, self:GetAttribute('fraction'))
+    ]])
+    header:SetFrameRef('tmp', button)
+    header:Execute([[tinsert(buttons, self:GetFrameRef('tmp'))]])
+    return button
+  end
+
   local function updateAttr(actionid, attr)
     header:SetAttribute('tmp', attr)
-    header:Execute(([[self:RunAttribute('updateActionAttr', '%s', self:GetAttribute('tmp'))]]):format(actionid))
+    header:Execute(([[self:Run(updateActionAttr, '%s', self:GetAttribute('tmp'))]]):format(actionid))
   end
+
+  return newButton, updateAttr
+end)()
+
+local maybeSetAttr, drainPendingAttrs = (function()
   local pendingAttrs = {}
   local function maybeSetAttr(actionid, attr)
     if InCombatLockdown() then
@@ -505,9 +573,8 @@ local function makeButtons()
       self:Hide()
     end
   ]=]
-  local makeButton = function(i)
-    local button = CreateFrame(
-      'CheckButton', prefix .. i, header, 'ActionButtonTemplate, SecureActionButtonTemplate')
+  local makeButton = function()
+    local button = newButton()
     button:SetMotionScriptsWhileDisabled(true)
     button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
     button.HotKey:SetVertexColor(0.75, 0.75, 0.75)
@@ -526,8 +593,8 @@ local function makeButtons()
     return button
   end
   local buttons = {}
-  for i = 1, 48 do
-    table.insert(buttons, makeButton(i))
+  for _ = 1, 48 do
+    table.insert(buttons, makeButton())
   end
   for i, button in ipairs(buttons) do
     button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
@@ -545,75 +612,10 @@ local function makeButtons()
   return buttons
 end
 
-local function setupHeader(buttons)
-  header:Execute([[
-    buttons = newtable()
-    actionToButton = newtable()
-    actionAttrs = newtable()
-  ]])
-  for i, button in ipairs(buttons) do
-    header:SetFrameRef('tmp', button)
-    header:Execute(([[buttons[%d] = self:GetFrameRef('tmp')]]):format(i))
-  end
-  header:SetAttribute('updateActionAttr', [=[
-    local actionid, value = ...
-    actionAttrs[actionid] = value
-    local buttonid = actionToButton[actionid]
-    if buttonid then
-      buttons[buttonid]:RunAttribute('setFraction', actionid, value)
-    end
-  ]=])
-  header:SetAttribute('updateActionPage', [=[
-    local page = ...
-    if currentPage ~= page then
-      currentPage = page
-      for buttonid, button in ipairs(buttons) do
-        local prevActionID = button:GetAttribute('fraction')
-        if prevActionID then
-          actionToButton[prevActionID] = nil
-        end
-        local actionid = page .. buttonid
-        local attr = actionAttrs[actionid]
-        if attr then
-          actionToButton[actionid] = buttonid
-          button:RunAttribute('setFraction', actionid, attr)
-        else
-          button:RunAttribute('setFraction', nil, nil)
-        end
-      end
-    end
-  ]=])
-end
-
-local function setupPaging(buttons)
-  header:Execute([[self:RunAttribute('updateActionPage', 'fraction')]])
-  for _, button in pairs(buttons) do
-    header:WrapScript(button, 'OnClick', 'return nil, true', [=[
-      local actionid = self:GetAttribute('fraction')
-      local attr = actionid and actionAttrs[actionid] or ''
-      local page = type(attr) == 'string' and attr:sub(1, 6) == '#page:' and attr:sub(7) or 'fraction'
-      owner:RunAttribute('updateActionPage', page)
-    ]=])
-  end
-  -- Hack to support professions for now.
-  local professionsButton = CreateFrame('Button', prefix .. 'ProfessionSwitcher', header, 'SecureActionButtonTemplate')
-  SetOverrideBindingClick(header, true, 'CTRL-P', professionsButton:GetName())
-  header:WrapScript(professionsButton, 'OnClick', 'return nil, true', [=[
-    owner:RunAttribute('updateActionPage', 'profession')
-  ]=])
-end
-
-local function setupActionButtons()
-  local actions = makeActions()
-  local buttons = makeButtons()
-  setupHeader(buttons)
-  setupActionState(actions)
-  setupPaging(buttons)
-end
-
 G.Eventer({
   PLAYER_LOGIN = function()
     G.ReparentFrame(MainMenuBar)
-    setupActionButtons()
+    makeButtons()
+    setupActionState(makeActions())
   end,
 })

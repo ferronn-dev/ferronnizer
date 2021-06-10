@@ -6,6 +6,7 @@ describe('Actions', function()
     wow.state.player.name = 'Moo'
     wow.state.realm = 'Cow'
     wow.state:SendEvent('PLAYER_LOGIN')
+    wow.state:SendEvent('PLAYER_ENTERING_WORLD')
   end
 
   local everything = {
@@ -63,6 +64,7 @@ describe('Actions', function()
   it('does not crash on events', function()
     init(wow, everything)
     wow.state:SendEvent('PLAYER_LOGIN')
+    wow.state:SendEvent('PLAYER_ENTERING_WORLD')
     wow.state:SendEvent('BAG_UPDATE_DELAYED')
     wow.state:SendEvent('UPDATE_BINDINGS')
     wow.state:SendEvent('SPELL_UPDATE_COOLDOWN')
