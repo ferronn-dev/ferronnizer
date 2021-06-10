@@ -532,16 +532,16 @@ local function makeActions()
   return actions
 end
 
-local grid = (function()
-  local width, height = 36, 36
+local attachToIconGrid = (function()
+  local width, height = 36, 18
   local frames = {}
-  for _ = 1, 48 do
+  for _ = 1, 96 do
     local frame = CreateFrame('Frame')
     frame:SetSize(width, height)
     table.insert(frames, frame)
   end
   for i, frame in ipairs(frames) do
-    if i <= 36 then
+    if i <= 84 then
       frame:SetPoint('BOTTOM', frames[i + 12], 'TOP')
     end
     if (i - 1) % 12 < 5 then
@@ -550,9 +550,19 @@ local grid = (function()
       frame:SetPoint('LEFT', frames[i - 1], 'RIGHT')
     end
   end
-  frames[42]:SetPoint('BOTTOMRIGHT', UIParent, 'BOTTOM')
-  frames[43]:SetPoint('BOTTOMLEFT', UIParent, 'BOTTOM')
-  return frames
+  frames[90]:SetPoint('BOTTOMRIGHT', UIParent, 'BOTTOM')
+  frames[91]:SetPoint('BOTTOMLEFT', UIParent, 'BOTTOM')
+  local function icon(frame, row, col)
+    local index = (row - 1) * 24 + 1 + col
+    frame:SetPoint('TOPLEFT', index, 'TOPLEFT')
+    frame:SetPoint('BOTTOMRIGHT', index + 12, 'BOTTOMRIGHT')
+  end
+  local function text(frame, row, col)
+    local index = (row - 1) * 6 + (col - 1) * 2 + 1
+    frame:SetPoint('TOPLEFT', index, 'TOPLEFT')
+    frame:SetPoint('BOTTOMRIGHT', index + 1, 'BOTTOMRIGHT')
+  end
+  return icon, text
 end)()
 
 local function makeButtons()
@@ -594,9 +604,9 @@ local function makeButtons()
     }
     updateButton(self, Mixin(reset, actionButtonState[actionid]))
   end
-  local makeButton = function(i)
+  local makeButton = function(row, col)
     local button = newButton()
-    button:SetAllPoints(grid[i])
+    attachToIconGrid(button, row, col)
     button:SetMotionScriptsWhileDisabled(true)
     button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
     button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
@@ -615,8 +625,10 @@ local function makeButtons()
     return button
   end
   local buttons = {}
-  for i = 1, 48 do
-    table.insert(buttons, makeButton(i))
+  for row = 1, 4 do
+    for col = 1, 12 do
+      table.insert(buttons, makeButton(row, col))
+    end
   end
   return buttons
 end
