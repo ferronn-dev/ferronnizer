@@ -559,7 +559,7 @@ local attachToIconGrid, attachToTextGrid = (function()
     frame:SetPoint('BOTTOMRIGHT', frames[index + 12], 'BOTTOMRIGHT')
   end
   local function text(frame, row, col)
-    local index = (row - 1) * 6 + (col - 1) * 2 + 1
+    local index = (row - 1) * 12 + (col - 1) * 2 + 1
     frame:ClearAllPoints()
     frame:SetPoint('TOPLEFT', frames[index], 'TOPLEFT')
     frame:SetPoint('BOTTOMRIGHT', frames[index + 1], 'BOTTOMRIGHT')
@@ -634,9 +634,12 @@ local function makeButtons()
   end
   -- TODO wire these up to the header, actions, etc
   local parent = CreateFrame('Frame', addonName .. 'TextButtonParent', UIParent)
+  parent:Hide()
   for row = 1, 8 do
     for col = 1, 6 do
-      local frame = CreateFrame('Button', nil, parent)
+      local idx = (row - 1) * 6 + col
+      local frame = CreateFrame('Button', addonName .. 'TextButton' .. idx, parent, 'UIPanelButtonTemplate')
+      frame.Text:SetText('Action ' .. idx)
       attachToTextGrid(frame, row, col)
     end
   end
