@@ -395,8 +395,8 @@ local newButton, updateAttr = (function()
   end
 
   local function updateAttr(actionid, attr)
-    header:SetAttribute('tmp', attr)
-    header:Execute(([[self:Run(updateActionAttr, '%s', self:GetAttribute('tmp'))]]):format(actionid))
+    local qq = (type(attr) == 'string' and '[[%s]]' or '%d'):format(attr)
+    header:Execute(([[self:Run(updateActionAttr, '%s', %s)]]):format(actionid, qq))
   end
 
   return newButton, updateAttr
