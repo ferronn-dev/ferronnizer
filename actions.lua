@@ -316,46 +316,19 @@ end)()
 local actionButtons = {}
 local actionButtonState = {}
 
-local updateAction = (function()
-  local lang = {
-    attr = function(attr, actionid)
-      if InCombatLockdown() then
-        pendingAttrs[actionid] = attr
-      else
-        updateAttr(actionid, attr)
-      end
-    end,
-    color = function(color)
-      return { color = color }
-    end,
-    cooldown = function(cooldown)
-      return { cooldown = cooldown }
-    end,
-    count = function(count)
-      return { count = count }
-    end,
-    icon = function(icon)
-      return { icon = icon }
-    end,
-    name = function(name)
-      return { name = name }
-    end,
-    tooltip = function(tooltip)
-      return { tooltip = tooltip }
-    end,
-    update = function(update)
-      return { update = update }
-    end,
-  }
-  return function(actionid, update)
-    local buttonUpdate = {}
-    for k, v in pairs(update) do
-      Mixin(buttonUpdate, lang[k](v, actionid))
+local function updateAction(actionid, update)
+  if update.attr then
+    if InCombatLockdown() then
+      pendingAttrs[actionid] = update.attr
+    else
+      updateAttr(actionid, update.attr)
     end
-    Mixin(actionButtonState[actionid], buttonUpdate)
-    updateButton(actionButtons[actionid], buttonUpdate)
   end
-end)()
+  local buttonUpdate = Mixin({}, update)
+  buttonUpdate.attr = nil
+  Mixin(actionButtonState[actionid], buttonUpdate)
+  updateButton(actionButtons[actionid], buttonUpdate)
+end
 
 local function setupActionState(actions)
   local handlers = {}
