@@ -553,14 +553,16 @@ local attachToIconGrid, attachToTextGrid = (function()
   frames[90]:SetPoint('BOTTOMRIGHT', UIParent, 'BOTTOM')
   frames[91]:SetPoint('BOTTOMLEFT', UIParent, 'BOTTOM')
   local function icon(frame, row, col)
-    local index = (row - 1) * 24 + 1 + col
-    frame:SetPoint('TOPLEFT', index, 'TOPLEFT')
-    frame:SetPoint('BOTTOMRIGHT', index + 12, 'BOTTOMRIGHT')
+    local index = (row - 1) * 24 + col
+    frame:ClearAllPoints()
+    frame:SetPoint('TOPLEFT', frames[index], 'TOPLEFT')
+    frame:SetPoint('BOTTOMRIGHT', frames[index + 12], 'BOTTOMRIGHT')
   end
   local function text(frame, row, col)
     local index = (row - 1) * 6 + (col - 1) * 2 + 1
-    frame:SetPoint('TOPLEFT', index, 'TOPLEFT')
-    frame:SetPoint('BOTTOMRIGHT', index + 1, 'BOTTOMRIGHT')
+    frame:ClearAllPoints()
+    frame:SetPoint('TOPLEFT', frames[index], 'TOPLEFT')
+    frame:SetPoint('BOTTOMRIGHT', frames[index + 1], 'BOTTOMRIGHT')
   end
   return icon, text
 end)()
