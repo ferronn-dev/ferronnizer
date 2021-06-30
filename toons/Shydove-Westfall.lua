@@ -128,6 +128,9 @@ G.Characters['Shydove-Westfall'] = {
     buff = true,
     reagent = 17029,
   },
+  [35] = {
+    spell = 'Shadowfiend',
+  },
   [43] = {
     mount = true,
   },

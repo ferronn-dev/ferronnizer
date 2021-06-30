@@ -12,6 +12,7 @@ describe('spell db', function()
       ['Inner Focus'] = true,
       ['Lay on Hands'] = true,
       ['Perception'] = true,
+      ['Shadowfiend'] = true,
     }
     local seenBad = {}
     for fullname, actions in pairs(wow.addon.Characters) do
