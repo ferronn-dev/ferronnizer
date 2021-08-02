@@ -128,9 +128,9 @@ G.Characters['Shydove-Westfall'] = {
     buff = true,
     reagent = 17029,
   },
-  [35] = {
+  [35] = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC and {
     spell = 'Shadowfiend',
-  },
+  } or nil,
   [43] = {
     mount = true,
   },
