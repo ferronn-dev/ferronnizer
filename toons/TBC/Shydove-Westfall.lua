@@ -1,9 +1,9 @@
 local _, G = ...
 G.AddCharacter('TBC', 'Shydove-Westfall', {
   [1] = {
-    actionText = 'GH5',
+    actionText = 'GH7',
     mouseover = true,
-    rank = 5,
+    rank = 7,
     spell = 'Greater Heal',
   },
   [2] = {
@@ -13,10 +13,8 @@ G.AddCharacter('TBC', 'Shydove-Westfall', {
     spell = 'Greater Heal',
   },
   [3] = {
-    actionText = 'H2',
     mouseover = true,
-    rank = 2,
-    spell = 'Heal',
+    spell = 'Prayer of Mending',
   },
   [4] = {
     stopcasting = true,
@@ -48,9 +46,9 @@ G.AddCharacter('TBC', 'Shydove-Westfall', {
     spell = 'Psychic Scream',
   },
   [13] = {
-    actionText = 'FH8',
+    actionText = 'FH9',
     mouseover = true,
-    rank = 8,
+    rank = 9,
     spell = 'Flash Heal',
   },
   [14] = {
@@ -60,10 +58,8 @@ G.AddCharacter('TBC', 'Shydove-Westfall', {
     spell = 'Flash Heal',
   },
   [15] = {
-    actionText = 'FH1',
     mouseover = true,
-    rank = 1,
-    spell = 'Flash Heal',
+    spell = 'Binding Heal',
   },
   [16] = {
     stopcasting = true,
