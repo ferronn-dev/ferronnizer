@@ -90,18 +90,24 @@ local scriptHooks = {
 local funcHooks = {
   UnitAura = function(t, unit, idx, filter)
     local _, tex, _, _, _, _, _, _, _, id = UnitAura(unit, idx, filter)
-    t:AddDoubleLine('id '..id, 'texture '..tex)
-    t:Show()
+    if id and tex then
+      t:AddDoubleLine('id '..id, 'texture '..tex)
+      t:Show()
+    end
   end,
   UnitBuff = function(t, unit, idx)
     local _, tex, _, _, _, _, _, _, _, id = UnitBuff(unit, idx)
-    t:AddDoubleLine('id '..id, 'texture '..tex)
-    t:Show()
+    if id and tex then
+      t:AddDoubleLine('id '..id, 'texture '..tex)
+      t:Show()
+    end
   end,
   UnitDebuff = function(t, unit, idx)
     local _, tex, _, _, _, _, _, _, _, id = UnitDebuff(unit, idx)
-    t:AddDoubleLine('id '..id, 'texture '..tex)
-    t:Show()
+    if id and tex then
+      t:AddDoubleLine('id '..id, 'texture '..tex)
+      t:Show()
+    end
   end,
 }
 
