@@ -1,6 +1,5 @@
 local _, G = ...
-G.Characters = G.Characters or {}
-G.Characters['Kewmelt-Westfall'] = {
+G.AddCharacter('Vanilla', 'Kewmelt-Westfall', {
   [1] = {
     spell = 'Frostbolt',
   },
@@ -53,7 +52,7 @@ G.Characters['Kewmelt-Westfall'] = {
     spell = 'Dampen Magic',
   },
   [17] = {
-    spell = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 'Detect Magic' or 'Icy Veins',
+    spell = 'Detect Magic',
   },
   [18] = {
     spell = 'Escape Artist',
@@ -94,8 +93,6 @@ G.Characters['Kewmelt-Westfall'] = {
       [1] = { spell = 'Teleport: Stormwind' },
       [2] = { spell = 'Teleport: Ironforge' },
       [3] = { spell = 'Teleport: Darnassus' },
-      [4] = { spell = 'Teleport: Exodar' },
-      [5] = { spell = 'Teleport: Theramore' },
     },
     reagent = 17031,
     texture = 135757,
@@ -106,8 +103,6 @@ G.Characters['Kewmelt-Westfall'] = {
       [1] = { spell = 'Portal: Stormwind' },
       [2] = { spell = 'Portal: Ironforge' },
       [3] = { spell = 'Portal: Darnassus' },
-      [4] = { spell = 'Portal: Exodar' },
-      [5] = { spell = 'Portal: Theramore' },
     },
     reagent = 17032,
     texture = 135743,
@@ -128,4 +123,4 @@ G.Characters['Kewmelt-Westfall'] = {
   [46] = {
     drink = true,
   },
-}
+})

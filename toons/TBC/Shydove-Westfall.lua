@@ -1,6 +1,5 @@
 local _, G = ...
-G.Characters = G.Characters or {}
-G.Characters['Shydove-Westfall'] = {
+G.AddCharacter('TBC', 'Shydove-Westfall', {
   [1] = {
     actionText = 'GH5',
     mouseover = true,
@@ -27,8 +26,7 @@ G.Characters['Shydove-Westfall'] = {
     spell = 'Renew',
   },
   [6] = {
-    mouseover = WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC,
-    spell = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 'Holy Nova' or 'Circle of Healing',
+    spell = 'Circle of Healing',
   },
   [7] = {
     mouseover = true,
@@ -84,7 +82,7 @@ G.Characters['Shydove-Westfall'] = {
   },
   [21] = {
     mouseover = true,
-    spell = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 'Power Infusion' or 'Fear Ward',
+    spell = 'Fear Ward',
   },
   [22] = {
     spell = 'Mind Vision',
@@ -128,9 +126,9 @@ G.Characters['Shydove-Westfall'] = {
     buff = true,
     reagent = 17029,
   },
-  [35] = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC and {
+  [35] = {
     spell = 'Shadowfiend',
-  } or nil,
+  },
   [43] = {
     mount = true,
   },
@@ -140,4 +138,4 @@ G.Characters['Shydove-Westfall'] = {
   [46] = {
     drink = true,
   },
-}
+})

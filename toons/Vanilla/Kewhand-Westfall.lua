@@ -1,6 +1,5 @@
 local _, G = ...
-G.Characters = G.Characters or {}
-G.Characters['Kewhand-Westfall'] = {
+G.AddCharacter('Vanilla', 'Kewhand-Westfall', {
   [1] = {
     actionText = 'HL8',
     mouseover = true,
@@ -92,4 +91,4 @@ G.Characters['Kewhand-Westfall'] = {
   [46] = {
     drink = true,
   },
-}
+})

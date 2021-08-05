@@ -1,6 +1,5 @@
 local _, G = ...
-G.Characters = G.Characters or {}
-G.Characters['Chamoi-Westfall'] = {
+G.AddCharacter('Vanilla', 'Chamoi-Westfall', {
   [1] = {
     spell = 'Lightning Bolt',
   },
@@ -114,4 +113,4 @@ G.Characters['Chamoi-Westfall'] = {
   [46] = {
     drink = true,
   },
-}
+})

@@ -1,6 +1,5 @@
 local _, G = ...
-G.Characters = G.Characters or {}
-G.Characters['Pixli-Westfall'] = {
+G.AddCharacter('Vanilla', 'Pixli-Westfall', {
   [1] = {
     spell = 'Frostbolt',
   },
@@ -50,7 +49,7 @@ G.Characters['Pixli-Westfall'] = {
     spell = 'Dampen Magic',
   },
   [17] = {
-    spell = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC and 'Detect Magic' or 'Icy Veins',
+    spell = 'Detect Magic',
   },
   [18] = {
     spell = 'Escape Artist',
@@ -95,4 +94,4 @@ G.Characters['Pixli-Westfall'] = {
   [46] = {
     drink = true,
   },
-}
+})
