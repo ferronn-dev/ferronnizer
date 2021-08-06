@@ -258,7 +258,7 @@ local function GetBuffToCast(unit)
             if buffs[spell.id] or group and buffs[group.id] then
               return nil, true
             end
-            if group and IsInGroup() and canCast(group, unit) then
+            if group and (UnitInParty(unit) or UnitInRaid(unit)) and canCast(group, unit) then
               return group.id
             elseif canCast(spell, unit) then
               return spell.id
