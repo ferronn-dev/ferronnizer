@@ -70,7 +70,6 @@ libs:
   libkeybound: https://repos.wowace.com/wow/libkeybound-1-0/trunk
   libclassicgearplanner: https://github.com/ferronn-dev/lib-classic-gear-planner.git
   libstub: https://repos.wowace.com/wow/libstub/trunk
-  libhealcomm: https://github.com/Azilroka/LibHealComm-4.0.git
 roots:
 - actions.lua
 - addonbox.lua
