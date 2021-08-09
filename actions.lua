@@ -265,8 +265,8 @@ local updateButton = (function()
       end
     end)(),
     update = (function()
-      local function getColor(isFooInRange, isUsableFoo)
-        return function(foo)
+      local function updateColor(isFooInRange, isUsableFoo)
+        local function getColor(foo)
           if isFooInRange(foo, 'target') == 0 then
             return 0.8, 0.1, 0.1
           end
@@ -279,14 +279,17 @@ local updateButton = (function()
             return 0.4, 0.4, 0.4
           end
         end
+        return function(foo, button)
+          button.icon:SetVertexColor(getColor(foo))
+        end
       end
       local updateLang = {
-        action = getColor(IsActionInRange, IsUsableAction),
-        spell = getColor(IsSpellInRange, IsUsableSpell),
+        action = updateColor(IsActionInRange, IsUsableAction),
+        spell = updateColor(IsSpellInRange, IsUsableSpell),
       }
       return function(button, prog)
         local k, v = next(prog)
-        button.icon:SetVertexColor(updateLang[k](v))
+        updateLang[k](v, button)
       end
     end)(),
   }
