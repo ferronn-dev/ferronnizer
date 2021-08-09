@@ -108,25 +108,21 @@ local makeAction = (function()
     end,
     mount = function()
       local function update()
-        for _, spellx in ipairs(G.MountSpellDB) do
-          local spell = spellx[1]
-          if IsSpellKnown(spell) then
-            return {
-              attr = '/cast [nomounted] ' .. GetSpellInfo(spell) .. '\n/dismount [mounted]',
-              cooldown = { spell = spell },
-              icon = GetSpellTexture(spell),
-              tooltip = { spell = spell },
-            }
-          end
-        end
-        for _, itemx in ipairs(G.MountItemDB) do
-          local item = itemx[1]
-          if GetItemCount(item) > 0 then
+        for _, entry in ipairs(G.MountDB) do
+          local item, spell = unpack(entry)
+          if item and GetItemCount(item) > 0 then
             return {
               attr = '/use [nomounted] item:' .. item .. '\n/dismount [mounted]',
               cooldown = { item = item },
               icon = GetItemIcon(item),
               tooltip = { item = item },
+            }
+          elseif IsSpellKnown(spell) then
+            return {
+              attr = '/cast [nomounted] ' .. GetSpellInfo(spell) .. '\n/dismount [mounted]',
+              cooldown = { spell = spell },
+              icon = GetSpellTexture(spell),
+              tooltip = { spell = spell },
             }
           end
         end

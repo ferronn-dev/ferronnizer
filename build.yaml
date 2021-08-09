@@ -87,8 +87,7 @@ sql:
   fooddb.sql:
   - FoodDB
   mountdb.sql:
-  - MountItemDB
-  - MountSpellDB
+  - MountDB
   potiondb.sql:
   - HealthPotionDB
   - ManaPotionDB

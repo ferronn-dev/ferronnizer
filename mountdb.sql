@@ -1,26 +1,31 @@
--- MountItemDB
 SELECT
-  CAST(e.parentitemid AS INT64)
-FROM
-  itemeffect e,
-  spelleffect s
-WHERE
-  s.spellid = e.spellid
-  AND e.spellcategoryid = "330"
-  AND s.effectaura = "32"
+  itemid,
+  spellid
+FROM ((
+  SELECT
+    CAST(parentitemid AS INT64) AS itemid,
+    CAST(spellid AS INT64) AS spellid
+  FROM
+    itemeffect
+  WHERE
+    spellcategoryid = "330"
+) UNION ALL (
+  SELECT
+    NULL AS itemid,
+    CAST(spell AS INT64) AS spellid
+  FROM
+    skilllineability
+))
+JOIN (
+  SELECT
+    CAST(spellid AS INT64) AS spellid,
+    CAST(effectbasepoints AS INT64) AS speed
+  FROM
+    spelleffect
+  WHERE
+    effectaura = "32")
+USING (spellid)
 ORDER BY
-  s.effectbasepoints DESC,
-  1;
-
--- MountSpellDB
-SELECT
-  CAST(s.spellid AS INT64)
-FROM
-  spelleffect s,
-  skilllineability k
-WHERE
-  s.spellid = k.spell
-  AND s.effectaura = "32"
-ORDER BY
-  s.effectbasepoints DESC,
-  1;
+  speed DESC,
+  itemid,
+  spellid;
