@@ -112,7 +112,7 @@ local makeAction = (function()
           local spell = spellx[1]
           if IsSpellKnown(spell) then
             return {
-              attr = '/cast ' .. GetSpellInfo(spell),
+              attr = '/cast [nomounted] ' .. GetSpellInfo(spell) .. '\n/dismount [mounted]',
               cooldown = { spell = spell },
               icon = GetSpellTexture(spell),
               tooltip = { spell = spell },
@@ -123,7 +123,7 @@ local makeAction = (function()
           local item = itemx[1]
           if GetItemCount(item) > 0 then
             return {
-              attr = '/use item:' .. item,
+              attr = '/use [nomounted] item:' .. item .. '\n/dismount [mounted]',
               cooldown = { item = item },
               icon = GetItemIcon(item),
               tooltip = { item = item },
@@ -138,10 +138,6 @@ local makeAction = (function()
       end
       return update(), {
         BAG_UPDATE_DELAYED = update,
-        PLAYER_REGEN_DISABLED = function()
-          return { attr = '/dismount' }
-        end,
-        PLAYER_REGEN_ENABLED = update,
         SPELLS_CHANGED = update,
       }
     end,
@@ -400,7 +396,7 @@ local newButton, updateAttr = (function()
   end
 
   local function updateAttr(actionid, attr)
-    local qq = (type(attr) == 'string' and '[[%s]]' or '%d'):format(attr)
+    local qq = (type(attr) == 'string' and '[==[%s]==]' or '%d'):format(attr)
     header:Execute(([[self:Run(updateActionAttr, '%s', %s)]]):format(actionid, qq))
   end
 
