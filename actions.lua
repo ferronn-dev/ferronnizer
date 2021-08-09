@@ -20,9 +20,8 @@ local makeAction = (function()
       end
       return currentDB[#currentDB][1]  -- give up and return the last thing
     end
-    local item
     local function updateItem(level)
-      item = computeItem(level)
+      local item = computeItem(level)
       return {
         attr = currentDB == potionDB and potionText or ('/use item:' .. item),
         cooldown = { item = item },
