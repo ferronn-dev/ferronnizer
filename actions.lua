@@ -1,7 +1,7 @@
 local addonName, G = ...
 
 local makeAction = (function()
-  local function consume(mealDB, potionDB)
+  local function consume(mealDB, potionDB, nethergon)
     local potionText = (function()
       local s = ''
       for _, consumable in ipairs(potionDB) do
@@ -9,9 +9,17 @@ local makeAction = (function()
       end
       return s
     end)()
+    local nethergonText = '/use item:' .. nethergon .. '\n' .. potionText
     local currentDB
+    local function useNethergon()
+      local id = select(8, GetInstanceInfo())
+      return id == 550 or id == 552 or id == 553 or id == 554
+    end
     local function computeItem(levelarg)
       local level = levelarg or UnitLevel('player')
+      if useNethergon() and level >= 55 and GetItemCount(nethergon) > 0 then
+        return nethergon
+      end
       for _, consumable in ipairs(currentDB) do
         local item, minlevel = unpack(consumable)
         if level >= minlevel and GetItemCount(item) > 0 then
@@ -20,10 +28,19 @@ local makeAction = (function()
       end
       return currentDB[#currentDB][1]  -- give up and return the last thing
     end
+    local function computeAttr(item)
+      if currentDB == mealDB then
+        return '/use item:' .. item
+      elseif useNethergon() then
+        return nethergonText
+      else
+        return potionText
+      end
+    end
     local function updateItem(level)
       local item = computeItem(level)
       return {
-        attr = currentDB == potionDB and potionText or ('/use item:' .. item),
+        attr = computeAttr(item),
         cooldown = { item = item },
         count = { item = item },
         icon = GetItemIcon(item),
@@ -37,6 +54,9 @@ local makeAction = (function()
     return function()
       return updateDB(mealDB), {
         BAG_UPDATE_DELAYED = function()
+          return updateItem()
+        end,
+        PLAYER_ENTERING_WORLD = function()
           return updateItem()
         end,
         PLAYER_LEVEL_UP = function(level)
@@ -81,8 +101,8 @@ local makeAction = (function()
         tooltip = { text = 'Buff' },
       }
     end,
-    drink = consume(G.DrinkDB, G.ManaPotionDB),
-    eat = consume(G.FoodDB, G.HealthPotionDB),
+    drink = consume(G.DrinkDB, G.ManaPotionDB, 32902),
+    eat = consume(G.FoodDB, G.HealthPotionDB, 32905),
     invslot = function(action)
       local slot = action.invslot
       local function update()
