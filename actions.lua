@@ -108,7 +108,7 @@ local makeAction = (function()
     end,
     mount = function()
       local function update()
-        for _, entry in ipairs(G.MountDB) do
+        for _, entry in ipairs(G.MountGroundDB) do
           local item, spell = unpack(entry)
           if item and GetItemCount(item) > 0 then
             return {
