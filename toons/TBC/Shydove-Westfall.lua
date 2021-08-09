@@ -24,6 +24,7 @@ G.AddCharacter('TBC', 'Shydove-Westfall', {
     spell = 'Renew',
   },
   [6] = {
+    mouseover = true,
     spell = 'Circle of Healing',
   },
   [7] = {
