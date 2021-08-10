@@ -11,13 +11,13 @@ local makeAction = (function()
     end)()
     local nethergonText = '/use item:' .. nethergon .. '\n' .. potionText
     local currentDB
-    local function useNethergon()
+    local function inNethergonZone()
       local id = select(8, GetInstanceInfo())
       return id == 550 or id == 552 or id == 553 or id == 554
     end
     local function computeItem(levelarg)
       local level = levelarg or UnitLevel('player')
-      if useNethergon() and level >= 55 and GetItemCount(nethergon) > 0 then
+      if inNethergonZone() and currentDB == potionDB and level >= 55 and GetItemCount(nethergon) > 0 then
         return nethergon
       end
       for _, consumable in ipairs(currentDB) do
@@ -31,7 +31,7 @@ local makeAction = (function()
     local function computeAttr(item)
       if currentDB == mealDB then
         return '/use item:' .. item
-      elseif useNethergon() then
+      elseif inNethergonZone() then
         return nethergonText
       else
         return potionText
