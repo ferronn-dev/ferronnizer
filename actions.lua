@@ -126,30 +126,48 @@ local makeAction = (function()
       }
     end,
     mount = function()
-      local function update()
-        for _, entry in ipairs(G.MountGroundDB) do
+      local function getMount(db)
+        for _, entry in ipairs(db) do
           local item, spell = unpack(entry)
           if item and GetItemCount(item) > 0 then
-            return {
-              attr = '/use [nomounted] item:' .. item .. '\n/dismount [mounted]',
+            return '/use', 'item:' .. item, {
               cooldown = { item = item },
               icon = GetItemIcon(item),
               tooltip = { item = item },
             }
           elseif IsSpellKnown(spell) then
-            return {
-              attr = '/cast [nomounted] ' .. GetSpellInfo(spell) .. '\n/dismount [mounted]',
+            return '/cast', (GetSpellInfo(spell)), {
               cooldown = { spell = spell },
               icon = GetSpellTexture(spell),
               tooltip = { spell = spell },
             }
           end
         end
-        return {
-          attr = '',
-          icon = 132261,
-          tooltip = { text = 'No mount... yet.' },
-        }
+      end
+      local function update()
+        local gcmd, garg, ground = getMount(G.MountGroundDB)
+        local fcmd, farg, flight = getMount(G.MountFlightDB)
+        if gcmd and fcmd then
+          local macro = (
+            string.format('%s [nomounted,flyable] %s\n', fcmd, farg) ..
+            string.format('%s [nomounted,noflyable] %s\n', gcmd, garg) ..
+            '/dismount [mounted]'
+          )
+          -- TODO update icon etc to use flight mount based on OnUpdate IsFlyableArea
+          return Mixin({ attr = macro }, ground)
+        elseif gcmd then
+          local macro = string.format('%s [nomounted] %s\n/dismount [mounted]', gcmd, garg)
+          return Mixin({ attr = macro }, ground)
+        elseif fcmd then
+          local macro = string.format('%s [nomounted] %s\n/dismount [mounted]', fcmd, farg)
+          return Mixin({ attr = macro }, flight)
+        else
+          return {
+            attr = '',
+            icon = 132261,
+            tooltip = { text = 'No mount... yet.' },
+          }
+        end
       end
       return update(), {
         BAG_UPDATE_DELAYED = update,
