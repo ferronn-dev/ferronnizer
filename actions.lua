@@ -76,7 +76,7 @@ local makeAction = (function()
       local num = action.action
       local function update()
         return {
-          attr = HasAction(num) and num or '',
+          attr = HasAction(num) and ('#action:' .. num) or '',
           icon = GetActionTexture(num),
           name = GetActionText(num),
         }
@@ -350,10 +350,10 @@ local newButton, updateAttr = (function()
     setFraction = [=[
       local actionid, value, prevActionID = ...
       local type_, action, macrotext
-      if type(value) == 'string' then
+      if value:sub(1, 8) == '#action:' then
+        type_, action = 'action', tonumber(value:sub(9))
+      else
         type_, macrotext = 'macro', value
-      elseif value ~= nil then
-        type_, action = 'action', value
       end
       self:SetAttribute('type', type_)
       self:SetAttribute('action', action)
@@ -387,7 +387,7 @@ local newButton, updateAttr = (function()
             actionToButton[actionid] = buttonid
             self:RunFor(button, setFraction, actionid, attr, prevActionID)
           else
-            self:RunFor(button, setFraction, nil, nil, prevActionID)
+            self:RunFor(button, setFraction, nil, '', prevActionID)
           end
         end
       end
@@ -395,7 +395,7 @@ local newButton, updateAttr = (function()
     updatePageOnClick = [=[
       local buttonid = ...
       local attr = actionAttrs[currentPage .. buttonid] or ''
-      local page = type(attr) == 'string' and attr:sub(1, 6) == '#page:' and attr:sub(7) or 'fraction'
+      local page = attr:sub(1, 6) == '#page:' and attr:sub(7) or 'fraction'
       self:Run(updateActionPage, page)
     ]=]
   ]])
@@ -432,8 +432,7 @@ local newButton, updateAttr = (function()
   end
 
   local function updateAttr(actionid, attr)
-    local qq = (type(attr) == 'string' and '[==[%s]==]' or '%d'):format(attr)
-    header:Execute(([[self:Run(updateActionAttr, '%s', %s)]]):format(actionid, qq))
+    header:Execute(([[self:Run(updateActionAttr, '%s', [==[%s]==])]]):format(actionid, attr))
   end
 
   return newButton, updateAttr
