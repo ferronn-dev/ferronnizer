@@ -413,10 +413,12 @@ local newButton, updateAttr = (function()
       end
     ]=]
     updatePageOnClick = [=[
-      local buttonid = ...
-      local attr = actionAttrs[currentPage .. buttonid] or ''
-      local page = attr:sub(1, 6) == '#page:' and attr:sub(7) or 'fraction'
-      self:Run(updateActionPage, page)
+      if currentPage ~= 'pet' then
+        local buttonid = ...
+        local attr = actionAttrs[currentPage .. buttonid] or ''
+        local page = attr:sub(1, 6) == '#page:' and attr:sub(7) or 'fraction'
+        self:Run(updateActionPage, page)
+      end
     ]=]
   ]])
   header:RegisterEvent('PLAYER_ENTERING_WORLD')
