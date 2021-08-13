@@ -175,4 +175,12 @@ describe('Actions', function()
       { macro = '/lol' },
     }, wow.state.commands)
   end)
+
+  it('sets correct attributes on actions', function()
+    wow.state.actions[42] = true
+    init(wow, { { action = 42 } })
+    local button = wow.env.mooActionButton1
+    assert.same('action', button:GetAttribute('type'))
+    assert.same(42, button:GetAttribute('action'))
+  end)
 end)
