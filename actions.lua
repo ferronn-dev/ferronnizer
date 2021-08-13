@@ -183,6 +183,17 @@ local makeAction = (function()
         tooltip = action.tooltip and { text = action.tooltip },
       }
     end,
+    petaction = function(action)
+      local num = action.petaction
+      local function update()
+        local _, texture, isToken = GetPetActionInfo(num)
+        return {
+          attr = texture and ('#petaction:' .. num) or '',
+          icon = isToken and _G[texture] or texture,
+        }
+      end
+      return update(), { UNIT_PET = update }
+    end,
     spell = function(action)
       local fullName = action.spell .. (action.rank and ('(Rank ' .. action.rank .. ')') or '')
       local function update()
@@ -349,15 +360,18 @@ local newButton, updateAttr = (function()
     currentPage = 'invalid'
     setFraction = [=[
       local actionid, value, prevActionID = ...
-      local type_, action, macrotext
+      local type_, action, macrotext, pet
       if value:sub(1, 8) == '#action:' then
         type_, action = 'action', tonumber(value:sub(9))
+      elseif value:sub(1, 11) == '#petaction:' then
+        type_, pet = 'pet', tonumber(value:sub(12))
       else
         type_, macrotext = 'macro', value
       end
       self:SetAttribute('type', type_)
       self:SetAttribute('action', action)
       self:SetAttribute('macrotext', macrotext)
+      self:SetAttribute('pet', pet)
       if actionid and macrotext ~= '' then
         self:CallMethod('Refresh', actionid, prevActionID)
         self:Show()
@@ -566,6 +580,9 @@ local function makeActions()
       spell = spell,
       stand = false,
     }
+  end
+  for i = 1, NUM_PET_ACTION_SLOTS do
+    actions['pet' .. i] = { petaction = i }
   end
   return actions
 end

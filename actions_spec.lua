@@ -18,6 +18,7 @@ describe('Actions', function()
     { macro = '/lol' },
     { mount = true },
     { page = {} },
+    { petaction = 7 },
     { spell = 'Cooking' },
     { stopcasting = true },
   }
@@ -182,5 +183,13 @@ describe('Actions', function()
     local button = wow.env.mooActionButton1
     assert.same('action', button:GetAttribute('type'))
     assert.same(42, button:GetAttribute('action'))
+  end)
+
+  it('sets correct attributes on petactions', function()
+    wow.state.petactions[2] = { nil, 'texture', false }
+    init(wow, { { petaction = 2 } })
+    local button = wow.env.mooActionButton1
+    assert.same('pet', button:GetAttribute('type'))
+    assert.same(2, button:GetAttribute('pet'))
   end)
 end)
