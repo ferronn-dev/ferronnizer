@@ -602,6 +602,11 @@ local function makeActions()
   for i = 1, NUM_PET_ACTION_SLOTS do
     actions['pet' .. i] = { petaction = i }
   end
+  actions['pet' .. (NUM_PET_ACTION_SLOTS + 1)] = {
+    macro = '/cancelaura Mind Control',
+    texture = 136206,
+    tooltip = 'Cancel Mind Control',
+  }
   return actions
 end
 
