@@ -424,9 +424,12 @@ local newButton, updateAttr = (function()
 
   RegisterAttributeDriver(header, 'state-petexists', '[@pet,exists] true; false')
   header:SetAttribute('_onstate-petexists', [=[
-    -- Switch to the pet page if we have a pet and it's not a hunter/warlock pet.
+    -- If we just got a pet and it's not a hunter/warlock pet, switch to the pet page.
+    -- If we just lost a pet and we're on the pet page, go back to the fraction page.
     if newstate and not PlayerPetSummary() then
       owner:Run(updateActionPage, 'pet')
+    elseif not newstate and currentPage == 'pet' then
+      owner:Run(updateActionPage, 'fraction')
     end
   ]=])
 
