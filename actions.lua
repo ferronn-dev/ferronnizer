@@ -188,11 +188,13 @@ local makeAction = (function()
       local function update()
         local _, texture, isToken = GetPetActionInfo(num)
         return {
-          attr = texture and ('#petaction:' .. num) or '',
-          icon = isToken and _G[texture] or texture,
+          icon = isToken and _G[texture] or texture or 'Interface\\Buttons\\UI-Quickslot2'
         }
       end
-      return update(), { UNIT_PET = update }
+      local init = Mixin(update(), {
+        attr = '#petaction:' .. num,
+      })
+      return init, { UNIT_PET = update }
     end,
     spell = function(action)
       local fullName = action.spell .. (action.rank and ('(Rank ' .. action.rank .. ')') or '')
