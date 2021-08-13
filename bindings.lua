@@ -34,6 +34,11 @@ local actionbars = {
   'SHIFT-A', 'SHIFT-S', 'SHIFT-D', 'SHIFT-F', 'SHIFT-G', 'SHIFT-H',
   'SHIFT-Z', 'SHIFT-X', 'SHIFT-C', 'SHIFT-V', 'SHIFT-B', 'SHIFT-N',
 }
+local switchers = {
+  ['ALT-CTRL-E'] = 'Emote',
+  ['CTRL-P'] = 'Profession',
+  ['CTRL-SHIFT-P'] = 'Pet',
+}
 
 G.Eventer({
   PLAYER_LOGIN = function()
@@ -45,6 +50,9 @@ G.Eventer({
     end
     for i, b in ipairs(actionbars) do
       SetBindingClick(b, addonName .. 'ActionButton' .. i)
+    end
+    for k, v in pairs(switchers) do
+      SetBindingClick(k, addonName .. 'ActionButton' .. v .. 'Switcher')
     end
   end,
 })
