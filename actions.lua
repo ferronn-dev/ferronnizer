@@ -193,6 +193,7 @@ local makeAction = (function()
       end
       local init = Mixin(update(), {
         attr = '#petaction:' .. num,
+        tooltip = { petaction = num },
       })
       return init, { UNIT_PET = update }
     end,
@@ -290,6 +291,9 @@ local updateButton = (function()
         end,
         item = function(item)
           GameTooltip:SetHyperlink('item:' .. item)
+        end,
+        petaction = function(petaction)
+          GameTooltip:SetPetAction(petaction)
         end,
         spell = function(spell)
           if type(spell) == 'string' then
