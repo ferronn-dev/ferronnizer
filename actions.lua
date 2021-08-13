@@ -446,7 +446,8 @@ local newButton, updateAttr = (function()
   for k, v in pairs(switchers) do
     local switch = CreateFrame('Button', prefix .. v .. 'Switcher', header, 'SecureActionButtonTemplate')
     header:WrapScript(switch, 'OnClick', 'return nil, true', ([=[
-      owner:Run(updateActionPage, '%s')
+      local page = '%s'
+      owner:Run(updateActionPage, currentPage == page and 'fraction' or page)
     ]=]):format(k))
   end
 
