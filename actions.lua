@@ -366,18 +366,17 @@ local newButton, updateAttr = (function()
     currentPage = 'invalid'
     setFraction = [=[
       local actionid, value, prevActionID = ...
-      local type_, action, macrotext, pet
+      local type_, action, macrotext
       if value:sub(1, 8) == '#action:' then
         type_, action = 'action', tonumber(value:sub(9))
       elseif value:sub(1, 11) == '#petaction:' then
-        type_, pet = 'pet', tonumber(value:sub(12))
+        type_, action = 'pet', tonumber(value:sub(12))
       else
         type_, macrotext = 'macro', value
       end
       self:SetAttribute('type', type_)
       self:SetAttribute('action', action)
       self:SetAttribute('macrotext', macrotext)
-      self:SetAttribute('pet', pet)
       if actionid and macrotext ~= '' then
         self:CallMethod('Refresh', actionid, prevActionID)
         self:Show()

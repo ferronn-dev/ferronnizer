@@ -190,6 +190,6 @@ describe('Actions', function()
     init(wow, { { petaction = 2 } })
     local button = wow.env.mooActionButton1
     assert.same('pet', button:GetAttribute('type'))
-    assert.same(2, button:GetAttribute('pet'))
+    assert.same(2, button:GetAttribute('action'))
   end)
 end)
