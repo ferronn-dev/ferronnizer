@@ -358,7 +358,7 @@ end)()
 
 local newButton, updateAttr = (function()
   local prefix = addonName .. 'ActionButton'
-  local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerBaseTemplate')
+  local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
   header:Execute([[
     buttons = newtable()
     actionToButton = newtable()
@@ -421,6 +421,15 @@ local newButton, updateAttr = (function()
       end
     ]=]
   ]])
+
+  RegisterAttributeDriver(header, 'state-petexists', '[@pet,exists] true; false')
+  header:SetAttribute('_onstate-petexists', [=[
+    -- Switch to the pet page if we have a pet and it's not a hunter/warlock pet.
+    if newstate and not PlayerPetSummary() then
+      owner:Run(updateActionPage, 'pet')
+    end
+  ]=])
+
   header:RegisterEvent('PLAYER_ENTERING_WORLD')
   header:SetScript('OnEvent', function(self)
     self:Execute([[self:Run(updateActionPage, 'fraction')]])
