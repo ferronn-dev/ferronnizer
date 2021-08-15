@@ -359,6 +359,9 @@ local updateButton = (function()
   end
 end)()
 
+local actionButtons = {}
+local actionButtonState = {}
+
 local newButton, updateAttr = (function()
   local prefix = addonName .. 'ActionButton'
   local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
@@ -455,6 +458,22 @@ local newButton, updateAttr = (function()
     ]=]):format(k))
   end
 
+  local insecureRefresh = function(self, actionid, prevActionID)
+    if prevActionID then
+      actionButtons[prevActionID] = nil
+    end
+    actionButtons[actionid] = self
+    local reset = {
+      color = 1.0,
+      cooldown = { reset = true },
+      count = { reset = true },
+      icon = 136235,  -- samwise
+      name = '',
+      tooltip = { reset = true },
+    }
+    updateButton(self, Mixin(reset, actionButtonState[actionid]))
+  end
+
   local num = 0
   local function newButton()
     num = num + 1
@@ -465,6 +484,7 @@ local newButton, updateAttr = (function()
     ]]):format(num))
     header:SetFrameRef('tmp', button)
     header:Execute([[tinsert(buttons, self:GetFrameRef('tmp'))]])
+    button.Refresh = insecureRefresh
     return button
   end
 
@@ -492,9 +512,6 @@ local maybeSetAttr, drainPendingAttrs = (function()
   end
   return maybeSetAttr, drainPendingAttrs
 end)()
-
-local actionButtons = {}
-local actionButtonState = {}
 
 local function updateAction(actionid, update)
   if update.attr then
@@ -674,21 +691,6 @@ local function makeButtons()
       self:SetChecked(false)
     end,
   }
-  local insecureRefresh = function(self, actionid, prevActionID)
-    if prevActionID then
-      actionButtons[prevActionID] = nil
-    end
-    actionButtons[actionid] = self
-    local reset = {
-      color = 1.0,
-      cooldown = { reset = true },
-      count = { reset = true },
-      icon = 136235,  -- samwise
-      name = '',
-      tooltip = { reset = true },
-    }
-    updateButton(self, Mixin(reset, actionButtonState[actionid]))
-  end
   local makeButton = function(row, col)
     local button = newButton()
     attachToIconGrid(button, row, col)
@@ -705,7 +707,6 @@ local function makeButtons()
     for k, v in pairs(scripts) do
       button:SetScript(k, v)
     end
-    button.Refresh = insecureRefresh
     button:Hide()
     return button
   end
