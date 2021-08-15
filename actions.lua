@@ -198,23 +198,26 @@ local makeAction = (function()
       return init, { UNIT_PET = update }
     end,
     spell = function(action)
-      local fullName = action.spell .. (action.rank and ('(Rank ' .. action.rank .. ')') or '')
+      local shortName = action.spell
+      local rankStr = action.rank and ('Rank ' .. action.rank) or nil
+      local fullName = shortName .. (rankStr and ('(' .. rankStr .. ')') or '')
+      local macro = (
+        (action.dismount ~= false and '/dismount\n' or '')..
+        (action.stand ~= false and '/stand\n' or '')..
+        (action.stopcasting and '/stopcasting\n' or '')..
+        '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
+        fullName)
       local function update()
-        local spellid = select(7, GetSpellInfo(action.spell, action.rank and ('Rank ' .. action.rank) or nil))
+        local spellid = select(7, GetSpellInfo(shortName, rankStr))
         return {
-          attr = spellid and IsSpellKnown(spellid) and (
-            (action.dismount ~= false and '/dismount\n' or '')..
-            (action.stand ~= false and '/stand\n' or '')..
-            (action.stopcasting and '/stopcasting\n' or '')..
-            '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
-            fullName) or '',
+          attr = spellid and IsSpellKnown(spellid) and macro or '',
+          -- Use the spell base name for GetSpellTexture; more likely to work on login.
+          icon = GetSpellTexture(shortName),
         }
       end
       local init = Mixin(update(), {
         cooldown = { spell = fullName },
         count = { spell = fullName },
-        -- Use the spell base name for GetSpellTexture; more likely to work on login.
-        icon = GetSpellTexture(action.spell),
         name = action.actionText,
         tooltip = { spell = fullName },
         update = { spell = fullName },
