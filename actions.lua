@@ -367,7 +367,6 @@ local newButton, updateAttr = (function()
   local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
   header:Execute([[
     buttons = newtable()
-    actionToButton = newtable()
     actionAttrs = newtable()
     currentPage = 'invalid'
     setFraction = [=[
@@ -393,9 +392,10 @@ local newButton, updateAttr = (function()
     updateActionAttr = [=[
       local actionid, value = ...
       actionAttrs[actionid] = value
-      local buttonid = actionToButton[actionid]
-      if buttonid then
-        self:RunFor(buttons[buttonid], setFraction, actionid, value)
+      for i, button in ipairs(buttons) do
+        if actionid == (currentPage .. i) then
+          self:RunFor(button, setFraction, actionid, value)
+        end
       end
     ]=]
     updateActionPage = [=[
@@ -405,11 +405,9 @@ local newButton, updateAttr = (function()
         currentPage = page
         self:CallMethod('InsecureUpdateActionPage', currentPage, previousPage)
         for buttonid, button in ipairs(buttons) do
-          actionToButton[previousPage .. buttonid] = nil
           local actionid = page .. buttonid
           local attr = actionAttrs[actionid]
           if attr then
-            actionToButton[actionid] = buttonid
             self:RunFor(button, setFraction, actionid, attr)
           else
             self:RunFor(button, setFraction, nil, '')
