@@ -221,4 +221,27 @@ describe('Actions', function()
     wow.state:SendEvent('BAG_UPDATE_DELAYED')
     assert.same('5', button.Count:GetText())
   end)
+
+  it('does not overwrite button count if action page is not current', function()
+    init(wow, {
+      [1] = { buff = true, reagent = 12345 },
+      [2] = {
+        page = {
+          [1] = { buff = true },
+        },
+      }
+    })
+    local buffButton = wow.env.mooActionButton1
+    local pageButton = wow.env.mooActionButton2
+    wow.state.inventory[12345] = 7
+    wow.state:SendEvent('BAG_UPDATE_DELAYED')
+    assert.same('7', buffButton.Count:GetText())
+    pageButton:Click()
+    assert.same('', buffButton.Count:GetText())
+    wow.state.inventory[12345] = 5
+    wow.state:SendEvent('BAG_UPDATE_DELAYED')
+    assert.same('', buffButton.Count:GetText())
+    buffButton:Click()
+    assert.same('5', buffButton.Count:GetText())
+  end)
 end)
