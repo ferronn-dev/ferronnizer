@@ -532,16 +532,17 @@ local function setupActionState(actions)
     handlers[ev] = handlers[ev] or {}
     table.insert(handlers[ev], handler)
   end
-  for actionid in pairs(actions) do
-    actionButtonState[actionid] = {}
-  end
-  for actionid, action in pairs(actions) do
-    local init, tyhandlers = makeAction(action)
-    updateAction(actionid, init)
-    for ev, handler in pairs(tyhandlers or {}) do
-      addHandler(ev, function(...)
-        return updateAction(actionid, handler(...))
-      end)
+  for pageName, pageActions in pairs(actions) do
+    for idx, action in pairs(pageActions) do
+      local actionid = pageName .. idx
+      actionButtonState[actionid] = {}
+      local init, tyhandlers = makeAction(action)
+      updateAction(actionid, init)
+      for ev, handler in pairs(tyhandlers or {}) do
+        addHandler(ev, function(...)
+          return updateAction(actionid, handler(...))
+        end)
+      end
     end
   end
   local function updateHandler(name)
@@ -580,60 +581,75 @@ local function setupActionState(actions)
 end
 
 local function makeActions()
-  local actions = {}
-  local charActions = G.Characters[UnitName('player')..'-'..GetRealmName()]
-  if charActions then
-    for i, v in pairs(charActions) do
-      if v.page then
-        local pageName = 'fraction' .. i .. 'x'
-        actions['fraction' .. i] = Mixin({}, v, { page = pageName })
-        for j, x in pairs(v.page) do
-          actions[pageName .. j] = x
+  local fractionPage, extraPages = (function()
+    local page, extra = {}, {}
+    local charActions = G.Characters[UnitName('player')..'-'..GetRealmName()]
+    if charActions then
+      for i, v in pairs(charActions) do
+        if v.page then
+          local pageName = 'fraction' .. i .. 'x'
+          page[i] = Mixin({}, v, { page = pageName })
+          local subpage = {}
+          for j, x in pairs(v.page) do
+            subpage[j] = x
+          end
+          extra[pageName] = subpage
+        elseif v.stopcasting and not v.spell then
+          page[i] = {
+            actionText = 'Stop',
+            macro = '/stopcasting',
+            texture = 135768,
+            tooltip = 'Stop Casting',
+          }
+        else
+          page[i] = v
         end
-      elseif v.stopcasting and not v.spell then
-        actions['fraction' .. i] = {
-          actionText = 'Stop',
-          macro = '/stopcasting',
-          texture = 135768,
-          tooltip = 'Stop Casting',
-        }
-      else
-        actions['fraction' .. i] = v
+      end
+    else
+      for i = 1, 48 do
+        table.insert(page, { action = i })
       end
     end
-  else
-    for i = 1, 48 do
-      actions['fraction' .. i] = { action = i }
-    end
-  end
-  local professions = {
-    'Alchemy',
-    'Cooking',
-    'Disenchant',
-    'Enchanting',
-    'First Aid',
-    'Engineering',
-    'Tailoring',
-    'Smelting',
-    'Leatherworking',
-    'Blacksmithing',
-  }
-  for i, spell in ipairs(professions) do
-    actions['profession' .. i] = {
-      dismount = false,
-      spell = spell,
-      stand = false,
-    }
-  end
-  for i = 1, NUM_PET_ACTION_SLOTS do
-    actions['pet' .. i] = { petaction = i }
-  end
-  actions['pet' .. (NUM_PET_ACTION_SLOTS + 1)] = {
-    macro = '/cancelaura Mind Control',
-    texture = 136206,
-    tooltip = 'Cancel Mind Control',
-  }
-  return actions
+    return page, extra
+  end)()
+  return Mixin(extraPages, {
+    fraction = fractionPage,
+    pet = (function()
+      local page = {}
+      for i = 1, NUM_PET_ACTION_SLOTS do
+        table.insert(page, { petaction = i })
+      end
+      table.insert(page, {
+        macro = '/cancelaura Mind Control',
+        texture = 136206,
+        tooltip = 'Cancel Mind Control',
+      })
+      return page
+    end)(),
+    profession = (function()
+      local professions = {
+        'Alchemy',
+        'Cooking',
+        'Disenchant',
+        'Enchanting',
+        'First Aid',
+        'Engineering',
+        'Tailoring',
+        'Smelting',
+        'Leatherworking',
+        'Blacksmithing',
+      }
+      local page = {}
+      for _, spell in ipairs(professions) do
+        table.insert(page, {
+          dismount = false,
+          spell = spell,
+          stand = false,
+        })
+      end
+      return page
+    end)(),
+  })
 end
 
 local attachToIconGrid, attachToTextGrid = (function()
