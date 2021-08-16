@@ -197,4 +197,17 @@ describe('Actions', function()
     init(wow, {{ macro = '/lol', actionText = 'Laugh' }})
     assert.same('Laugh', wow.env.mooActionButton1.Name:GetText())
   end)
+
+  it('sets button text through paging', function()
+    init(wow, {{
+      actionText = 'Parent',
+      page = {{ actionText = 'Child', macro = '/lol' }},
+    }})
+    local button = wow.env.mooActionButton1
+    assert.same('Parent', button.Name:GetText())
+    button:Click()
+    assert.same('Child', button.Name:GetText())
+    button:Click()
+    assert.same('Parent', button.Name:GetText())
+  end)
 end)
