@@ -210,4 +210,15 @@ describe('Actions', function()
     button:Click()
     assert.same('Parent', button.Name:GetText())
   end)
+
+  it('changes inventory counts', function()
+    init(wow, {{ buff = true, reagent = 12345 }})
+    local button = wow.env.mooActionButton1
+    wow.state.inventory[12345] = 7
+    wow.state:SendEvent('BAG_UPDATE_DELAYED')
+    assert.same('7', button.Count:GetText())
+    wow.state.inventory[12345] = 5
+    wow.state:SendEvent('BAG_UPDATE_DELAYED')
+    assert.same('5', button.Count:GetText())
+  end)
 end)

@@ -278,7 +278,7 @@ local updateButton = (function()
       return function(button, prog)
         local k, v = next(prog)
         local count = countLang[k](v)
-        button.Count:SetText(count < 0 and '' or count > 9999 and '*' or count)
+        button.Count:SetText(count < 0 and '' or count > 9999 and '*' or tostring(count))
       end
     end)(),
     icon = function(button, icon)
