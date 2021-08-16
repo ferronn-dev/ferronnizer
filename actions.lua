@@ -371,7 +371,7 @@ local newButton, updateAttr = (function()
     actionAttrs = newtable()
     currentPage = 'invalid'
     setFraction = [=[
-      local actionid, value, prevActionID = ...
+      local actionid, value = ...
       local type_, action, macrotext
       if value:sub(1, 8) == '#action:' then
         type_, action = 'action', tonumber(value:sub(9))
@@ -384,7 +384,7 @@ local newButton, updateAttr = (function()
       self:SetAttribute('action', action)
       self:SetAttribute('macrotext', macrotext)
       if actionid and macrotext ~= '' then
-        self:CallMethod('Refresh', actionid, prevActionID)
+        self:CallMethod('Refresh', actionid)
         self:Show()
       else
         self:Hide()
@@ -395,7 +395,7 @@ local newButton, updateAttr = (function()
       actionAttrs[actionid] = value
       local buttonid = actionToButton[actionid]
       if buttonid then
-        self:RunFor(buttons[buttonid], setFraction, actionid, value, actionid)
+        self:RunFor(buttons[buttonid], setFraction, actionid, value)
       end
     ]=]
     updateActionPage = [=[
@@ -403,16 +403,16 @@ local newButton, updateAttr = (function()
       if currentPage ~= page then
         local previousPage = currentPage
         currentPage = page
+        self:CallMethod('InsecureUpdateActionPage', currentPage, previousPage)
         for buttonid, button in ipairs(buttons) do
-          local prevActionID = previousPage .. buttonid
-          actionToButton[prevActionID] = nil
+          actionToButton[previousPage .. buttonid] = nil
           local actionid = page .. buttonid
           local attr = actionAttrs[actionid]
           if attr then
             actionToButton[actionid] = buttonid
-            self:RunFor(button, setFraction, actionid, attr, prevActionID)
+            self:RunFor(button, setFraction, actionid, attr)
           else
-            self:RunFor(button, setFraction, nil, '', prevActionID)
+            self:RunFor(button, setFraction, nil, '')
           end
         end
       end
@@ -458,11 +458,7 @@ local newButton, updateAttr = (function()
     ]=]):format(k))
   end
 
-  local insecureRefresh = function(self, actionid, prevActionID)
-    if prevActionID then
-      actionButtons[prevActionID] = nil
-    end
-    actionButtons[actionid] = self
+  local insecureRefresh = function(self, actionid)
     local reset = {
       color = 1.0,
       cooldown = { reset = true },
@@ -472,6 +468,15 @@ local newButton, updateAttr = (function()
       tooltip = { reset = true },
     }
     updateButton(self, Mixin(reset, actionButtonState[actionid]))
+  end
+
+  local buttons = {}
+
+  header.InsecureUpdateActionPage = function(_, newPage, prevPage)
+    for i, button in ipairs(buttons) do
+      actionButtons[prevPage .. i] = nil
+      actionButtons[newPage .. i] = button
+    end
   end
 
   local num = 0
@@ -485,6 +490,7 @@ local newButton, updateAttr = (function()
     header:SetFrameRef('tmp', button)
     header:Execute([[tinsert(buttons, self:GetFrameRef('tmp'))]])
     button.Refresh = insecureRefresh
+    table.insert(buttons, button)
     return button
   end
 
