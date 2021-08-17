@@ -385,7 +385,7 @@ local newButton, updateAttr = (function()
       button:SetAttribute('action', action)
       button:SetAttribute('macrotext', macrotext)
       if value ~= '' then
-        button:CallMethod('Refresh', currentPage, idx)
+        button:CallMethod('Refresh', idx)
         button:Show()
       else
         button:Hide()
@@ -449,7 +449,7 @@ local newButton, updateAttr = (function()
     ]=]):format(k))
   end
 
-  local insecureRefresh = function(self, pageName, idx)
+  local insecureRefresh = function(self, idx)
     local reset = {
       color = 1.0,
       cooldown = { reset = true },
@@ -458,7 +458,7 @@ local newButton, updateAttr = (function()
       name = '',
       tooltip = { reset = true },
     }
-    updateButton(self, Mixin(reset, actionButtonState[pageName][idx]))
+    updateButton(self, Mixin(reset, actionButtonState[actionPage][idx]))
   end
 
   header.InsecureUpdateActionPage = function(_, newPage)
