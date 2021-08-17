@@ -401,18 +401,13 @@ local actionButtons = (function()
         self.ttfn()
       end
     end,
-    OnEvent = function(self, ev)
-      if ev == 'PLAYER_LOGIN' then
-        self:UnregisterEvent('PLAYER_LOGIN')
-        self:RegisterEvent('UPDATE_BINDINGS')
+    OnEvent = function(self)
+      local key = GetBindingKey('CLICK ' .. self:GetName() .. ':LeftButton')
+      if key then
+        self.HotKey:SetText(LibStub('LibKeyBound-1.0'):ToShortKey(key))
+        self.HotKey:Show()
       else
-        local key = GetBindingKey('CLICK ' .. self:GetName() .. ':LeftButton')
-        if key then
-          self.HotKey:SetText(LibStub('LibKeyBound-1.0'):ToShortKey(key))
-          self.HotKey:Show()
-        else
-          self.HotKey:Hide()
-        end
+        self.HotKey:Hide()
       end
     end,
     OnLeave = function()
@@ -440,7 +435,7 @@ local actionButtons = (function()
       button:SetNormalTexture('Interface\\Buttons\\UI-Quickslot2')
       button.NormalTexture:SetTexCoord(0, 0, 0, 0)
       button.cooldown:SetSwipeColor(0, 0, 0)
-      button:RegisterEvent('PLAYER_LOGIN')
+      button:RegisterEvent('UPDATE_BINDINGS')
       for k, v in pairs(scripts) do
         button:SetScript(k, v)
       end
