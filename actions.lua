@@ -382,7 +382,7 @@ local newButton, updateAttr = (function()
       self:SetAttribute('type', type_)
       self:SetAttribute('action', action)
       self:SetAttribute('macrotext', macrotext)
-      if actionid and macrotext ~= '' then
+      if value ~= '' then
         self:CallMethod('Refresh', actionid)
         self:Show()
       else
