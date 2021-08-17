@@ -423,47 +423,50 @@ local actionButtons = (function()
       self:SetChecked(false)
     end,
   }
-  local makeButton = function(row, col, idx)
-    local button = CreateFrame(
-        'CheckButton',
-        addonName .. 'ActionButton' .. idx,
-        UIParent,
-        'ActionButtonTemplate, SecureActionButtonTemplate')
-    attachToIconGrid(button, row, col)
-    button:SetMotionScriptsWhileDisabled(true)
-    button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-    button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
-    button.HotKey:SetVertexColor(0.75, 0.75, 0.75)
-    button.HotKey:SetPoint('TOPLEFT', button, 'TOPLEFT', -2, -4)
-    button.Count:SetFont(button.Count:GetFont(), 16, 'OUTLINE')
-    button:SetNormalTexture('Interface\\Buttons\\UI-Quickslot2')
-    button.NormalTexture:SetTexCoord(0, 0, 0, 0)
-    button.cooldown:SetSwipeColor(0, 0, 0)
-    button:RegisterEvent('PLAYER_LOGIN')
-    for k, v in pairs(scripts) do
-      button:SetScript(k, v)
-    end
-    button:Hide()
-    return button
-  end
-  local buttons = {}
+  local iconButtons = {}
   for row = 1, 4 do
     for col = 1, 12 do
-      table.insert(buttons, makeButton(row, col, #buttons + 1))
+      local button = CreateFrame(
+          'CheckButton',
+          addonName .. 'ActionButton' .. (#iconButtons + 1),
+          UIParent,
+          'ActionButtonTemplate, SecureActionButtonTemplate')
+      attachToIconGrid(button, row, col)
+      button:SetMotionScriptsWhileDisabled(true)
+      button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+      button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
+      button.HotKey:SetVertexColor(0.75, 0.75, 0.75)
+      button.HotKey:SetPoint('TOPLEFT', button, 'TOPLEFT', -2, -4)
+      button.Count:SetFont(button.Count:GetFont(), 16, 'OUTLINE')
+      button:SetNormalTexture('Interface\\Buttons\\UI-Quickslot2')
+      button.NormalTexture:SetTexCoord(0, 0, 0, 0)
+      button.cooldown:SetSwipeColor(0, 0, 0)
+      button:RegisterEvent('PLAYER_LOGIN')
+      for k, v in pairs(scripts) do
+        button:SetScript(k, v)
+      end
+      button:Hide()
+      table.insert(iconButtons, button)
     end
   end
-  -- TODO wire these up to the header, actions, etc
-  local parent = CreateFrame('Frame', addonName .. 'TextButtonParent', UIParent)
-  parent:Hide()
+  local textButtons = {}
   for row = 1, 8 do
     for col = 1, 6 do
       local idx = (row - 1) * 6 + col
-      local frame = CreateFrame('Button', addonName .. 'TextButton' .. idx, parent, 'UIPanelButtonTemplate')
-      frame.Text:SetText('Action ' .. idx)
-      attachToTextGrid(frame, row, col)
+      local button = CreateFrame(
+          'Button',
+          addonName .. 'ActionTextButton' .. idx,
+          UIParent,
+          'UIPanelButtonTemplate, SecureActionButtonTemplate')
+      button.Text:SetText('Action ' .. idx)
+      attachToTextGrid(button, row, col)
+      table.insert(textButtons, button)
     end
   end
-  return buttons
+  return {
+    icon = iconButtons,
+    text = textButtons,
+  }
 end)()
 
 local actionPage = 'invalid'
@@ -525,7 +528,7 @@ local updateAttr = (function()
     ]=]
   ]])
 
-  for idx, button in ipairs(actionButtons) do
+  for idx, button in ipairs(actionButtons.icon) do
     button:SetID(idx)
     header:WrapScript(button, 'OnClick', 'return nil, true', [[
       owner:Run(updatePageOnClick, self:GetID())
@@ -556,7 +559,7 @@ local updateAttr = (function()
       name = '',
       tooltip = { reset = true },
     }
-    updateButton(actionButtons[idx], Mixin(reset, actionButtonState[actionPage][idx]))
+    updateButton(actionButtons.icon[idx], Mixin(reset, actionButtonState[actionPage][idx]))
   end
   header.InsecureUpdateActionPage = function(_, newPage)
     actionPage = newPage
@@ -615,7 +618,7 @@ local function updateAction(pageName, idx, update)
   end
   Mixin(actionButtonState[pageName][idx], update)
   if pageName == actionPage then
-    updateButton(actionButtons[idx], update)
+    updateButton(actionButtons.icon[idx], update)
   end
 end
 
@@ -642,7 +645,7 @@ local function setupActionState(actions)
     return function()
       for idx, state in pairs(actionButtonState[actionPage]) do
         if state[name] then
-          updateButton(actionButtons[idx], { [name] = state[name] })
+          updateButton(actionButtons.icon[idx], { [name] = state[name] })
         end
       end
     end
