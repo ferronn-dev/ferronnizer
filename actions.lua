@@ -370,21 +370,22 @@ local newButton, updateAttr = (function()
     buttons = newtable()
     actionAttrs = newtable()
     currentPage = 'invalid'
-    setFraction = [=[
-      local idx, value = ...
+    updateActionButton = [=[
+      local idx = ...
+      local attr = actionAttrs[currentPage .. idx] or ''
       local type_, action, macrotext
-      if value:sub(1, 8) == '#action:' then
-        type_, action = 'action', tonumber(value:sub(9))
-      elseif value:sub(1, 11) == '#petaction:' then
-        type_, action = 'pet', tonumber(value:sub(12))
+      if attr:sub(1, 8) == '#action:' then
+        type_, action = 'action', tonumber(attr:sub(9))
+      elseif attr:sub(1, 11) == '#petaction:' then
+        type_, action = 'pet', tonumber(attr:sub(12))
       else
-        type_, macrotext = 'macro', value
+        type_, macrotext = 'macro', attr
       end
       local button = buttons[idx]
       button:SetAttribute('type', type_)
       button:SetAttribute('action', action)
       button:SetAttribute('macrotext', macrotext)
-      if value ~= '' then
+      if attr ~= '' then
         button:CallMethod('Refresh')
         button:Show()
       else
@@ -392,10 +393,10 @@ local newButton, updateAttr = (function()
       end
     ]=]
     updateActionAttr = [=[
-      local pageName, idx, value = ...
-      actionAttrs[pageName .. idx] = value
+      local pageName, idx, attr = ...
+      actionAttrs[pageName .. idx] = attr
       if pageName == currentPage then
-        owner:Run(setFraction, idx, value)
+        owner:Run(updateActionButton, idx)
       end
     ]=]
     updateActionPage = [=[
@@ -404,7 +405,7 @@ local newButton, updateAttr = (function()
         owner:CallMethod('InsecureUpdateActionPage', page)
         currentPage = page
         for buttonid in ipairs(buttons) do
-          owner:Run(setFraction, buttonid, actionAttrs[page .. buttonid] or '')
+          owner:Run(updateActionButton, buttonid)
         end
       end
     ]=]
