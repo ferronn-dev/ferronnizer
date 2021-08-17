@@ -370,7 +370,7 @@ local newButton, updateAttr = (function()
     actionAttrs = newtable()
     currentPage = 'invalid'
     setFraction = [=[
-      local actionid, value = ...
+      local idx, value = ...
       local type_, action, macrotext
       if value:sub(1, 8) == '#action:' then
         type_, action = 'action', tonumber(value:sub(9))
@@ -383,31 +383,26 @@ local newButton, updateAttr = (function()
       self:SetAttribute('action', action)
       self:SetAttribute('macrotext', macrotext)
       if value ~= '' then
-        self:CallMethod('Refresh', actionid)
+        self:CallMethod('Refresh', currentPage, idx)
         self:Show()
       else
         self:Hide()
       end
     ]=]
     updateActionAttr = [=[
-      local actionid, value = ...
-      actionAttrs[actionid] = value
-      for i, button in ipairs(buttons) do
-        if actionid == (currentPage .. i) then
-          self:RunFor(button, setFraction, actionid, value)
-        end
+      local pageName, idx, value = ...
+      actionAttrs[pageName .. idx] = value
+      if pageName == currentPage then
+        self:RunFor(buttons[idx], setFraction, idx, value)
       end
     ]=]
     updateActionPage = [=[
       local page = ...
-      if currentPage ~= page then
-        local previousPage = currentPage
+      if page ~= currentPage then
+        self:CallMethod('InsecureUpdateActionPage', page, currentPage)
         currentPage = page
-        self:CallMethod('InsecureUpdateActionPage', currentPage, previousPage)
         for buttonid, button in ipairs(buttons) do
-          local actionid = page .. buttonid
-          local attr = actionAttrs[actionid] or ''
-          self:RunFor(button, setFraction, actionid, attr)
+          self:RunFor(button, setFraction, buttonid, actionAttrs[page .. buttonid] or '')
         end
       end
     ]=]
@@ -452,7 +447,7 @@ local newButton, updateAttr = (function()
     ]=]):format(k))
   end
 
-  local insecureRefresh = function(self, actionid)
+  local insecureRefresh = function(self, pageName, idx)
     local reset = {
       color = 1.0,
       cooldown = { reset = true },
@@ -461,7 +456,7 @@ local newButton, updateAttr = (function()
       name = '',
       tooltip = { reset = true },
     }
-    updateButton(self, Mixin(reset, actionButtonState[actionid]))
+    updateButton(self, Mixin(reset, actionButtonState[pageName][idx]))
   end
 
   local buttons = {}
@@ -489,8 +484,7 @@ local newButton, updateAttr = (function()
   end
 
   local function updateAttr(pageName, idx, attr)
-    local actionid = pageName .. idx
-    header:Execute(([[self:Run(updateActionAttr, '%s', [==[%s]==])]]):format(actionid, attr))
+    header:Execute(([[self:Run(updateActionAttr, '%s', %d, [==[%s]==])]]):format(pageName, idx, attr))
   end
 
   return newButton, updateAttr
@@ -522,9 +516,8 @@ local function updateAction(pageName, idx, update)
     maybeSetAttr(pageName, idx, update.attr)
     update.attr = nil
   end
-  local actionid = pageName .. idx
-  Mixin(actionButtonState[actionid], update)
-  updateButton(actionButtons[actionid], update)
+  Mixin(actionButtonState[pageName][idx], update)
+  updateButton(actionButtons[pageName .. idx], update)
 end
 
 local function setupActionState(actions)
@@ -534,8 +527,9 @@ local function setupActionState(actions)
     table.insert(handlers[ev], handler)
   end
   for pageName, pageActions in pairs(actions) do
+    actionButtonState[pageName] = {}
     for idx, action in pairs(pageActions) do
-      actionButtonState[pageName .. idx] = {}
+      actionButtonState[pageName][idx] = {}
       local init, tyhandlers = makeAction(action)
       updateAction(pageName, idx, init)
       for ev, handler in pairs(tyhandlers or {}) do
@@ -547,9 +541,11 @@ local function setupActionState(actions)
   end
   local function updateHandler(name)
     return function()
-      for actionid, state in pairs(actionButtonState) do
-        if state[name] then
-          updateButton(actionButtons[actionid], { [name] = state[name] })
+      for pageName, pageState in pairs(actionButtonState) do
+        for idx, state in pairs(pageState) do
+          if state[name] then
+            updateButton(actionButtons[pageName .. idx], { [name] = state[name] })
+          end
         end
       end
     end
