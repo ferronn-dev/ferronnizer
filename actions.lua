@@ -436,7 +436,7 @@ local newButton, updateAttr = (function()
   end)
 
   local switchers = {
-    emotes = 'Emote',
+    emote = 'Emote',
     pet = 'Pet',
     profession = 'Profession',
   }
@@ -605,6 +605,7 @@ local function makeActions()
     return page, extra
   end)()
   return Mixin(extraPages, {
+    emote = {},
     fraction = fractionPage,
     pet = (function()
       local page = {}
