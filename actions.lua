@@ -724,10 +724,9 @@ local function makeButtons()
     button:Hide()
     return button
   end
-  local buttons = {}
   for row = 1, 4 do
     for col = 1, 12 do
-      table.insert(buttons, makeButton(row, col))
+      makeButton(row, col)
     end
   end
   -- TODO wire these up to the header, actions, etc
@@ -741,7 +740,6 @@ local function makeButtons()
       attachToTextGrid(frame, row, col)
     end
   end
-  return buttons
 end
 
 G.Eventer({
