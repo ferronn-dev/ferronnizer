@@ -385,7 +385,7 @@ local newButton, updateAttr = (function()
       button:SetAttribute('action', action)
       button:SetAttribute('macrotext', macrotext)
       if value ~= '' then
-        button:CallMethod('Refresh', idx)
+        button:CallMethod('Refresh')
         button:Show()
       else
         button:Hide()
@@ -449,7 +449,7 @@ local newButton, updateAttr = (function()
     ]=]):format(k))
   end
 
-  local insecureRefresh = function(self, idx)
+  local insecureRefresh = function(self)
     local reset = {
       color = 1.0,
       cooldown = { reset = true },
@@ -458,7 +458,7 @@ local newButton, updateAttr = (function()
       name = '',
       tooltip = { reset = true },
     }
-    updateButton(self, Mixin(reset, actionButtonState[actionPage][idx]))
+    updateButton(self, Mixin(reset, actionButtonState[actionPage][self:GetID()]))
   end
 
   header.InsecureUpdateActionPage = function(_, newPage)
@@ -470,9 +470,10 @@ local newButton, updateAttr = (function()
     num = num + 1
     local button = CreateFrame(
       'CheckButton', prefix .. num, header, 'ActionButtonTemplate, SecureActionButtonTemplate')
-    header:WrapScript(button, 'OnClick', 'return nil, true', ([[
-      owner:Run(updatePageOnClick, %d)
-    ]]):format(num))
+    button:SetID(num)
+    header:WrapScript(button, 'OnClick', 'return nil, true', [[
+      owner:Run(updatePageOnClick, self:GetID())
+    ]])
     header:SetFrameRef('tmp', button)
     header:Execute([[tinsert(buttons, self:GetFrameRef('tmp'))]])
     button.Refresh = insecureRefresh
