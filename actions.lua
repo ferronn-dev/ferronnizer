@@ -386,7 +386,7 @@ local newButton, updateAttr = (function()
       button:SetAttribute('action', action)
       button:SetAttribute('macrotext', macrotext)
       if attr ~= '' then
-        button:CallMethod('Refresh')
+        owner:CallMethod('InsecureActionButtonRefresh', idx)
         button:Show()
       else
         button:Hide()
@@ -432,6 +432,21 @@ local newButton, updateAttr = (function()
     end
   ]=])
 
+  header.InsecureActionButtonRefresh = function(_, idx)
+    local reset = {
+      color = 1.0,
+      cooldown = { reset = true },
+      count = { reset = true },
+      icon = 136235,  -- samwise
+      name = '',
+      tooltip = { reset = true },
+    }
+    updateButton(actionButtons[idx], Mixin(reset, actionButtonState[actionPage][idx]))
+  end
+  header.InsecureUpdateActionPage = function(_, newPage)
+    actionPage = newPage
+  end
+
   header:RegisterEvent('PLAYER_ENTERING_WORLD')
   header:SetScript('OnEvent', function(self)
     self:Execute([[self:Run(updateActionPage, 'fraction')]])
@@ -450,22 +465,6 @@ local newButton, updateAttr = (function()
     ]=]):format(k))
   end
 
-  local insecureRefresh = function(self)
-    local reset = {
-      color = 1.0,
-      cooldown = { reset = true },
-      count = { reset = true },
-      icon = 136235,  -- samwise
-      name = '',
-      tooltip = { reset = true },
-    }
-    updateButton(self, Mixin(reset, actionButtonState[actionPage][self:GetID()]))
-  end
-
-  header.InsecureUpdateActionPage = function(_, newPage)
-    actionPage = newPage
-  end
-
   local num = 0
   local function newButton()
     num = num + 1
@@ -477,7 +476,6 @@ local newButton, updateAttr = (function()
     ]])
     header:SetFrameRef('tmp', button)
     header:Execute([[tinsert(buttons, self:GetFrameRef('tmp'))]])
-    button.Refresh = insecureRefresh
     table.insert(actionButtons, button)
     return button
   end
