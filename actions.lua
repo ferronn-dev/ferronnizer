@@ -359,11 +359,117 @@ local updateButton = (function()
   end
 end)()
 
+local actionButtons = (function()
+  local attachToIconGrid, attachToTextGrid = (function()
+    local width, height = 36, 18
+    local frames = {}
+    for _ = 1, 96 do
+      local frame = CreateFrame('Frame')
+      frame:SetSize(width, height)
+      table.insert(frames, frame)
+    end
+    for i, frame in ipairs(frames) do
+      if i <= 84 then
+        frame:SetPoint('BOTTOM', frames[i + 12], 'TOP')
+      end
+      if (i - 1) % 12 < 5 then
+        frame:SetPoint('RIGHT', frames[i + 1], 'LEFT')
+      elseif (i - 1) % 12 > 6 then
+        frame:SetPoint('LEFT', frames[i - 1], 'RIGHT')
+      end
+    end
+    frames[90]:SetPoint('BOTTOMRIGHT', UIParent, 'BOTTOM')
+    frames[91]:SetPoint('BOTTOMLEFT', UIParent, 'BOTTOM')
+    local function icon(frame, row, col)
+      local index = (row - 1) * 24 + col
+      frame:ClearAllPoints()
+      frame:SetPoint('TOPLEFT', frames[index], 'TOPLEFT')
+      frame:SetPoint('BOTTOMRIGHT', frames[index + 12], 'BOTTOMRIGHT')
+    end
+    local function text(frame, row, col)
+      local index = (row - 1) * 12 + (col - 1) * 2 + 1
+      frame:ClearAllPoints()
+      frame:SetPoint('TOPLEFT', frames[index], 'TOPLEFT')
+      frame:SetPoint('BOTTOMRIGHT', frames[index + 1], 'BOTTOMRIGHT')
+    end
+    return icon, text
+  end)()
+  local scripts = {
+    OnEnter = function(self)
+      if self.ttfn then
+        GameTooltip_SetDefaultAnchor(GameTooltip, self)
+        self.ttfn()
+      end
+    end,
+    OnEvent = function(self, ev)
+      if ev == 'PLAYER_LOGIN' then
+        self:UnregisterEvent('PLAYER_LOGIN')
+        self:RegisterEvent('UPDATE_BINDINGS')
+        return
+      else
+        local key = GetBindingKey('CLICK ' .. self:GetName() .. ':LeftButton')
+        if key then
+          self.HotKey:SetText(LibStub('LibKeyBound-1.0'):ToShortKey(key))
+          self.HotKey:Show()
+        else
+          self.HotKey:Hide()
+        end
+      end
+    end,
+    OnLeave = function()
+      GameTooltip:Hide()
+    end,
+    PostClick = function(self)
+      self:SetChecked(false)
+    end,
+  }
+  local makeButton = function(row, col, idx)
+    local button = CreateFrame(
+        'CheckButton',
+        addonName .. 'ActionButton' .. idx,
+        UIParent,
+        'ActionButtonTemplate, SecureActionButtonTemplate')
+    attachToIconGrid(button, row, col)
+    button:SetMotionScriptsWhileDisabled(true)
+    button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+    button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
+    button.HotKey:SetVertexColor(0.75, 0.75, 0.75)
+    button.HotKey:SetPoint('TOPLEFT', button, 'TOPLEFT', -2, -4)
+    button.Count:SetFont(button.Count:GetFont(), 16, 'OUTLINE')
+    button:SetNormalTexture('Interface\\Buttons\\UI-Quickslot2')
+    button.NormalTexture:SetTexCoord(0, 0, 0, 0)
+    button.cooldown:SetSwipeColor(0, 0, 0)
+    button:RegisterEvent('PLAYER_LOGIN')
+    for k, v in pairs(scripts) do
+      button:SetScript(k, v)
+    end
+    button:Hide()
+    return button
+  end
+  local buttons = {}
+  for row = 1, 4 do
+    for col = 1, 12 do
+      table.insert(buttons, makeButton(row, col, #buttons + 1))
+    end
+  end
+  -- TODO wire these up to the header, actions, etc
+  local parent = CreateFrame('Frame', addonName .. 'TextButtonParent', UIParent)
+  parent:Hide()
+  for row = 1, 8 do
+    for col = 1, 6 do
+      local idx = (row - 1) * 6 + col
+      local frame = CreateFrame('Button', addonName .. 'TextButton' .. idx, parent, 'UIPanelButtonTemplate')
+      frame.Text:SetText('Action ' .. idx)
+      attachToTextGrid(frame, row, col)
+    end
+  end
+  return buttons
+end)()
+
 local actionPage = 'invalid'
-local actionButtons = {}
 local actionButtonState = {}
 
-local newButton, updateAttr = (function()
+local updateAttr = (function()
   local prefix = addonName .. 'ActionButton'
   local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
   header:Execute([[
@@ -419,6 +525,15 @@ local newButton, updateAttr = (function()
     ]=]
   ]])
 
+  for idx, button in ipairs(actionButtons) do
+    button:SetID(idx)
+    header:WrapScript(button, 'OnClick', 'return nil, true', [[
+      owner:Run(updatePageOnClick, self:GetID())
+    ]])
+    header:SetFrameRef('tmp', button)
+    header:Execute([[tinsert(buttons, self:GetFrameRef('tmp'))]])
+  end
+
   RegisterAttributeDriver(header, 'state-petexists', '[@pet,exists] true; false')
   header:SetAttribute('_onstate-petexists', [=[
     -- If we just got a pet and it's not a hunter/warlock pet, switch to the pet page.
@@ -465,26 +580,11 @@ local newButton, updateAttr = (function()
     ]=]):format(k))
   end
 
-  local num = 0
-  local function newButton()
-    num = num + 1
-    local button = CreateFrame(
-      'CheckButton', prefix .. num, header, 'ActionButtonTemplate, SecureActionButtonTemplate')
-    button:SetID(num)
-    header:WrapScript(button, 'OnClick', 'return nil, true', [[
-      owner:Run(updatePageOnClick, self:GetID())
-    ]])
-    header:SetFrameRef('tmp', button)
-    header:Execute([[tinsert(buttons, self:GetFrameRef('tmp'))]])
-    table.insert(actionButtons, button)
-    return button
-  end
-
   local function updateAttr(pageName, idx, attr)
     header:Execute(([[self:Run(updateActionAttr, '%s', %d, [==[%s]==])]]):format(pageName, idx, attr))
   end
 
-  return newButton, updateAttr
+  return updateAttr
 end)()
 
 local maybeSetAttr, drainPendingAttrs = (function()
@@ -646,106 +746,9 @@ local function makeActions()
   })
 end
 
-local attachToIconGrid, attachToTextGrid = (function()
-  local width, height = 36, 18
-  local frames = {}
-  for _ = 1, 96 do
-    local frame = CreateFrame('Frame')
-    frame:SetSize(width, height)
-    table.insert(frames, frame)
-  end
-  for i, frame in ipairs(frames) do
-    if i <= 84 then
-      frame:SetPoint('BOTTOM', frames[i + 12], 'TOP')
-    end
-    if (i - 1) % 12 < 5 then
-      frame:SetPoint('RIGHT', frames[i + 1], 'LEFT')
-    elseif (i - 1) % 12 > 6 then
-      frame:SetPoint('LEFT', frames[i - 1], 'RIGHT')
-    end
-  end
-  frames[90]:SetPoint('BOTTOMRIGHT', UIParent, 'BOTTOM')
-  frames[91]:SetPoint('BOTTOMLEFT', UIParent, 'BOTTOM')
-  local function icon(frame, row, col)
-    local index = (row - 1) * 24 + col
-    frame:ClearAllPoints()
-    frame:SetPoint('TOPLEFT', frames[index], 'TOPLEFT')
-    frame:SetPoint('BOTTOMRIGHT', frames[index + 12], 'BOTTOMRIGHT')
-  end
-  local function text(frame, row, col)
-    local index = (row - 1) * 12 + (col - 1) * 2 + 1
-    frame:ClearAllPoints()
-    frame:SetPoint('TOPLEFT', frames[index], 'TOPLEFT')
-    frame:SetPoint('BOTTOMRIGHT', frames[index + 1], 'BOTTOMRIGHT')
-  end
-  return icon, text
-end)()
-
-local function makeButtons()
-  local scripts = {
-    OnEnter = function(self)
-      if self.ttfn then
-        GameTooltip_SetDefaultAnchor(GameTooltip, self)
-        self.ttfn()
-      end
-    end,
-    OnEvent = function(self)
-      local key = GetBindingKey('CLICK ' .. self:GetName() .. ':LeftButton')
-      if key then
-        self.HotKey:SetText(LibStub('LibKeyBound-1.0'):ToShortKey(key))
-        self.HotKey:Show()
-      else
-        self.HotKey:Hide()
-      end
-    end,
-    OnLeave = function()
-      GameTooltip:Hide()
-    end,
-    PostClick = function(self)
-      self:SetChecked(false)
-    end,
-  }
-  local makeButton = function(row, col)
-    local button = newButton()
-    attachToIconGrid(button, row, col)
-    button:SetMotionScriptsWhileDisabled(true)
-    button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-    button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
-    button.HotKey:SetVertexColor(0.75, 0.75, 0.75)
-    button.HotKey:SetPoint('TOPLEFT', button, 'TOPLEFT', -2, -4)
-    button.Count:SetFont(button.Count:GetFont(), 16, 'OUTLINE')
-    button:SetNormalTexture('Interface\\Buttons\\UI-Quickslot2')
-    button.NormalTexture:SetTexCoord(0, 0, 0, 0)
-    button.cooldown:SetSwipeColor(0, 0, 0)
-    button:RegisterEvent('UPDATE_BINDINGS')
-    for k, v in pairs(scripts) do
-      button:SetScript(k, v)
-    end
-    button:Hide()
-    return button
-  end
-  for row = 1, 4 do
-    for col = 1, 12 do
-      makeButton(row, col)
-    end
-  end
-  -- TODO wire these up to the header, actions, etc
-  local parent = CreateFrame('Frame', addonName .. 'TextButtonParent', UIParent)
-  parent:Hide()
-  for row = 1, 8 do
-    for col = 1, 6 do
-      local idx = (row - 1) * 6 + col
-      local frame = CreateFrame('Button', addonName .. 'TextButton' .. idx, parent, 'UIPanelButtonTemplate')
-      frame.Text:SetText('Action ' .. idx)
-      attachToTextGrid(frame, row, col)
-    end
-  end
-end
-
 G.Eventer({
   PLAYER_LOGIN = function()
     G.ReparentFrame(MainMenuBar)
-    makeButtons()
     setupActionState(makeActions())
   end,
 })
