@@ -513,7 +513,7 @@ local updateAttr = (function()
       if page ~= currentPage then
         owner:CallMethod('InsecureUpdateActionPage', page)
         if page == 'emote' or currentPage == 'emote' then
-          for _, button in ipairs(button[page == 'emote' and 'icon' or 'text']) do
+          for _, button in ipairs(buttons[page == 'emote' and 'icon' or 'text']) do
             button:Hide()
           end
         end
