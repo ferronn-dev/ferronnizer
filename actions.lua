@@ -406,12 +406,8 @@ local newButton, updateAttr = (function()
         self:CallMethod('InsecureUpdateActionPage', currentPage, previousPage)
         for buttonid, button in ipairs(buttons) do
           local actionid = page .. buttonid
-          local attr = actionAttrs[actionid]
-          if attr then
-            self:RunFor(button, setFraction, actionid, attr)
-          else
-            self:RunFor(button, setFraction, nil, '')
-          end
+          local attr = actionAttrs[actionid] or ''
+          self:RunFor(button, setFraction, actionid, attr)
         end
       end
     ]=]
