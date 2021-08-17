@@ -405,7 +405,6 @@ local actionButtons = (function()
       if ev == 'PLAYER_LOGIN' then
         self:UnregisterEvent('PLAYER_LOGIN')
         self:RegisterEvent('UPDATE_BINDINGS')
-        return
       else
         local key = GetBindingKey('CLICK ' .. self:GetName() .. ':LeftButton')
         if key then
