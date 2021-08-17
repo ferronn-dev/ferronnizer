@@ -495,7 +495,7 @@ local updateAttr = (function()
       else
         type_, macrotext = 'macro', attr
       end
-      local button = buttons.icon[idx]
+      local button = buttons[currentPage == 'emote' and 'text' or 'icon'][idx]
       button:SetAttribute('type', type_)
       button:SetAttribute('action', action)
       button:SetAttribute('macrotext', macrotext)
@@ -517,8 +517,13 @@ local updateAttr = (function()
       local page = ...
       if page ~= currentPage then
         owner:CallMethod('InsecureUpdateActionPage', page)
+        if page == 'emote' or currentPage == 'emote' then
+          for _, button in ipairs(button[page == 'emote' and 'icon' or 'text']) do
+            button:Hide()
+          end
+        end
         currentPage = page
-        for buttonid in ipairs(buttons.icon) do
+        for buttonid in ipairs(buttons[page == 'emote' and 'text' or 'icon']) do
           owner:Run(updateActionButton, buttonid)
         end
       end
