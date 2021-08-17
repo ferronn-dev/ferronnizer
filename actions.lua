@@ -472,6 +472,11 @@ end)()
 local actionPage = 'invalid'
 local actionButtonState = {}
 
+local function getActionButton(idx)
+  local buttonPage = actionPage == 'emote' and 'text' or 'icon'
+  return actionButtons[buttonPage][idx]
+end
+
 local updateAttr = (function()
   local prefix = addonName .. 'ActionButton'
   local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
@@ -567,7 +572,7 @@ local updateAttr = (function()
       name = '',
       tooltip = { reset = true },
     }
-    updateButton(actionButtons.icon[idx], Mixin(reset, actionButtonState[actionPage][idx]))
+    updateButton(getActionButton(idx), Mixin(reset, actionButtonState[actionPage][idx]))
   end
   header.InsecureUpdateActionPage = function(_, newPage)
     actionPage = newPage
@@ -626,7 +631,7 @@ local function updateAction(pageName, idx, update)
   end
   Mixin(actionButtonState[pageName][idx], update)
   if pageName == actionPage then
-    updateButton(actionButtons.icon[idx], update)
+    updateButton(getActionButton(idx), update)
   end
 end
 
@@ -653,7 +658,7 @@ local function setupActionState(actions)
     return function()
       for idx, state in pairs(actionButtonState[actionPage]) do
         if state[name] then
-          updateButton(actionButtons.icon[idx], { [name] = state[name] })
+          updateButton(getActionButton(idx), { [name] = state[name] })
         end
       end
     end
