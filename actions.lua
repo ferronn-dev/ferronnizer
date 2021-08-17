@@ -490,7 +490,7 @@ local updateAttr = (function()
       else
         type_, macrotext = 'macro', attr
       end
-      local button = buttons[idx]
+      local button = buttons.icon[idx]
       button:SetAttribute('type', type_)
       button:SetAttribute('action', action)
       button:SetAttribute('macrotext', macrotext)
@@ -513,7 +513,7 @@ local updateAttr = (function()
       if page ~= currentPage then
         owner:CallMethod('InsecureUpdateActionPage', page)
         currentPage = page
-        for buttonid in ipairs(buttons) do
+        for buttonid in ipairs(buttons.icon) do
           owner:Run(updateActionButton, buttonid)
         end
       end
@@ -528,13 +528,21 @@ local updateAttr = (function()
     ]=]
   ]])
 
-  for idx, button in ipairs(actionButtons.icon) do
-    button:SetID(idx)
-    header:WrapScript(button, 'OnClick', 'return nil, true', [[
-      owner:Run(updatePageOnClick, self:GetID())
-    ]])
-    header:SetFrameRef('tmp', button)
-    header:Execute([[tinsert(buttons, self:GetFrameRef('tmp'))]])
+  for buttonPageName, buttons in pairs(actionButtons) do
+    header:Execute(([[
+      local buttonPageName = '%s'
+      buttons[buttonPageName] = buttons[buttonPageName] or newtable()
+    ]]):format(buttonPageName))
+    for idx, button in ipairs(buttons) do
+      button:SetID(idx)
+      header:WrapScript(button, 'OnClick', 'return nil, true', [[
+        owner:Run(updatePageOnClick, self:GetID())
+      ]])
+      header:SetFrameRef('tmp', button)
+      header:Execute(([[
+        tinsert(buttons['%s'], self:GetFrameRef('tmp'))
+      ]]):format(buttonPageName))
+    end
   end
 
   RegisterAttributeDriver(header, 'state-petexists', '[@pet,exists] true; false')
