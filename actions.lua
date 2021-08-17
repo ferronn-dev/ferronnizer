@@ -395,16 +395,16 @@ local newButton, updateAttr = (function()
       local pageName, idx, value = ...
       actionAttrs[pageName .. idx] = value
       if pageName == currentPage then
-        self:Run(setFraction, idx, value)
+        owner:Run(setFraction, idx, value)
       end
     ]=]
     updateActionPage = [=[
       local page = ...
       if page ~= currentPage then
-        self:CallMethod('InsecureUpdateActionPage', page)
+        owner:CallMethod('InsecureUpdateActionPage', page)
         currentPage = page
         for buttonid in ipairs(buttons) do
-          self:Run(setFraction, buttonid, actionAttrs[page .. buttonid] or '')
+          owner:Run(setFraction, buttonid, actionAttrs[page .. buttonid] or '')
         end
       end
     ]=]
@@ -413,7 +413,7 @@ local newButton, updateAttr = (function()
         local buttonid = ...
         local attr = actionAttrs[currentPage .. buttonid] or ''
         local page = attr:sub(1, 6) == '#page:' and attr:sub(7) or 'fraction'
-        self:Run(updateActionPage, page)
+        owner:Run(updateActionPage, page)
       end
     ]=]
   ]])
