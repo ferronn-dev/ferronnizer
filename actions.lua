@@ -237,7 +237,9 @@ end)()
 local updateButton = (function()
   local lang = {
     color = function(button, color)
-      button.icon:SetVertexColor(color, color, color)
+      if button.icon then
+        button.icon:SetVertexColor(color, color, color)
+      end
     end,
     cooldown = (function()
       local cooldownLang = {
@@ -255,9 +257,11 @@ local updateButton = (function()
         end,
       }
       return function(button, prog)
-        local k, v = next(prog)
-        local start, duration, enable, modRate = cooldownLang[k](v)
-        CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
+        if button.cooldown then
+          local k, v = next(prog)
+          local start, duration, enable, modRate = cooldownLang[k](v)
+          CooldownFrame_Set(button.cooldown, start, duration, enable, false, modRate)
+        end
       end
     end)(),
     count = (function()
@@ -276,16 +280,20 @@ local updateButton = (function()
         end,
       }
       return function(button, prog)
-        local k, v = next(prog)
-        local count = countLang[k](v)
-        button.Count:SetText(count < 0 and '' or count > 9999 and '*' or tostring(count))
+        if button.Count then
+          local k, v = next(prog)
+          local count = countLang[k](v)
+          button.Count:SetText(count < 0 and '' or count > 9999 and '*' or tostring(count))
+        end
       end
     end)(),
     icon = function(button, icon)
-      button.icon:SetTexture(icon)
+      if button.icon then
+        button.icon:SetTexture(icon)
+      end
     end,
     name = function(button, name)
-      button.Name:SetText(name)
+      (button.Name or button.Text):SetText(name)
     end,
     tooltip = (function()
       local tooltipLang = {
@@ -337,7 +345,9 @@ local updateButton = (function()
           end
         end
         return function(foo, button)
-          button.icon:SetVertexColor(getColor(foo))
+          if button.icon then
+            button.icon:SetVertexColor(getColor(foo))
+          end
         end
       end
       local updateLang = {
@@ -722,7 +732,21 @@ local function makeActions()
     return page, extra
   end)()
   return Mixin(extraPages, {
-    emote = {},
+    emote = (function()
+      local emotes = {
+        'lol',
+        'thank',
+        'cheer',
+      }
+      local page = {}
+      for _, emote in ipairs(emotes) do
+        table.insert(page, {
+          actionText = emote,
+          macro = '/' .. emote,
+        })
+      end
+      return page
+    end)(),
     fraction = fractionPage,
     pet = (function()
       local page = {}
