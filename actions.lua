@@ -458,8 +458,9 @@ local actionButtons = (function()
           addonName .. 'ActionTextButton' .. idx,
           UIParent,
           'UIPanelButtonTemplate, SecureActionButtonTemplate')
-      button.Text:SetText('Action ' .. idx)
       attachToTextGrid(button, row, col)
+      button.Text:SetText('Action ' .. idx)
+      button:Hide()
       table.insert(textButtons, button)
     end
   end
