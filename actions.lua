@@ -488,7 +488,8 @@ local newButton, updateAttr = (function()
     return button
   end
 
-  local function updateAttr(actionid, attr)
+  local function updateAttr(pageName, idx, attr)
+    local actionid = pageName .. idx
     header:Execute(([[self:Run(updateActionAttr, '%s', [==[%s]==])]]):format(actionid, attr))
   end
 
@@ -497,27 +498,31 @@ end)()
 
 local maybeSetAttr, drainPendingAttrs = (function()
   local pendingAttrs = {}
-  local function maybeSetAttr(actionid, attr)
+  local function maybeSetAttr(pageName, idx, attr)
     if InCombatLockdown() then
-      pendingAttrs[actionid] = attr
+      pendingAttrs[pageName] = pendingAttrs[pageName] or {}
+      pendingAttrs[pageName][idx] = attr
     else
-      updateAttr(actionid, attr)
+      updateAttr(pageName, idx, attr)
     end
   end
   local function drainPendingAttrs()
-    for actionid, attr in pairs(pendingAttrs) do
-      updateAttr(actionid, attr)
+    for pageName, pageAttrs in pairs(pendingAttrs) do
+      for idx, attr in pairs(pageAttrs) do
+        updateAttr(pageName, idx, attr)
+      end
+      wipe(pageAttrs)
     end
-    wipe(pendingAttrs)
   end
   return maybeSetAttr, drainPendingAttrs
 end)()
 
-local function updateAction(actionid, update)
+local function updateAction(pageName, idx, update)
   if update.attr then
-    maybeSetAttr(actionid, update.attr)
+    maybeSetAttr(pageName, idx, update.attr)
     update.attr = nil
   end
+  local actionid = pageName .. idx
   Mixin(actionButtonState[actionid], update)
   updateButton(actionButtons[actionid], update)
 end
@@ -530,13 +535,12 @@ local function setupActionState(actions)
   end
   for pageName, pageActions in pairs(actions) do
     for idx, action in pairs(pageActions) do
-      local actionid = pageName .. idx
-      actionButtonState[actionid] = {}
+      actionButtonState[pageName .. idx] = {}
       local init, tyhandlers = makeAction(action)
-      updateAction(actionid, init)
+      updateAction(pageName, idx, init)
       for ev, handler in pairs(tyhandlers or {}) do
         addHandler(ev, function(...)
-          return updateAction(actionid, handler(...))
+          return updateAction(pageName, idx, handler(...))
         end)
       end
     end
