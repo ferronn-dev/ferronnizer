@@ -380,21 +380,22 @@ local newButton, updateAttr = (function()
       else
         type_, macrotext = 'macro', value
       end
-      self:SetAttribute('type', type_)
-      self:SetAttribute('action', action)
-      self:SetAttribute('macrotext', macrotext)
+      local button = buttons[idx]
+      button:SetAttribute('type', type_)
+      button:SetAttribute('action', action)
+      button:SetAttribute('macrotext', macrotext)
       if value ~= '' then
-        self:CallMethod('Refresh', currentPage, idx)
-        self:Show()
+        button:CallMethod('Refresh', currentPage, idx)
+        button:Show()
       else
-        self:Hide()
+        button:Hide()
       end
     ]=]
     updateActionAttr = [=[
       local pageName, idx, value = ...
       actionAttrs[pageName .. idx] = value
       if pageName == currentPage then
-        self:RunFor(buttons[idx], setFraction, idx, value)
+        self:Run(setFraction, idx, value)
       end
     ]=]
     updateActionPage = [=[
@@ -402,8 +403,8 @@ local newButton, updateAttr = (function()
       if page ~= currentPage then
         self:CallMethod('InsecureUpdateActionPage', page)
         currentPage = page
-        for buttonid, button in ipairs(buttons) do
-          self:RunFor(button, setFraction, buttonid, actionAttrs[page .. buttonid] or '')
+        for buttonid in ipairs(buttons) do
+          self:Run(setFraction, buttonid, actionAttrs[page .. buttonid] or '')
         end
       end
     ]=]
