@@ -442,7 +442,7 @@ local actionButtons = (function()
     for col = 1, 12 do
       local button = CreateFrame(
           'CheckButton',
-          addonName .. 'ActionButton' .. (#iconButtons + 1),
+          addonName .. 'ActionIconButton' .. (#iconButtons + 1),
           UIParent,
           'ActionButtonTemplate, SecureActionButtonTemplate')
       attachToIconGrid(button, row, col)
@@ -494,6 +494,7 @@ local updateAttr = (function()
   local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
   header:Execute([[
     buttons = newtable()
+    keybinders = newtable()
     actionAttrs = newtable()
     currentPage = 'invalid'
     updateActionButton = [=[
@@ -529,13 +530,16 @@ local updateAttr = (function()
       local page = ...
       if page ~= currentPage then
         owner:CallMethod('InsecureUpdateActionPage', page)
-        if page == 'emote' or currentPage == 'emote' then
-          for _, button in ipairs(buttons[page == 'emote' and 'icon' or 'text']) do
+        local oldButtonPage = currentPage == 'emote' and 'text' or 'icon'
+        local newButtonPage = page == 'emote' and 'text' or 'icon'
+        if oldButtonPage ~= newButtonPage then
+          for _, button in ipairs(buttons[oldButtonPage]) do
             button:Hide()
           end
         end
         currentPage = page
-        for buttonid in ipairs(buttons[page == 'emote' and 'text' or 'icon']) do
+        for buttonid, button in ipairs(buttons[newButtonPage]) do
+          keybinders[buttonid]:SetAttribute('clickbutton', button:GetName())
           owner:Run(updateActionButton, buttonid)
         end
       end
@@ -566,6 +570,21 @@ local updateAttr = (function()
         tinsert(buttons['%s'], self:GetFrameRef('tmp'))
       ]]):format(buttonPageName))
     end
+  end
+
+  local len = 0
+  for _, buttons in pairs(actionButtons) do
+    len = math.max(len, #buttons)
+  end
+  for i = 1, len do
+    local button = CreateFrame(
+        'Button',
+        addonName .. 'ActionButton' .. i,
+        nil,
+        'SecureActionButtonTemplate')
+    button:SetAttribute('type', 'click')
+    header:SetFrameRef('tmp', button)
+    header:Execute([[tinsert(keybinders, self:GetFrameRef('tmp'))]])
   end
 
   RegisterAttributeDriver(header, 'state-petexists', '[@pet,exists] true; false')
