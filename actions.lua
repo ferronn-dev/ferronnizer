@@ -449,7 +449,6 @@ local actionButtons = (function()
       for k, v in pairs(scripts) do
         button:SetScript(k, v)
       end
-      button:Hide()
       table.insert(iconButtons, button)
     end
   end
@@ -463,8 +462,6 @@ local actionButtons = (function()
           UIParent,
           'UIPanelButtonTemplate, SecureActionButtonTemplate')
       attachToTextGrid(button, row, col)
-      button.Text:SetText('Action ' .. idx)
-      button:Hide()
       table.insert(textButtons, button)
     end
   end
@@ -549,6 +546,7 @@ local updateAttr = (function()
       buttons[buttonPageName] = buttons[buttonPageName] or newtable()
     ]]):format(buttonPageName))
     for idx, button in ipairs(buttons) do
+      button:Hide()
       button:SetID(idx)
       header:WrapScript(button, 'OnClick', 'return nil, true', [[
         owner:Run(updatePageOnClick, self:GetID())
