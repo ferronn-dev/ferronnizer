@@ -103,6 +103,16 @@ local makeAction = (function()
     end,
     drink = consume(G.DrinkDB, G.ManaPotionDB, 32902),
     eat = consume(G.FoodDB, G.HealthPotionDB, 32905),
+    emote = function(action)
+      local emote = action.emote
+      local keyName = 'CLICK ' .. addonName .. 'ActionButton' .. action.index .. ':LeftButton'
+      local function update()
+        local key = GetBindingKey(keyName)
+        local keystr = key and (LibStub('LibKeyBound-1.0'):ToShortKey(key) .. ' - ') or ''
+        return { name = keystr .. emote }
+      end
+      return Mixin(update(), { attr = '/' .. emote }), { UPDATE_BINDINGS = update }
+    end,
     invslot = function(action)
       local slot = action.invslot
       local function update()
@@ -737,10 +747,10 @@ local function makeActions()
         'cheer',
       }
       local page = {}
-      for _, emote in ipairs(emotes) do
+      for i, emote in ipairs(emotes) do
         table.insert(page, {
-          actionText = emote,
-          macro = '/' .. emote,
+          emote = emote,
+          index = i,
         })
       end
       return page
