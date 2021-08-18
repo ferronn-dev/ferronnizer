@@ -539,8 +539,12 @@ local updateAttr = (function()
           end
         end
         currentPage = page
+        for i, keybinder in ipairs(keybinders) do
+          local button = buttons[newButtonPage][i]
+          local macrotext = button and ('/click ' .. button:GetName()) or ''
+          keybinder:SetAttribute('macrotext', macrotext)
+        end
         for buttonid, button in ipairs(buttons[newButtonPage]) do
-          keybinders[buttonid]:SetAttribute('clickbutton', button:GetName())
           owner:Run(updateActionButton, buttonid)
         end
       end
@@ -583,7 +587,7 @@ local updateAttr = (function()
         addonName .. 'ActionButton' .. i,
         nil,
         'SecureActionButtonTemplate')
-    button:SetAttribute('type', 'click')
+    button:SetAttribute('type', 'macro')
     header:SetFrameRef('tmp', button)
     header:Execute([[tinsert(keybinders, self:GetFrameRef('tmp'))]])
   end

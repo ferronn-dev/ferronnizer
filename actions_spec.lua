@@ -32,7 +32,7 @@ describe('Actions', function()
         spell = 'Greater Heal',
       },
     })
-    wow.env.mooActionButton1:Click()
+    wow.env.mooActionIconButton1:Click()
     local macro = (
         '/dismount\n/stand\n'..
         '/cast [@mouseover,help,nodead][] Greater Heal(Rank 5)')
@@ -48,16 +48,16 @@ describe('Actions', function()
 
   it('makes the right amount of buttons', function()
     init(wow, {})
-    assert.Not.Nil(wow.env.mooActionButton1)
-    assert.Not.Nil(wow.env.mooActionButton48)
-    assert.Nil(wow.env.mooActionButton49)
+    assert.Not.Nil(wow.env.mooActionIconButton1)
+    assert.Not.Nil(wow.env.mooActionIconButton48)
+    assert.Nil(wow.env.mooActionIconButton49)
   end)
 
   it('invokes macros on click', function()
     init(wow, {
       [34] = { buff = true },
     })
-    wow.env.mooActionButton34:Click()
+    wow.env.mooActionIconButton34:Click()
     local macro = '/click mooBuffButton'
     assert.same({{ macro = macro }}, wow.state.commands)
   end)
@@ -85,7 +85,7 @@ describe('Actions', function()
         spell = 'Lay on Hands',
       },
     })
-    wow.env.mooActionButton41:Click()
+    wow.env.mooActionIconButton41:Click()
     local macro = (
         '/dismount\n/stand\n/stopcasting\n'..
         '/cast [@mouseover,help,nodead][] Lay on Hands')
@@ -165,10 +165,10 @@ describe('Actions', function()
     })
     assert.True(wow.env.mooActionIconButton1:IsShown())
     assert.False(wow.env.mooActionIconButton2:IsShown())
-    wow.env.mooActionButton1:Click()
+    wow.env.mooActionIconButton1:Click()
     assert.False(wow.env.mooActionIconButton1:IsShown())
     assert.True(wow.env.mooActionIconButton2:IsShown())
-    wow.env.mooActionButton2:Click()
+    wow.env.mooActionIconButton2:Click()
     assert.True(wow.env.mooActionIconButton1:IsShown())
     assert.False(wow.env.mooActionIconButton2:IsShown())
     assert.same({
