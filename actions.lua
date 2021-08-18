@@ -422,7 +422,8 @@ local actionButtons = (function()
       end
     end,
     OnEvent = function(self)
-      local key = GetBindingKey('CLICK ' .. self:GetName() .. ':LeftButton')
+      local binder = addonName .. 'ActionButton' .. self:GetID()
+      local key = GetBindingKey('CLICK ' .. binder .. ':LeftButton')
       if key then
         self.HotKey:SetText(LibStub('LibKeyBound-1.0'):ToShortKey(key))
         self.HotKey:Show()
