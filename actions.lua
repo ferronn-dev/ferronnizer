@@ -203,6 +203,7 @@ local makeAction = (function()
       end
       local init = Mixin(update(), {
         attr = '#petaction:' .. num,
+        cooldown = { petaction = num },
         tooltip = { petaction = num },
       })
       return init, { UNIT_PET = update }
@@ -258,6 +259,9 @@ local updateButton = (function()
         end,
         item = function(item)
           return GetItemCooldown(item)
+        end,
+        petaction = function(petaction)
+          return GetPetActionCooldown(petaction)
         end,
         reset = function()
           return 0, 0, 0
