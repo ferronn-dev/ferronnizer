@@ -773,6 +773,17 @@ local function makeActions()
         'lol',
         'thank',
         'cheer',
+        'wave',
+        'hello',
+        'train',
+        'rude',
+        'congratulate',
+        'moo',
+        'oom',
+        'attacktarget',
+        'charge',
+        'mourn',
+        'tickle',
       }
       local page = {}
       for i, emote in ipairs(emotes) do
