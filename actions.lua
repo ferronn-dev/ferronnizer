@@ -494,7 +494,7 @@ local function getActionButton(idx)
   return actionButtons[buttonPage][idx]
 end
 
-local updateAttr = (function()
+local function setupHeader(actions)
   local prefix = addonName .. 'ActionButton'
   local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
   header:Execute([[
@@ -629,17 +629,13 @@ local updateAttr = (function()
     self:Execute([[self:Run(updateActionPage, 'fraction')]])
   end)
 
-  local switchers = {
-    emote = 'Emote',
-    pet = 'Pet',
-    profession = 'Profession',
-  }
-  for k, v in pairs(switchers) do
-    local switch = CreateFrame('Button', prefix .. v .. 'Switcher', header, 'SecureActionButtonTemplate')
+  for page in pairs(actions) do
+    local name = page:gsub('^%l', string.upper)
+    local switch = CreateFrame('Button', prefix .. name .. 'Switcher', header, 'SecureActionButtonTemplate')
     header:WrapScript(switch, 'OnClick', 'return nil, true', ([=[
       local page = '%s'
       owner:Run(updateActionPage, currentPage == page and 'fraction' or page)
-    ]=]):format(k))
+    ]=]):format(page))
   end
 
   local function updateAttr(pageName, idx, attr)
@@ -647,41 +643,40 @@ local updateAttr = (function()
   end
 
   return updateAttr
-end)()
-
-local maybeSetAttr, drainPendingAttrs = (function()
-  local pendingAttrs = {}
-  local function maybeSetAttr(pageName, idx, attr)
-    if InCombatLockdown() then
-      pendingAttrs[pageName] = pendingAttrs[pageName] or {}
-      pendingAttrs[pageName][idx] = attr
-    else
-      updateAttr(pageName, idx, attr)
-    end
-  end
-  local function drainPendingAttrs()
-    for pageName, pageAttrs in pairs(pendingAttrs) do
-      for idx, attr in pairs(pageAttrs) do
-        updateAttr(pageName, idx, attr)
-      end
-      wipe(pageAttrs)
-    end
-  end
-  return maybeSetAttr, drainPendingAttrs
-end)()
-
-local function updateAction(pageName, idx, update)
-  if update.attr then
-    maybeSetAttr(pageName, idx, update.attr)
-    update.attr = nil
-  end
-  Mixin(actionButtonState[pageName][idx], update)
-  if pageName == actionPage then
-    updateButton(getActionButton(idx), update)
-  end
 end
 
-local function setupActionState(actions)
+local function setupActions(actions)
+  local updateAttr = setupHeader(actions)
+  local maybeSetAttr, drainPendingAttrs = (function()
+    local pendingAttrs = {}
+    local function maybeSetAttr(pageName, idx, attr)
+      if InCombatLockdown() then
+        pendingAttrs[pageName] = pendingAttrs[pageName] or {}
+        pendingAttrs[pageName][idx] = attr
+      else
+        updateAttr(pageName, idx, attr)
+      end
+    end
+    local function drainPendingAttrs()
+      for pageName, pageAttrs in pairs(pendingAttrs) do
+        for idx, attr in pairs(pageAttrs) do
+          updateAttr(pageName, idx, attr)
+        end
+        wipe(pageAttrs)
+      end
+    end
+    return maybeSetAttr, drainPendingAttrs
+  end)()
+  local function updateAction(pageName, idx, update)
+    if update.attr then
+      maybeSetAttr(pageName, idx, update.attr)
+      update.attr = nil
+    end
+    Mixin(actionButtonState[pageName][idx], update)
+    if pageName == actionPage then
+      updateButton(getActionButton(idx), update)
+    end
+  end
   local handlers = {}
   local function addHandler(ev, handler)
     handlers[ev] = handlers[ev] or {}
@@ -836,6 +831,6 @@ end
 G.Eventer({
   PLAYER_LOGIN = function()
     G.ReparentFrame(MainMenuBar)
-    setupActionState(makeActions())
+    setupActions(makeActions())
   end,
 })
