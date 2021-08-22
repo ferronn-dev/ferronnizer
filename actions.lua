@@ -732,38 +732,46 @@ local function setupActions(actions, defaultPage)
 end
 
 local function makeActions()
+  local charActions = G.Characters[UnitName('player')..'-'..GetRealmName()]
   local fractionPage, extraPages = (function()
     local page, extra = {}, {}
-    local charActions = G.Characters[UnitName('player')..'-'..GetRealmName()]
-    if charActions then
-      for i, v in pairs(charActions) do
-        if v.page then
-          local pageName = 'fraction' .. i .. 'x'
-          page[i] = Mixin({}, v, { page = pageName })
-          local subpage = {}
-          for j, x in pairs(v.page) do
-            subpage[j] = x
-          end
-          extra[pageName] = subpage
-        elseif v.stopcasting and not v.spell then
-          page[i] = {
-            actionText = 'Stop',
-            macro = '/stopcasting',
-            texture = 135768,
-            tooltip = 'Stop Casting',
-          }
-        else
-          page[i] = v
+    for i, v in pairs(charActions or {}) do
+      if v.page then
+        local pageName = 'fraction' .. i .. 'x'
+        page[i] = Mixin({}, v, { page = pageName })
+        local subpage = {}
+        for j, x in pairs(v.page) do
+          subpage[j] = x
         end
-      end
-    else
-      for i = 1, 48 do
-        table.insert(page, { action = i })
+        extra[pageName] = subpage
+      elseif v.stopcasting and not v.spell then
+        page[i] = {
+          actionText = 'Stop',
+          macro = '/stopcasting',
+          texture = 135768,
+          tooltip = 'Stop Casting',
+        }
+      else
+        page[i] = v
       end
     end
     return page, extra
   end)()
   local actions = Mixin(extraPages, {
+    action1 = (function()
+      local page = {}
+      for i = 1, 48 do
+        table.insert(page, { action = i })
+      end
+      return page
+    end)(),
+    action2 = (function()
+      local page = {}
+      for i = 49, 72 do
+        table.insert(page, { action = i })
+      end
+      return page
+    end)(),
     emote = (function()
       local emotes = {
         'lol',
@@ -827,7 +835,7 @@ local function makeActions()
       return page
     end)(),
   })
-  local defaultPage = 'fraction'
+  local defaultPage = charActions and 'fraction' or 'action1'
   return actions, defaultPage
 end
 
