@@ -502,9 +502,9 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
     buttons = newtable()
     keybinders = newtable()
     actionAttrs = newtable()
-    currentPage = 'invalid'
     updateActionButton = [=[
       local idx = ...
+      local currentPage = owner:GetAttribute('fractionpage')
       local attr = actionAttrs[currentPage .. idx] or ''
       local type_, action, macrotext
       if attr:sub(1, 8) == '#action:' then
@@ -528,12 +528,13 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
     updateActionAttr = [=[
       local pageName, idx, attr = ...
       actionAttrs[pageName .. idx] = attr
-      if pageName == currentPage then
+      if pageName == owner:GetAttribute('fractionpage') then
         owner:Run(updateActionButton, idx)
       end
     ]=]
     updateActionPage = [=[
       local page = ...
+      local currentPage = owner:GetAttribute('fractionpage')
       if page ~= currentPage then
         owner:CallMethod('InsecureUpdateActionPage', page)
         local oldButtonPage = currentPage == 'emote' and 'text' or 'icon'
@@ -543,7 +544,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
             button:Hide()
           end
         end
-        currentPage = page
+        owner:SetAttribute('fractionpage', page)
         for i, keybinder in ipairs(keybinders) do
           local button = buttons[newButtonPage][i]
           local macrotext = button and ('/click ' .. button:GetName()) or ''
@@ -555,6 +556,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
       end
     ]=]
     updatePageOnClick = [=[
+      local currentPage = owner:GetAttribute('fractionpage')
       if currentPage ~= 'pet' then
         local buttonid = ...
         local attr = actionAttrs[currentPage .. buttonid] or ''
