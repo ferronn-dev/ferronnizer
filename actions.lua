@@ -383,7 +383,10 @@ local updateButton = (function()
   end
 end)()
 
-local actionButtons = (function()
+local actionPage = 'invalid'
+local actionButtonState = {}
+
+local function makeActionButtons()
   local attachToIconGrid, attachToTextGrid = (function()
     local width, height = 36, 18
     local frames = {}
@@ -480,21 +483,18 @@ local actionButtons = (function()
       table.insert(textButtons, button)
     end
   end
-  return {
+  local actionButtons = {
     icon = iconButtons,
     text = textButtons,
   }
-end)()
-
-local actionPage = 'invalid'
-local actionButtonState = {}
-
-local function getActionButton(idx)
-  local buttonPage = actionPage == 'emote' and 'text' or 'icon'
-  return actionButtons[buttonPage][idx]
+  local function getActionButton(idx)
+    local buttonPage = actionPage == 'emote' and 'text' or 'icon'
+    return actionButtons[buttonPage][idx]
+  end
+  return actionButtons, getActionButton
 end
 
-local function setupHeader(actions, defaultPage)
+local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
   local prefix = addonName .. 'ActionButton'
   local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
   header:Execute(([[defaultPage = '%s']]):format(defaultPage))
@@ -646,8 +646,8 @@ local function setupHeader(actions, defaultPage)
   return updateAttr
 end
 
-local function setupActions(actions, defaultPage)
-  local updateAttr = setupHeader(actions, defaultPage)
+local function setupActions(actions, defaultPage, actionButtons, getActionButton)
+  local updateAttr = setupHeader(actions, defaultPage, actionButtons, getActionButton)
   local maybeSetAttr, drainPendingAttrs = (function()
     local pendingAttrs = {}
     local function maybeSetAttr(pageName, idx, attr)
@@ -843,6 +843,8 @@ end
 G.Eventer({
   PLAYER_LOGIN = function()
     G.ReparentFrame(MainMenuBar)
-    setupActions(makeActions())
+    local actions, defaultPage = makeActions()
+    local actionButtons, getActionButton = makeActionButtons()
+    setupActions(actions, defaultPage, actionButtons, getActionButton)
   end,
 })
