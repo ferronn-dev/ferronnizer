@@ -494,9 +494,10 @@ local function getActionButton(idx)
   return actionButtons[buttonPage][idx]
 end
 
-local function setupHeader(actions)
+local function setupHeader(actions, defaultPage)
   local prefix = addonName .. 'ActionButton'
   local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
+  header:Execute(([[defaultPage = '%s']]):format(defaultPage))
   header:Execute([[
     buttons = newtable()
     keybinders = newtable()
@@ -557,7 +558,7 @@ local function setupHeader(actions)
       if currentPage ~= 'pet' then
         local buttonid = ...
         local attr = actionAttrs[currentPage .. buttonid] or ''
-        local page = attr:sub(1, 6) == '#page:' and attr:sub(7) or 'fraction'
+        local page = attr:sub(1, 6) == '#page:' and attr:sub(7) or defaultPage
         owner:Run(updateActionPage, page)
       end
     ]=]
@@ -599,13 +600,13 @@ local function setupHeader(actions)
   RegisterAttributeDriver(header, 'state-petexists', '[@pet,exists] true; false')
   header:SetAttribute('_onstate-petexists', [=[
     -- If we just got a pet and it's not a hunter/warlock pet, switch to the pet page.
-    -- If we just lost a pet and we're on the pet page, go back to the fraction page.
+    -- If we just lost a pet and we're on the pet page, go back to the default page.
     local petExists = newstate == 'true'
     local creatureFamily, petName = PlayerPetSummary()
     if petExists and not creatureFamily and petName ~= 'Shadowfiend' then
       owner:Run(updateActionPage, 'pet')
     elseif not petExists and currentPage == 'pet' then
-      owner:Run(updateActionPage, 'fraction')
+      owner:Run(updateActionPage, defaultPage)
     end
   ]=])
 
@@ -626,7 +627,7 @@ local function setupHeader(actions)
 
   header:RegisterEvent('PLAYER_ENTERING_WORLD')
   header:SetScript('OnEvent', function(self)
-    self:Execute([[self:Run(updateActionPage, 'fraction')]])
+    self:Execute([[self:Run(updateActionPage, defaultPage)]])
   end)
 
   for page in pairs(actions) do
@@ -634,7 +635,7 @@ local function setupHeader(actions)
     local switch = CreateFrame('Button', prefix .. name .. 'Switcher', header, 'SecureActionButtonTemplate')
     header:WrapScript(switch, 'OnClick', 'return nil, true', ([=[
       local page = '%s'
-      owner:Run(updateActionPage, currentPage == page and 'fraction' or page)
+      owner:Run(updateActionPage, currentPage == page and defaultPage or page)
     ]=]):format(page))
   end
 
@@ -645,8 +646,8 @@ local function setupHeader(actions)
   return updateAttr
 end
 
-local function setupActions(actions)
-  local updateAttr = setupHeader(actions)
+local function setupActions(actions, defaultPage)
+  local updateAttr = setupHeader(actions, defaultPage)
   local maybeSetAttr, drainPendingAttrs = (function()
     local pendingAttrs = {}
     local function maybeSetAttr(pageName, idx, attr)
@@ -762,7 +763,7 @@ local function makeActions()
     end
     return page, extra
   end)()
-  return Mixin(extraPages, {
+  local actions = Mixin(extraPages, {
     emote = (function()
       local emotes = {
         'lol',
@@ -826,6 +827,8 @@ local function makeActions()
       return page
     end)(),
   })
+  local defaultPage = 'fraction'
+  return actions, defaultPage
 end
 
 G.Eventer({
