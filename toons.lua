@@ -1,2 +1,3 @@
 local _, G = ...
 G.AddCharacter = nil
+G.AddClassActionSpec = nil

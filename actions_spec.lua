@@ -255,4 +255,11 @@ describe('Actions', function()
     assert.Not.Nil(wow.env.mooActionButtonPetSwitcher)
     assert.Not.Nil(wow.env.mooActionButtonProfessionSwitcher)
   end)
+
+  it('honors class action specs', function()
+    wow.addon.ClassActionSpecs['PALADIN'] = { [37] = { buff = true } }
+    wow.state:SendEvent('PLAYER_LOGIN')
+    wow.state:SendEvent('PLAYER_ENTERING_WORLD')
+    assert.True(wow.env.mooActionIconButton37:IsShown())
+  end)
 end)

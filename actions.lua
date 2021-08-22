@@ -732,10 +732,11 @@ local function setupActions(actions, defaultPage)
 end
 
 local function makeActions()
-  local charActions = G.Characters[UnitName('player')..'-'..GetRealmName()]
   local fractionPage, extraPages = (function()
+    local charActions = G.Characters[UnitName('player')..'-'..GetRealmName()]
+    local classActions = G.ClassActionSpecs[UnitClassBase('player')]
     local page, extra = {}, {}
-    for i, v in pairs(charActions or {}) do
+    for i, v in pairs(charActions or classActions or {}) do
       if v.page then
         local pageName = 'fraction' .. i .. 'x'
         page[i] = Mixin({}, v, { page = pageName })
@@ -835,7 +836,7 @@ local function makeActions()
       return page
     end)(),
   })
-  local defaultPage = charActions and 'fraction' or 'action1'
+  local defaultPage = next(fractionPage) and 'fraction' or 'action1'
   return actions, defaultPage
 end
 
