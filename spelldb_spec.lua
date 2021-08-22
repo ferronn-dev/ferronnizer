@@ -25,6 +25,17 @@ describe('spell db', function()
         end
       end
     end
+    for fullname, actions in pairs(wow.addon.ClassActionSpecs) do
+      for _, action in pairs(actions) do
+        if action.spell then
+          if knownBad[action.spell] then
+            seenBad[action.spell] = true
+          elseif not wow.addon.SpellDB[action.spell] then
+            error(fullname .. ': ' .. action.spell)
+          end
+        end
+      end
+    end
     assert.same(knownBad, seenBad)
   end)
 end)

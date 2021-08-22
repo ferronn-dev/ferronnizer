@@ -1,5 +1,5 @@
 local _, G = ...
-G.AddCharacter('Vanilla', 'Kewmelt-Westfall', {
+G.AddClassActionSpec('TBC', 'MAGE', {
   [1] = {
     spell = 'Frostbolt',
   },
@@ -52,7 +52,7 @@ G.AddCharacter('Vanilla', 'Kewmelt-Westfall', {
     spell = 'Dampen Magic',
   },
   [17] = {
-    spell = 'Detect Magic',
+    spell = 'Icy Veins',
   },
   [18] = {
     spell = 'Escape Artist',
@@ -93,6 +93,8 @@ G.AddCharacter('Vanilla', 'Kewmelt-Westfall', {
       [1] = { spell = 'Teleport: Stormwind' },
       [2] = { spell = 'Teleport: Ironforge' },
       [3] = { spell = 'Teleport: Darnassus' },
+      [4] = { spell = 'Teleport: Exodar' },
+      [5] = { spell = 'Teleport: Theramore' },
     },
     reagent = 17031,
     texture = 135757,
@@ -103,6 +105,8 @@ G.AddCharacter('Vanilla', 'Kewmelt-Westfall', {
       [1] = { spell = 'Portal: Stormwind' },
       [2] = { spell = 'Portal: Ironforge' },
       [3] = { spell = 'Portal: Darnassus' },
+      [4] = { spell = 'Portal: Exodar' },
+      [5] = { spell = 'Portal: Theramore' },
     },
     reagent = 17032,
     texture = 135743,

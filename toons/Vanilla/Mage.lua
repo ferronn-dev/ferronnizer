@@ -1,5 +1,5 @@
 local _, G = ...
-G.AddCharacter('Vanilla', 'Pixli-Westfall', {
+G.AddClassActionSpec('Vanilla', 'MAGE', {
   [1] = {
     spell = 'Frostbolt',
   },
@@ -32,6 +32,9 @@ G.AddCharacter('Vanilla', 'Pixli-Westfall', {
   },
   [11] = {
     spell = 'Scorch',
+  },
+  [12] = {
+    spell = 'Cone of Cold',
   },
   [13] = {
     mouseover = true,
@@ -66,6 +69,12 @@ G.AddCharacter('Vanilla', 'Pixli-Westfall', {
   [22] = {
     spell = 'Evocation',
   },
+  [23] = {
+    spell = 'Ice Barrier',
+  },
+  [24] = {
+    spell = 'Ice Block',
+  },
   [25] = {
     spell = 'Mana Shield',
   },
@@ -78,6 +87,26 @@ G.AddCharacter('Vanilla', 'Pixli-Westfall', {
   [28] = {
     spell = 'Counterspell',
     stopcasting = true,
+  },
+  [31] = {
+    page = {
+      [1] = { spell = 'Teleport: Stormwind' },
+      [2] = { spell = 'Teleport: Ironforge' },
+      [3] = { spell = 'Teleport: Darnassus' },
+    },
+    reagent = 17031,
+    texture = 135757,
+    tooltip = 'Teleport',
+  },
+  [32] = {
+    page = {
+      [1] = { spell = 'Portal: Stormwind' },
+      [2] = { spell = 'Portal: Ironforge' },
+      [3] = { spell = 'Portal: Darnassus' },
+    },
+    reagent = 17032,
+    texture = 135743,
+    tooltip = 'Portal',
   },
   [34] = {
     buff = true,
