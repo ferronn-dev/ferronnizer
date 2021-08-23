@@ -266,7 +266,7 @@ describe('Actions', function()
     assert.True(wow.env.mooActionIconButton37:IsShown())
   end)
 
-  it('handles healsets', function()
+  describe('healset type', function()
     local slowHeals = {
       ranks = { 1.0, 0.7, 0.4 },
       spells = { 'Greater Heal', 'Heal', 'Lesser Heal' },
@@ -275,13 +275,19 @@ describe('Actions', function()
       ranks = { 1.0, 0.3, 0 },
       spells = { 'Flash Heal' },
     }
-    init(wow, {
+    local actionSpec = {
       { healset = slowHeals, rank = 3 },
       { healset = slowHeals, rank = 2 },
       { healset = slowHeals, rank = 1 },
       { healset = fastHeals, rank = 3 },
       { healset = fastHeals, rank = 2 },
       { healset = fastHeals, rank = 1 },
-    })
+    }
+    it('defaults to empty', function()
+      init(wow, actionSpec)
+      for i = 1, 6 do
+        assert.False(wow.env['mooActionIconButton' .. i]:IsShown())
+      end
+    end)
   end)
 end)
