@@ -34,26 +34,26 @@ deps:
   - playerinfo.lua
   toons.lua:
   - toons/TBC/Chamoi-Westfall.lua
-  - toons/TBC/Kewhand-Westfall.lua
   - toons/TBC/Mage.lua
+  - toons/TBC/Paladin.lua
   - toons/TBC/Shydove-Westfall.lua
   - toons/Vanilla/Chamoi-Westfall.lua
-  - toons/Vanilla/Kewhand-Westfall.lua
   - toons/Vanilla/Mage.lua
+  - toons/Vanilla/Paladin.lua
   - toons/Vanilla/Shydove-Westfall.lua
   toons/TBC/Chamoi-Westfall.lua:
   - tooninit.lua
-  toons/TBC/Kewhand-Westfall.lua:
-  - tooninit.lua
   toons/TBC/Mage.lua:
+  - tooninit.lua
+  toons/TBC/Paladin.lua:
   - tooninit.lua
   toons/TBC/Shydove-Westfall.lua:
   - tooninit.lua
   toons/Vanilla/Chamoi-Westfall.lua:
   - tooninit.lua
-  toons/Vanilla/Kewhand-Westfall.lua:
-  - tooninit.lua
   toons/Vanilla/Mage.lua:
+  - tooninit.lua
+  toons/Vanilla/Paladin.lua:
   - tooninit.lua
   toons/Vanilla/Shydove-Westfall.lua:
   - tooninit.lua

@@ -1,4 +1,3 @@
-local lfs = require('lfs')
 describe('Actions', function()
 
   local function init(wow, actions)
@@ -92,32 +91,26 @@ describe('Actions', function()
     assert.same({{ macro = macro }}, wow.state.commands)
   end)
 
-  local specsInitialized = 0
-  for spec in lfs.dir('toons/Vanilla') do
-    local name, realm = string.match(spec, '^(%a+)-(%a+).lua$')
-    local class = string.match(spec, '^(%a+).lua$')
-    if spec:sub(-4) == '.lua' then
-      it('can initialize ' .. spec, function()
-        if name then
-          wow.state.player.name = name
-          wow.state.realm = realm
-        elseif class then
-          wow.state.player.name = 'Notarealname'
-          wow.state.realm = 'Notarealrealm'
-          wow.state.player.class = 8  -- TODO generalize beyond mage
-        else
-          error('invalid lua filename in toons')
-        end
-        specsInitialized = specsInitialized + 1
-        wow.state:SendEvent('PLAYER_LOGIN')
-        wow.state:SendEvent('PLAYER_ENTERING_WORLD')
-        assert.same('fraction', wow.env.mooActionButtonHeader:GetAttribute('fractionpage'))
-      end)
+  it('can initialize all character specs', function()
+    for namerealm in pairs(wow.addon.Characters) do
+      local name, realm = string.match(namerealm, '^(%a+)-(%a+)')
+      wow.state.player.name = name
+      wow.state.realm = realm
+      wow.state:SendEvent('PLAYER_LOGIN')
+      wow.state:SendEvent('PLAYER_ENTERING_WORLD')
+      assert.same('fraction', wow.env.mooActionButtonHeader:GetAttribute('fractionpage'), namerealm)
     end
-  end
+  end)
 
-  it('initializes at least one spec', function()
-    assert.True(specsInitialized > 0)
+  it('can initialize all class specs', function()
+    for classid in pairs(wow.addon.ClassActionSpecs) do
+      wow.state.player.name = 'Notarealname'
+      wow.state.realm = 'Notarealrealm'
+      wow.state.player.class = classid
+      wow.state:SendEvent('PLAYER_LOGIN')
+      wow.state:SendEvent('PLAYER_ENTERING_WORLD')
+      assert.same('fraction', wow.env.mooActionButtonHeader:GetAttribute('fractionpage'), classid)
+    end
   end)
 
   it('has non-combat macrotexts that are not too long', function()
@@ -275,7 +268,8 @@ describe('Actions', function()
   end)
 
   it('honors class action specs', function()
-    wow.addon.ClassActionSpecs['PALADIN'] = { [37] = { buff = true } }
+    wow.state.player.class = 2
+    wow.addon.ClassActionSpecs[2] = { [37] = { buff = true } }
     wow.state:SendEvent('PLAYER_LOGIN')
     wow.state:SendEvent('PLAYER_ENTERING_WORLD')
     assert.True(wow.env.mooActionIconButton37:IsShown())

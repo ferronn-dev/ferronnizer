@@ -1,5 +1,5 @@
 local _, G = ...
-G.AddCharacter('TBC', 'Kewhand-Westfall', {
+G.AddClassActionSpec('Vanilla', 2, {
   [1] = {
     actionText = 'HL8',
     mouseover = true,

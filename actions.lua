@@ -736,7 +736,7 @@ end
 local function makeActions()
   local fractionPage, extraPages = (function()
     local charActions = G.Characters[UnitName('player')..'-'..GetRealmName()]
-    local classActions = G.ClassActionSpecs[UnitClassBase('player')]
+    local classActions = G.ClassActionSpecs[select(3, UnitClass('player'))]
     local page, extra = {}, {}
     for i, v in pairs(charActions or classActions or {}) do
       if v.page then

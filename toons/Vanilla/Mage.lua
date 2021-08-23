@@ -1,5 +1,5 @@
 local _, G = ...
-G.AddClassActionSpec('Vanilla', 'MAGE', {
+G.AddClassActionSpec('Vanilla', 8, {
   [1] = {
     spell = 'Frostbolt',
   },
