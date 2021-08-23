@@ -45,11 +45,7 @@ describe('galeshapley', function()
       Y = { 'C', 'B', 'A' },
       Z = { 'A', 'C', 'B' },
     }
-    local expected = {
-      Y = 'A',
-      Z = 'B',
-      X = 'C',
-    }
-    assert.same(expected, stableMarriage(men, women))
+    assert.same({ Y = 'A', Z = 'B', X = 'C' }, stableMarriage(men, women))
+    assert.same({ A = 'Z', B = 'X', C = 'Y' }, stableMarriage(women, men))
   end)
 end)
