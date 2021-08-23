@@ -5,6 +5,7 @@ deps:
   - fooddb.lua
   - mountdb.lua
   - potiondb.lua
+  - spelldb.lua
   - toons.lua
   - util.lua
   addonbox.lua:

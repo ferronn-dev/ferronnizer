@@ -113,6 +113,26 @@ local makeAction = (function()
       end
       return Mixin(update(), { attr = '/' .. emote }), { UPDATE_BINDINGS = update }
     end,
+    healset = function(action)
+      local healset = action.healset
+      local spellids = {}
+      for _, spell in ipairs(healset.spells) do
+        for _, rank in ipairs(G.SpellDB[spell]) do
+          table.insert(spellids, rank[1])
+        end
+      end
+      -- local pct = healset.rank
+      local function update()
+        local known = {}
+        for i, spellid in ipairs(spellids) do
+          if IsSpellKnown(spellid) then
+            table.insert(known, i)
+          end
+        end
+        return {}
+      end
+      return update(), { SPELLS_CHANGED = update }
+    end,
     invslot = function(action)
       local slot = action.invslot
       local function update()

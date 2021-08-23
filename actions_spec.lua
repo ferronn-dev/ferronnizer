@@ -14,6 +14,7 @@ describe('Actions', function()
     { buff = true },
     { drink = true },
     { eat = true },
+    { healset = { spells = { 'Greater Heal' }, ranks = {1} }, rank = 1 },
     { invslot = 13 },
     { macro = '/lol' },
     { mount = true },
@@ -252,7 +253,7 @@ describe('Actions', function()
     assert.Not.Nil(wow.env.mooActionButtonAction2Switcher)
     assert.Not.Nil(wow.env.mooActionButtonEmoteSwitcher)
     assert.Not.Nil(wow.env.mooActionButtonFractionSwitcher)
-    assert.Not.Nil(wow.env.mooActionButtonFraction8xSwitcher)
+    assert.Not.Nil(wow.env.mooActionButtonFraction9xSwitcher)
     assert.Not.Nil(wow.env.mooActionButtonPetSwitcher)
     assert.Not.Nil(wow.env.mooActionButtonProfessionSwitcher)
   end)
@@ -263,5 +264,24 @@ describe('Actions', function()
     wow.state:SendEvent('PLAYER_LOGIN')
     wow.state:SendEvent('PLAYER_ENTERING_WORLD')
     assert.True(wow.env.mooActionIconButton37:IsShown())
+  end)
+
+  it('handles healsets', function()
+    local slowHeals = {
+      ranks = { 1.0, 0.7, 0.4 },
+      spells = { 'Greater Heal', 'Heal', 'Lesser Heal' },
+    }
+    local fastHeals = {
+      ranks = { 1.0, 0.3, 0 },
+      spells = { 'Flash Heal' },
+    }
+    init(wow, {
+      { healset = slowHeals, rank = 3 },
+      { healset = slowHeals, rank = 2 },
+      { healset = slowHeals, rank = 1 },
+      { healset = fastHeals, rank = 3 },
+      { healset = fastHeals, rank = 2 },
+      { healset = fastHeals, rank = 1 },
+    })
   end)
 end)
