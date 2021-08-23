@@ -289,5 +289,12 @@ describe('Actions', function()
         assert.False(wow.env['mooActionIconButton' .. i]:IsShown())
       end
     end)
+    it('only sets top rank when one spell is known', function()
+      wow.state.knownSpells = {2052, 9474}
+      init(wow, actionSpec)
+      for i, shown in ipairs({true, false, false, true, false, false}) do
+        assert.same(shown, wow.env['mooActionIconButton' .. i]:IsShown(), i)
+      end
+    end)
   end)
 end)

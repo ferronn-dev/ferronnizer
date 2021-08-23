@@ -115,21 +115,36 @@ local makeAction = (function()
     end,
     healset = function(action)
       local healset = action.healset
-      local spellids = {}
+      local spellset = {}
       for _, spell in ipairs(healset.spells) do
-        for _, rank in ipairs(G.SpellDB[spell]) do
-          table.insert(spellids, rank[1])
+        local ranks = G.SpellDB[spell]
+        for i, rank in ipairs(ranks) do
+          local fullName = ('%s(Rank %d)'):format(spell, #ranks - i + 1)
+          table.insert(spellset, {
+            action = {
+              attr = '/dismount\n/stand\n/stopcasting\n/cast [@mouseover,help,nodead][] ' .. fullName,
+              cooldown = { spell = fullName },
+              count = { spell = fullName },
+              icon = GetSpellTexture(spell),
+              -- TODO compute a name based on initials and rank
+              tooltip = { spell = fullName },
+              update = { spell = fullName },
+            },
+            id = rank[1],
+          })
         end
       end
-      -- local pct = healset.rank
+      local pcts = healset.ranks
       local function update()
         local known = {}
-        for i, spellid in ipairs(spellids) do
-          if IsSpellKnown(spellid) then
+        for i, spell in ipairs(spellset) do
+          if IsSpellKnown(spell.id) then
             table.insert(known, i)
           end
         end
-        return {}
+        -- TODO respect healset.ranks spread instead of using top n
+        local myindex = known[#pcts - action.rank + 1]
+        return myindex and spellset[myindex].action or { attr = '' }
       end
       return update(), { SPELLS_CHANGED = update }
     end,
