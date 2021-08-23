@@ -33,29 +33,29 @@ deps:
   tooltips.lua:
   - playerinfo.lua
   toons.lua:
-  - toons/TBC/Chamoi-Westfall.lua
   - toons/TBC/Mage.lua
   - toons/TBC/Paladin.lua
   - toons/TBC/Priest.lua
-  - toons/Vanilla/Chamoi-Westfall.lua
+  - toons/TBC/Shaman.lua
   - toons/Vanilla/Mage.lua
   - toons/Vanilla/Paladin.lua
   - toons/Vanilla/Priest.lua
-  toons/TBC/Chamoi-Westfall.lua:
-  - tooninit.lua
+  - toons/Vanilla/Shaman.lua
   toons/TBC/Mage.lua:
   - tooninit.lua
   toons/TBC/Paladin.lua:
   - tooninit.lua
   toons/TBC/Priest.lua:
   - tooninit.lua
-  toons/Vanilla/Chamoi-Westfall.lua:
+  toons/TBC/Shaman.lua:
   - tooninit.lua
   toons/Vanilla/Mage.lua:
   - tooninit.lua
   toons/Vanilla/Paladin.lua:
   - tooninit.lua
   toons/Vanilla/Priest.lua:
+  - tooninit.lua
+  toons/Vanilla/Shaman.lua:
   - tooninit.lua
   vars.lua:
   - util.lua

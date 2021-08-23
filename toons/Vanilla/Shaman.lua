@@ -1,5 +1,5 @@
 local _, G = ...
-G.AddCharacter('TBC', 'Chamoi-Westfall', {
+G.AddClassActionSpec('Vanilla', 7, {
   [1] = {
     spell = 'Lightning Bolt',
   },
