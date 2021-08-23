@@ -91,16 +91,25 @@ describe('Actions', function()
         '/cast [@mouseover,help,nodead][] Lay on Hands')
     assert.same({{ macro = macro }}, wow.state.commands)
   end)
-  for toon in lfs.dir('toons') do
+
+  local toonsInitialized = 0
+  for toon in lfs.dir('toons/Vanilla') do
     local name, realm = string.match(toon, '^(%a+)-(%a+).lua$')
     if name then
+      toonsInitialized = toonsInitialized + 1
       it('can initialize ' .. toon, function()
         wow.state.player.name = name
         wow.state.realm = realm
         wow.state:SendEvent('PLAYER_LOGIN')
+        wow.state:SendEvent('PLAYER_ENTERING_WORLD')
+        assert.same('fraction', wow.env.mooActionButtonHeader:GetAttribute('fractionpage'))
       end)
     end
   end
+
+  it('initializes at least one toon', function()
+    assert.True(toonsInitialized > 0)
+  end)
 
   it('has non-combat macrotexts that are not too long', function()
     init(wow, everything)
