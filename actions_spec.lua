@@ -92,14 +92,23 @@ describe('Actions', function()
     assert.same({{ macro = macro }}, wow.state.commands)
   end)
 
-  local toonsInitialized = 0
-  for toon in lfs.dir('toons/Vanilla') do
-    local name, realm = string.match(toon, '^(%a+)-(%a+).lua$')
-    if name then
-      toonsInitialized = toonsInitialized + 1
-      it('can initialize ' .. toon, function()
-        wow.state.player.name = name
-        wow.state.realm = realm
+  local specsInitialized = 0
+  for spec in lfs.dir('toons/Vanilla') do
+    local name, realm = string.match(spec, '^(%a+)-(%a+).lua$')
+    local class = string.match(spec, '^(%a+).lua$')
+    if spec:sub(-4) == '.lua' then
+      it('can initialize ' .. spec, function()
+        if name then
+          wow.state.player.name = name
+          wow.state.realm = realm
+        elseif class then
+          wow.state.player.name = 'Notarealname'
+          wow.state.realm = 'Notarealrealm'
+          wow.state.player.class = 8  -- TODO generalize beyond mage
+        else
+          error('invalid lua filename in toons')
+        end
+        specsInitialized = specsInitialized + 1
         wow.state:SendEvent('PLAYER_LOGIN')
         wow.state:SendEvent('PLAYER_ENTERING_WORLD')
         assert.same('fraction', wow.env.mooActionButtonHeader:GetAttribute('fractionpage'))
@@ -107,8 +116,8 @@ describe('Actions', function()
     end
   end
 
-  it('initializes at least one toon', function()
-    assert.True(toonsInitialized > 0)
+  it('initializes at least one spec', function()
+    assert.True(specsInitialized > 0)
   end)
 
   it('has non-combat macrotexts that are not too long', function()
