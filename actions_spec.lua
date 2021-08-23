@@ -1,7 +1,8 @@
 describe('Actions', function()
 
   local function init(wow, actions)
-    wow.addon.Characters['Moo-Cow'] = actions
+    wow.addon.ClassActionSpecs[2] = actions
+    wow.state.player.class = 2
     wow.state.player.name = 'Moo'
     wow.state.realm = 'Cow'
     wow.state:SendEvent('PLAYER_LOGIN')
@@ -89,17 +90,6 @@ describe('Actions', function()
         '/dismount\n/stand\n/stopcasting\n'..
         '/cast [@mouseover,help,nodead][] Lay on Hands')
     assert.same({{ macro = macro }}, wow.state.commands)
-  end)
-
-  it('can initialize all character specs', function()
-    for namerealm in pairs(wow.addon.Characters) do
-      local name, realm = string.match(namerealm, '^(%a+)-(%a+)')
-      wow.state.player.name = name
-      wow.state.realm = realm
-      wow.state:SendEvent('PLAYER_LOGIN')
-      wow.state:SendEvent('PLAYER_ENTERING_WORLD')
-      assert.same('fraction', wow.env.mooActionButtonHeader:GetAttribute('fractionpage'), namerealm)
-    end
   end)
 
   it('can initialize all class specs', function()
