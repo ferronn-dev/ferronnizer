@@ -292,8 +292,16 @@ describe('Actions', function()
     it('only sets top rank when one spell is known', function()
       wow.state.knownSpells = {2052, 9474}
       init(wow, actionSpec)
-      for i, shown in ipairs({true, false, false, true, false, false}) do
-        assert.same(shown, wow.env['mooActionIconButton' .. i]:IsShown(), i)
+      local buttonNames = { [1] = 'LH2', [4] = 'FH4' }
+      for i = 1, 6 do
+        local button = wow.env['mooActionIconButton' .. i]
+        local buttonName = buttonNames[i]
+        if buttonName then
+          assert.True(button:IsShown(), buttonName)
+          assert.same(buttonName, button.Name:GetText(), buttonName)
+        else
+          assert.False(button:IsShown(), i)
+        end
       end
     end)
   end)

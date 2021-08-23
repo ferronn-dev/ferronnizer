@@ -119,14 +119,20 @@ local makeAction = (function()
       for _, spell in ipairs(healset.spells) do
         local ranks = G.SpellDB[spell]
         for i, rank in ipairs(ranks) do
-          local fullName = ('%s(Rank %d)'):format(spell, #ranks - i + 1)
+          local rn = #ranks - i + 1
+          local fullName = ('%s(Rank %d)'):format(spell, rn)
+          local actionText = ''
+          for w in spell:gmatch('%S+') do
+            actionText = actionText .. w:sub(1, 1)
+          end
+          actionText = actionText .. rn
           table.insert(spellset, {
             action = {
               attr = '/dismount\n/stand\n/stopcasting\n/cast [@mouseover,help,nodead][] ' .. fullName,
               cooldown = { spell = fullName },
               count = { spell = fullName },
               icon = GetSpellTexture(spell),
-              -- TODO compute a name based on initials and rank
+              name = actionText,
               tooltip = { spell = fullName },
               update = { spell = fullName },
             },
