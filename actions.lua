@@ -194,6 +194,7 @@ local makeAction = (function()
           cooldown = item and { item = item } or nil,
           icon = item and GetItemIcon(item) or nil,
           tooltip = item and { item = item } or nil,
+          update = item and { item = item } or nil,
         }
       end
       return update(), { PLAYER_EQUIPMENT_CHANGED = update }
@@ -437,6 +438,7 @@ local updateButton = (function()
       end
       local updateLang = {
         action = updateColor(IsActionInRange, IsUsableAction),
+        item = updateColor(IsItemInRange, IsUsableItem),
         spell = updateColor(IsSpellInRange, IsUsableSpell),
       }
       return function(button, prog)
