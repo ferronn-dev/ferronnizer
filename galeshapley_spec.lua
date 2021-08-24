@@ -28,12 +28,6 @@ describe('galeshapley', function()
     assert.same({ w1 = 'm1' }, stableMarriage(men, women))
   end)
 
-  it('works on one man two women', function()
-    local men = { m1 = { 'w1', 'w2' } }
-    local women = { w1 = { 'm1' }, w2 = { 'm1' } }
-    assert.same({ w1 = 'm1' }, stableMarriage(men, women))
-  end)
-
   it('works on example from wikipedia', function()
     local men = {
       A = { 'Y', 'X', 'Z' },
