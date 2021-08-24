@@ -140,7 +140,15 @@ local makeAction = (function()
           })
         end
       end
-      local pcts = healset.ranks
+      local idealpcts = healset.ranks
+      local myrank = #idealpcts - action.rank + 1
+      local function makeDistance(t, k)
+        return function(a, b)
+          local aa = math.abs(t[a] - k)
+          local bb = math.abs(t[b] - k)
+          return aa < bb
+        end
+      end
       local function update()
         local known = {}
         for i, spell in ipairs(spellset) do
@@ -148,9 +156,31 @@ local makeAction = (function()
             table.insert(known, i)
           end
         end
-        -- TODO respect healset.ranks spread instead of using top n
-        local myindex = known[#pcts - action.rank + 1]
-        return myindex and spellset[myindex].action or { attr = '' }
+        if #known <= #idealpcts then
+          local myindex = known[myrank]
+          return myindex and spellset[myindex].action or { attr = '' }
+        else
+          local klo, khi = known[1], known[#known]
+          local assignedpcts = {}
+          for i, j in ipairs(known) do
+            assignedpcts[i] = 1 - (j - klo) / (khi - klo)
+          end
+          local assigneds = {}
+          for i, j in ipairs(assignedpcts) do
+            assigneds[i] = makeDistance(idealpcts, j)
+          end
+          local ideals = {}
+          for i, j in ipairs(idealpcts) do
+            ideals[i] = makeDistance(assignedpcts, j)
+          end
+          for assigned, ideal in pairs(G.StableMarriage(ideals, assigneds)) do
+            if ideal == myrank then
+              return spellset[known[assigned]].action
+            end
+          end
+          -- This shouldn't happen...
+          return { attr = '' }
+        end
       end
       return update(), { SPELLS_CHANGED = update }
     end,

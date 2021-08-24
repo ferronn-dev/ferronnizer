@@ -3,6 +3,7 @@ deps:
   actions.lua:
   - drinkdb.lua
   - fooddb.lua
+  - galeshapley.lua
   - mountdb.lua
   - potiondb.lua
   - spelldb.lua
