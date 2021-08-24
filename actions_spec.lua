@@ -304,5 +304,17 @@ describe('Actions', function()
         end
       end
     end)
+    pending('finds stable marriage when more spells are known than needed', function()
+      wow.state.knownSpells = {
+        25314, 10965, 10964, 10963, 2060,  -- Greater Heal
+        10915, 9474, 9473, 9472, 2061,     -- Flash Heal
+      }
+      init(wow, actionSpec)
+      for i, rank in ipairs({5, 4, 3, 5, 3, 1}) do
+        local button = wow.env['mooActionIconButton' .. i]
+        assert.True(button:IsShown())
+        assert.same(('(Rank %d)'):format(rank), button:GetAttribute('macrotext'):sub(-8))
+      end
+    end)
   end)
 end)
