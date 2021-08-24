@@ -128,7 +128,7 @@ local makeAction = (function()
           actionText = actionText .. rn
           table.insert(spellset, {
             action = {
-              attr = '/dismount\n/stand\n/stopcasting\n/cast [@mouseover,help,nodead][] ' .. fullName,
+              attr = '/dismount\n/stand\n/cast [@mouseover,help,nodead][] ' .. fullName,
               cooldown = { spell = fullName },
               count = { spell = fullName },
               icon = GetSpellTexture(spell),
