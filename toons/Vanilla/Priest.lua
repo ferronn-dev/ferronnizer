@@ -1,22 +1,24 @@
 local _, G = ...
+local slowHeals = {
+  ranks = { 1.0, 0.7, 0.4 },
+  spells = { 'Greater Heal', 'Heal', 'Lesser Heal' },
+}
+local fastHeals = {
+  ranks = { 1.0, 0.3, 0 },
+  spells = { 'Flash Heal' },
+}
 G.AddClassActionSpec('Vanilla', 5, {
   [1] = {
-    actionText = 'GH5',
-    mouseover = true,
-    rank = 5,
-    spell = 'Greater Heal',
+    healset = slowHeals,
+    rank = 3,
   },
   [2] = {
-    actionText = 'GH1',
-    mouseover = true,
-    rank = 1,
-    spell = 'Greater Heal',
+    healset = slowHeals,
+    rank = 2,
   },
   [3] = {
-    actionText = 'H2',
-    mouseover = true,
-    rank = 2,
-    spell = 'Heal',
+    healset = slowHeals,
+    rank = 1,
   },
   [4] = {
     stopcasting = true,
@@ -48,22 +50,16 @@ G.AddClassActionSpec('Vanilla', 5, {
     spell = 'Psychic Scream',
   },
   [13] = {
-    actionText = 'FH7',
-    mouseover = true,
+    healset = fastHeals,
     rank = 3,
-    spell = 'Flash Heal',
   },
   [14] = {
-    actionText = 'FH3',
-    mouseover = true,
-    rank = 3,
-    spell = 'Flash Heal',
+    healset = fastHeals,
+    rank = 2,
   },
   [15] = {
-    actionText = 'FH1',
-    mouseover = true,
+    healset = fastHeals,
     rank = 1,
-    spell = 'Flash Heal',
   },
   [16] = {
     stopcasting = true,
