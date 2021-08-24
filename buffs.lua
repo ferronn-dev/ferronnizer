@@ -172,6 +172,7 @@ end
 local trackingdb = {
   {spell = 2580, texture = 136025},  -- Find Minerals
   {spell = 2383, texture = 133939},  -- Find Herbs
+  {spell = 2481, texture = 135725},  -- Find Treasure
 }
 
 local function consumeList(db)
