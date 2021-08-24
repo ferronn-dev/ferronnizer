@@ -42,4 +42,17 @@ describe('galeshapley', function()
     assert.same({ Y = 'A', Z = 'B', X = 'C' }, stableMarriage(men, women))
     assert.same({ A = 'Z', B = 'X', C = 'Y' }, stableMarriage(women, men))
   end)
+
+  it('works with pref functions instead', function()
+    local men = {
+      function(a, b) return a < b end,
+      function(a, b) return a > b end,
+    }
+    local women = {
+      function(a, b) return a > b end,
+      function(a, b) return a < b end,
+    }
+    assert.same({1, 2}, stableMarriage(men, women))
+    assert.same({2, 1}, stableMarriage(women, men))
+  end)
 end)
