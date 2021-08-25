@@ -244,11 +244,7 @@ local makeAction = (function()
           local macro = string.format('%s [nomounted] %s\n/dismount [mounted]', fcmd, farg)
           return Mixin({ attr = macro }, flight)
         else
-          return {
-            attr = '',
-            icon = 132261,
-            tooltip = { text = 'No mount... yet.' },
-          }
+          return { attr = '' }
         end
       end
       return update(), {
