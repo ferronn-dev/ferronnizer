@@ -7,7 +7,7 @@ SELECT
             CAST(b.reagent_0_ AS INT64) AS reagent)
         ORDER BY a.minlevel DESC, CAST(a.id AS INT64))
 FROM (
-    SELECT
+    SELECT DISTINCT
         n.id id,
         n.name_lang name,
         CAST(l.baselevel AS INT64) minlevel

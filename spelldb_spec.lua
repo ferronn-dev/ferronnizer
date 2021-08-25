@@ -28,30 +28,6 @@ describe('spell db', function()
     assert.same(knownBad, seenBad)
   end)
   it('does not duplicate spell ids', function()
-    -- TODO make this table empty instead
-    local expected = ({
-      [2] = {
-        ['Bite'] = true,
-        ['Claw'] = true,
-        ['Consecration'] = true,
-        ['Dash'] = true,
-        ['Dive'] = true,
-        ['Immolate'] = true,
-        ['Intimidation'] = true,
-        ['Screech'] = true,
-      },
-      [5] = {
-        ['Bite'] = true,
-        ['Claw'] = true,
-        ['Dash'] = true,
-        ['Dive'] = true,
-        ['Gore'] = true,
-        ['Greater Heal'] = true,
-        ['Immolate'] = true,
-        ['Intimidation'] = true,
-        ['Screech'] = true,
-      },
-    })[wow.env.WOW_PROJECT_ID]
     local actual = {}
     for name, ranks in pairs(wow.addon.SpellDB) do
       local ids = {}
@@ -62,6 +38,6 @@ describe('spell db', function()
         ids[rank[1]] = true
       end
     end
-    assert.same(expected, actual)
+    assert.same({}, actual)
   end)
 end)
