@@ -126,6 +126,12 @@ G.AddClassActionSpec('TBC', 5, {
   [35] = {
     spell = 'Shadowfiend',
   },
+  [36] = {
+    spell = 'Levitate',
+  },
+  [37] = {
+    spell = 'Shadow Word: Death',
+  },
   [43] = {
     mount = true,
   },
