@@ -45,6 +45,7 @@ local makeAction = (function()
         count = { item = item },
         icon = GetItemIcon(item),
         tooltip = { item = item },
+        update = { item = item },
       }
     end
     local function updateDB(db)
