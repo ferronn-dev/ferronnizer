@@ -132,6 +132,9 @@ G.AddClassActionSpec('TBC', 5, {
   [37] = {
     spell = 'Shadow Word: Death',
   },
+  [38] = {
+    spell = 'Mass Dispel',
+  },
   [43] = {
     mount = true,
   },
