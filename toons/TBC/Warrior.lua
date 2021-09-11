@@ -3,8 +3,23 @@ G.AddClassActionSpec('TBC', 1, {
   [1] = {
     spell = 'Heroic Strike',
   },
-  [34] = {
+  [2] = {
+    spell = 'Rend',
+  },
+  [5] = {
+    spell = 'Charge',
+  },
+  [6] = {
+    spell = 'Thunder Clap',
+  },
+  [13] = {
+    spell = 'Battle Shout',
+  },
+  [33] = {
     spell = 'Gift of the Naaru',
+  },
+  [34] = {
+    buff = true,
   },
   [43] = {
     mount = true,
