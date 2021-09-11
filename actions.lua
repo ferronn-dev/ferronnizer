@@ -860,6 +860,23 @@ local function makeActions()
         'charge',
         'mourn',
         'tickle',
+        'roar',
+        'rofl',
+        'hug',
+        'kiss',
+        'love',
+        'hungry',
+        'thirsty',
+        'ready',
+        'sleep',
+        'sigh',
+        'nod',
+        'no',
+        'threaten',
+        'silly',
+        'question',
+        'welcome',
+        'hail',
       }
       local page = {}
       for i, emote in ipairs(emotes) do
