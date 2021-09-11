@@ -12,6 +12,9 @@ G.AddClassActionSpec('TBC', 1, {
   [6] = {
     spell = 'Thunder Clap',
   },
+  [7] = {
+    spell = 'Hamstring',
+  },
   [13] = {
     spell = 'Battle Shout',
   },
