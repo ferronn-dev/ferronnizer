@@ -51,8 +51,7 @@ G.StableMarriage = function(men, women)
     nextPref[man] = 1
   end
   local engagements = {}
-  local man = next(freeMen)
-  while man do
+  for man in next, freeMen do
     local prefs = tmen[man]
     local idx = nextPref[man]
     local woman = prefs[idx]
@@ -64,7 +63,6 @@ G.StableMarriage = function(men, women)
     end
     engagements[woman] = fiance
     freeMen[fiance] = nil
-    man = next(freeMen)
   end
   return engagements
 end
