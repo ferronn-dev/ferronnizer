@@ -129,7 +129,7 @@ local makeAction = (function()
           actionText = actionText .. rn
           table.insert(spellset, {
             action = {
-              attr = '/dismount\n/stand\n/cast [@mouseover,help,nodead][] ' .. fullName,
+              attr = '/dismount [noflying]\n/stand\n/cast [@mouseover,help,nodead][] ' .. fullName,
               cooldown = { spell = fullName },
               count = { spell = fullName },
               icon = GetSpellTexture(spell),
@@ -297,7 +297,7 @@ local makeAction = (function()
       local rankStr = action.rank and ('Rank ' .. action.rank) or nil
       local fullName = shortName .. (rankStr and ('(' .. rankStr .. ')') or '')
       local macro = (
-        (action.dismount ~= false and '/dismount\n' or '')..
+        (action.dismount ~= false and '/dismount [noflying]\n' or '')..
         (action.stand ~= false and '/stand\n' or '')..
         (action.stopcasting and '/stopcasting\n' or '')..
         '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
