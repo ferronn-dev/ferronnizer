@@ -18,6 +18,7 @@ describe('Actions', function()
     { invslot = 13 },
     { macro = '/lol' },
     { mount = true },
+    { noncombat = 2 },
     { page = {} },
     { petaction = 7 },
     { spell = 'Cooking' },
@@ -253,7 +254,7 @@ describe('Actions', function()
     assert.Not.Nil(wow.env.mooActionButtonAction2Switcher)
     assert.Not.Nil(wow.env.mooActionButtonEmoteSwitcher)
     assert.Not.Nil(wow.env.mooActionButtonFractionSwitcher)
-    assert.Not.Nil(wow.env.mooActionButtonFraction9xSwitcher)
+    assert.Not.Nil(wow.env.mooActionButtonFraction10xSwitcher)
     assert.Not.Nil(wow.env.mooActionButtonPetSwitcher)
     assert.Not.Nil(wow.env.mooActionButtonProfessionSwitcher)
   end)

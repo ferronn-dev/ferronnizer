@@ -35,6 +35,7 @@ local actionbars = {
   'SHIFT-Z', 'SHIFT-X', 'SHIFT-C', 'SHIFT-V', 'SHIFT-B', 'SHIFT-N',
 }
 local switchers = {
+  ['ALT-CTRL-W'] = 'Noncombat',
   ['ALT-CTRL-E'] = 'Emote',
   ['CTRL-P'] = 'Profession',
   ['CTRL-SHIFT-P'] = 'Pet',

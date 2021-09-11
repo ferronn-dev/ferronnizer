@@ -253,6 +253,21 @@ local makeAction = (function()
         SPELLS_CHANGED = update,
       }
     end,
+    noncombat = function(action)
+      local index = action.noncombat
+      local init = {
+        attr = '',
+        icon = 134400,
+      }
+      return init, {
+        GOSSIP_SHOW = function()
+          return { attr = ('/run SelectGossipOption(%d)'):format(index) }
+        end,
+        GOSSIP_CLOSED = function()
+          return { attr = '' }
+        end,
+      }
+    end,
     page = function(action)
       return {
         attr = '#page:' .. action.page,
@@ -888,6 +903,13 @@ local function makeActions()
       return page
     end)(),
     fraction = fractionPage,
+    noncombat = (function()
+      local page = {}
+      for i = 1, 10 do
+        table.insert(page, { noncombat = i })
+      end
+      return page
+    end)(),
     pet = (function()
       local page = {}
       for i = 1, NUM_PET_ACTION_SLOTS do
