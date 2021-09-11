@@ -254,14 +254,14 @@ local makeAction = (function()
       }
     end,
     noncombat = function(action)
-      local index = action.noncombat
+      local macro = ('/run SelectGossipOption(%d)'):format(action.noncombat)
       local init = {
         attr = '',
         icon = 134400,
       }
       return init, {
         GOSSIP_SHOW = function()
-          return { attr = ('/run SelectGossipOption(%d)'):format(index) }
+          return { attr = macro }
         end,
         GOSSIP_CLOSED = function()
           return { attr = '' }
