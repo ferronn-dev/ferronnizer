@@ -11,6 +11,7 @@ describe('Actions', function()
 
   local everything = {
     { action = 3 },
+    { bandage = true },
     { buff = true },
     { drink = true },
     { eat = true },
@@ -254,7 +255,7 @@ describe('Actions', function()
     assert.Not.Nil(wow.env.mooActionButtonAction2Switcher)
     assert.Not.Nil(wow.env.mooActionButtonEmoteSwitcher)
     assert.Not.Nil(wow.env.mooActionButtonFractionSwitcher)
-    assert.Not.Nil(wow.env.mooActionButtonFraction10xSwitcher)
+    assert.Not.Nil(wow.env.mooActionButtonFraction11xSwitcher)
     assert.Not.Nil(wow.env.mooActionButtonPetSwitcher)
     assert.Not.Nil(wow.env.mooActionButtonProfessionSwitcher)
   end)

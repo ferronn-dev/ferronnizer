@@ -1,6 +1,7 @@
 addon: Ferronnizer
 deps:
   actions.lua:
+  - bandagedb.lua
   - drinkdb.lua
   - fooddb.lua
   - galeshapley.lua
@@ -81,6 +82,8 @@ roots:
 - tooltips.lua
 - vars.lua
 sql:
+  bandagedb.sql:
+  - BandageDB
   drinkdb.sql:
   - DrinkDB
   fooddb.sql:

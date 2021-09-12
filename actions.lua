@@ -94,6 +94,36 @@ local makeAction = (function()
         end,
       }
     end,
+    bandage = function()
+      local macro = ''
+      for _, entry in ipairs(G.BandageDB) do
+        macro = macro .. '/use item:' .. entry[1] .. '\n'
+      end
+      local function currentItem()
+        for _, entry in ipairs(G.BandageDB) do
+          -- TODO skill-based filter
+          local item = unpack(entry)
+          if GetItemCount(item) > 0 then
+            return item
+          end
+        end
+        return G.BandageDB[#G.BandageDB][1]  -- give up and return the last thing
+      end
+      local function update()
+        local item = currentItem()
+        return {
+          cooldown = { item = item },
+          count = { item = item },
+          icon = GetItemIcon(item),
+          tooltip = { item = item },
+          update = { item = item },
+        }
+      end
+      return Mixin(update(), { attr = macro }), {
+        BAG_UPDATE_DELAYED = update,
+        CHAT_MSG_SKILL = update,
+      }
+    end,
     buff = function(action)
       return {
         attr = '/click ' .. addonName .. 'BuffButton',
