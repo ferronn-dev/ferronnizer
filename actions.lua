@@ -350,6 +350,7 @@ local makeAction = (function()
         }
       end
       local init = Mixin(update(), {
+        checked = { spell = fullName },
         cooldown = { spell = fullName },
         count = { spell = fullName },
         name = action.actionText,
@@ -370,6 +371,10 @@ end)()
 
 local updateButton = (function()
   local lang = {
+    checked = function(button, prog)
+      assert(prog.spell, 'invalid checked program')
+      button:SetChecked(IsCurrentSpell(prog.spell))
+    end,
     color = function(button, color)
       if button.icon then
         button.icon:SetVertexColor(color, color, color)
@@ -833,6 +838,7 @@ local function setupActions(actions, defaultPage, actionButtons, getActionButton
   end
   local genericHandlers = {
     BAG_UPDATE_DELAYED = updateHandler('count'),
+    CURRENT_SPELL_CAST_CHANGED = updateHandler('checked'),
     SPELL_UPDATE_COOLDOWN = updateHandler('cooldown'),
   }
   for ev, handler in pairs(genericHandlers) do
