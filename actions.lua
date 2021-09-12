@@ -99,11 +99,20 @@ local makeAction = (function()
       for _, entry in ipairs(G.BandageDB) do
         macro = macro .. '/use item:' .. entry[1] .. '\n'
       end
+      local function currentSkill()
+        for i = 1, GetNumSkillLines() do
+          local name, _, _, value = GetSkillLineInfo(i)
+          if name == PROFESSIONS_FIRST_AID then
+            return value
+          end
+        end
+        return 0
+      end
       local function currentItem()
+        local skill = currentSkill()
         for _, entry in ipairs(G.BandageDB) do
-          -- TODO skill-based filter
-          local item = unpack(entry)
-          if GetItemCount(item) > 0 then
+          local item, minskill = unpack(entry)
+          if skill >= minskill and GetItemCount(item) > 0 then
             return item
           end
         end
