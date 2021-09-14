@@ -19,6 +19,8 @@ deps:
   - fooddb.lua
   - spelldb.lua
   - util.lua
+  carrot.lua:
+  - util.lua
   chatframe.lua:
   - util.lua
   control.lua:
@@ -75,6 +77,7 @@ roots:
 - addonbox.lua
 - bindings.lua
 - buffs.lua
+- carrot.lua
 - chatframe.lua
 - control.lua
 - minimap.lua

@@ -1,0 +1,6 @@
+describe('carrot', function()
+  it('handles combat', function()
+    wow.state:EnterCombat()
+    wow.state:LeaveCombat()
+  end)
+end)
