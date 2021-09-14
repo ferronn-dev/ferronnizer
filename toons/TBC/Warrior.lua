@@ -18,6 +18,9 @@ G.AddClassActionSpec('TBC', 1, {
   [13] = {
     spell = 'Battle Shout',
   },
+  [14] = {
+    spell = 'Bloodrage',
+  },
   [33] = {
     spell = 'Gift of the Naaru',
   },
