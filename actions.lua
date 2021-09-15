@@ -979,6 +979,8 @@ local function makeActions()
         'Smelting',
         'Leatherworking',
         'Blacksmithing',
+        'Jewelcrafting',
+        'Prospecting',
       }
       local page = {}
       for _, spell in ipairs(professions) do
