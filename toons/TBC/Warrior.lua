@@ -6,6 +6,9 @@ G.AddClassActionSpec('TBC', 1, {
   [2] = {
     spell = 'Rend',
   },
+  [3] = {
+    spell = 'Sunder Armor',
+  },
   [5] = {
     spell = 'Charge',
   },
@@ -20,6 +23,15 @@ G.AddClassActionSpec('TBC', 1, {
   },
   [14] = {
     spell = 'Bloodrage',
+  },
+  [19] = {
+    spell = 'Battle Stance',
+  },
+  [20] = {
+    spell = 'Defensive Stance',
+  },
+  [26] = {
+    spell = 'Taunt',
   },
   [33] = {
     spell = 'Gift of the Naaru',
