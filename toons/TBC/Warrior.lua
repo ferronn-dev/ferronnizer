@@ -42,13 +42,10 @@ G.AddClassActionSpec('TBC', 1, {
   [43] = {
     mount = true,
   },
-  [44] = {
-    bandage = true,
-  },
   [45] = {
     eat = true,
   },
   [46] = {
-    drink = true,
+    bandage = true,
   },
 })
