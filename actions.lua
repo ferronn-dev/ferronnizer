@@ -683,24 +683,23 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
       end
     ]=]
     updatePageOnClick = [=[
-      local currentPage = owner:GetAttribute('fractionpage')
-      if currentPage ~= 'pet' then
-        local buttonid = ...
-        local attr = actionPages[currentPage].attrs[buttonid] or ''
-        local page = attr:sub(1, 6) == '#page:' and attr:sub(7) or defaultPage
-        owner:Run(updateActionPage, page)
-      end
+      local buttonid = ...
+      local currentPage = actionPages[owner:GetAttribute('fractionpage')]
+      local attr = currentPage.attrs[buttonid] or ''
+      local page = attr:sub(1, 6) == '#page:' and attr:sub(7) or currentPage.nextActionPage
+      owner:Run(updateActionPage, page)
     ]=]
   ]])
 
   for name, page in pairs(actions) do
     header:Execute(([[
-      local name, buttonPage = %q, %q
+      local name, buttonPage, nextActionPage = %q, %q, %q
       local t = newtable()
       t.attrs = newtable()
       t.buttonPage = buttonPage
+      t.nextActionPage = nextActionPage
       actionPages[name] = t
-    ]]):format(name, page.buttonPage))
+    ]]):format(name, page.buttonPage, page.nextActionPage))
   end
 
   for buttonPageName, buttons in pairs(actionButtons) do
@@ -1001,17 +1000,18 @@ local function makeActions()
       return page
     end)(),
   })
+  local defaultPage = next(fractionPage) and 'fraction' or 'action1'
   local actions = (function()
     local t = {}
     for k, v in pairs(actionPages) do
       t[k] = {
         actions = v,
         buttonPage = k == 'emote' and 'text' or 'icon',
+        nextActionPage = k == 'pet' and k or defaultPage,
       }
     end
     return t
   end)()
-  local defaultPage = next(fractionPage) and 'fraction' or 'action1'
   return actions, defaultPage
 end
 
