@@ -713,11 +713,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
     len = math.max(len, #buttons)
   end
   for i = 1, len do
-    local button = CreateFrame(
-        'Button',
-        addonName .. 'ActionButton' .. i,
-        nil,
-        'SecureActionButtonTemplate')
+    local button = CreateFrame('Button', prefix .. i, nil, 'SecureActionButtonTemplate')
     button:SetAttribute('type', 'macro')
     header:SetFrameRef('tmp', button)
     header:Execute([[tinsert(keybinders, self:GetFrameRef('tmp'))]])
