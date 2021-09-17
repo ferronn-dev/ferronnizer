@@ -621,7 +621,7 @@ local actionButtonState = {}
 local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
   local prefix = addonName .. 'ActionButton'
   local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
-  header:Execute(([[defaultPage = '%s']]):format(defaultPage))
+  header:Execute(([[defaultPage = %q]]):format(defaultPage))
   header:Execute([[
     actionPages = newtable()
     buttonPages = newtable()
@@ -705,7 +705,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
 
   for buttonPageName, buttons in pairs(actionButtons) do
     header:Execute(([[
-      local buttonPageName = '%s'
+      local buttonPageName = %q
       buttonPages[buttonPageName] = buttonPages[buttonPageName] or newtable()
     ]]):format(buttonPageName))
     for idx, button in ipairs(buttons) do
@@ -716,7 +716,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
       ]])
       header:SetFrameRef('tmp', button)
       header:Execute(([[
-        tinsert(buttonPages['%s'], self:GetFrameRef('tmp'))
+        tinsert(buttonPages[%q], self:GetFrameRef('tmp'))
       ]]):format(buttonPageName))
     end
   end
@@ -769,13 +769,13 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
     local name = page:gsub('^%l', string.upper)
     local switch = CreateFrame('Button', prefix .. name .. 'Switcher', header, 'SecureActionButtonTemplate')
     header:WrapScript(switch, 'OnClick', 'return nil, true', ([=[
-      local page = '%s'
+      local page = %q
       owner:Run(updateActionPage, currentPage == page and defaultPage or page)
     ]=]):format(page))
   end
 
   local function updateAttr(pageName, idx, attr)
-    header:Execute(([[self:Run(updateActionAttr, '%s', %d, [==[%s]==])]]):format(pageName, idx, attr))
+    header:Execute(([[self:Run(updateActionAttr, %q, %d, %q)]]):format(pageName, idx, attr))
   end
 
   return updateAttr
