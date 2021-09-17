@@ -629,7 +629,8 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
     updateActionButton = [=[
       local idx = ...
       local currentPage = owner:GetAttribute('fractionpage')
-      local attr = actionPages[currentPage][idx] or ''
+      local actionPage = actionPages[currentPage]
+      local attr = actionPage.attrs[idx] or ''
       local type_, action, macrotext
       if attr:sub(1, 8) == '#action:' then
         type_, action = 'action', tonumber(attr:sub(9))
@@ -638,7 +639,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
       else
         type_, macrotext = 'macro', attr
       end
-      local button = buttonPages[currentPage == 'emote' and 'text' or 'icon'][idx]
+      local button = buttonPages[actionPage.buttonPage][idx]
       button:SetAttribute('type', type_)
       button:SetAttribute('action', action)
       button:SetAttribute('macrotext', macrotext)
@@ -651,7 +652,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
     ]=]
     updateActionAttr = [=[
       local pageName, idx, attr = ...
-      actionPages[pageName][idx] = attr
+      actionPages[pageName].attrs[idx] = attr
       if pageName == owner:GetAttribute('fractionpage') then
         owner:Run(updateActionButton, idx)
       end
@@ -661,11 +662,13 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
       local currentPage = owner:GetAttribute('fractionpage')
       if page ~= currentPage then
         owner:CallMethod('InsecureUpdateActionPage', page)
-        local oldButtonPage = currentPage == 'emote' and 'text' or 'icon'
-        local newButtonPage = page == 'emote' and 'text' or 'icon'
-        if oldButtonPage ~= newButtonPage then
-          for _, button in ipairs(buttonPages[oldButtonPage]) do
-            button:Hide()
+        local newButtonPage = actionPages[page].buttonPage
+        if currentPage then
+          local oldButtonPage = actionPages[currentPage].buttonPage
+          if oldButtonPage ~= newButtonPage then
+            for _, button in ipairs(buttonPages[oldButtonPage]) do
+              button:Hide()
+            end
           end
         end
         owner:SetAttribute('fractionpage', page)
@@ -683,18 +686,21 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
       local currentPage = owner:GetAttribute('fractionpage')
       if currentPage ~= 'pet' then
         local buttonid = ...
-        local attr = actionPages[currentPage][buttonid] or ''
+        local attr = actionPages[currentPage].attrs[buttonid] or ''
         local page = attr:sub(1, 6) == '#page:' and attr:sub(7) or defaultPage
         owner:Run(updateActionPage, page)
       end
     ]=]
   ]])
 
-  for actionPageName in pairs(actions) do
+  for name, page in pairs(actions) do
     header:Execute(([[
-      local actionPageName = '%s'
-      actionPages[actionPageName] = actionPages[actionPageName] or newtable()
-    ]]):format(actionPageName))
+      local name, buttonPage = %q, %q
+      local t = newtable()
+      t.attrs = newtable()
+      t.buttonPage = buttonPage
+      actionPages[name] = t
+    ]]):format(name, page.buttonPage))
   end
 
   for buttonPageName, buttons in pairs(actionButtons) do
