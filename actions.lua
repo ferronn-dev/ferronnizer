@@ -623,7 +623,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
   local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
   header:Execute(([[defaultPage = '%s']]):format(defaultPage))
   header:Execute([[
-    buttons = newtable()
+    buttonPages = newtable()
     keybinders = newtable()
     actionAttrs = newtable()
     updateActionButton = [=[
@@ -638,7 +638,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
       else
         type_, macrotext = 'macro', attr
       end
-      local button = buttons[currentPage == 'emote' and 'text' or 'icon'][idx]
+      local button = buttonPages[currentPage == 'emote' and 'text' or 'icon'][idx]
       button:SetAttribute('type', type_)
       button:SetAttribute('action', action)
       button:SetAttribute('macrotext', macrotext)
@@ -664,17 +664,17 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
         local oldButtonPage = currentPage == 'emote' and 'text' or 'icon'
         local newButtonPage = page == 'emote' and 'text' or 'icon'
         if oldButtonPage ~= newButtonPage then
-          for _, button in ipairs(buttons[oldButtonPage]) do
+          for _, button in ipairs(buttonPages[oldButtonPage]) do
             button:Hide()
           end
         end
         owner:SetAttribute('fractionpage', page)
         for i, keybinder in ipairs(keybinders) do
-          local button = buttons[newButtonPage][i]
+          local button = buttonPages[newButtonPage][i]
           local macrotext = button and ('/click ' .. button:GetName()) or ''
           keybinder:SetAttribute('macrotext', macrotext)
         end
-        for buttonid, button in ipairs(buttons[newButtonPage]) do
+        for buttonid, button in ipairs(buttonPages[newButtonPage]) do
           owner:Run(updateActionButton, buttonid)
         end
       end
@@ -693,7 +693,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
   for buttonPageName, buttons in pairs(actionButtons) do
     header:Execute(([[
       local buttonPageName = '%s'
-      buttons[buttonPageName] = buttons[buttonPageName] or newtable()
+      buttonPages[buttonPageName] = buttonPages[buttonPageName] or newtable()
     ]]):format(buttonPageName))
     for idx, button in ipairs(buttons) do
       button:Hide()
@@ -703,7 +703,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
       ]])
       header:SetFrameRef('tmp', button)
       header:Execute(([[
-        tinsert(buttons['%s'], self:GetFrameRef('tmp'))
+        tinsert(buttonPages['%s'], self:GetFrameRef('tmp'))
       ]]):format(buttonPageName))
     end
   end
