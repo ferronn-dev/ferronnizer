@@ -623,13 +623,13 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
   local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
   header:Execute(([[defaultPage = '%s']]):format(defaultPage))
   header:Execute([[
+    actionPages = newtable()
     buttonPages = newtable()
     keybinders = newtable()
-    actionAttrs = newtable()
     updateActionButton = [=[
       local idx = ...
       local currentPage = owner:GetAttribute('fractionpage')
-      local attr = actionAttrs[currentPage .. idx] or ''
+      local attr = actionPages[currentPage][idx] or ''
       local type_, action, macrotext
       if attr:sub(1, 8) == '#action:' then
         type_, action = 'action', tonumber(attr:sub(9))
@@ -651,7 +651,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
     ]=]
     updateActionAttr = [=[
       local pageName, idx, attr = ...
-      actionAttrs[pageName .. idx] = attr
+      actionPages[pageName][idx] = attr
       if pageName == owner:GetAttribute('fractionpage') then
         owner:Run(updateActionButton, idx)
       end
@@ -683,12 +683,19 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
       local currentPage = owner:GetAttribute('fractionpage')
       if currentPage ~= 'pet' then
         local buttonid = ...
-        local attr = actionAttrs[currentPage .. buttonid] or ''
+        local attr = actionPages[currentPage][buttonid] or ''
         local page = attr:sub(1, 6) == '#page:' and attr:sub(7) or defaultPage
         owner:Run(updateActionPage, page)
       end
     ]=]
   ]])
+
+  for actionPageName in pairs(actions) do
+    header:Execute(([[
+      local actionPageName = '%s'
+      actionPages[actionPageName] = actionPages[actionPageName] or newtable()
+    ]]):format(actionPageName))
+  end
 
   for buttonPageName, buttons in pairs(actionButtons) do
     header:Execute(([[
