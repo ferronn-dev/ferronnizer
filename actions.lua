@@ -512,9 +512,6 @@ local updateButton = (function()
   end
 end)()
 
-local actionPage = 'invalid'
-local actionButtonState = {}
-
 local function makeActionButtons()
   local attachToIconGrid, attachToTextGrid = (function()
     local width, height = 36, 18
@@ -612,16 +609,14 @@ local function makeActionButtons()
       table.insert(textButtons, button)
     end
   end
-  local actionButtons = {
+  return {
     icon = iconButtons,
     text = textButtons,
   }
-  local function getActionButton(idx)
-    local buttonPage = actionPage == 'emote' and 'text' or 'icon'
-    return actionButtons[buttonPage][idx]
-  end
-  return actionButtons, getActionButton
 end
+
+local actionPage = 'invalid'
+local actionButtonState = {}
 
 local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
   local prefix = addonName .. 'ActionButton'
@@ -777,7 +772,11 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
   return updateAttr
 end
 
-local function setupActions(actions, defaultPage, actionButtons, getActionButton)
+local function setupActions(actions, defaultPage, actionButtons)
+  local function getActionButton(idx)
+    local buttonPage = actionPage == 'emote' and 'text' or 'icon'
+    return actionButtons[buttonPage][idx]
+  end
   local updateAttr = setupHeader(actions, defaultPage, actionButtons, getActionButton)
   local maybeSetAttr, drainPendingAttrs = (function()
     local pendingAttrs = {}
@@ -1001,7 +1000,7 @@ G.Eventer({
   PLAYER_LOGIN = function()
     G.ReparentFrame(MainMenuBar)
     local actions, defaultPage = makeActions()
-    local actionButtons, getActionButton = makeActionButtons()
-    setupActions(actions, defaultPage, actionButtons, getActionButton)
+    local actionButtons = makeActionButtons()
+    setupActions(actions, defaultPage, actionButtons)
   end,
 })
