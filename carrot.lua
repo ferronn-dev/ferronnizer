@@ -33,6 +33,5 @@ G.Eventer({
   BAG_UPDATE_DELAYED = carrotIfMounted,
   PLAYER_EQUIPMENT_CHANGED = carrotIfMounted,
   PLAYER_MOUNT_DISPLAY_CHANGED = carrotIfMounted,
-  PLAYER_REGEN_DISABLED = unequipCarrot,
   PLAYER_REGEN_ENABLED = carrotIfMounted,
 })
