@@ -770,7 +770,7 @@ end
 
 local function setupActions(actions, defaultPage, actionButtons)
   local function getActionButton(idx)
-    local buttonPage = actions[actionPage].grid
+    local buttonPage = actions[actionPage].buttonPage
     return actionButtons[buttonPage][idx]
   end
   local updateAttr = setupHeader(actions, defaultPage, actionButtons, getActionButton)
@@ -993,7 +993,7 @@ local function makeActions()
     for k, v in pairs(actionPages) do
       t[k] = {
         actions = v,
-        grid = k == 'emote' and 'text' or 'icon',
+        buttonPage = k == 'emote' and 'text' or 'icon',
       }
     end
     return t
