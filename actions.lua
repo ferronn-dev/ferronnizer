@@ -320,8 +320,10 @@ local makeAction = (function()
       local num = action.petaction
       local function update()
         local _, texture, isToken = GetPetActionInfo(num)
+        local icon = isToken and _G[texture] or texture
         return {
-          icon = isToken and _G[texture] or texture or 'Interface\\Buttons\\UI-Quickslot2'
+          alpha = icon and 1.0 or 0.0,
+          icon = icon,
         }
       end
       local init = Mixin(update(), {
@@ -371,6 +373,9 @@ end)()
 
 local updateButton = (function()
   local lang = {
+    alpha = function(button, alpha)
+      button:SetAlpha(alpha)
+    end,
     checked = function(button, prog)
       assert(prog.spell, 'invalid checked program')
       button:SetChecked(IsCurrentSpell(prog.spell))
@@ -506,7 +511,7 @@ local updateButton = (function()
   return function(button, update)
     if button then
       for k, v in pairs(update) do
-        lang[k](button, v)
+        assert(lang[k], 'unknown function ' .. k)(button, v)
       end
     end
   end
@@ -746,6 +751,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
 
   header.InsecureActionButtonRefresh = function(_, idx)
     local reset = {
+      alpha = 1.0,
       color = 1.0,
       cooldown = { reset = true },
       count = { reset = true },
