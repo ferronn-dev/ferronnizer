@@ -187,37 +187,10 @@ local function consumeList(db)
 end
 
 local conjuredb = {
-  -- drinks
-  {
-    count = 20,
-    spells = consumeList(G.DrinkDB),
-  },
-  -- food
-  {
-    count = 10,
-    spells = consumeList(G.FoodDB),
-  },
-  -- managems
-  {
-    count = 1,
-    spells = {
-      {spell = 10054, item = 8008},
-      {spell = 10053, item = 8007},
-      {spell = 3552, item = 5513},
-      {spell = 759, item = 5514},
-    },
-  },
-  -- healthstones
-  {
-    count = 1,
-    spells = {
-      {spell = 11730, item = 9421},
-      {spell = 11729, item = 5510},
-      {spell = 5699, item = 5509},
-      {spell = 6202, item = 5511},
-      {spell = 6201, item = 5512},
-    },
-  },
+  { count = 20, spells = consumeList(G.DrinkDB) },
+  { count = 10, spells = consumeList(G.FoodDB) },
+  { count = 1, spells = consumeList(G.ManaPotionDB) },
+  { count = 1, spells = consumeList(G.HealthPotionDB) },
 }
 
 local function canCast(spell, unit)
