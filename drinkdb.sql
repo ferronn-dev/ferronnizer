@@ -1,7 +1,7 @@
 SELECT
   CAST(s.id AS INT64),
   CAST(s.requiredlevel AS INT64),
-  CAST(z.spellid AS INT64)
+  IF(CAST(s.flags_0_ AS INT64) & 0x2 > 0, CAST(z.spellid AS INT64), NULL)
 FROM
   itemsparse s
 JOIN
