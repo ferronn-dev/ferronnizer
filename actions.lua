@@ -774,7 +774,7 @@ end
 
 local function setupActions(actions, defaultPage, actionButtons)
   local function getActionButton(idx)
-    local buttonPage = actionPage == 'emote' and 'text' or 'icon'
+    local buttonPage = actions[actionPage].grid
     return actionButtons[buttonPage][idx]
   end
   local updateAttr = setupHeader(actions, defaultPage, actionButtons, getActionButton)
@@ -813,9 +813,9 @@ local function setupActions(actions, defaultPage, actionButtons)
     handlers[ev] = handlers[ev] or {}
     table.insert(handlers[ev], handler)
   end
-  for pageName, pageActions in pairs(actions) do
+  for pageName, page in pairs(actions) do
     actionButtonState[pageName] = {}
-    for idx, action in pairs(pageActions) do
+    for idx, action in pairs(page.actions) do
       actionButtonState[pageName][idx] = {}
       local init, tyhandlers = makeAction(action)
       updateAction(pageName, idx, init)
@@ -888,7 +888,7 @@ local function makeActions()
     end
     return page, extra
   end)()
-  local actions = Mixin(extraPages, {
+  local actionPages = Mixin(extraPages, {
     action1 = (function()
       local page = {}
       for i = 1, 48 do
@@ -992,6 +992,16 @@ local function makeActions()
       return page
     end)(),
   })
+  local actions = (function()
+    local t = {}
+    for k, v in pairs(actionPages) do
+      t[k] = {
+        actions = v,
+        grid = k == 'emote' and 'text' or 'icon',
+      }
+    end
+    return t
+  end)()
   local defaultPage = next(fractionPage) and 'fraction' or 'action1'
   return actions, defaultPage
 end
