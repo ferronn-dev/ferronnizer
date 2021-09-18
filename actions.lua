@@ -378,7 +378,7 @@ local makeAction = (function()
       return function(action)
         local stance = action.stance
         local button = assert(buttons[stance], 'bad stance ' .. stance)
-        return {
+        local init = {
           attr = '/click ' .. button:GetName(),
           checked = { spell = stance },
           cooldown = { spell = stance },
@@ -386,6 +386,14 @@ local makeAction = (function()
           tooltip = { spell = stance },
           update = { spell = stance },
         }
+        local function update()
+          local icon = GetSpellTexture(stance)
+          return {
+            alpha = icon and 1.0 or 0.0,
+            icon = icon,
+          }
+        end
+        return Mixin(init, update()), { SPELLS_CHANGED = update }
       end
     end)(),
   }
