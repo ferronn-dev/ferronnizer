@@ -33,10 +33,13 @@ G.AddClassActionSpec('TBC', 1, {
     spell = 'Bloodrage',
   },
   [19] = {
-    spell = 'Battle Stance',
+    stance = 'Battle Stance',
   },
   [20] = {
-    spell = 'Defensive Stance',
+    stance = 'Defensive Stance',
+  },
+  [21] = {
+    stance = 'Berserker Stance',
   },
   [25] = {
     shield = true,

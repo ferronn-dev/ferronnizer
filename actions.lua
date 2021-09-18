@@ -361,6 +361,33 @@ local makeAction = (function()
       })
       return init, { SPELLS_CHANGED = update }
     end,
+    stance = (function()
+      local names = {'Battle', 'Defensive', 'Berserker'}
+      local buttons = {}
+      for _, name in ipairs(names) do
+        local button = CreateFrame(
+          'Button',
+          addonName .. name .. 'StanceButton',
+          nil,
+          'SecureActionButtonTemplate')
+        button:Hide()
+        button:SetAttribute('type', 'macro')
+        button:SetAttribute('macrotext', '/cast ' .. name .. ' Stance')
+        buttons[name .. ' Stance'] = button
+      end
+      return function(action)
+        local stance = action.stance
+        local button = assert(buttons[stance], 'bad stance ' .. stance)
+        return {
+          attr = '/click ' .. button:GetName(),
+          checked = { spell = stance },
+          cooldown = { spell = stance },
+          count = { spell = stance },
+          tooltip = { spell = stance },
+          update = { spell = stance },
+        }
+      end
+    end)(),
   }
   return function(action)
     for k, v in pairs(lang) do
@@ -368,6 +395,7 @@ local makeAction = (function()
         return v(action)
       end
     end
+    error('invalid action')
   end
 end)()
 

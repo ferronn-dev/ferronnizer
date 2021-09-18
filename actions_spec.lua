@@ -23,6 +23,7 @@ describe('Actions', function()
     { page = {} },
     { petaction = 7 },
     { spell = 'Cooking' },
+    { stance = 'Berserker Stance' },
     { stopcasting = true },
   }
 
