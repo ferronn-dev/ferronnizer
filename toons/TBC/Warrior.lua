@@ -10,7 +10,7 @@ G.AddClassActionSpec('TBC', 1, {
     spell = 'Sunder Armor',
   },
   [4] = {
-    spell = 'Overpower',
+    shapeshift = { 'Overpower', 'Revenge' }
   },
   [5] = {
     spell = 'Charge',
@@ -48,9 +48,6 @@ G.AddClassActionSpec('TBC', 1, {
   },
   [26] = {
     spell = 'Taunt',
-  },
-  [27] = {
-    spell = 'Revenge',
   },
   [33] = {
     spell = 'Gift of the Naaru',

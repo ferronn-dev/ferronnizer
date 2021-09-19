@@ -333,6 +333,36 @@ local makeAction = (function()
       })
       return init, { UNIT_PET = update }
     end,
+    shapeshift = function(action)
+      local shapes = action.shapeshift
+      local macro = '/cast'
+      for shape, spell in pairs(shapes) do
+        macro = macro .. (' [form:%d] %s;'):format(shape, spell)
+      end
+      local function update()
+        local shape = GetShapeshiftForm()
+        local spell = shape and shapes[shape] or nil
+        if spell then
+          return {
+            alpha = 1.0,
+            cooldown = { spell = spell },
+            icon = GetSpellTexture(spell),
+            tooltip = { spell = spell },
+            update = { spell = spell },
+          }
+        else
+          return {
+            alpha = 0.0,
+            cooldown = { reset = true },
+            tooltip = { reset = true },
+          }
+        end
+      end
+      return { attr = macro }, {
+        SPELLS_CHANGED = update,
+        UPDATE_SHAPESHIFT_FORM = update,
+      }
+    end,
     spell = function(action)
       local shortName = action.spell
       local rankStr = action.rank and ('Rank ' .. action.rank) or nil
