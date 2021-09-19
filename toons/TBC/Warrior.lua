@@ -26,11 +26,17 @@ G.AddClassActionSpec('TBC', 1, {
     spell = 'Hamstring',
     stances = {'Battle Stance', 'Berserker Stance'},
   },
+  [8] = {
+    spell = '!Shoot',
+  },
   [13] = {
     spell = 'Battle Shout',
   },
   [14] = {
     spell = 'Bloodrage',
+  },
+  [15] = {
+    spell = 'Demoralizing Shout',
   },
   [19] = {
     stance = 'Battle Stance',
@@ -48,6 +54,10 @@ G.AddClassActionSpec('TBC', 1, {
   },
   [26] = {
     spell = 'Taunt',
+    stances = {'Defensive Stance'},
+  },
+  [27] = {
+    spell = 'Revenge',
     stances = {'Defensive Stance'},
   },
   [33] = {
