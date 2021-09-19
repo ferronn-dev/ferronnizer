@@ -46,8 +46,7 @@ G.AddClassActionSpec('TBC', 7, {
     stopcasting = true,
   },
   [17] = {
-    mouseover = true,
-    spell = 'Gift of the Naaru',
+    racial = true,
   },
   [18] = {
     mouseover = true,

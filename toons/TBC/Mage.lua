@@ -55,7 +55,7 @@ G.AddClassActionSpec('TBC', 8, {
     spell = 'Icy Veins',
   },
   [18] = {
-    spell = 'Escape Artist',
+    racial = true,
   },
   [19] = {
     invslot = 13,

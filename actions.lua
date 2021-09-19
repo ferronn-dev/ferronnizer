@@ -930,6 +930,20 @@ local function makeActions()
           texture = 135768,
           tooltip = 'Stop Casting',
         }
+      elseif v.racial then
+        page[i] = {
+          spell = ({
+            Draenei = 'Gift of the Naaru',
+            Dwarf = 'Stoneform',
+            Gnome = 'Escape Artist',
+            Human = 'Perception',
+            ['Night Elf'] = 'Shadowmeld',
+            Orc = 'Blood Fury',
+            Tauren = 'War Stomp',
+            Troll = 'Berserking',
+            Undead = 'Will of the Forsaken',
+          })[UnitRace('player')]
+        }
       else
         page[i] = v
       end

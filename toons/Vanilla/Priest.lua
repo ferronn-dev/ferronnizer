@@ -110,7 +110,7 @@ G.AddClassActionSpec('Vanilla', 5, {
     spell = 'Shackle Undead',
   },
   [31] = {
-    spell = 'Perception',
+    racial = true,
   },
   [32] = {
     spell = 'Holy Fire',

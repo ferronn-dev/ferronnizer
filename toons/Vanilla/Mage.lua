@@ -55,7 +55,7 @@ G.AddClassActionSpec('Vanilla', 8, {
     spell = 'Detect Magic',
   },
   [18] = {
-    spell = 'Escape Artist',
+    racial = true,
   },
   [19] = {
     invslot = 13,

@@ -6,12 +6,9 @@ describe('spell db', function()
       ['Desperate Prayer'] = true,
       ['Divine Intervention'] = true,
       ['Divine Favor'] = true,
-      ['Escape Artist'] = true,
       ['Evocation'] = true,
-      ['Gift of the Naaru'] = true,
       ['Inner Focus'] = true,
       ['Lay on Hands'] = true,
-      ['Perception'] = true,
     }
     local seenBad = {}
     for fullname, actions in pairs(wow.addon.ClassActionSpecs) do

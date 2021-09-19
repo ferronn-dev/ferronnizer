@@ -50,7 +50,7 @@ G.AddClassActionSpec('TBC', 1, {
     spell = 'Taunt',
   },
   [33] = {
-    spell = 'Gift of the Naaru',
+    racial = true,
   },
   [34] = {
     buff = true,
