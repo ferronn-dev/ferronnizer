@@ -19,7 +19,7 @@ G.AddClassActionSpec('TBC', 1, {
     spell = 'Thunder Clap',
   },
   [7] = {
-    spell = 'Hamstring',
+    shapeshift = { 'Hamstring', 'Shield Block' }
   },
   [8] = {
     ammo = true,
@@ -47,7 +47,7 @@ G.AddClassActionSpec('TBC', 1, {
     spell = 'Shield Bash',
   },
   [26] = {
-    spell = 'Taunt',
+    shapeshift = { 'Mocking Blow', 'Taunt' },
   },
   [33] = {
     racial = true,
