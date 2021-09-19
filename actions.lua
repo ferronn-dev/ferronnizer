@@ -354,7 +354,7 @@ local makeAction = (function()
       local init = Mixin(update(), {
         checked = { spell = fullName },
         cooldown = { spell = fullName },
-        count = { spell = fullName },
+        count = action.ammo and { invslot = 0 } or { spell = fullName },
         name = action.actionText,
         tooltip = { spell = fullName },
         update = { spell = fullName },
@@ -416,6 +416,9 @@ local updateButton = (function()
       local countLang = {
         action = function(action)
           return IsConsumableAction(action) and GetActionCount(action) or -1
+        end,
+        invslot = function(invslot)
+          return GetInventoryItemCount('player', invslot)
         end,
         item = function(item)
           return GetItemCount(item)

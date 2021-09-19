@@ -22,6 +22,7 @@ G.AddClassActionSpec('TBC', 1, {
     spell = 'Hamstring',
   },
   [8] = {
+    ammo = true,
     spell = '!Shoot',
   },
   [13] = {
