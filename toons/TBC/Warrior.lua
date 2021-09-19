@@ -39,13 +39,13 @@ G.AddClassActionSpec('TBC', 1, {
     spell = 'Demoralizing Shout',
   },
   [19] = {
-    stance = 'Battle Stance',
+    spell = 'Battle Stance',
   },
   [20] = {
-    stance = 'Defensive Stance',
+    spell = 'Defensive Stance',
   },
   [21] = {
-    stance = 'Berserker Stance',
+    spell = 'Berserker Stance',
   },
   [25] = {
     shield = true,
