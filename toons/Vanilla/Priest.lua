@@ -101,7 +101,13 @@ G.AddClassActionSpec('Vanilla', 5, {
     spell = 'Fade',
   },
   [28] = {
-    spell = 'Desperate Prayer',
+    spell = ({
+      Dwarf = 'Desperate Prayer',
+      Human = 'Desperate Prayer',
+      ['Night Elf'] = 'Elune\'s Grace',
+      Troll = 'Hex of Weakness',
+      Undead = 'Touch of Weakness',
+    })[UnitRace('player')],
   },
   [29] = {
     spell = 'Mind Control',
@@ -121,6 +127,15 @@ G.AddClassActionSpec('Vanilla', 5, {
   [34] = {
     buff = true,
     reagent = 17029,
+  },
+  [39] = {
+    spell = ({
+      Dwarf = 'Fear Ward',
+      Human = 'Feedback',
+      ['Night Elf'] = 'Starshards',
+      Troll = 'Shadowguard',
+      Undead = 'Devouring Plague',
+    })[UnitRace('player')],
   },
   [43] = {
     mount = true,
