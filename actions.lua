@@ -367,10 +367,23 @@ local updateButton = (function()
     alpha = function(button, alpha)
       button:SetAlpha(alpha)
     end,
-    checked = function(button, prog)
-      assert(prog.spell, 'invalid checked program')
-      button:SetChecked(IsCurrentSpell(prog.spell))
-    end,
+    checked = (function()
+      local checkedLang = {
+        reset = function()
+          return false
+        end,
+        spell = function(spell)
+          return IsCurrentSpell(spell)
+        end,
+      }
+      return function(button, checked)
+        local k, v = next(checked)
+        local fn = assert(checkedLang[k], 'invalid checked program ' .. k)
+        local chfn = function() return fn(v) end
+        button:SetChecked(chfn())
+        button.chfn = chfn
+      end
+    end)(),
     color = function(button, color)
       if button.icon then
         button.icon:SetVertexColor(color, color, color)
@@ -567,7 +580,7 @@ local function makeActionButtons()
       GameTooltip:Hide()
     end,
     PostClick = function(self)
-      self:SetChecked(false)
+      self:SetChecked(self.chfn())
     end,
   }
   local iconButtons = {}
@@ -746,6 +759,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
   header.InsecureActionButtonRefresh = function(_, idx)
     local reset = {
       alpha = 1.0,
+      checked = { reset = true },
       color = 1.0,
       cooldown = { reset = true },
       count = { reset = true },
