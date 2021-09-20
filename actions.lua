@@ -41,11 +41,7 @@ local makeAction = (function()
       local item = computeItem(level)
       return {
         attr = computeAttr(item),
-        cooldown = { item = item },
-        count = { item = item },
-        icon = GetItemIcon(item),
-        tooltip = { item = item },
-        update = { item = item },
+        ui = { item = item },
       }
     end
     local function updateDB(db)
@@ -121,11 +117,7 @@ local makeAction = (function()
       local function update()
         local item = currentItem()
         return {
-          cooldown = { item = item },
-          count = { item = item },
-          icon = GetItemIcon(item),
-          tooltip = { item = item },
-          update = { item = item },
+          ui = { item = item },
         }
       end
       return Mixin(update(), { attr = macro }), {
@@ -169,12 +161,9 @@ local makeAction = (function()
           table.insert(spellset, {
             action = {
               attr = '/dismount [noflying]\n/stand\n/cast [@mouseover,help,nodead][] ' .. fullName,
-              cooldown = { spell = fullName },
-              count = { spell = fullName },
               icon = GetSpellTexture(spell),
               name = actionText,
-              tooltip = { spell = fullName },
-              update = { spell = fullName },
+              ui = { spell = fullName },
             },
             id = rank[1],
           })
@@ -228,13 +217,9 @@ local makeAction = (function()
       local slot = action.invslot
       local function update()
         local item = GetInventoryItemID('player', slot)
-        return {
-          attr = item and ('/use ' .. slot) or '',
-          color = item and IsUsableItem(item) and 1.0 or 0.4,
-          cooldown = item and { item = item } or nil,
-          icon = item and GetItemIcon(item) or nil,
-          tooltip = item and { item = item } or nil,
-          update = item and { item = item } or nil,
+        return not item and { attr = '' } or {
+          attr = '/use ' .. slot,
+          ui = { item = item },
         }
       end
       return update(), { PLAYER_EQUIPMENT_CHANGED = update }
@@ -253,15 +238,11 @@ local makeAction = (function()
           local item, spell = unpack(entry)
           if item and GetItemCount(item) > 0 then
             return '/use', 'item:' .. item, {
-              cooldown = { item = item },
-              icon = GetItemIcon(item),
-              tooltip = { item = item },
+              ui = { item = item },
             }
           elseif IsSpellKnown(spell) then
             return '/cast', (GetSpellInfo(spell)), {
-              cooldown = { spell = spell },
-              icon = GetSpellTexture(spell),
-              tooltip = { spell = spell },
+              ui = { spell = spell },
             }
           end
         end
@@ -345,10 +326,7 @@ local makeAction = (function()
         if spell then
           return {
             alpha = 1.0,
-            cooldown = { spell = spell },
-            icon = GetSpellTexture(spell),
-            tooltip = { spell = spell },
-            update = { spell = spell },
+            ui = { spell = spell },
           }
         else
           return {
@@ -382,12 +360,9 @@ local makeAction = (function()
         }
       end
       local init = Mixin(update(), {
-        checked = { spell = fullName },
-        cooldown = { spell = fullName },
         count = action.ammo and { invslot = 0 } or { spell = fullName },
         name = action.actionText,
-        tooltip = { spell = fullName },
-        update = { spell = fullName },
+        ui = { spell = fullName },
       })
       return init, { SPELLS_CHANGED = update }
     end,
@@ -846,16 +821,45 @@ local function setupActions(actions, defaultPage, actionButtons)
     end
     return maybeSetAttr, drainPendingAttrs
   end)()
-  local function updateAction(pageName, idx, update)
-    if update.attr then
-      maybeSetAttr(pageName, idx, update.attr)
-      update.attr = nil
+  local updateAction = (function()
+    local uiLang = {
+      item = function(item)
+        return {
+          color = IsUsableItem(item) and 1.0 or 0.4,
+          cooldown = { item = item },
+          count = { item = item },
+          icon = GetItemIcon(item),
+          tooltip = { item = item },
+          update = { item = item },
+        }
+      end,
+      spell = function(spell)
+        return {
+          checked = { spell = spell },
+          cooldown = { spell = spell },
+          count = { spell = spell },
+          icon = GetSpellTexture(spell),
+          tooltip = { spell = spell },
+          update = { spell = spell },
+        }
+      end,
+    }
+    return function(pageName, idx, update)
+      if update.attr then
+        maybeSetAttr(pageName, idx, update.attr)
+        update.attr = nil
+      end
+      if update.ui then
+        local k, v = next(update.ui)
+        update = Mixin({}, uiLang[k](v), update)
+        update.ui = nil
+      end
+      Mixin(actionButtonState[pageName][idx], update)
+      if pageName == actionPage then
+        updateButton(getActionButton(idx), update)
+      end
     end
-    Mixin(actionButtonState[pageName][idx], update)
-    if pageName == actionPage then
-      updateButton(getActionButton(idx), update)
-    end
-  end
+  end)()
   local handlers = {}
   local function addHandler(ev, handler)
     handlers[ev] = handlers[ev] or {}
