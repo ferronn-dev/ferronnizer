@@ -42,6 +42,7 @@ deps:
   - toons/TBC/Paladin.lua
   - toons/TBC/Priest.lua
   - toons/TBC/Shaman.lua
+  - toons/TBC/Warlock.lua
   - toons/TBC/Warrior.lua
   - toons/Vanilla/Mage.lua
   - toons/Vanilla/Paladin.lua
@@ -54,6 +55,8 @@ deps:
   toons/TBC/Priest.lua:
   - tooninit.lua
   toons/TBC/Shaman.lua:
+  - tooninit.lua
+  toons/TBC/Warlock.lua:
   - tooninit.lua
   toons/TBC/Warrior.lua:
   - tooninit.lua

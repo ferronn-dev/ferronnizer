@@ -448,7 +448,7 @@ local updateButton = (function()
           return IsConsumableAction(action) and GetActionCount(action) or -1
         end,
         invslot = function(invslot)
-          return GetInventoryItemCount('player', invslot)
+          return GetInventoryItemCount('player', invslot) or -1
         end,
         item = function(item)
           return GetItemCount(item)
