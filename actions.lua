@@ -956,6 +956,12 @@ local function makeActions()
             Undead = 'Will of the Forsaken',
           })[UnitRace('player')]
         }
+      elseif v.racial2 then
+        local spell = ({
+          ['Blood Elf'] = 'Mana Tap',
+          Undead = 'Cannibalize',
+        })[UnitRace('player')]
+        page[i] = spell and { spell = spell } or nil
       else
         page[i] = v
       end

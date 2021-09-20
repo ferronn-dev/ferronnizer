@@ -119,7 +119,7 @@ G.AddClassActionSpec('TBC', 5, {
     spell = 'Shackle Undead',
   },
   [31] = {
-    racial = true,
+    spell = 'Shadowfiend',
   },
   [32] = {
     spell = 'Holy Fire',
@@ -132,10 +132,10 @@ G.AddClassActionSpec('TBC', 5, {
     reagent = 17029,
   },
   [35] = {
-    spell = 'Shadowfiend',
+    racial = true,
   },
   [36] = {
-    spell = 'Levitate',
+    racial2 = true,
   },
   [37] = {
     spell = 'Shadow Word: Death',
@@ -154,6 +154,9 @@ G.AddClassActionSpec('TBC', 5, {
     local spell = spells[UnitRace('player')]
     return spell and { spell = spell } or nil
   end)(),
+  [40] = {
+    spell = 'Levitate',
+  },
   [43] = {
     mount = true,
   },

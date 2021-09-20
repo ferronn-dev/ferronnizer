@@ -55,7 +55,7 @@ G.AddClassActionSpec('Vanilla', 8, {
     spell = 'Detect Magic',
   },
   [18] = {
-    racial = true,
+    spell = 'Slow Fall',
   },
   [19] = {
     invslot = 13,
@@ -111,8 +111,11 @@ G.AddClassActionSpec('Vanilla', 8, {
   [34] = {
     buff = true,
   },
+  [35] = {
+    racial = true,
+  },
   [36] = {
-    spell = 'Slow Fall',
+    racial2 = true,
   },
   [43] = {
     mount = true,

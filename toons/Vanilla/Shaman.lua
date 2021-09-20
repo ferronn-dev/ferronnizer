@@ -45,9 +45,6 @@ G.AddClassActionSpec('Vanilla', 7, {
   [16] = {
     stopcasting = true,
   },
-  [17] = {
-    racial = true,
-  },
   [18] = {
     mouseover = true,
     spell = 'Water Breathing',
@@ -91,6 +88,15 @@ G.AddClassActionSpec('Vanilla', 7, {
   },
   [33] = {
     spell = 'Frostbrand Weapon',
+  },
+  [34] = {
+    buff = true,
+  },
+  [35] = {
+    racial = true,
+  },
+  [36] = {
+    racial2 = true,
   },
   [37] = {
     spell = 'Purge',

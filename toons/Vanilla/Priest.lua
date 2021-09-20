@@ -115,9 +115,6 @@ G.AddClassActionSpec('Vanilla', 5, {
   [30] = {
     spell = 'Shackle Undead',
   },
-  [31] = {
-    racial = true,
-  },
   [32] = {
     spell = 'Holy Fire',
   },
@@ -127,6 +124,12 @@ G.AddClassActionSpec('Vanilla', 5, {
   [34] = {
     buff = true,
     reagent = 17029,
+  },
+  [35] = {
+    racial = true,
+  },
+  [36] = {
+    racial2 = true,
   },
   [39] = {
     spell = ({

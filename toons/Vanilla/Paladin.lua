@@ -52,9 +52,6 @@ G.AddClassActionSpec('Vanilla', 2, {
   [21] = {
     spell = 'Redemption',
   },
-  [22] = {
-    racial = true,
-  },
   [30] = {
     spell = 'Divine Shield',
     stopcasting = true,
@@ -75,6 +72,12 @@ G.AddClassActionSpec('Vanilla', 2, {
   [34] = {
     buff = true,
     reagent = 21177,
+  },
+  [35] = {
+    racial = true,
+  },
+  [36] = {
+    racial2 = true,
   },
   [41] = {
     mouseover = true,

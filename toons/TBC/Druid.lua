@@ -1,10 +1,13 @@
 local _, G = ...
 G.AddClassActionSpec('TBC', 11, {
-  [33] = {
-    racial = true,
-  },
   [34] = {
     buff = true,
+  },
+  [35] = {
+    racial = true,
+  },
+  [36] = {
+    racial2 = true,
   },
   [43] = {
     mount = true,
