@@ -102,7 +102,15 @@ G.AddClassActionSpec('TBC', 5, {
     spell = 'Fade',
   },
   [28] = {
-    spell = 'Desperate Prayer',
+    spell = ({
+      ['Blood Elf'] = 'Touch of Weakness',
+      Draenei = 'Symbol of Hope',
+      Dwarf = 'Desperate Prayer',
+      Human = 'Desperate Prayer',
+      ['Night Elf'] = 'Elune\'s Grace',
+      Troll = 'Hex of Weakness',
+      Undead = 'Touch of Weakness',
+    })[UnitRace('player')],
   },
   [29] = {
     spell = 'Mind Control',
@@ -135,6 +143,17 @@ G.AddClassActionSpec('TBC', 5, {
   [38] = {
     spell = 'Mass Dispel',
   },
+  [39] = (function()
+    local spells = {
+      ['Blood Elf'] = 'Consume Magic',
+      Human = 'Feedback',
+      ['Night Elf'] = 'Starshards',
+      Troll = 'Shadowguard',
+      Undead = 'Devouring Plague',
+    }
+    local spell = spells[UnitRace('player')]
+    return spell and { spell = spell } or nil
+  end)(),
   [43] = {
     mount = true,
   },
