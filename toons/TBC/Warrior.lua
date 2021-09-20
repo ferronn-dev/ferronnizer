@@ -10,16 +10,16 @@ G.AddClassActionSpec('TBC', 1, {
     spell = 'Sunder Armor',
   },
   [4] = {
-    shapeshift = { 'Overpower', 'Revenge' }
+    shapeshift = { 'Overpower', 'Revenge' },
   },
   [5] = {
-    spell = 'Charge',
+    shapeshift = { 'Charge', 'Shield Block' },
   },
   [6] = {
     spell = 'Thunder Clap',
   },
   [7] = {
-    shapeshift = { 'Hamstring', 'Shield Block' }
+    shapeshift = { 'Hamstring', 'Disarm' },
   },
   [8] = {
     ammo = true,
