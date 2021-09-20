@@ -46,7 +46,13 @@ describe('Actions', function()
     init(wow, {
       [46] = { drink = true },
     })
-    assert.same('/use ', wow.env.mooActionIconButton46:GetAttribute('macrotext'):sub(1, 5))
+    local button = wow.env.mooActionIconButton46
+    assert.same('', button:GetAttribute('macrotext'))
+    assert.same(0.0, button:GetAlpha())
+    wow.state.inventory[5350] = 1
+    wow.state:SendEvent('BAG_UPDATE_DELAYED')
+    assert.same('/use item:5350', button:GetAttribute('macrotext'))
+    assert.same(1.0, button:GetAlpha())
   end)
 
   it('makes the right amount of buttons', function()

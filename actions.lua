@@ -26,7 +26,6 @@ local makeAction = (function()
           return item
         end
       end
-      return currentDB[#currentDB][1]  -- give up and return the last thing
     end
     local function computeAttr(item)
       if currentDB == mealDB then
@@ -40,8 +39,8 @@ local makeAction = (function()
     local function updateItem(level)
       local item = computeItem(level)
       return {
-        attr = computeAttr(item),
-        ui = { item = item },
+        attr = item and computeAttr(item) or nil,
+        ui = item and { item = item } or { hide = true },
       }
     end
     local function updateDB(db)
@@ -112,13 +111,10 @@ local makeAction = (function()
             return item
           end
         end
-        return G.BandageDB[#G.BandageDB][1]  -- give up and return the last thing
       end
       local function update()
         local item = currentItem()
-        return {
-          ui = { item = item },
-        }
+        return { ui = item and { item = item } or { hide = true } }
       end
       return Mixin(update(), { attr = macro }), {
         BAG_UPDATE_DELAYED = update,
