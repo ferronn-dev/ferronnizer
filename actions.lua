@@ -323,18 +323,7 @@ local makeAction = (function()
       local function update()
         local shape = GetShapeshiftForm()
         local spell = shape and shapes[shape] or nil
-        if spell then
-          return {
-            alpha = 1.0,
-            ui = { spell = spell },
-          }
-        else
-          return {
-            alpha = 0.0,
-            cooldown = { reset = true },
-            tooltip = { reset = true },
-          }
-        end
+        return { ui = spell and { spell = spell } or { hide = true } }
       end
       return { attr = macro }, {
         SPELLS_CHANGED = update,
@@ -823,8 +812,15 @@ local function setupActions(actions, defaultPage, actionButtons)
   end)()
   local updateAction = (function()
     local uiLang = {
+      hide = function()
+        return {
+          alpha = 0.0,
+          tooltip = { reset = true },
+        }
+      end,
       item = function(item)
         return {
+          alpha = 1.0,
           color = IsUsableItem(item) and 1.0 or 0.4,
           cooldown = { item = item },
           count = { item = item },
@@ -835,6 +831,7 @@ local function setupActions(actions, defaultPage, actionButtons)
       end,
       spell = function(spell)
         return {
+          alpha = 1.0,
           checked = { spell = spell },
           cooldown = { spell = spell },
           count = { spell = spell },
