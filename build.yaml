@@ -38,9 +38,12 @@ deps:
   tooltips.lua:
   - playerinfo.lua
   toons.lua:
+  - toons/TBC/Druid.lua
+  - toons/TBC/Hunter.lua
   - toons/TBC/Mage.lua
   - toons/TBC/Paladin.lua
   - toons/TBC/Priest.lua
+  - toons/TBC/Rogue.lua
   - toons/TBC/Shaman.lua
   - toons/TBC/Warlock.lua
   - toons/TBC/Warrior.lua
@@ -48,11 +51,17 @@ deps:
   - toons/Vanilla/Paladin.lua
   - toons/Vanilla/Priest.lua
   - toons/Vanilla/Shaman.lua
+  toons/TBC/Druid.lua:
+  - tooninit.lua
+  toons/TBC/Hunter.lua:
+  - tooninit.lua
   toons/TBC/Mage.lua:
   - tooninit.lua
   toons/TBC/Paladin.lua:
   - tooninit.lua
   toons/TBC/Priest.lua:
+  - tooninit.lua
+  toons/TBC/Rogue.lua:
   - tooninit.lua
   toons/TBC/Shaman.lua:
   - tooninit.lua
