@@ -52,6 +52,9 @@ G.AddClassActionSpec('TBC', 2, {
   [21] = {
     spell = 'Redemption',
   },
+  [22] = {
+    racial = true,
+  },
   [30] = {
     spell = 'Divine Shield',
     stopcasting = true,
