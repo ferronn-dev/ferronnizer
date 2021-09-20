@@ -933,6 +933,7 @@ local function makeActions()
       elseif v.racial then
         page[i] = {
           spell = ({
+            ['Blood Elf'] = 'Arcane Torrent',
             Draenei = 'Gift of the Naaru',
             Dwarf = 'Stoneform',
             Gnome = 'Escape Artist',
