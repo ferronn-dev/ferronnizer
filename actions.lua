@@ -1044,6 +1044,11 @@ local function makeActions()
         texture = 136206,
         tooltip = 'Cancel Mind Control',
       })
+      table.insert(page, {
+        macro = '/petdismiss',
+        texture = 'interface/icons/spell_nature_spiritwolf',
+        tooltip = 'Dismiss Pet',
+      })
       return page
     end)(),
     profession = (function()
