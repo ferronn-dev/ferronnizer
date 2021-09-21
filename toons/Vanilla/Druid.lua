@@ -1,5 +1,11 @@
 local _, G = ...
 G.AddClassActionSpec('Vanilla', 11, {
+  [1] = {
+    spell = 'Wrath',
+  },
+  [13] = {
+    spell = 'Healing Touch',
+  },
   [34] = {
     buff = true,
   },
