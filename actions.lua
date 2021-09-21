@@ -751,7 +751,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
     local creatureFamily, petName = PlayerPetSummary()
     if petExists and not creatureFamily and petName ~= 'Shadowfiend' then
       owner:Run(updateActionPage, 'pet')
-    elseif not petExists and currentPage == 'pet' then
+    elseif not petExists and owner:GetAttribute('fractionpage') == 'pet' then
       owner:Run(updateActionPage, defaultPage)
     end
   ]=])
