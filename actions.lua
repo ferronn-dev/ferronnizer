@@ -785,7 +785,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
     local switch = CreateFrame('Button', prefix .. name .. 'Switcher', header, 'SecureActionButtonTemplate')
     header:WrapScript(switch, 'OnClick', 'return nil, true', ([=[
       local page = %q
-      owner:Run(updateActionPage, currentPage == page and defaultPage or page)
+      owner:Run(updateActionPage, owner:GetAttribute('fractionpage') == page and defaultPage or page)
     ]=]):format(page))
   end
 
