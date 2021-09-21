@@ -377,11 +377,13 @@ local updateButton = (function()
         end,
       }
       return function(button, checked)
-        local k, v = next(checked)
-        local fn = assert(checkedLang[k], 'invalid checked program ' .. k)
-        local chfn = function() return fn(v) end
-        button:SetChecked(chfn())
-        button.chfn = chfn
+        if button.SetChecked then
+          local k, v = next(checked)
+          local fn = assert(checkedLang[k], 'invalid checked program ' .. k)
+          local chfn = function() return fn(v) end
+          button:SetChecked(chfn())
+          button.chfn = chfn
+        end
       end
     end)(),
     color = function(button, color)
