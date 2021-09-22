@@ -216,7 +216,7 @@ local function GetBuffToCast(unit)
           if buff.classes and not buff.classes[UnitClass(unit)] then
             return nil
           end
-          if buff.tank ~= nil
+          if IsInGroup() and buff.tank ~= nil
               and buff.tank ~= UnitIsUnit(unit, G.TheTankUnit) then
             return nil
           end

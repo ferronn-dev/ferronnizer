@@ -3,8 +3,14 @@ G.AddClassActionSpec('Vanilla', 11, {
   [1] = {
     spell = 'Wrath',
   },
+  [2] = {
+    spell = 'Moonfire',
+  },
   [13] = {
     spell = 'Healing Touch',
+  },
+  [14] = {
+    spell = 'Rejuvenation',
   },
   [34] = {
     buff = true,
