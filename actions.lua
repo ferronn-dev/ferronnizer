@@ -92,19 +92,18 @@ local makeAction = (function()
     aura = function(action)
       local index, filter = action.aura.index, action.aura.filter
       local function update(unit)
-        if unit ~= 'player' then
+        if not UnitIsUnit(unit, 'player') then
           return {}
         else
-          local _, icon, count = UnitAura('player', index, filter)
+          local _, icon = UnitAura('player', index, filter)
           return {
-            count = { value = count },
+            alpha = icon and 1.0 or 0.0,
             icon = icon,
-            ui = { hide = (icon == nil) },
           }
         end
       end
       local attr = string.format('#cancelaura:%2d:%s', index, filter)
-      return { attr = attr }, { UNIT_AURA = update }
+      return Mixin({ attr = attr }, update('player')), { UNIT_AURA = update }
     end,
     bandage = function()
       local macro = ''
