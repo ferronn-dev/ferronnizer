@@ -296,10 +296,12 @@ local makeAction = (function()
     petaction = function(action)
       local num = action.petaction
       local function update()
-        local _, texture, isToken = GetPetActionInfo(num)
+        local _, texture, isToken, isActive, autoCastAllowed, autoCastEnabled = GetPetActionInfo(num)
         local icon = isToken and _G[texture] or texture
         return {
           alpha = icon and 1.0 or 0.0,
+          autocast = autoCastAllowed and (autoCastEnabled and 'enabled' or 'disabled') or 'disallowed',
+          checked = { value = isActive or false },
           icon = icon,
         }
       end
@@ -308,7 +310,11 @@ local makeAction = (function()
         cooldown = { petaction = num },
         tooltip = { petaction = num },
       })
-      return init, { UNIT_PET = update }
+      return init, {
+        PET_BAR_UPDATE = update,
+        PET_UI_UPDATE = update,
+        UNIT_PET = update,
+      }
     end,
     shapeshift = function(action)
       local shapes = action.shapeshift
@@ -367,6 +373,27 @@ local updateButton = (function()
     alpha = function(button, alpha)
       button:SetAlpha(alpha)
     end,
+    autocast = (function()
+      local autocastLang = {
+        disabled = function(button)
+          button.AutoCastable:Show()
+          AutoCastShine_AutoCastStop(button.AutoCastShine)
+        end,
+        disallowed = function(button)
+          button.AutoCastable:Hide()
+          AutoCastShine_AutoCastStop(button.AutoCastShine)
+        end,
+        enabled = function(button)
+          button.AutoCastable:Show()
+          AutoCastShine_AutoCastStart(button.AutoCastShine)
+        end,
+      }
+      return function(button, autocast)
+        if button.AutoCastable then
+          assert(autocastLang[autocast], 'invalid autocast ' .. autocast)(button)
+        end
+      end
+    end)(),
     checked = (function()
       local checkedLang = {
         reset = function()
@@ -375,11 +402,14 @@ local updateButton = (function()
         spell = function(spell)
           return IsCurrentSpell(spell)
         end,
+        value = function(value)
+          return value
+        end,
       }
       return function(button, checked)
         if button.SetChecked then
           local k, v = next(checked)
-          local fn = assert(checkedLang[k], 'invalid checked program ' .. k)
+          local fn = assert(checkedLang[k], 'invalid checked program ' .. tostring(k))
           local chfn = function() return fn(v) end
           button:SetChecked(chfn())
           button.chfn = chfn
@@ -761,6 +791,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
   header.InsecureActionButtonRefresh = function(_, idx)
     local reset = {
       alpha = 1.0,
+      autocast = 'disallowed',
       checked = { reset = true },
       color = 1.0,
       cooldown = { reset = true },
