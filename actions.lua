@@ -89,6 +89,23 @@ local makeAction = (function()
         end,
       }
     end,
+    aura = function(action)
+      local index, filter = action.aura.index, action.aura.filter
+      local function update(unit)
+        if unit ~= 'player' then
+          return {}
+        else
+          local _, icon, count = UnitAura('player', index, filter)
+          return {
+            count = { value = count },
+            icon = icon,
+            ui = { hide = (icon == nil) },
+          }
+        end
+      end
+      local attr = string.format('#cancelaura:%2d:%s', index, filter)
+      return { attr = attr }, { UNIT_AURA = update }
+    end,
     bandage = function()
       local macro = ''
       for _, entry in ipairs(G.BandageDB) do
@@ -396,9 +413,6 @@ local updateButton = (function()
     end)(),
     checked = (function()
       local checkedLang = {
-        reset = function()
-          return false
-        end,
         spell = function(spell)
           return IsCurrentSpell(spell)
         end,
@@ -458,11 +472,11 @@ local updateButton = (function()
         item = function(item)
           return GetItemCount(item)
         end,
-        reset = function()
-          return -1
-        end,
         spell = function(spell)
           return IsConsumableSpell(spell) and GetSpellCount(spell) or -1
+        end,
+        value = function(value)
+          return value
         end,
       }
       return function(button, prog)
@@ -675,11 +689,13 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
       local currentPage = owner:GetAttribute('fractionpage')
       local actionPage = actionPages[currentPage]
       local attr = actionPage.attrs[idx] or ''
-      local type_, action, macrotext
+      local type_, action, macrotext, index, filter
       if attr:sub(1, 8) == '#action:' then
         type_, action = 'action', tonumber(attr:sub(9))
       elseif attr:sub(1, 11) == '#petaction:' then
         type_, action = 'pet', tonumber(attr:sub(12))
+      elseif attr:sub(1, 12) == '#cancelaura:' then
+        type_, index, filter = 'cancelaura', tonumber(attr:sub(13, 14)), attr:sub(16)
       else
         type_, macrotext = 'macro', attr
       end
@@ -687,6 +703,8 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
       button:SetAttribute('type', type_)
       button:SetAttribute('action', action)
       button:SetAttribute('macrotext', macrotext)
+      button:SetAttribute('index', index)
+      button:SetAttribute('filter', filter)
       if attr ~= '' then
         owner:CallMethod('InsecureActionButtonRefresh', idx)
         button:Show()
@@ -792,10 +810,10 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
     local reset = {
       alpha = 1.0,
       autocast = 'disallowed',
-      checked = { reset = true },
+      checked = { value = false },
       color = 1.0,
       cooldown = { reset = true },
-      count = { reset = true },
+      count = { value = -1 },
       icon = 136235,  -- samwise
       name = '',
       tooltip = { reset = true },
@@ -1013,6 +1031,18 @@ local function makeActions()
       local page = {}
       for i = 49, 72 do
         table.insert(page, { action = i })
+      end
+      return page
+    end)(),
+    aura = (function()
+      local page = {}
+      for i = 1, 40 do
+        table.insert(page, {
+          aura = {
+            filter = 'CANCELABLE',
+            index = i,
+          },
+        })
       end
       return page
     end)(),
