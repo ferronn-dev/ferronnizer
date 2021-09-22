@@ -26,7 +26,7 @@ G.AddClassActionSpec('TBC', 9, {
   },
   [16] = {
     macro = '/petattack',
-    texture = 'interface/icons/ability_racial_bloodrage',
+    texture = 'interface/icons/ability_ghoulfrenzy',
     tooltip = 'Pet Attack',
   },
   [17] = {
