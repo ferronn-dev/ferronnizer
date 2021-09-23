@@ -1,22 +1,14 @@
 local _, G = ...
 G.AddClassActionSpec('TBC', 2, {
   [1] = {
-    actionText = 'HL8',
-    mouseover = true,
-    rank = 8,
-    spell = 'Holy Light',
+    page = {
+      [1] = {
+        spell = 'Seal of Righteousness',
+      },
+    },
   },
   [2] = {
-    actionText = 'FoL6',
-    mouseover = true,
-    rank = 6,
-    spell = 'Flash of Light',
-  },
-  [3] = {
-    actionText = 'FoL1',
-    mouseover = true,
-    rank = 1,
-    spell = 'Flash of Light',
+    spell = 'Judgement',
   },
   [4] = {
     spell = 'Divine Favor',
@@ -31,6 +23,14 @@ G.AddClassActionSpec('TBC', 2, {
     mouseover = true,
     spell = 'Cleanse',
   },
+  [8] = {
+    page = {
+      [1] = {
+        mouseover = true,
+        spell = 'Blessing of Might',
+      },
+    },
+  },
   [9] = {
     spell = 'Exorcism',
   },
@@ -43,6 +43,10 @@ G.AddClassActionSpec('TBC', 2, {
   [12] = {
     spell = 'Turn Undead',
   },
+  [13] = {
+    mouseover = true,
+    spell = 'Holy Light',
+  },
   [19] = {
     invslot = 13,
   },
@@ -51,6 +55,13 @@ G.AddClassActionSpec('TBC', 2, {
   },
   [21] = {
     spell = 'Redemption',
+  },
+  [25] = {
+    page = {
+      [25] = {
+        spell = 'Devotion Aura',
+      },
+    },
   },
   [30] = {
     spell = 'Divine Shield',
@@ -90,6 +101,9 @@ G.AddClassActionSpec('TBC', 2, {
   },
   [43] = {
     mount = true,
+  },
+  [44] = {
+    bandage = true,
   },
   [45] = {
     eat = true,
