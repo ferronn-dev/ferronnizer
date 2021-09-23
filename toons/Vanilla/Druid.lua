@@ -6,6 +6,9 @@ G.AddClassActionSpec('Vanilla', 11, {
   [2] = {
     spell = 'Moonfire',
   },
+  [12] = {
+    spell = 'Entangling Roots',
+  },
   [13] = {
     spell = 'Healing Touch',
   },
@@ -20,6 +23,9 @@ G.AddClassActionSpec('Vanilla', 11, {
   },
   [36] = {
     racial2 = true,
+  },
+  [42] = {
+    item = 6948,
   },
   [43] = {
     mount = true,

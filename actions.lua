@@ -236,6 +236,12 @@ local makeAction = (function()
       end
       return update(), { PLAYER_EQUIPMENT_CHANGED = update }
     end,
+    item = function(action)
+      return {
+        attr = '/use item:' .. action.item,
+        ui = { item = action.item },
+      }
+    end,
     macro = function(action)
       return {
         attr = action.macro,
