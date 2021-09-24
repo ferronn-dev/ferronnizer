@@ -14,6 +14,7 @@ G.AddClassActionSpec('TBC', 2, {
     spell = 'Divine Favor',
   },
   [5] = {
+    options = '[@mouseover,harm,nodead][]',
     spell = 'Hammer of Justice',
   },
   [6] = {

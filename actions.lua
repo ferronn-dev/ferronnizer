@@ -390,12 +390,18 @@ local makeAction = (function()
       local shortName = action.spell
       local rankStr = action.rank and ('Rank ' .. action.rank) or nil
       local fullName = shortName .. (rankStr and ('(' .. rankStr .. ')') or '')
+      local macrot = {'/cast'}
+      if action.mouseover then
+        table.insert(macrot, '[@mouseover,help,nodead][]')
+      elseif action.options then
+        table.insert(macrot, action.options)
+      end
+      table.insert(macrot, fullName)
       local macro = (
         (action.dismount ~= false and '/dismount [noflying]\n' or '')..
         (action.stand ~= false and '/stand\n' or '')..
         (action.stopcasting and '/stopcasting\n' or '')..
-        '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')..
-        fullName)
+        table.concat(macrot, ' '))
       local function update()
         local spellid = select(7, GetSpellInfo(shortName, rankStr))
         return {
