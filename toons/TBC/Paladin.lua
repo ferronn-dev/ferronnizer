@@ -1,10 +1,9 @@
 local _, G = ...
 G.AddClassActionSpec('TBC', 2, {
   [1] = {
-    page = {
-      [1] = {
-        spell = 'Seal of Righteousness',
-      },
+    oneof = {
+      [1] = 'Seal of Righteousness',
+      [2] = 'Seal of the Crusader',
     },
   },
   [2] = {
@@ -57,10 +56,9 @@ G.AddClassActionSpec('TBC', 2, {
     spell = 'Redemption',
   },
   [25] = {
-    page = {
-      [25] = {
-        spell = 'Devotion Aura',
-      },
+    oneof = {
+      [25] = 'Devotion Aura',
+      [26] = 'Retribution Aura',
     },
   },
   [30] = {

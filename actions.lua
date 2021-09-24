@@ -306,6 +306,37 @@ local makeAction = (function()
         end,
       }
     end,
+    oneof = function(action)
+      local spells = action.oneof
+      local function update()
+        local known = {}
+        for _, name in ipairs(spells) do
+          local id = select(7, GetSpellInfo(name))
+          if id and IsSpellKnown(id) then
+            known[id] = true
+          end
+        end
+        if not next(known) then
+          return { attr = '' }
+        end
+        local spell = spells[1]
+        for i = 1, 40 do
+          local buff = select(10, UnitBuff('player', i))
+          if not buff then
+            break
+          end
+          if known[buff] then
+            spell = buff
+            break
+          end
+        end
+        return { attr = '#page:' .. action.page, ui = { spell = spell } }
+      end
+      return {}, {
+        SPELLS_CHANGED = update,
+        UNIT_AURA = update,
+      }
+    end,
     page = function(action)
       return {
         attr = '#page:' .. action.page,
@@ -1008,6 +1039,15 @@ local function makeActions()
         for j, x in pairs(v.page) do
           subpage[j] = x
         end
+        extra[pageName] = subpage
+      elseif v.oneof then
+        local spells, subpage = {}, {}
+        for j, sp in pairs(v.oneof) do
+          table.insert(spells, sp)
+          subpage[j] = { spell = sp }
+        end
+        local pageName = 'fraction' .. i .. 'x'
+        page[i] = Mixin({}, v, { oneof = spells, page = pageName })
         extra[pageName] = subpage
       elseif v.stopcasting and not (v.spell or v.spells) then
         page[i] = {
