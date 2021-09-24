@@ -1040,60 +1040,64 @@ local function setupActions(actions, defaultPage, actionButtons)
 end
 
 local function makeActions()
-  local fractionPage, extraPages = (function()
-    local classActions = G.ClassActionSpecs[select(3, UnitClass('player'))]
-    local page, extra = {}, {}
-    for i, v in pairs(classActions or {}) do
-      if v.page then
-        local pageName = 'fraction1x' .. i .. 'x'
-        page[i] = Mixin({}, v, { page = pageName })
-        local subpage = {}
-        for j, x in pairs(v.page) do
-          subpage[j] = x
-        end
-        extra[pageName] = subpage
-      elseif v.oneof then
-        local spells, subpage = {}, {}
-        for j, sp in pairs(v.oneof) do
-          table.insert(spells, sp)
-          subpage[j] = { spell = sp }
-        end
-        local pageName = 'fraction1x' .. i .. 'x'
-        page[i] = Mixin({}, v, { oneof = spells, oneofpage = pageName })
-        extra[pageName] = subpage
-      elseif v.stopcasting and not (v.spell or v.spells) then
-        page[i] = {
-          actionText = 'Stop',
-          macro = '/stopcasting',
-          texture = 135768,
-          tooltip = 'Stop Casting',
-        }
-      elseif v.racial then
-        page[i] = {
-          spell = ({
-            ['Blood Elf'] = 'Arcane Torrent',
-            Draenei = 'Gift of the Naaru',
-            Dwarf = 'Stoneform',
-            Gnome = 'Escape Artist',
-            Human = 'Perception',
-            ['Night Elf'] = 'Shadowmeld',
-            Orc = 'Blood Fury',
-            Tauren = 'War Stomp',
-            Troll = 'Berserking',
-            Undead = 'Will of the Forsaken',
+  local fractionPages, extraPages = (function()
+    local classActionPages = G.ClassActionSpecs[select(3, UnitClass('player'))]
+    local fractions, extra = {}, {}
+    for z, classActions in ipairs(classActionPages or {}) do
+      local page = {}
+      table.insert(fractions, page)
+      for i, v in pairs(classActions) do
+        if v.page then
+          local pageName = 'fraction' .. z .. 'x' .. i .. 'x'
+          page[i] = Mixin({}, v, { page = pageName })
+          local subpage = {}
+          for j, x in pairs(v.page) do
+            subpage[j] = x
+          end
+          extra[pageName] = subpage
+        elseif v.oneof then
+          local spells, subpage = {}, {}
+          for j, sp in pairs(v.oneof) do
+            table.insert(spells, sp)
+            subpage[j] = { spell = sp }
+          end
+          local pageName = 'fraction' .. z .. 'x' .. i .. 'x'
+          page[i] = Mixin({}, v, { oneof = spells, oneofpage = pageName })
+          extra[pageName] = subpage
+        elseif v.stopcasting and not (v.spell or v.spells) then
+          page[i] = {
+            actionText = 'Stop',
+            macro = '/stopcasting',
+            texture = 135768,
+            tooltip = 'Stop Casting',
+          }
+        elseif v.racial then
+          page[i] = {
+            spell = ({
+              ['Blood Elf'] = 'Arcane Torrent',
+              Draenei = 'Gift of the Naaru',
+              Dwarf = 'Stoneform',
+              Gnome = 'Escape Artist',
+              Human = 'Perception',
+              ['Night Elf'] = 'Shadowmeld',
+              Orc = 'Blood Fury',
+              Tauren = 'War Stomp',
+              Troll = 'Berserking',
+              Undead = 'Will of the Forsaken',
+            })[UnitRace('player')]
+          }
+        elseif v.racial2 then
+          local spell = ({
+            ['Blood Elf'] = 'Mana Tap',
+            Undead = 'Cannibalize',
           })[UnitRace('player')]
-        }
-      elseif v.racial2 then
-        local spell = ({
-          ['Blood Elf'] = 'Mana Tap',
-          Undead = 'Cannibalize',
-        })[UnitRace('player')]
-        page[i] = spell and { spell = spell } or nil
-      else
-        page[i] = v
+          page[i] = spell and { spell = spell } or nil
+        else
+          page[i] = v
+        end
       end
     end
-    return page, extra
+    return fractions, extra
   end)()
   local actionPages = Mixin(extraPages, {
     action1 = (function()
@@ -1165,7 +1169,6 @@ local function makeActions()
       end
       return page
     end)(),
-    fraction1 = fractionPage,
     noncombat = (function()
       local page = {}
       for i = 1, 10 do
@@ -1216,7 +1219,7 @@ local function makeActions()
       return page
     end)(),
   })
-  local defaultPage = next(fractionPage) and 'fraction1' or 'action1'
+  local defaultPage = next(fractionPages) and 'fraction1' or 'action1'
   local actions = (function()
     local t = {}
     for k, v in pairs(actionPages) do
@@ -1224,6 +1227,14 @@ local function makeActions()
         actions = v,
         buttonPage = k == 'emote' and 'text' or 'icon',
         nextActionPage = k == 'pet' and k or defaultPage,
+      }
+    end
+    for i, v in pairs(fractionPages) do
+      local n = 'fraction' .. i
+      t[n] = {
+        actions = v,
+        buttonPage = 'icon',
+        nextActionPage = n,
       }
     end
     return t

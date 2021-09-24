@@ -41,6 +41,10 @@ local switchers = {
   ['CTRL-P'] = 'Profession',
   ['CTRL-SHIFT-P'] = 'Pet',
   ['F1'] = 'Default',
+  ['F2'] = 'Fraction2',
+  ['F3'] = 'Fraction3',
+  ['F4'] = 'Fraction4',
+  ['F5'] = 'Fraction5',
 }
 
 G.Eventer({

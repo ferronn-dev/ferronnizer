@@ -1,7 +1,7 @@
 describe('Actions', function()
 
   local function init(wow, actions)
-    wow.addon.ClassActionSpecs[2] = actions
+    wow.addon.ClassActionSpecs[2] = {actions}
     wow.state.player.class = 2
     wow.state.player.name = 'Moo'
     wow.state.realm = 'Cow'
@@ -268,7 +268,7 @@ describe('Actions', function()
 
   it('honors class action specs', function()
     wow.state.player.class = 2
-    wow.addon.ClassActionSpecs[2] = { [37] = { buff = true } }
+    wow.addon.ClassActionSpecs[2] = { { [37] = { buff = true } } }
     wow.state:SendEvent('PLAYER_LOGIN')
     wow.state:SendEvent('PLAYER_ENTERING_WORLD')
     assert.True(wow.env.mooActionIconButton37:IsShown())
