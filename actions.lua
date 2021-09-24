@@ -688,7 +688,9 @@ local function makeActionButtons()
       GameTooltip:Hide()
     end,
     PostClick = function(self)
-      self:SetChecked(self.chfn())
+      if self.chfn then
+        self:SetChecked(self.chfn())
+      end
     end,
   }
   local iconButtons = {}
