@@ -108,7 +108,7 @@ describe('Actions', function()
       wow.state.player.class = classid
       wow.state:SendEvent('PLAYER_LOGIN')
       wow.state:SendEvent('PLAYER_ENTERING_WORLD')
-      assert.same('fraction', wow.env.mooActionButtonHeader:GetAttribute('fractionpage'), classid)
+      assert.same('fraction1', wow.env.mooActionButtonHeader:GetAttribute('fractionpage'), classid)
     end
   end)
 
@@ -182,7 +182,7 @@ describe('Actions', function()
     assert.True(wow.env.mooActionIconButton1:IsShown())
     assert.False(wow.env.mooActionIconButton2:IsShown())
     assert.same({
-      { macro = '#page:fraction1x' },
+      { macro = '#page:fraction1x1x' },
       { macro = '/lol' },
     }, wow.state.commands)
   end)
@@ -260,8 +260,8 @@ describe('Actions', function()
     assert.Not.Nil(wow.env.mooActionButtonAction1Switcher)
     assert.Not.Nil(wow.env.mooActionButtonAction2Switcher)
     assert.Not.Nil(wow.env.mooActionButtonEmoteSwitcher)
-    assert.Not.Nil(wow.env.mooActionButtonFractionSwitcher)
-    assert.Not.Nil(wow.env.mooActionButtonFraction11xSwitcher)
+    assert.Not.Nil(wow.env.mooActionButtonFraction1Switcher)
+    assert.Not.Nil(wow.env.mooActionButtonFraction1x11xSwitcher)
     assert.Not.Nil(wow.env.mooActionButtonPetSwitcher)
     assert.Not.Nil(wow.env.mooActionButtonProfessionSwitcher)
   end)

@@ -1045,7 +1045,7 @@ local function makeActions()
     local page, extra = {}, {}
     for i, v in pairs(classActions or {}) do
       if v.page then
-        local pageName = 'fraction' .. i .. 'x'
+        local pageName = 'fraction1x' .. i .. 'x'
         page[i] = Mixin({}, v, { page = pageName })
         local subpage = {}
         for j, x in pairs(v.page) do
@@ -1058,7 +1058,7 @@ local function makeActions()
           table.insert(spells, sp)
           subpage[j] = { spell = sp }
         end
-        local pageName = 'fraction' .. i .. 'x'
+        local pageName = 'fraction1x' .. i .. 'x'
         page[i] = Mixin({}, v, { oneof = spells, oneofpage = pageName })
         extra[pageName] = subpage
       elseif v.stopcasting and not (v.spell or v.spells) then
@@ -1165,7 +1165,7 @@ local function makeActions()
       end
       return page
     end)(),
-    fraction = fractionPage,
+    fraction1 = fractionPage,
     noncombat = (function()
       local page = {}
       for i = 1, 10 do
@@ -1216,7 +1216,7 @@ local function makeActions()
       return page
     end)(),
   })
-  local defaultPage = next(fractionPage) and 'fraction' or 'action1'
+  local defaultPage = next(fractionPage) and 'fraction1' or 'action1'
   local actions = (function()
     local t = {}
     for k, v in pairs(actionPages) do
