@@ -21,7 +21,7 @@ G.AddClassActionSpec('TBC', 2, {
   },
   [7] = {
     mouseover = true,
-    spell = 'Cleanse',
+    spells = {'Cleanse', 'Purify'},
   },
   [8] = {
     page = {
@@ -64,7 +64,7 @@ G.AddClassActionSpec('TBC', 2, {
     },
   },
   [30] = {
-    spell = 'Divine Shield',
+    spells = {'Divine Shield', 'Divine Protection'},
     stopcasting = true,
   },
   [31] = {

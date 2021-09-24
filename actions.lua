@@ -379,6 +379,25 @@ local makeAction = (function()
       })
       return init, { SPELLS_CHANGED = update }
     end,
+    spells = function(action)
+      local spells = action.spells
+      local prefix = (
+          (action.stopcasting and '/stopcasting\n' or '')..
+          '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' '))
+      local function update()
+        for _, name in ipairs(spells) do
+          local id = select(7, GetSpellInfo(name))
+          if id and IsSpellKnown(id) then
+            return {
+              attr = prefix .. name,
+              ui = { spell = name },
+            }
+          end
+        end
+        return {}
+      end
+      return {}, { SPELLS_CHANGED = update }
+    end,
   }
   return function(action)
     for k, v in pairs(lang) do
