@@ -4,4 +4,4 @@ WHERE s.id = e.parentitemid
   AND e.spellcategoryid = '150'
   AND e.spellid = z.spellid
   AND z.effect = '6'
-ORDER BY CAST(s.requiredskillrank AS INT64) DESC;
+ORDER BY 2 DESC, 1;
