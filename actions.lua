@@ -307,7 +307,7 @@ local makeAction = (function()
       }
     end,
     oneof = function(action)
-      local spells = action.oneof
+      local page, spells = action.oneofpage, action.oneof
       local function update()
         local known = {}
         for _, name in ipairs(spells) do
@@ -330,7 +330,7 @@ local makeAction = (function()
             break
           end
         end
-        return { attr = '#page:' .. action.page, ui = { spell = spell } }
+        return { attr = '#page:' .. page, ui = { spell = spell } }
       end
       return {}, {
         SPELLS_CHANGED = update,
@@ -1047,7 +1047,7 @@ local function makeActions()
           subpage[j] = { spell = sp }
         end
         local pageName = 'fraction' .. i .. 'x'
-        page[i] = Mixin({}, v, { oneof = spells, page = pageName })
+        page[i] = Mixin({}, v, { oneof = spells, oneofpage = pageName })
         extra[pageName] = subpage
       elseif v.stopcasting and not (v.spell or v.spells) then
         page[i] = {
