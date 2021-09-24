@@ -7,7 +7,7 @@ G.AddClassActionSpec('TBC', 2, {
     },
   },
   [2] = {
-    spell = 'Judgement',
+    judgement = true,
   },
   [4] = {
     spell = 'Divine Favor',

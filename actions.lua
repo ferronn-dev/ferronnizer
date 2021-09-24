@@ -242,6 +242,12 @@ local makeAction = (function()
         ui = { item = action.item },
       }
     end,
+    judgement = function(action)
+      return {
+        attr = '/cast Judgement\n/cast Seal of Righteousness',
+        ui = { spell = 'Judgement' },
+      }
+    end,
     macro = function(action)
       return {
         attr = action.macro,
