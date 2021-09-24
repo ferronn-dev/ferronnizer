@@ -1009,7 +1009,7 @@ local function makeActions()
           subpage[j] = x
         end
         extra[pageName] = subpage
-      elseif v.stopcasting and not v.spell then
+      elseif v.stopcasting and not (v.spell or v.spells) then
         page[i] = {
           actionText = 'Stop',
           macro = '/stopcasting',
