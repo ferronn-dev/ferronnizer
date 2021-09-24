@@ -91,7 +91,7 @@ G.AddClassActionSpec('TBC', 5, {
     spell = 'Mind Soothe',
   },
   [25] = {
-    mouseover = true,
+    options = '[@mouseover,nodead][]',
     spell = 'Dispel Magic',
   },
   [26] = {
