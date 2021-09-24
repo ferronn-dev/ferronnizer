@@ -40,6 +40,7 @@ local switchers = {
   ['ALT-CTRL-E'] = 'Emote',
   ['CTRL-P'] = 'Profession',
   ['CTRL-SHIFT-P'] = 'Pet',
+  ['F1'] = 'Default',
 }
 
 G.Eventer({

@@ -902,6 +902,9 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
     ]=]):format(page))
   end
 
+  local defaultSwitch = CreateFrame('Button', prefix .. 'DefaultSwitcher', header, 'SecureActionButtonTemplate')
+  header:WrapScript(defaultSwitch, 'OnClick', 'return nil, true', 'owner:Run(updateActionPage, defaultPage)')
+
   local function updateAttr(pageName, idx, attr)
     header:Execute(([[self:Run(updateActionAttr, %q, %d, %q)]]):format(pageName, idx, attr))
   end
