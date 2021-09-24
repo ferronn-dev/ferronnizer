@@ -7,7 +7,8 @@ G.AddClassActionSpec('TBC', 2, {
     },
   },
   [2] = {
-    judgement = true,
+    macro = '/cast Judgement\n/cast Seal of Righteousness',
+    ui = { spell = 'Judgement' },
   },
   [4] = {
     spell = 'Divine Favor',
