@@ -139,7 +139,7 @@ local makeAction = (function()
     end,
     buff = function(action)
       return {
-        attr = '/click ' .. addonName .. 'BuffButton',
+        attr = '/click PallyPowerAuto RightButton\n/click ' .. addonName .. 'BuffButton',
         count = action.reagent and { item = action.reagent },
         icon = 135938,
         tooltip = { text = 'Buff' },

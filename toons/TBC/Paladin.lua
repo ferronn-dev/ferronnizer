@@ -62,11 +62,6 @@ G.AddClassActionSpec('TBC', 2, {
       [26] = 'Retribution Aura',
     },
   },
-  [26] = {
-    macro = '/click PallyPowerAuto RightButton',
-    texture = 'interface/icons/trade_engineering',
-    tooltip = 'PallyPower',
-  },
   [30] = {
     spells = {'Divine Shield', 'Divine Protection'},
     stopcasting = true,

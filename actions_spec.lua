@@ -67,7 +67,7 @@ describe('Actions', function()
       [34] = { buff = true },
     })
     wow.env.mooActionIconButton34:Click()
-    local macro = '/click mooBuffButton'
+    local macro = '/click PallyPowerAuto RightButton\n/click mooBuffButton'
     assert.same({{ macro = macro }}, wow.state.commands)
   end)
 
