@@ -62,7 +62,7 @@ G.AddClassActionSpec('TBC', 2, {
     },
   },
   [26] = {
-    macro = '/click PallyPowerAuto',
+    macro = '/click PallyPowerAuto RightButton',
     texture = 'interface/icons/trade_engineering',
     tooltip = 'PallyPower',
   },
