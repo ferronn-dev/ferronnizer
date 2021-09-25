@@ -7,7 +7,7 @@ G.AddClassActionSpec('TBC', 2, {
     },
   },
   [2] = {
-    macro = '/cast Judgement\n/cast PallyPowerRF RightButton',
+    macro = '/cast Judgement\n/click PallyPowerRF RightButton',
     ui = { spell = 'Judgement' },
   },
   [4] = {
