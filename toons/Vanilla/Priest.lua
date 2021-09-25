@@ -149,4 +149,21 @@ G.AddClassActionSpec('Vanilla', 5, {
   [46] = {
     drink = true,
   },
+},{
+  [1] = {
+    spell = 'Smite',
+  },
+  [2] = {
+    spell = 'Mind Blast',
+  },
+  [3] = {
+    spell = 'Shadow Word: Pain',
+  },
+  [7] = {
+    mouseover = true,
+    spell = 'Power Word: Shield',
+  },
+  [8] = {
+    spell = '!Shoot',
+  },
 })
