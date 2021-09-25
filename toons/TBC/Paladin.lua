@@ -25,11 +25,9 @@ G.AddClassActionSpec('TBC', 2, {
     spells = {'Cleanse', 'Purify'},
   },
   [8] = {
-    page = {
-      [1] = {
-        mouseover = true,
-        spell = 'Blessing of Might',
-      },
+    oneof = {
+      [1] = 'Blessing of Might',
+      [2] = 'Blessing of Wisdom',
     },
   },
   [9] = {
@@ -62,6 +60,9 @@ G.AddClassActionSpec('TBC', 2, {
       [25] = 'Devotion Aura',
       [26] = 'Retribution Aura',
     },
+  },
+  [26] = {
+    spell = 'Righteous Defense',
   },
   [30] = {
     spells = {'Divine Shield', 'Divine Protection'},
