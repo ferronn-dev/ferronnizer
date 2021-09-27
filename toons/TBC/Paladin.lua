@@ -44,6 +44,17 @@ G.AddClassActionSpec('TBC', 2, {
   },
   [13] = {
     mouseover = true,
+    rank = 3,
+    spell = 'Holy Light',
+  },
+  [14] = {
+    mouseover = true,
+    rank = 2,
+    spell = 'Holy Light',
+  },
+  [15] = {
+    mouseover = true,
+    rank = 1,
     spell = 'Holy Light',
   },
   [19] = {
