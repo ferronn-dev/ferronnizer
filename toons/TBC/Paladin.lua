@@ -4,6 +4,7 @@ G.AddClassActionSpec('TBC', 2, {
     oneof = {
       [1] = 'Seal of Righteousness',
       [2] = 'Seal of the Crusader',
+      [3] = 'Seal of Command',
     },
   },
   [2] = {
@@ -55,7 +56,7 @@ G.AddClassActionSpec('TBC', 2, {
   [15] = {
     mouseover = true,
     rank = 1,
-    spell = 'Holy Light',
+    spell = 'Flash of Light',
   },
   [19] = {
     invslot = 13,
