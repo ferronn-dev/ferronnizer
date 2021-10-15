@@ -5,6 +5,7 @@ G.AddClassActionSpec('TBC', 2, {
       [1] = 'Seal of Righteousness',
       [2] = 'Seal of the Crusader',
       [3] = 'Seal of Command',
+      [4] = 'Seal of Justice',
     },
   },
   [2] = {
@@ -45,7 +46,7 @@ G.AddClassActionSpec('TBC', 2, {
   },
   [13] = {
     mouseover = true,
-    rank = 3,
+    rank = 4,
     spell = 'Holy Light',
   },
   [14] = {
@@ -71,6 +72,7 @@ G.AddClassActionSpec('TBC', 2, {
     oneof = {
       [25] = 'Devotion Aura',
       [26] = 'Retribution Aura',
+      [27] = 'Concentration Aura',
     },
   },
   [26] = {
