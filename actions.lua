@@ -379,7 +379,8 @@ local makeAction = (function()
       local function update()
         local shape = GetShapeshiftForm()
         local spell = shape and shapes[shape] or nil
-        return { ui = spell and { spell = spell } or { hide = true } }
+        local spellid = spell and select(7, GetSpellInfo(spell)) or nil
+        return { ui = spellid and IsSpellKnown(spellid) and { spell = spellid } or { hide = true } }
       end
       return { attr = macro }, {
         SPELLS_CHANGED = update,
