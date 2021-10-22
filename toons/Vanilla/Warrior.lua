@@ -10,16 +10,16 @@ G.AddClassActionSpec('Vanilla', 1, {
     spell = 'Sunder Armor',
   },
   [4] = {
-    shapeshift = { 'Overpower', 'Revenge' },
+    shapeshift = { 'Overpower', 'Revenge', 'Whirlwind' },
   },
   [5] = {
-    shapeshift = { 'Charge', 'Shield Block' },
+    shapeshift = { 'Charge', 'Shield Block', 'Berserker Rage' },
   },
   [6] = {
-    spell = 'Thunder Clap',
+    shapeshift = { 'Thunder Clap', '', 'Pummel' },
   },
   [7] = {
-    shapeshift = { 'Hamstring', 'Disarm' },
+    shapeshift = { 'Hamstring', 'Disarm', 'Hamstring' },
   },
   [8] = {
     ammo = true,
@@ -34,6 +34,12 @@ G.AddClassActionSpec('Vanilla', 1, {
   [15] = {
     spell = 'Demoralizing Shout',
   },
+  [16] = {
+    spell = 'Challenging Shout',
+  },
+  [17] = {
+    spell = 'Intimidating Shout',
+  },
   [19] = {
     spell = 'Battle Stance',
   },
@@ -47,7 +53,10 @@ G.AddClassActionSpec('Vanilla', 1, {
     spell = 'Shield Bash',
   },
   [26] = {
-    shapeshift = { 'Mocking Blow', 'Taunt' },
+    shapeshift = { 'Mocking Blow', 'Taunt', 'Incercept' },
+  },
+  [33] = {
+    shapeshift = { 'Retaliation', 'Shield Wall', 'Recklessness' },
   },
   [34] = {
     buff = true,
