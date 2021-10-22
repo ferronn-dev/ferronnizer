@@ -1,5 +1,8 @@
 local _, G = ...
 G.AddClassActionSpec('TBC', 3, {
+  [1] = {
+    spell = '!Auto Shot',
+  },
   [34] = {
     buff = true,
   },

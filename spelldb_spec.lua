@@ -1,6 +1,7 @@
 describe('spell db', function()
   it('knows about all spell actions', function()
     local knownBad = {
+      ['!Auto Shot'] = true,
       ['!Shoot'] = true,
       ['Cold Snap'] = true,
       ['Desperate Prayer'] = true,
