@@ -4,7 +4,7 @@ G.AddClassActionSpec('Vanilla', 1, {
     spell = 'Heroic Strike',
   },
   [2] = {
-    spell = 'Rend',
+    spell = 'Cleave',
   },
   [3] = {
     spell = 'Sunder Armor',
@@ -23,6 +23,15 @@ G.AddClassActionSpec('Vanilla', 1, {
   },
   [8] = {
     shoot = true,
+  },
+  [9] = {
+    spell = 'Rend',
+  },
+  [10] = {
+    spell = 'Slam',
+  },
+  [11] = {
+    spell = 'Execute',
   },
   [13] = {
     spell = 'Battle Shout',
@@ -52,7 +61,7 @@ G.AddClassActionSpec('Vanilla', 1, {
     spell = 'Shield Bash',
   },
   [26] = {
-    shapeshift = { 'Mocking Blow', 'Taunt', 'Incercept' },
+    shapeshift = { 'Mocking Blow', 'Taunt', 'Intercept' },
   },
   [33] = {
     shapeshift = { 'Retaliation', 'Shield Wall', 'Recklessness' },
