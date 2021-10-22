@@ -3,20 +3,34 @@ G.AddClassActionSpec('Vanilla', 3, {
   [1] = {
     spell = '!Auto Shot',
   },
+  [2] = {
+    spells = {'Aimed Shot', 'Arcane Shot'},
+  },
+  [3] = {
+    spell = 'Multi-Shot',
+  },
+  [4] = {
+    spell = 'Serpent Sting',
+  },
+  [5] = {
+    spell = 'Hunter\'s Mark',
+  },
+  [6] = {
+    spell = 'Bestial Wrath',
+  },
+  [7] = {
+    spell = 'Concussive Shot',
+  },
   [8] = {
     spell = 'Raptor Strike',
   },
-  [19] = {
-    oneof = {
-      [19] = 'Aspect of the Hawk',
-      [20] = 'Aspect of the Cheetah',
-      [21] = 'Aspect of the Pack',
-      [22] = 'Aspect of the Monkey',
-      [23] = 'Aspect of the Wild',
-      [24] = 'Aspect of the Beast',
-    },
+  [11] = {
+    spell = 'Mongoose Bite',
   },
-  [20] = {
+  [12] = {
+    spell = 'Wing Clip',
+  },
+  [13] = {
     page = {
       { spell = 'Beast Lore' },
       { spell = 'Call Pet' },
@@ -32,34 +46,47 @@ G.AddClassActionSpec('Vanilla', 3, {
     },
     texture = 132270,
   },
-  [21] = {
+  [14] = {
     page = {
-      { spell = 'Arcane Shot' },
-      { spell = 'Concussive Shot' },
       { spell = 'Distracting Shot' },
-      { spell = 'Flare' },
-      { spell = 'Hunter\'s Mark' },
-      { spell = 'Multi-Shot' },
       { spell = 'Rapid Fire' },
       { spell = 'Scorpid Sting' },
-      { spell = 'Serpent Sting' },
       { spell = 'Viper Sting' },
       { spell = 'Volley' },
     },
     texture = 132222,
   },
-  [22] = {
+  [15] = {
     page = {
-      { spell = 'Disengage' },
       { spell = 'Explosive Trap' },
       { spell = 'Feign Death' },
       { spell = 'Freezing Trap' },
       { spell = 'Frost Trap' },
       { spell = 'Immolation Trap' },
-      { spell = 'Mongoose Bite' },
-      { spell = 'Wing Clip' },
     },
     texture = 132215,
+  },
+  [19] = {
+    invslot = 13,
+  },
+  [20] = {
+    invslot = 14,
+  },
+  [21] = {
+    oneof = {
+      [19] = 'Aspect of the Hawk',
+      [20] = 'Aspect of the Cheetah',
+      [21] = 'Aspect of the Pack',
+      [22] = 'Aspect of the Monkey',
+      [23] = 'Aspect of the Wild',
+      [24] = 'Aspect of the Beast',
+    },
+  },
+  [22] = {
+    spell = 'Flare',
+  },
+  [25] = {
+    spell = 'Disengage',
   },
   [33] = {
     oneof = {
