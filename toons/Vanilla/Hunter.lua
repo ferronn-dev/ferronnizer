@@ -24,6 +24,18 @@ G.AddClassActionSpec('Vanilla', 3, {
   [8] = {
     spell = 'Raptor Strike',
   },
+  [9] = {
+    page = {
+      [9] = { spell = 'Explosive Trap' },
+      [10] = { spell = 'Freezing Trap' },
+      [11] = { spell = 'Frost Trap' },
+      [12] = { spell = 'Immolation Trap' },
+    },
+    texture = 'interface/icons/ability_ensnare',
+  },
+  [10] = {
+    spell = 'Volley',
+  },
   [11] = {
     spell = 'Mongoose Bite',
   },
@@ -31,39 +43,13 @@ G.AddClassActionSpec('Vanilla', 3, {
     spell = 'Wing Clip',
   },
   [13] = {
-    page = {
-      { spell = 'Beast Lore' },
-      { spell = 'Call Pet' },
-      { spell = 'Dismiss Pet' },
-      { spell = 'Eagle Eye' },
-      { spell = 'Eyes of the Beast' },
-      { spell = 'Feed Pet' },
-      { spell = 'Mend Pet' },
-      { spell = 'Revive Pet' },
-      { spell = 'Tame Beast' },
-      { spell = 'Scare Beast' },
-      { spell = 'Beast Training' },
-    },
-    texture = 132270,
+    spell = 'Distracting Shot',
   },
   [14] = {
-    page = {
-      { spell = 'Distracting Shot' },
-      { spell = 'Rapid Fire' },
-      { spell = 'Scorpid Sting' },
-      { spell = 'Viper Sting' },
-      { spell = 'Volley' },
-    },
-    texture = 132222,
+    spell = 'Scorpid Sting',
   },
   [15] = {
-    page = {
-      [13] = { spell = 'Explosive Trap' },
-      [14] = { spell = 'Freezing Trap' },
-      [15] = { spell = 'Frost Trap' },
-      [16] = { spell = 'Immolation Trap' },
-    },
-    texture = 'interface/icons/ability_ensnare',
+    spell = 'Viper Sting',
   },
   [16] = {
     petaction = 1,
@@ -98,6 +84,27 @@ G.AddClassActionSpec('Vanilla', 3, {
   },
   [26] = {
     spell = 'Feign Death',
+  },
+  [27] = {
+    spell = 'Mend Pet',
+  },
+  [28] = {
+    page = {
+      { spell = 'Beast Lore' },
+      { spell = 'Call Pet' },
+      { spell = 'Dismiss Pet' },
+      { spell = 'Eagle Eye' },
+      { spell = 'Eyes of the Beast' },
+      { spell = 'Feed Pet' },
+      { spell = 'Revive Pet' },
+      { spell = 'Tame Beast' },
+      { spell = 'Scare Beast' },
+      { spell = 'Beast Training' },
+    },
+    texture = 132270,
+  },
+  [32] = {
+    spell = 'Rapid Fire',
   },
   [33] = {
     oneof = {
