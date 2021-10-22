@@ -387,6 +387,25 @@ local makeAction = (function()
         UPDATE_SHAPESHIFT_FORM = update,
       }
     end,
+    shoot = function()
+      local macro = table.concat({
+        '/cast [equipped:bows] Shoot Bow',
+        '/cast [equipped:crossbows] Shoot Crossbow',
+        '/cast [equipped:guns] Shoot Gun',
+        '/cast [equipped:thrown] Throw',
+        '/cast [equipped:wand] !Shoot',
+      }, '\n')
+      local function update()
+        local item = GetInventoryItemID('player', 18)
+        return {
+          color = 1.0,
+          count = { invslot = 0 },
+          ui = item and { item = item } or { hide = true },
+          update = { reset = true },
+        }
+      end
+      return Mixin(update(), { attr = macro }), { PLAYER_EQUIPMENT_CHANGED = update }
+    end,
     spell = function(action)
       local shortName = action.spell
       local rankStr = action.rank and ('Rank ' .. action.rank) or nil
@@ -616,6 +635,7 @@ local updateButton = (function()
       local updateLang = {
         action = updateColor(IsActionInRange, IsUsableAction),
         item = updateColor(IsItemInRange, IsUsableItem),
+        reset = function() end,
         spell = updateColor(IsSpellInRange, IsUsableSpell),
       }
       return function(button, prog)
