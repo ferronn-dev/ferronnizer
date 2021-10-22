@@ -58,13 +58,12 @@ G.AddClassActionSpec('Vanilla', 3, {
   },
   [15] = {
     page = {
-      { spell = 'Explosive Trap' },
-      { spell = 'Feign Death' },
-      { spell = 'Freezing Trap' },
-      { spell = 'Frost Trap' },
-      { spell = 'Immolation Trap' },
+      [13] = { spell = 'Explosive Trap' },
+      [14] = { spell = 'Freezing Trap' },
+      [15] = { spell = 'Frost Trap' },
+      [16] = { spell = 'Immolation Trap' },
     },
-    texture = 132215,
+    texture = 'interface/icons/ability_ensnare',
   },
   [16] = {
     petaction = 1,
@@ -96,6 +95,9 @@ G.AddClassActionSpec('Vanilla', 3, {
   },
   [25] = {
     spell = 'Disengage',
+  },
+  [26] = {
+    spell = 'Feign Death',
   },
   [33] = {
     oneof = {
