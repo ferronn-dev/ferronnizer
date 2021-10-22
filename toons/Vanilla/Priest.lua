@@ -35,7 +35,7 @@ G.AddClassActionSpec('Vanilla', 5, {
     spell = 'Power Word: Shield',
   },
   [8] = {
-    spell = '!Shoot',
+    shoot = true,
   },
   [9] = {
     spell = 'Smite',
@@ -95,7 +95,7 @@ G.AddClassActionSpec('Vanilla', 5, {
   },
   [26] = {
     mouseover = true,
-    spell = 'Abolish Disease',
+    spells = {'Abolish Disease', 'Cure Disease'},
   },
   [27] = {
     spell = 'Fade',
@@ -114,6 +114,9 @@ G.AddClassActionSpec('Vanilla', 5, {
   },
   [30] = {
     spell = 'Shackle Undead',
+  },
+  [31] = {
+    spell = 'Levitate',
   },
   [32] = {
     spell = 'Holy Fire',
@@ -164,6 +167,6 @@ G.AddClassActionSpec('Vanilla', 5, {
     spell = 'Power Word: Shield',
   },
   [8] = {
-    spell = '!Shoot',
+    shoot = true,
   },
 })
