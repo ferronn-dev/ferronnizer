@@ -533,7 +533,7 @@ local updateButton = (function()
           return GetInventoryItemCount('player', invslot) or -1
         end,
         item = function(item)
-          return GetItemCount(item)
+          return IsConsumableItem(item) and GetItemCount(item) or -1
         end,
         spell = function(spell)
           return IsConsumableSpell(spell) and GetSpellCount(spell) or -1
