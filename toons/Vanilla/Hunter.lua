@@ -66,6 +66,15 @@ G.AddClassActionSpec('Vanilla', 3, {
     },
     texture = 132215,
   },
+  [16] = {
+    petaction = 1,
+  },
+  [17] = {
+    petaction = 2,
+  },
+  [18] = {
+    petaction = 3,
+  },
   [19] = {
     invslot = 13,
   },
