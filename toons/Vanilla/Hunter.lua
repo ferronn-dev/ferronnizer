@@ -3,6 +3,9 @@ G.AddClassActionSpec('Vanilla', 3, {
   [1] = {
     spell = '!Auto Shot',
   },
+  [8] = {
+    spell = 'Raptor Strike',
+  },
   [19] = {
     oneof = {
       [19] = 'Aspect of the Hawk',
@@ -25,6 +28,7 @@ G.AddClassActionSpec('Vanilla', 3, {
       { spell = 'Revive Pet' },
       { spell = 'Tame Beast' },
       { spell = 'Scare Beast' },
+      { spell = 'Beast Training' },
     },
     texture = 132270,
   },
@@ -53,7 +57,6 @@ G.AddClassActionSpec('Vanilla', 3, {
       { spell = 'Frost Trap' },
       { spell = 'Immolation Trap' },
       { spell = 'Mongoose Bite' },
-      { spell = 'Raptor Strike' },
       { spell = 'Wing Clip' },
     },
     texture = 132215,
