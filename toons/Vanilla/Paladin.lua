@@ -1,22 +1,24 @@
 local _, G = ...
+local flashOfLight = {
+  ranks = { 1.0, 0.0 },
+  spells = { 'Flash of Light' },
+}
 G.AddClassActionSpec('Vanilla', 2, {
   [1] = {
-    actionText = 'HL8',
-    mouseover = true,
-    rank = 8,
-    spell = 'Holy Light',
+    oneof = {
+      'Seal of Righteousness',
+      'Seal of the Crusader',
+      'Seal of Wisdom',
+      'Seal of Light',
+      'Seal of Justice',
+    },
   },
   [2] = {
-    actionText = 'FoL6',
-    mouseover = true,
-    rank = 6,
-    spell = 'Flash of Light',
+    macro = '/cast Judgement\n/click PallyPowerRF RightButton',
+    ui = { spell = 'Judgement' },
   },
   [3] = {
-    actionText = 'FoL1',
-    mouseover = true,
-    rank = 1,
-    spell = 'Flash of Light',
+    spell = 'Holy Shock',
   },
   [4] = {
     spell = 'Divine Favor',
@@ -29,7 +31,19 @@ G.AddClassActionSpec('Vanilla', 2, {
   },
   [7] = {
     mouseover = true,
-    spell = 'Cleanse',
+    spells = { 'Cleanse', 'Purify' },
+  },
+  [8] = {
+    oneof = {
+      'Blessing of Freedom',
+      'Blessing of Kings',
+      'Blessing of Light',
+      'Blessing of Might',
+      'Blessing of Protection',
+      'Blessing of Sacrifice',
+      'Blessing of Salvation',
+      'Blessing of Wisdom',
+    },
   },
   [9] = {
     spell = 'Exorcism',
@@ -43,6 +57,18 @@ G.AddClassActionSpec('Vanilla', 2, {
   [12] = {
     spell = 'Turn Undead',
   },
+  [13] = {
+    mouseover = true,
+    spell = 'Holy Light',
+  },
+  [14] = {
+    healset = flashOfLight,
+    rank = 2,
+  },
+  [15] = {
+    healset = flashOfLight,
+    rank = 1,
+  },
   [19] = {
     invslot = 13,
   },
@@ -52,8 +78,18 @@ G.AddClassActionSpec('Vanilla', 2, {
   [21] = {
     spell = 'Redemption',
   },
+  [25] = {
+    oneof = {
+      [25] = 'Devotion Aura',
+      [26] = 'Retribution Aura',
+      [27] = 'Concentration Aura',
+      [28] = 'Fire Resistance Aura',
+      [29] = 'Frost Resistance Aura',
+      [30] = 'Shadow Resistance Aura',
+    },
+  },
   [30] = {
-    spell = 'Divine Shield',
+    spells = { 'Divine Shield', 'Divine Protection' },
     stopcasting = true,
   },
   [31] = {
