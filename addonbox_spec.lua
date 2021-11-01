@@ -1,6 +1,0 @@
-describe('addonbox', function()
-  it('does not crash on load', function()
-    wow.state:SendEvent('ADDON_LOADED', 'moo')
-    wow.state:SendEvent('PLAYER_ENTERING_WORLD')
-  end)
-end)

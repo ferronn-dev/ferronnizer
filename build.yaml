@@ -10,8 +10,6 @@ deps:
   - spelldb.lua
   - toons.lua
   - util.lua
-  addonbox.lua:
-  - util.lua
   bindings.lua:
   - util.lua
   buffs.lua:
@@ -101,7 +99,6 @@ libs:
   libstub: https://repos.wowace.com/wow/libstub/trunk
 roots:
 - actions.lua
-- addonbox.lua
 - bindings.lua
 - buffs.lua
 - carrot.lua
