@@ -99,6 +99,7 @@ libs:
   libkeybound: https://repos.wowace.com/wow/libkeybound-1-0/trunk
   libclassicgearplanner: https://github.com/ferronn-dev/LibClassicGearPlanner.git
   libstub: https://repos.wowace.com/wow/libstub/trunk
+  ouf: https://github.com/ouf-wow/ouf.git
 roots:
 - actions.lua
 - addonbox.lua
