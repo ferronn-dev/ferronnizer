@@ -3,6 +3,9 @@ G.AddClassActionSpec('Vanilla', 9, {
   [1] = {
     spell = 'Shadow Bolt',
   },
+  [2] = {
+    spell = 'Immolate',
+  },
   [34] = {
     buff = true,
   },

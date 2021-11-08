@@ -10,6 +10,8 @@ describe('spell db', function()
       ['Evocation'] = true,
       ['Inner Focus'] = true,
       ['Lay on Hands'] = true,
+      ['Pick Pocket'] = true,
+      ['Stealth'] = true,
     }
     local seenBad = {}
     for fullname, spec in pairs(wow.addon.ClassActionSpecs) do

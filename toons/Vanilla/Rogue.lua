@@ -1,5 +1,23 @@
 local _, G = ...
 G.AddClassActionSpec('Vanilla', 4, {
+  [1] = {
+    spell = 'Sinister Strike',
+  },
+  [2] = {
+    spell = 'Eviscerate',
+  },
+  [3] = {
+    spell = 'Backstab',
+  },
+  [4] = {
+    spell = 'Pick Pocket',
+  },
+  [5] = {
+    spell = 'Stealth',
+  },
+  [9] = {
+    shoot = true,
+  },
   [34] = {
     buff = true,
   },
