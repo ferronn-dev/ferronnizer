@@ -15,6 +15,9 @@ G.AddClassActionSpec('Vanilla', 4, {
   [5] = {
     spell = 'Stealth',
   },
+  [6] = {
+    spell = 'Gouge',
+  },
   [9] = {
     shoot = true,
   },
