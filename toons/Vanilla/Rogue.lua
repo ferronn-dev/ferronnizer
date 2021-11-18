@@ -18,6 +18,9 @@ G.AddClassActionSpec('Vanilla', 4, {
   [6] = {
     spell = 'Gouge',
   },
+  [7] = {
+    spell = 'Kick',
+  },
   [8] = {
     spell = 'Slice and Dice',
   },
