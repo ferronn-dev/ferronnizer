@@ -431,7 +431,7 @@ local makeAction = (function()
         }
       end
       local init = Mixin(update(), {
-        count = action.ammo and { invslot = 0 } or { spell = fullName },
+        count = { spell = fullName },
         name = action.actionText,
         ui = { spell = fullName },
       })

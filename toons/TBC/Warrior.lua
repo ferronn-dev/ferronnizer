@@ -22,8 +22,7 @@ G.AddClassActionSpec('TBC', 1, {
     shapeshift = { 'Hamstring', 'Disarm' },
   },
   [8] = {
-    ammo = true,
-    spell = '!Shoot',
+    shoot = true,
   },
   [13] = {
     spell = 'Battle Shout',
