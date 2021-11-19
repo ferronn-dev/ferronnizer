@@ -397,9 +397,10 @@ local makeAction = (function()
       }, '\n')
       local function update()
         local item = GetInventoryItemID('player', 18)
+        local count = GetInventoryItemCount('player', GetInventoryItemID('player', 0) == 0 and 18 or 0) or 0
         return {
           color = 1.0,
-          count = { invslot = 0 },
+          count = { value = count },
           ui = item and { item = item } or { hide = true },
           update = { reset = true },
         }
@@ -547,9 +548,6 @@ local updateButton = (function()
       local countLang = {
         action = function(action)
           return IsConsumableAction(action) and GetActionCount(action) or -1
-        end,
-        invslot = function(invslot)
-          return GetInventoryItemCount('player', invslot) or -1
         end,
         item = function(item)
           return GetItemCount(item)
