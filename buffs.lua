@@ -90,14 +90,6 @@ local buffSlotSpecification = {
   },{
     buffs = {
       {
-        spell = 'Righteous Fury',
-        tank = true,
-      },
-    },
-    self = true,
-  },{
-    buffs = {
-      {
         spell = 'Shadow Protection',
         group = 'Prayer of Shadow Protection',
       },
