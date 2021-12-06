@@ -1,7 +1,5 @@
 local _, G = ...
 
-G.TheTankUnit = ''
-
 local buffSlotSpecification = {
   {
     buffs = {
@@ -88,12 +86,7 @@ local buffSlotSpecification = {
       },
     },
   },{
-    buffs = {
-      {
-        spell = 'Thorns',
-        tank = true,
-      },
-    },
+    buffs = { { spell = 'Thorns' } },
   },
 }
 
@@ -129,7 +122,6 @@ local thebuffdb = (function()
               end
               return t
             end)(),
-            tank = buffSpec.tank,
           })
         end
         return buffs
@@ -198,13 +190,6 @@ local function GetBuffToCast(unit)
       for _, buff in ipairs(slot.buffs) do
         local id, skip = (function()
           if buff.classes and not buff.classes[UnitClass(unit)] then
-            return nil
-          end
-          if IsInGroup() and buff.tank ~= nil
-              and buff.tank ~= UnitIsUnit(unit, G.TheTankUnit) then
-            return nil
-          end
-          if buff.party and not UnitInParty(unit) then
             return nil
           end
           for _, rank in ipairs(buff.ranks) do
