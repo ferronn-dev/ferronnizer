@@ -1,7 +1,6 @@
 local _, G = ...
 
 G.TheTankUnit = ''
-G.Salvation = false
 
 local buffSlotSpecification = {
   {
@@ -14,12 +13,6 @@ local buffSlotSpecification = {
   },{
     buffs = {
       {
-        spell = 'Blessing of Salvation',
-        group = 'Greater Blessing of Salvation',
-        flag = 'Salvation',
-        tank = false,
-        party = true,
-      },{
         spell = 'Blessing of Wisdom',
         group = 'Greater Blessing of Wisdom',
         classes = {'Paladin', 'Mage', 'Warlock', 'Priest', 'Hunter'},
@@ -137,7 +130,6 @@ local thebuffdb = (function()
               return t
             end)(),
             tank = buffSpec.tank,
-            flag = buffSpec.flag,
           })
         end
         return buffs
@@ -210,9 +202,6 @@ local function GetBuffToCast(unit)
           end
           if IsInGroup() and buff.tank ~= nil
               and buff.tank ~= UnitIsUnit(unit, G.TheTankUnit) then
-            return nil
-          end
-          if buff.flag and not G[buff.flag] then
             return nil
           end
           if buff.party and not UnitInParty(unit) then
