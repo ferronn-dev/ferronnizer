@@ -9,26 +9,6 @@ local buffSlotSpecification = {
       },
     },
   },{
-    buffs = {
-      {
-        spell = 'Blessing of Wisdom',
-        group = 'Greater Blessing of Wisdom',
-        classes = {'Paladin', 'Mage', 'Warlock', 'Priest', 'Hunter'},
-      },{
-        spell = 'Blessing of Might',
-        group = 'Greater Blessing of Might',
-        classes = {'Warrior', 'Rogue', 'Druid'},
-      },{
-        spell = 'Blessing of Kings',
-        group = 'Greater Blessing of Kings',
-        classes = {},  -- disabled
-      },{
-        spell = 'Blessing of Light',
-        group = 'Greater Blessing of Light',
-        classes = {},  -- disabled
-      },
-    },
-  },{
     buffs = { { spell = 'Dampen Magic' } },
     solo = true,
   },{
