@@ -15,4 +15,4 @@ ON
 WHERE
   e.spellcategoryid = "59"
 ORDER BY
-  CAST(s.itemlevel AS INT64) DESC, 2 DESC, 1, 3;
+  CAST(s.itemlevel AS INT64) DESC, 2 DESC, 3 NULLS LAST, 1;
