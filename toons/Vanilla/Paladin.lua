@@ -69,6 +69,9 @@ G.AddClassActionSpec('Vanilla', 2, {
     healset = flashOfLight,
     rank = 1,
   },
+  [16] = {
+    stopcasting = true,
+  },
   [19] = {
     invslot = 13,
   },
