@@ -1214,11 +1214,12 @@ local function makeActions()
     end)(),
     profession = (function()
       local professions = {
-        'Alchemy',
         'Cooking',
+        'Fishing',
+        'First Aid',
+        'Alchemy',
         'Disenchant',
         'Enchanting',
-        'First Aid',
         'Engineering',
         'Tailoring',
         'Smelting',
