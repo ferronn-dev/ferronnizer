@@ -11,6 +11,7 @@ deps:
   - toons.lua
   - util.lua
   bindings.lua:
+  - actions.lua
   - util.lua
   buffs.lua:
   - drinkdb.lua
