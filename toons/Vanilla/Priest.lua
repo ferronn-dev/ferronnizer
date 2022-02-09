@@ -155,6 +155,10 @@ local healer = Mixin({
     spell = 'Prayer of Healing',
   },
 }, common)
+local dpsSlowHeal = {
+  ranks = { 1.0 },
+  spells = { 'Greater Heal', 'Heal', 'Lesser Heal' },
+}
 local dps = Mixin({
   [1] = {
     spell = 'Smite',
@@ -171,6 +175,14 @@ local dps = Mixin({
   },
   [8] = {
     shoot = true,
+  },
+  [13] = {
+    healset = dpsSlowHeal,
+    rank = 1,
+  },
+  [14] = {
+    mouseover = true,
+    spell = 'Renew',
   },
 }, common)
 G.AddClassActionSpec('Vanilla', 5, healer, dps)
