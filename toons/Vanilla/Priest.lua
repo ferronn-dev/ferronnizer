@@ -7,69 +7,7 @@ local fastHeals = {
   ranks = { 1.0, 0.3, 0 },
   spells = { 'Flash Heal' },
 }
-G.AddClassActionSpec('Vanilla', 5, {
-  [1] = {
-    healset = slowHeals,
-    rank = 3,
-  },
-  [2] = {
-    healset = slowHeals,
-    rank = 2,
-  },
-  [3] = {
-    healset = slowHeals,
-    rank = 1,
-  },
-  [4] = {
-    stopcasting = true,
-  },
-  [5] = {
-    mouseover = true,
-    spell = 'Renew',
-  },
-  [6] = {
-    spell = 'Holy Nova',
-  },
-  [7] = {
-    mouseover = true,
-    spell = 'Power Word: Shield',
-  },
-  [8] = {
-    shoot = true,
-  },
-  [9] = {
-    spell = 'Smite',
-  },
-  [10] = {
-    spell = 'Shadow Word: Pain',
-  },
-  [11] = {
-    spell = 'Mind Blast',
-  },
-  [12] = {
-    spell = 'Psychic Scream',
-  },
-  [13] = {
-    healset = fastHeals,
-    rank = 3,
-  },
-  [14] = {
-    healset = fastHeals,
-    rank = 2,
-  },
-  [15] = {
-    healset = fastHeals,
-    rank = 1,
-  },
-  [16] = {
-    stopcasting = true,
-  },
-  [17] = {
-    spell = 'Inner Focus',
-  },
-  [18] = {
-    spell = 'Prayer of Healing',
-  },
+local common = {
   [19] = {
     invslot = 13,
   },
@@ -152,7 +90,72 @@ G.AddClassActionSpec('Vanilla', 5, {
   [46] = {
     drink = true,
   },
-},{
+}
+local healer = Mixin({
+  [1] = {
+    healset = slowHeals,
+    rank = 3,
+  },
+  [2] = {
+    healset = slowHeals,
+    rank = 2,
+  },
+  [3] = {
+    healset = slowHeals,
+    rank = 1,
+  },
+  [4] = {
+    stopcasting = true,
+  },
+  [5] = {
+    mouseover = true,
+    spell = 'Renew',
+  },
+  [6] = {
+    spell = 'Holy Nova',
+  },
+  [7] = {
+    mouseover = true,
+    spell = 'Power Word: Shield',
+  },
+  [8] = {
+    shoot = true,
+  },
+  [9] = {
+    spell = 'Smite',
+  },
+  [10] = {
+    spell = 'Shadow Word: Pain',
+  },
+  [11] = {
+    spell = 'Mind Blast',
+  },
+  [12] = {
+    spell = 'Psychic Scream',
+  },
+  [13] = {
+    healset = fastHeals,
+    rank = 3,
+  },
+  [14] = {
+    healset = fastHeals,
+    rank = 2,
+  },
+  [15] = {
+    healset = fastHeals,
+    rank = 1,
+  },
+  [16] = {
+    stopcasting = true,
+  },
+  [17] = {
+    spell = 'Inner Focus',
+  },
+  [18] = {
+    spell = 'Prayer of Healing',
+  },
+}, common)
+local dps = Mixin({
   [1] = {
     spell = 'Smite',
   },
@@ -169,4 +172,5 @@ G.AddClassActionSpec('Vanilla', 5, {
   [8] = {
     shoot = true,
   },
-})
+}, common)
+G.AddClassActionSpec('Vanilla', 5, healer, dps)
