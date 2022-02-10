@@ -224,11 +224,6 @@ local function IsTracking(texture)
 end
 
 local function GetSpellToCast()
-  for _, track in ipairs(trackingdb) do
-    if IsSpellKnown(track.spell) and not IsTracking(track.texture) then
-      return track.spell, 'player'
-    end
-  end
   for _, unit in ipairs(unitsToBuff) do
     if UnitExists(unit) then
       local spell = GetBuffToCast(unit)
@@ -245,6 +240,11 @@ local function GetSpellToCast()
         end
         break
       end
+    end
+  end
+  for _, track in ipairs(trackingdb) do
+    if IsSpellKnown(track.spell) and not IsTracking(track.texture) then
+      return track.spell, 'player'
     end
   end
 end
