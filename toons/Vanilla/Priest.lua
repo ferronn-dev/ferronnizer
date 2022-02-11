@@ -156,7 +156,7 @@ local healer = Mixin({
   },
 }, common)
 local dpsSlowHeal = {
-  ranks = { 1.0 },
+  ranks = { 1.0, 0.7 },
   spells = { 'Greater Heal', 'Heal', 'Lesser Heal' },
 }
 local dps = Mixin({
@@ -178,9 +178,13 @@ local dps = Mixin({
   },
   [13] = {
     healset = dpsSlowHeal,
-    rank = 1,
+    rank = 2,
   },
   [14] = {
+    healset = dpsSlowHeal,
+    rank = 1,
+  },
+  [15] = {
     mouseover = true,
     spell = 'Renew',
   },
