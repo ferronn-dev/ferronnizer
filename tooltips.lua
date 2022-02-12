@@ -1,5 +1,3 @@
-local _, G = ...
-
 local tooltipRefs = {
   GameTooltip,
   ItemRefTooltip,
@@ -7,10 +5,6 @@ local tooltipRefs = {
   ShoppingTooltip2,
   ShoppingTooltip3,
 }
-
-local ratio = function(n, d)
-  return string.format('%d/%d (%.1f%%)', n, d, n * 100 / d)
-end
 
 local scriptHooks = {
   Item = function(t)
@@ -42,36 +36,6 @@ local scriptHooks = {
     local id = select(2, strsplit(':', link))
     if id and texture then
       t:AddDoubleLine('id '..id, 'texture '..texture)
-    end
-  end,
-  Unit = function(t)
-    local unit = select(2, t:GetUnit())
-    if not unit then
-      return
-    end
-    local hp, hpmax = UnitHealth(unit), UnitHealthMax(unit)
-    if hp and hpmax and hpmax ~= 0 then
-      t:AddDoubleLine('Health', ratio(hp, hpmax))
-    end
-    local pp, ppmax = UnitPower(unit), UnitPowerMax(unit)
-    if pp and ppmax and ppmax ~= 0 then
-      t:AddDoubleLine('Power', ratio(pp, ppmax))
-    end
-    local d = G.GetPlayerInfo(UnitName(unit))
-    if not d then
-      return
-    end
-    if d.xp and d.xpmax and UnitLevel(unit) ~= 60 then
-      t:AddDoubleLine('XP', ratio(d.xp, d.xpmax))
-    end
-    if d.bagfree and d.bagtotal then
-      t:AddDoubleLine('Bags', ratio(d.bagfree, d.bagtotal))
-    end
-    if d.durcur and d.durmax then
-      t:AddDoubleLine('Durability', ratio(d.durcur, d.durmax))
-    end
-    if d.money then
-      SetTooltipMoney(t, d.money)
     end
   end,
   Spell = function(t)
