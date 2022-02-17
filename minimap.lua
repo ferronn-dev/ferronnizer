@@ -28,3 +28,15 @@ G.Eventer({
     end
   end),
 })
+
+-- TODO put this somewhere more appropriate
+G.Eventer({
+  PLAYER_ENTERING_WORLD = function()
+    PlayerFrame:SetUserPlaced(true)
+    PlayerFrame:ClearAllPoints()
+    PlayerFrame:SetPoint('CENTER', -200, -100)
+    TargetFrame:SetUserPlaced(true)
+    TargetFrame:ClearAllPoints()
+    TargetFrame:SetPoint('CENTER', 200, -100)
+  end,
+})
