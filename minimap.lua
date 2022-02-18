@@ -38,5 +38,8 @@ G.Eventer({
     TargetFrame:SetUserPlaced(true)
     TargetFrame:ClearAllPoints()
     TargetFrame:SetPoint('CENTER', 200, -100)
+    _G.CastingBarFrame.ignoreFramePositionManager = true
+    CastingBarFrame:ClearAllPoints()
+    CastingBarFrame:SetPoint('BOTTOM', 0, 275)
   end,
 })
