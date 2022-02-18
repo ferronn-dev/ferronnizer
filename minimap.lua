@@ -29,6 +29,12 @@ G.Eventer({
   end),
 })
 
+local targetHandler = CreateFrame('Frame')
+targetHandler:RegisterEvent('PLAYER_TARGET_CHANGED')
+targetHandler:RegisterUnitEvent('UNIT_HEALTH', 'target')
+targetHandler:RegisterUnitEvent('UNIT_MAXHEALTH', 'target')
+targetHandler:RegisterUnitEvent('UNIT_POWER_UPDATE', 'target')
+
 -- TODO put this somewhere more appropriate
 G.Eventer({
   PLAYER_ENTERING_WORLD = function()
@@ -38,6 +44,16 @@ G.Eventer({
     TargetFrame:SetUserPlaced(true)
     TargetFrame:ClearAllPoints()
     TargetFrame:SetPoint('CENTER', 200, -100)
+    local sib = TargetFrameTextureFrameName
+    local hbt = sib:GetParent():CreateFontString('TargetFrameHealthBarText', sib:GetDrawLayer(), 'TextStatusBarText')
+    hbt:SetPoint('CENTER', -50, 3)
+    local mbt = sib:GetParent():CreateFontString('TargetFrameManaBarText', sib:GetDrawLayer(), 'TextStatusBarText')
+    mbt:SetPoint('CENTER', -50, -8)
+    targetHandler:SetScript('OnEvent', function(_, ev)
+      hbt:SetText(UnitHealth('target') .. ' / ' .. UnitHealthMax('target'))
+      local pm = UnitPowerMax('target')
+      mbt:SetText(pm == 0 and '' or (UnitPower('target') .. ' / ' .. pm))
+    end)
     _G.CastingBarFrame.ignoreFramePositionManager = true
     CastingBarFrame:ClearAllPoints()
     CastingBarFrame:SetPoint('BOTTOM', 0, 275)
