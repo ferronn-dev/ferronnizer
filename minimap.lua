@@ -52,9 +52,7 @@ end
 -- TODO put this somewhere more appropriate
 G.Eventer({
   PLAYER_ENTERING_WORLD = function()
-    PlayerFrame:SetUserPlaced(true)
-    PlayerFrame:ClearAllPoints()
-    PlayerFrame:SetPoint('CENTER', -200, -100)
+    PlayerFrame:Hide()
     TargetFrame:SetUserPlaced(true)
     TargetFrame:ClearAllPoints()
     TargetFrame:SetPoint('CENTER', 200, -100)
@@ -118,19 +116,23 @@ G.Eventer({
 })
 
 if _G.BuffFrame then
-  local moving
-  local function move(f)
-    if not moving then
-      moving = true
-      f:SetMovable(true)
-      f:SetUserPlaced(true)
-      f:ClearAllPoints()
-      f:SetPoint('TOPRIGHT', PlayerFrame, 'BOTTOMRIGHT', 0, 20)
-      f:SetMovable(false)
-      moving = nil
-    end
-  end
-  move(_G.BuffFrame)
-  hooksecurefunc(_G.BuffFrame, 'SetPoint', move)
-  _G.BuffFrame:SetScale(0.8)
+  G.Eventer({
+    PLAYER_LOGIN = function()
+      local moving
+      local function move(f)
+        if not moving then
+          moving = true
+          f:SetMovable(true)
+          f:SetUserPlaced(true)
+          f:ClearAllPoints()
+          f:SetPoint('TOPRIGHT', _G.FerronnizerRoot.PlayerFrame, 'BOTTOMRIGHT')
+          f:SetMovable(false)
+          moving = nil
+        end
+      end
+      move(_G.BuffFrame)
+      hooksecurefunc(_G.BuffFrame, 'SetPoint', move)
+      _G.BuffFrame:SetScale(0.8)
+    end,
+  })
 end

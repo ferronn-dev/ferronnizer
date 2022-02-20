@@ -108,6 +108,7 @@ roots:
 - minimap.lua
 - save.lua
 - tooltips.lua
+- ui.xml
 - vars.lua
 sql:
   bandagedb.sql:

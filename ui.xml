@@ -1,0 +1,65 @@
+<Ui>
+  <Frame name='FerronnizerRoot' parent='UIParent' setAllPoints='true'>
+    <Frames>
+      <Frame parentKey='PlayerFrame'>
+        <Size x='160' y='40' />
+        <Anchors>
+          <Anchor point='CENTER' x='-200' y='-100' />
+        </Anchors>
+        <Frames>
+          <StatusBar parentKey='PlayerHealth'>
+            <Anchors>
+              <Anchor point='TOPLEFT' />
+            </Anchors>
+            <Size x='160' y='20' />
+            <BarTexture file='Interface\TargetingFrame\UI-StatusBar' />
+            <BarColor r='0' g='1' b='0' />
+            <Layers>
+              <Layer>
+                <FontString parentKey='Text' inherits='GameNormalNumberFont' justifyH='CENTER' setAllPoints='true' />
+              </Layer>
+            </Layers>
+            <Scripts>
+              <OnLoad>
+                self:RegisterEvent('PLAYER_LOGIN')
+                self:RegisterUnitEvent('UNIT_HEALTH', 'player')
+                self:RegisterUnitEvent('UNIT_MAXHEALTH', 'player')
+              </OnLoad>
+              <OnEvent>
+                local value, max = UnitHealth('player'), UnitHealthMax('player')
+                self:SetMinMaxValues(0, max)
+                self:SetValue(value)
+                self.Text:SetText(value .. ' / ' .. max)
+              </OnEvent>
+            </Scripts>
+          </StatusBar>
+          <StatusBar parentKey='PlayerPower'>
+            <Anchors>
+              <Anchor point='TOPLEFT' x='0' y='-20' />
+            </Anchors>
+            <Size x='160' y='20' />
+            <BarTexture file='Interface\TargetingFrame\UI-StatusBar' />
+            <BarColor r='0' g='0' b='1' />
+            <Layers>
+              <Layer>
+                <FontString parentKey='Text' inherits='GameNormalNumberFont' justifyH='CENTER' setAllPoints='true' />
+              </Layer>
+            </Layers>
+            <Scripts>
+              <OnLoad>
+                self:RegisterEvent('PLAYER_LOGIN')
+                self:RegisterUnitEvent('UNIT_POWER_UPDATE', 'player')
+              </OnLoad>
+              <OnEvent>
+                local value, max = UnitPower('player'), UnitPowerMax('player')
+                self:SetMinMaxValues(0, max)
+                self:SetValue(value)
+                self.Text:SetText(value .. ' / ' .. max)
+              </OnEvent>
+            </Scripts>
+          </StatusBar>
+        </Frames>
+      </Frame>
+    </Frames>
+  </Frame>
+</Ui>
