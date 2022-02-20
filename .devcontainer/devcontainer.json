@@ -4,6 +4,7 @@
 		"context": "../addonmaker",
 		"dockerfile": "../addonmaker/Dockerfile"
 	},
+	"postCreateCommand": "sh /addonmaker/main.sh",
 	"workspaceFolder": "/addon",
 	"workspaceMount": "source=${localWorkspaceFolder},target=/addon,type=bind"
 }
