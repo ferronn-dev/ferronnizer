@@ -1,0 +1,9 @@
+{
+	"name": "Ferronnizer",
+	"build": {
+		"context": "../addonmaker",
+		"dockerfile": "../addonmaker/Dockerfile"
+	},
+	"workspaceFolder": "/addon",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/addon,type=bind"
+}
