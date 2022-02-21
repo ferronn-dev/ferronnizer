@@ -1,7 +1,10 @@
 <Ui>
   <Frame name='FerronnizerRoot' parent='UIParent' setAllPoints='true'>
     <Frames>
-      <Frame parentKey='PlayerFrame'>
+      <Button parentKey='PlayerFrame' inherits='SecureUnitButtonTemplate'>
+        <Attributes>
+          <Attribute name='unit' value='player' />
+        </Attributes>
         <Size x='160' y='40' />
         <Anchors>
           <Anchor point='CENTER' x='-200' y='-100' />
@@ -65,7 +68,7 @@
             </Scripts>
           </StatusBar>
         </Frames>
-      </Frame>
+      </Button>
     </Frames>
   </Frame>
 </Ui>
