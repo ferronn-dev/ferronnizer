@@ -16,6 +16,9 @@
             <BarColor r='0' g='1' b='0' />
             <Layers>
               <Layer>
+                <Texture parentKey='Background' setAllPoints='true'>
+                  <Color a='0.5' />
+                </Texture>
                 <FontString parentKey='Text' inherits='GameNormalNumberFont' justifyH='CENTER' setAllPoints='true' />
               </Layer>
             </Layers>
@@ -42,6 +45,9 @@
             <BarColor r='0' g='0' b='1' />
             <Layers>
               <Layer>
+                <Texture parentKey='Background' setAllPoints='true'>
+                  <Color a='0.5' />
+                </Texture>
                 <FontString parentKey='Text' inherits='GameNormalNumberFont' justifyH='CENTER' setAllPoints='true' />
               </Layer>
             </Layers>
