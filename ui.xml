@@ -9,6 +9,17 @@
         <Anchors>
           <Anchor point='CENTER' x='-200' y='-100' />
         </Anchors>
+        <Scripts>
+          <OnEnter>
+            GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMRIGHT')
+            GameTooltip:SetUnit('player')
+            GameTooltip:AddLine(('XP: %d/%d'):format(UnitXP('player'), UnitXPMax('player')))
+            GameTooltip:Show()
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide()
+          </OnLeave>
+        </Scripts>
         <Frames>
           <StatusBar parentKey='PlayerHealth'>
             <Anchors>
