@@ -550,7 +550,7 @@ local updateButton = (function()
           return IsConsumableAction(action) and GetActionCount(action) or -1
         end,
         item = function(item)
-          return GetItemCount(item)
+          return select(8, GetItemInfo(item)) > 1 and GetItemCount(item) or -1
         end,
         spell = function(spell)
           return IsConsumableSpell(spell) and GetSpellCount(spell) or -1
