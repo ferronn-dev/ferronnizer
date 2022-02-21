@@ -1,5 +1,7 @@
 local addonName, G = ...
 
+local stackables = {}
+
 local makeAction = (function()
   local function consume(mealDB, potionDB, nethergon)
     local potionText = (function()
@@ -550,7 +552,11 @@ local updateButton = (function()
           return IsConsumableAction(action) and GetActionCount(action) or -1
         end,
         item = function(item)
-          return select(8, GetItemInfo(item)) > 1 and GetItemCount(item) or -1
+          local stackable = stackables[item]
+          if stackable == nil then
+            C_Item.RequestLoadItemDataByID(item)
+          end
+          return stackable and GetItemCount(item) or -1
         end,
         spell = function(spell)
           return IsConsumableSpell(spell) and GetSpellCount(spell) or -1
@@ -1031,9 +1037,14 @@ local function setupActions(actions, defaultPage, actionButtons)
       end
     end
   end
+  local countHandler = updateHandler('count')
   local genericHandlers = {
-    BAG_UPDATE_DELAYED = updateHandler('count'),
+    BAG_UPDATE_DELAYED = countHandler,
     CURRENT_SPELL_CAST_CHANGED = updateHandler('checked'),
+    ITEM_DATA_LOAD_RESULT = function(itemID, success)
+      stackables[itemID] = success and select(8, GetItemInfo(itemID)) > 1
+      countHandler()
+    end,
     SPELL_UPDATE_COOLDOWN = updateHandler('cooldown'),
   }
   for ev, handler in pairs(genericHandlers) do
