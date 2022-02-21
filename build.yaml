@@ -22,20 +22,10 @@ deps:
   - util.lua
   chatframe.lua:
   - util.lua
-  control.lua:
-  - partychat.lua
-  - util.lua
   minimap.lua:
-  - util.lua
-  partychat.lua:
-  - util.lua
-  playerinfo.lua:
-  - partychat.lua
   - util.lua
   save.lua:
   - util.lua
-  tooltips.lua:
-  - playerinfo.lua
   toons.lua:
   - toons/TBC/Druid.lua
   - toons/TBC/Hunter.lua
@@ -104,7 +94,6 @@ roots:
 - buffs.lua
 - carrot.lua
 - chatframe.lua
-- control.lua
 - minimap.lua
 - save.lua
 - tooltips.lua
