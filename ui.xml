@@ -97,7 +97,7 @@
               <Anchor point='TOPLEFT' x='0' y='-40' />
             </Anchors>
             <Attributes>
-              <Attribute name='filter' value='HELPFUL' />
+              <Attribute name='groupBy' value='HELPFUL,HARMFUL' />
               <Attribute name='minHeight' value='1' />
               <Attribute name='minWidth' value='1' />
               <Attribute name='point' value='TOPLEFT' />
