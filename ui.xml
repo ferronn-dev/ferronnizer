@@ -175,7 +175,7 @@
                 local filter = button:GetAttribute('filter')
                 local _, icon, count, dispelType = UnitAura(unit, index, filter)
                 button.Icon:SetTexture(icon)
-                button.Count:SetText(count > 0 and count or '')
+                button.Count:SetText(count and count > 0 and count or '')
                 if dispelType then
                   local color = DebuffTypeColor[dispelType]
                   button.Border:SetVertexColor(color.r, color.g, color.b)
