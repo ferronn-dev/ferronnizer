@@ -29,7 +29,7 @@
         <Attributes>
           <Attribute name='unit' value='player' />
         </Attributes>
-        <Size x='160' y='140' />
+        <Size x='160' y='160' />
         <Anchors>
           <Anchor point='CENTER' x='-200' y='-100' />
         </Anchors>
@@ -46,9 +46,34 @@
           </OnLeave>
         </Scripts>
         <Frames>
-          <StatusBar parentKey='Health'>
+          <Frame parentKey='Name'>
             <Anchors>
               <Anchor point='TOPLEFT' />
+            </Anchors>
+            <Size x='160' y='20' />
+            <Layers>
+              <Layer>
+                <Texture parentKey='Background' setAllPoints='true'>
+                  <Color r='0.4' g='0' b='0' />
+                </Texture>
+                <FontString parentKey='Text' inherits='GameFontNormalSmall' justifyH='CENTER' setAllPoints='true' />
+              </Layer>
+            </Layers>
+            <Scripts>
+              <OnLoad>
+                local unit = self:GetParent():GetAttribute('unit')
+                self:RegisterEvent('PLAYER_LOGIN')
+                self:RegisterUnitEvent('UNIT_NAME_UPDATE', unit)
+              </OnLoad>
+              <OnEvent>
+                local unit = self:GetParent():GetAttribute('unit')
+                self.Text:SetText(UnitName(unit))
+              </OnEvent>
+            </Scripts>
+          </Frame>
+          <StatusBar parentKey='Health'>
+            <Anchors>
+              <Anchor point='TOPLEFT' x='0' y='-20' />
             </Anchors>
             <Size x='160' y='20' />
             <BarTexture file='Interface\TargetingFrame\UI-StatusBar' />
@@ -79,7 +104,7 @@
           </StatusBar>
           <StatusBar parentKey='Power'>
             <Anchors>
-              <Anchor point='TOPLEFT' x='0' y='-20' />
+              <Anchor point='TOPLEFT' x='0' y='-40' />
             </Anchors>
             <Size x='160' y='20' />
             <BarTexture file='Interface\TargetingFrame\UI-StatusBar' />
@@ -110,7 +135,7 @@
           </StatusBar>
           <Frame parentKey='Auras' inherits='SecureAuraHeaderTemplate' hidden='false' setAllPoints='true'>
             <Anchors>
-              <Anchor point='TOPLEFT' x='0' y='-40' />
+              <Anchor point='TOPLEFT' x='0' y='-60' />
             </Anchors>
             <Attributes>
               <Attribute name='groupBy' value='HELPFUL,HARMFUL' />
