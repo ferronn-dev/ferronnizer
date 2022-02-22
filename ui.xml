@@ -23,158 +23,160 @@
       </OnLeave>
     </Scripts>
   </Button>
+  <Button name='FerronnizerTemplateUnitButton' inherits='SecureUnitButtonTemplate' virtual='true'>
+    <Size x='160' y='160' />
+    <Scripts>
+      <OnEnter>
+        local unit = self.unit
+        GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMRIGHT')
+        GameTooltip:SetUnit(unit)
+        GameTooltip:AddLine(('XP: %d/%d'):format(UnitXP(unit), UnitXPMax(unit)))
+        GameTooltip:Show()
+      </OnEnter>
+      <OnLeave>
+        GameTooltip:Hide()
+      </OnLeave>
+    </Scripts>
+    <Frames>
+      <Frame parentKey='Name'>
+        <Anchors>
+          <Anchor point='TOPLEFT' />
+        </Anchors>
+        <Size x='160' y='20' />
+        <Layers>
+          <Layer>
+            <Texture parentKey='Background' setAllPoints='true'>
+              <Color r='0.4' g='0' b='0' />
+            </Texture>
+            <FontString parentKey='Text' inherits='GameFontNormalSmall' justifyH='CENTER' setAllPoints='true' />
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>
+            local unit = self:GetParent().unit
+            self:RegisterEvent('PLAYER_LOGIN')
+            self:RegisterUnitEvent('UNIT_NAME_UPDATE', unit)
+          </OnLoad>
+          <OnEvent>
+            local unit = self:GetParent().unit
+            self.Text:SetText(UnitName(unit))
+          </OnEvent>
+        </Scripts>
+      </Frame>
+      <StatusBar parentKey='Health'>
+        <Anchors>
+          <Anchor point='TOPLEFT' x='0' y='-20' />
+        </Anchors>
+        <Size x='160' y='20' />
+        <BarTexture file='Interface\TargetingFrame\UI-StatusBar' />
+        <BarColor r='0' g='1' b='0' />
+        <Layers>
+          <Layer>
+            <Texture parentKey='Background' setAllPoints='true'>
+              <Color a='0.5' />
+            </Texture>
+            <FontString parentKey='Text' inherits='GameNormalNumberFont' justifyH='CENTER' setAllPoints='true' />
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>
+            local unit = self:GetParent().unit
+            self:RegisterEvent('PLAYER_LOGIN')
+            self:RegisterUnitEvent('UNIT_HEALTH', unit)
+            self:RegisterUnitEvent('UNIT_MAXHEALTH', unit)
+          </OnLoad>
+          <OnEvent>
+            local unit = self:GetParent().unit
+            local value, max = UnitHealth(unit), UnitHealthMax(unit)
+            self:SetMinMaxValues(0, max)
+            self:SetValue(value)
+            self.Text:SetText(value .. ' / ' .. max)
+          </OnEvent>
+        </Scripts>
+      </StatusBar>
+      <StatusBar parentKey='Power'>
+        <Anchors>
+          <Anchor point='TOPLEFT' x='0' y='-40' />
+        </Anchors>
+        <Size x='160' y='20' />
+        <BarTexture file='Interface\TargetingFrame\UI-StatusBar' />
+        <Layers>
+          <Layer>
+            <Texture parentKey='Background' setAllPoints='true'>
+              <Color a='0.5' />
+            </Texture>
+            <FontString parentKey='Text' inherits='GameNormalNumberFont' justifyH='CENTER' setAllPoints='true' />
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>
+            local unit = self:GetParent().unit
+            self:RegisterEvent('PLAYER_LOGIN')
+            self:RegisterUnitEvent('UNIT_POWER_UPDATE', unit)
+          </OnLoad>
+          <OnEvent>
+            local unit = self:GetParent().unit
+            local color = PowerBarColor[select(2, UnitPowerType(unit)) or 'MANA']
+            self:SetStatusBarColor(color.r, color.g, color.b)
+            local value, max = UnitPower(unit), UnitPowerMax(unit)
+            self:SetMinMaxValues(0, max)
+            self:SetValue(value)
+            self.Text:SetText(value .. ' / ' .. max)
+          </OnEvent>
+        </Scripts>
+      </StatusBar>
+      <Frame parentKey='Auras' inherits='SecureAuraHeaderTemplate' hidden='false' setAllPoints='true'>
+        <Anchors>
+          <Anchor point='TOPLEFT' x='0' y='-60' />
+        </Anchors>
+        <Attributes>
+          <Attribute name='groupBy' value='HELPFUL,HARMFUL' />
+          <Attribute name='minHeight' value='1' />
+          <Attribute name='minWidth' value='1' />
+          <Attribute name='point' value='TOPLEFT' />
+          <Attribute name='sortDirection' value='+' />
+          <Attribute name='sortMethod' value='INDEX' />
+          <Attribute name='template' value='FerronnizerTemplateAuraButton' />
+          <Attribute name='wrapAfter' value='8' />
+          <Attribute name='wrapXOffset' value='0' />
+          <Attribute name='wrapYOffset' value='-20' />
+          <Attribute name='xOffset' value='20' />
+          <Attribute name='yOffset' value='0' />
+        </Attributes>
+        <Scripts>
+          <OnLoad>
+            BuffFrame:Hide()
+            local unit = self:GetParent().unit
+            self:RegisterUnitEvent('UNIT_AURA', unit)
+            self:SetAttribute('unit', unit) -- also triggers internal update
+            local function updateIcons()
+              local idx = 1
+              local button = self:GetAttribute('child' .. idx)
+              while button and button:IsShown() do
+                local index = button:GetAttribute('index')
+                local filter = button:GetAttribute('filter')
+                local _, icon = UnitAura(unit, index, filter)
+                button.Icon:SetTexture(icon)
+                idx = idx + 1
+                button = self:GetAttribute('child' .. idx)
+              end
+            end
+            updateIcons()
+            self:HookScript('OnEvent', updateIcons)
+          </OnLoad>
+        </Scripts>
+      </Frame>
+    </Frames>
+  </Button>
   <Frame name='FerronnizerRoot' parent='UIParent' setAllPoints='true'>
     <Frames>
-      <Button parentKey='PlayerFrame' inherits='SecureUnitButtonTemplate'>
-        <Attributes>
-          <Attribute name='unit' value='player' />
-        </Attributes>
-        <Size x='160' y='160' />
+      <Button parentKey='PlayerFrame' inherits='FerronnizerTemplateUnitButton'>
         <Anchors>
           <Anchor point='CENTER' x='-200' y='-100' />
         </Anchors>
-        <Scripts>
-          <OnEnter>
-            local unit = self:GetAttribute('unit')
-            GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMRIGHT')
-            GameTooltip:SetUnit(unit)
-            GameTooltip:AddLine(('XP: %d/%d'):format(UnitXP(unit), UnitXPMax(unit)))
-            GameTooltip:Show()
-          </OnEnter>
-          <OnLeave>
-            GameTooltip:Hide()
-          </OnLeave>
-        </Scripts>
-        <Frames>
-          <Frame parentKey='Name'>
-            <Anchors>
-              <Anchor point='TOPLEFT' />
-            </Anchors>
-            <Size x='160' y='20' />
-            <Layers>
-              <Layer>
-                <Texture parentKey='Background' setAllPoints='true'>
-                  <Color r='0.4' g='0' b='0' />
-                </Texture>
-                <FontString parentKey='Text' inherits='GameFontNormalSmall' justifyH='CENTER' setAllPoints='true' />
-              </Layer>
-            </Layers>
-            <Scripts>
-              <OnLoad>
-                local unit = self:GetParent():GetAttribute('unit')
-                self:RegisterEvent('PLAYER_LOGIN')
-                self:RegisterUnitEvent('UNIT_NAME_UPDATE', unit)
-              </OnLoad>
-              <OnEvent>
-                local unit = self:GetParent():GetAttribute('unit')
-                self.Text:SetText(UnitName(unit))
-              </OnEvent>
-            </Scripts>
-          </Frame>
-          <StatusBar parentKey='Health'>
-            <Anchors>
-              <Anchor point='TOPLEFT' x='0' y='-20' />
-            </Anchors>
-            <Size x='160' y='20' />
-            <BarTexture file='Interface\TargetingFrame\UI-StatusBar' />
-            <BarColor r='0' g='1' b='0' />
-            <Layers>
-              <Layer>
-                <Texture parentKey='Background' setAllPoints='true'>
-                  <Color a='0.5' />
-                </Texture>
-                <FontString parentKey='Text' inherits='GameNormalNumberFont' justifyH='CENTER' setAllPoints='true' />
-              </Layer>
-            </Layers>
-            <Scripts>
-              <OnLoad>
-                local unit = self:GetParent():GetAttribute('unit')
-                self:RegisterEvent('PLAYER_LOGIN')
-                self:RegisterUnitEvent('UNIT_HEALTH', unit)
-                self:RegisterUnitEvent('UNIT_MAXHEALTH', unit)
-              </OnLoad>
-              <OnEvent>
-                local unit = self:GetParent():GetAttribute('unit')
-                local value, max = UnitHealth(unit), UnitHealthMax(unit)
-                self:SetMinMaxValues(0, max)
-                self:SetValue(value)
-                self.Text:SetText(value .. ' / ' .. max)
-              </OnEvent>
-            </Scripts>
-          </StatusBar>
-          <StatusBar parentKey='Power'>
-            <Anchors>
-              <Anchor point='TOPLEFT' x='0' y='-40' />
-            </Anchors>
-            <Size x='160' y='20' />
-            <BarTexture file='Interface\TargetingFrame\UI-StatusBar' />
-            <Layers>
-              <Layer>
-                <Texture parentKey='Background' setAllPoints='true'>
-                  <Color a='0.5' />
-                </Texture>
-                <FontString parentKey='Text' inherits='GameNormalNumberFont' justifyH='CENTER' setAllPoints='true' />
-              </Layer>
-            </Layers>
-            <Scripts>
-              <OnLoad>
-                local unit = self:GetParent():GetAttribute('unit')
-                self:RegisterEvent('PLAYER_LOGIN')
-                self:RegisterUnitEvent('UNIT_POWER_UPDATE', unit)
-              </OnLoad>
-              <OnEvent>
-                local unit = self:GetParent():GetAttribute('unit')
-                local color = PowerBarColor[select(2, UnitPowerType(unit)) or 'MANA']
-                self:SetStatusBarColor(color.r, color.g, color.b)
-                local value, max = UnitPower(unit), UnitPowerMax(unit)
-                self:SetMinMaxValues(0, max)
-                self:SetValue(value)
-                self.Text:SetText(value .. ' / ' .. max)
-              </OnEvent>
-            </Scripts>
-          </StatusBar>
-          <Frame parentKey='Auras' inherits='SecureAuraHeaderTemplate' hidden='false' setAllPoints='true'>
-            <Anchors>
-              <Anchor point='TOPLEFT' x='0' y='-60' />
-            </Anchors>
-            <Attributes>
-              <Attribute name='groupBy' value='HELPFUL,HARMFUL' />
-              <Attribute name='minHeight' value='1' />
-              <Attribute name='minWidth' value='1' />
-              <Attribute name='point' value='TOPLEFT' />
-              <Attribute name='sortDirection' value='+' />
-              <Attribute name='sortMethod' value='INDEX' />
-              <Attribute name='template' value='FerronnizerTemplateAuraButton' />
-              <Attribute name='wrapAfter' value='8' />
-              <Attribute name='wrapXOffset' value='0' />
-              <Attribute name='wrapYOffset' value='-20' />
-              <Attribute name='xOffset' value='20' />
-              <Attribute name='yOffset' value='0' />
-            </Attributes>
-            <Scripts>
-              <OnLoad>
-                BuffFrame:Hide()
-                local unit = self:GetParent():GetAttribute('unit')
-                self:RegisterUnitEvent('UNIT_AURA', unit)
-                self:SetAttribute('unit', unit) -- also triggers internal update
-                local function updateIcons()
-                  local idx = 1
-                  local button = self:GetAttribute('child' .. idx)
-                  while button and button:IsShown() do
-                    local index = button:GetAttribute('index')
-                    local filter = button:GetAttribute('filter')
-                    local _, icon = UnitAura(unit, index, filter)
-                    button.Icon:SetTexture(icon)
-                    idx = idx + 1
-                    button = self:GetAttribute('child' .. idx)
-                  end
-                end
-                updateIcons()
-                self:HookScript('OnEvent', updateIcons)
-              </OnLoad>
-            </Scripts>
-          </Frame>
-        </Frames>
+        <KeyValues>
+          <KeyValue key='unit' value='player' />
+        </KeyValues>
       </Button>
     </Frames>
   </Frame>
