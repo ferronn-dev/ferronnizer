@@ -6,7 +6,9 @@
     <Size x='20' y='20' />
     <Layers>
       <Layer level='ARTWORK'>
-        <Texture parentKey='Icon' setAllPoints='true' />
+        <Texture parentKey='Icon' setAllPoints='true'>
+          <TexCoords top='0.07' left='0.07' bottom='0.93' right='0.93' />
+        </Texture>
       </Layer>
     </Layers>
     <Scripts>
@@ -14,7 +16,6 @@
         self:RegisterForClicks('RightButtonUp')
         self:RegisterEvent('PLAYER_LOGIN')
         self:RegisterUnitEvent('UNIT_AURA', 'player')
-        self.Icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
       </OnLoad>
       <OnEvent>
         local _, icon = UnitAura('player', self:GetID(), 'HELPFUL')
