@@ -398,12 +398,13 @@ local makeAction = (function()
         '/cast [equipped:wand] !Shoot',
       }, '\n')
       local function update()
-        local item = GetInventoryItemID('player', 18)
-        local count = GetInventoryItemCount('player', GetInventoryItemID('player', 0) == 0 and 18 or 0) or 0
+        local ammo = GetInventoryItemID('player', 0)
+        local ranged = GetInventoryItemID('player', 18)
+        local item = ammo ~= 0 and ammo or ranged
         return {
           color = 1.0,
-          count = { value = count },
-          ui = item and { item = item } or { hide = true },
+          count = item and { item = item } or { value = -1 },
+          ui = ranged and { item = ranged } or { hide = true },
           update = { reset = true },
         }
       end
@@ -556,7 +557,7 @@ local updateButton = (function()
           if stackable == nil then
             C_Item.RequestLoadItemDataByID(item)
           end
-          return stackable and GetItemCount(item) or -1
+          return (stackable or IsConsumableItem(item)) and GetItemCount(item) or -1
         end,
         spell = function(spell)
           return IsConsumableSpell(spell) and GetSpellCount(spell) or -1
