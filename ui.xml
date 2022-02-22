@@ -35,9 +35,10 @@
         </Anchors>
         <Scripts>
           <OnEnter>
+            local unit = self:GetAttribute('unit')
             GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMRIGHT')
-            GameTooltip:SetUnit('player')
-            GameTooltip:AddLine(('XP: %d/%d'):format(UnitXP('player'), UnitXPMax('player')))
+            GameTooltip:SetUnit(unit)
+            GameTooltip:AddLine(('XP: %d/%d'):format(UnitXP(unit), UnitXPMax(unit)))
             GameTooltip:Show()
           </OnEnter>
           <OnLeave>
@@ -45,7 +46,7 @@
           </OnLeave>
         </Scripts>
         <Frames>
-          <StatusBar parentKey='PlayerHealth'>
+          <StatusBar parentKey='Health'>
             <Anchors>
               <Anchor point='TOPLEFT' />
             </Anchors>
@@ -62,19 +63,21 @@
             </Layers>
             <Scripts>
               <OnLoad>
+                local unit = self:GetParent():GetAttribute('unit')
                 self:RegisterEvent('PLAYER_LOGIN')
-                self:RegisterUnitEvent('UNIT_HEALTH', 'player')
-                self:RegisterUnitEvent('UNIT_MAXHEALTH', 'player')
+                self:RegisterUnitEvent('UNIT_HEALTH', unit)
+                self:RegisterUnitEvent('UNIT_MAXHEALTH', unit)
               </OnLoad>
               <OnEvent>
-                local value, max = UnitHealth('player'), UnitHealthMax('player')
+                local unit = self:GetParent():GetAttribute('unit')
+                local value, max = UnitHealth(unit), UnitHealthMax(unit)
                 self:SetMinMaxValues(0, max)
                 self:SetValue(value)
                 self.Text:SetText(value .. ' / ' .. max)
               </OnEvent>
             </Scripts>
           </StatusBar>
-          <StatusBar parentKey='PlayerPower'>
+          <StatusBar parentKey='Power'>
             <Anchors>
               <Anchor point='TOPLEFT' x='0' y='-20' />
             </Anchors>
@@ -90,13 +93,15 @@
             </Layers>
             <Scripts>
               <OnLoad>
+                local unit = self:GetParent():GetAttribute('unit')
                 self:RegisterEvent('PLAYER_LOGIN')
-                self:RegisterUnitEvent('UNIT_POWER_UPDATE', 'player')
+                self:RegisterUnitEvent('UNIT_POWER_UPDATE', unit)
               </OnLoad>
               <OnEvent>
-                local color = PowerBarColor[select(2, UnitPowerType('player')) or 'MANA']
+                local unit = self:GetParent():GetAttribute('unit')
+                local color = PowerBarColor[select(2, UnitPowerType(unit)) or 'MANA']
                 self:SetStatusBarColor(color.r, color.g, color.b)
-                local value, max = UnitPower('player'), UnitPowerMax('player')
+                local value, max = UnitPower(unit), UnitPowerMax(unit)
                 self:SetMinMaxValues(0, max)
                 self:SetValue(value)
                 self.Text:SetText(value .. ' / ' .. max)
