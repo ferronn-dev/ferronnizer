@@ -172,7 +172,7 @@
     <Frames>
       <Button parentKey='PlayerFrame' inherits='FerronnizerTemplateUnitButton'>
         <Anchors>
-          <Anchor point='CENTER' x='-200' y='-100' />
+          <Anchor point='CENTER' x='-200' y='-140' />
         </Anchors>
         <KeyValues>
           <KeyValue key='unit' value='player' />
@@ -180,7 +180,7 @@
       </Button>
       <Button parentKey='TargetFrame' inherits='FerronnizerTemplateUnitButton'>
         <Anchors>
-          <Anchor point='CENTER' x='200' y='-100' />
+          <Anchor point='CENTER' x='200' y='-140' />
         </Anchors>
         <KeyValues>
           <KeyValue key='unit' value='target' />
