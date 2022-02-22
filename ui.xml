@@ -114,7 +114,7 @@
             <Scripts>
               <OnLoad>
                 BuffFrame:Hide()
-                self:RegisterEvent('UNIT_AURA')
+                self:RegisterUnitEvent('UNIT_AURA', 'player')
                 self:SetAttribute('unit', 'player')
                 local function updateIcons()
                   local unit = self:GetAttribute('unit')
