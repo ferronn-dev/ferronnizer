@@ -1,5 +1,8 @@
 <Ui>
   <Button name='FerronnizerTemplateAuraButton' inherits='SecureActionButtonTemplate' virtual='true'>
+    <Attributes>
+      <Attribute name='type2' value='cancelaura' />
+    </Attributes>
     <Size x='20' y='20' />
     <Layers>
       <Layer level='ARTWORK'>
@@ -8,12 +11,13 @@
     </Layers>
     <Scripts>
       <OnLoad>
+        self:RegisterForClicks('RightButtonUp')
         self:RegisterEvent('PLAYER_LOGIN')
         self:RegisterUnitEvent('UNIT_AURA', 'player')
         self.Icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
       </OnLoad>
       <OnEvent>
-        local _, icon = UnitAura('player', self:GetID())
+        local _, icon = UnitAura('player', self:GetID(), 'HELPFUL')
         if icon then
           self.Icon:SetTexture(icon)
           self.Icon:Show()
@@ -111,14 +115,15 @@
               <Attribute name='filter' value='HELPFUL' />
               <Attribute name='minHeight' value='1' />
               <Attribute name='minWidth' value='1' />
-              <Attribute name='point' value='TOPRIGHT' />
+              <Attribute name='point' value='TOPLEFT' />
+              <Attribute name='sortDirection' value='+' />
               <Attribute name='sortMethod' value='INDEX' />
               <Attribute name='template' value='FerronnizerTemplateAuraButton' />
               <Attribute name='unit' value='player' />
               <Attribute name='wrapAfter' value='8' />
               <Attribute name='wrapXOffset' value='0' />
               <Attribute name='wrapYOffset' value='-20' />
-              <Attribute name='xOffset' value='-20' />
+              <Attribute name='xOffset' value='20' />
               <Attribute name='yOffset' value='0' />
             </Attributes>
             <Scripts>
