@@ -1,5 +1,5 @@
 <Ui>
-  <Button name='FerronnizerTemplateAuraButton' inherits='SecureActionButtonTemplate' virtual='true'>
+  <Button name='FerronnizerTemplateAuraButton' inherits='SecureActionButtonTemplate' virtual='true' registerForClicks='RightButtonUp'>
     <Attributes>
       <Attribute name='type2' value='cancelaura' />
     </Attributes>
@@ -13,7 +13,6 @@
     </Layers>
     <Scripts>
       <OnLoad>
-        self:RegisterForClicks('RightButtonUp')
         self:RegisterEvent('PLAYER_LOGIN')
         self:RegisterUnitEvent('UNIT_AURA', 'player')
       </OnLoad>
