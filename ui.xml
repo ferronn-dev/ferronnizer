@@ -115,7 +115,6 @@
               <Attribute name='sortDirection' value='+' />
               <Attribute name='sortMethod' value='INDEX' />
               <Attribute name='template' value='FerronnizerTemplateAuraButton' />
-              <Attribute name='unit' value='player' />
               <Attribute name='wrapAfter' value='8' />
               <Attribute name='wrapXOffset' value='0' />
               <Attribute name='wrapYOffset' value='-20' />
@@ -125,9 +124,9 @@
             <Scripts>
               <OnLoad>
                 BuffFrame:Hide()
-                local unit = self:GetAttribute('unit')
+                local unit = self:GetParent():GetAttribute('unit')
                 self:RegisterUnitEvent('UNIT_AURA', unit)
-                self:SetAttribute('unit', unit) -- triggers internal update
+                self:SetAttribute('unit', unit) -- also triggers internal update
                 local function updateIcons()
                   local idx = 1
                   local button = self:GetAttribute('child' .. idx)
