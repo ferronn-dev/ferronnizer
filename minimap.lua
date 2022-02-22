@@ -114,25 +114,3 @@ G.Eventer({
   NAME_PLATE_UNIT_ADDED = onAdd,
   NAME_PLATE_UNIT_REMOVED = onRemove,
 })
-
-if _G.BuffFrame then
-  G.Eventer({
-    PLAYER_LOGIN = function()
-      local moving
-      local function move(f)
-        if not moving then
-          moving = true
-          f:SetMovable(true)
-          f:SetUserPlaced(true)
-          f:ClearAllPoints()
-          f:SetPoint('TOPRIGHT', _G.FerronnizerRoot.PlayerFrame, 'BOTTOMRIGHT')
-          f:SetMovable(false)
-          moving = nil
-        end
-      end
-      move(_G.BuffFrame)
-      hooksecurefunc(_G.BuffFrame, 'SetPoint', move)
-      _G.BuffFrame:SetScale(0.8)
-    end,
-  })
-end

@@ -1,11 +1,35 @@
 <Ui>
+  <Button name='FerronnizerTemplateAuraButton' inherits='SecureActionButtonTemplate' virtual='true'>
+    <Size x='20' y='20' />
+    <Layers>
+      <Layer level='ARTWORK'>
+        <Texture parentKey='Icon' setAllPoints='true' />
+      </Layer>
+    </Layers>
+    <Scripts>
+      <OnLoad>
+        self:RegisterEvent('PLAYER_LOGIN')
+        self:RegisterUnitEvent('UNIT_AURA', 'player')
+        self.Icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+      </OnLoad>
+      <OnEvent>
+        local _, icon = UnitAura('player', self:GetID())
+        if icon then
+          self.Icon:SetTexture(icon)
+          self.Icon:Show()
+        else
+          self.Icon:Hide()
+        end
+      </OnEvent>
+    </Scripts>
+  </Button>
   <Frame name='FerronnizerRoot' parent='UIParent' setAllPoints='true'>
     <Frames>
       <Button parentKey='PlayerFrame' inherits='SecureUnitButtonTemplate'>
         <Attributes>
           <Attribute name='unit' value='player' />
         </Attributes>
-        <Size x='160' y='40' />
+        <Size x='160' y='140' />
         <Anchors>
           <Anchor point='CENTER' x='-200' y='-100' />
         </Anchors>
@@ -79,6 +103,30 @@
               </OnEvent>
             </Scripts>
           </StatusBar>
+          <Frame parentKey='Auras' inherits='SecureAuraHeaderTemplate' hidden='false' setAllPoints='true'>
+            <Anchors>
+              <Anchor point='TOPLEFT' x='0' y='-40' />
+            </Anchors>
+            <Attributes>
+              <Attribute name='filter' value='HELPFUL' />
+              <Attribute name='minHeight' value='1' />
+              <Attribute name='minWidth' value='1' />
+              <Attribute name='point' value='TOPRIGHT' />
+              <Attribute name='sortMethod' value='INDEX' />
+              <Attribute name='template' value='FerronnizerTemplateAuraButton' />
+              <Attribute name='unit' value='player' />
+              <Attribute name='wrapAfter' value='8' />
+              <Attribute name='wrapXOffset' value='0' />
+              <Attribute name='wrapYOffset' value='-20' />
+              <Attribute name='xOffset' value='-20' />
+              <Attribute name='yOffset' value='0' />
+            </Attributes>
+            <Scripts>
+              <OnLoad>
+                BuffFrame:Hide()
+              </OnLoad>
+            </Scripts>
+          </Frame>
         </Frames>
       </Button>
     </Frames>
