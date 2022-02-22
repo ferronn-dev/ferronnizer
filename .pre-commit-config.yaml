@@ -10,6 +10,13 @@ repos:
   rev: v0.12.1
   hooks:
   - id: stylua-system
+- repo: local
+  hooks:
+  - id: addonmaker
+    name: addonmaker
+    entry: sh addonmaker/run.sh
+    language: system
+    pass_filenames: false
 - repo: meta
   hooks:
   - id: check-hooks-apply
