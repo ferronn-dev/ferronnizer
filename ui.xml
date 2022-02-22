@@ -15,6 +15,12 @@
           </Anchors>
         </FontString>
       </Layer>
+      <Layer level='OVERLAY'>
+        <!-- Taken from BuffFrame.xml -->
+        <Texture parentKey='Border' file='Interface\Buttons\UI-Debuff-Overlays' setAllPoints='true'>
+          <TexCoords left='0.296875' right='0.5703125' top='0' bottom='0.515625' />
+        </Texture>
+      </Layer>
     </Layers>
     <Scripts>
       <OnEnter>
@@ -167,9 +173,16 @@
               while button and button:IsShown() do
                 local index = button:GetAttribute('index')
                 local filter = button:GetAttribute('filter')
-                local _, icon, count = UnitAura(unit, index, filter)
+                local _, icon, count, dispelType = UnitAura(unit, index, filter)
                 button.Icon:SetTexture(icon)
                 button.Count:SetText(count > 0 and count or '')
+                if dispelType then
+                  local color = DebuffTypeColor[dispelType]
+                  button.Border:SetVertexColor(color.r, color.g, color.b)
+                  button.Border:Show()
+                else
+                  button.Border:Hide()
+                end
                 idx = idx + 1
                 button = self:GetAttribute('child' .. idx)
               end
