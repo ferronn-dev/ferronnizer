@@ -52,10 +52,8 @@ end
 -- TODO put this somewhere more appropriate
 G.Eventer({
   PLAYER_ENTERING_WORLD = function()
-    PlayerFrame:Hide()
-    TargetFrame:SetUserPlaced(true)
-    TargetFrame:ClearAllPoints()
-    TargetFrame:SetPoint('CENTER', 200, -100)
+    G.ReparentFrame(PlayerFrame)
+    G.ReparentFrame(TargetFrame)
     _G.CastingBarFrame.ignoreFramePositionManager = true
     CastingBarFrame:ClearAllPoints()
     CastingBarFrame:SetPoint('BOTTOM', 0, 275)

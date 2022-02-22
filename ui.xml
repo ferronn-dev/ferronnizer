@@ -178,6 +178,28 @@
           <KeyValue key='unit' value='player' />
         </KeyValues>
       </Button>
+      <Button parentKey='TargetFrame' inherits='FerronnizerTemplateUnitButton'>
+        <Anchors>
+          <Anchor point='CENTER' x='200' y='-100' />
+        </Anchors>
+        <KeyValues>
+          <KeyValue key='unit' value='target' />
+        </KeyValues>
+        <Scripts>
+          <OnLoad>
+            self:RegisterEvent('PLAYER_LOGIN')
+            self:RegisterEvent('PLAYER_TARGET_CHANGED')
+            self.Name:RegisterEvent('PLAYER_TARGET_CHANGED')
+            self.Health:RegisterEvent('PLAYER_TARGET_CHANGED')
+            self.Power:RegisterEvent('PLAYER_TARGET_CHANGED')
+            self.Auras:RegisterEvent('PLAYER_TARGET_CHANGED')
+          </OnLoad>
+          <OnEvent>
+            <!-- TODO make this secure -->
+            self:SetShown(UnitExists('target'))
+          </OnEvent>
+        </Scripts>
+      </Button>
     </Frames>
   </Frame>
 </Ui>
