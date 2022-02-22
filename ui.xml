@@ -13,8 +13,9 @@
     </Layers>
     <Scripts>
       <OnEnter>
+        local unit = self:GetParent():GetAttribute('unit')
         GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMRIGHT')
-        GameTooltip:SetUnitAura('player', self:GetAttribute('index'), self:GetAttribute('filter'))
+        GameTooltip:SetUnitAura(unit, self:GetAttribute('index'), self:GetAttribute('filter'))
         GameTooltip:Show()
       </OnEnter>
       <OnLeave>
@@ -124,10 +125,10 @@
             <Scripts>
               <OnLoad>
                 BuffFrame:Hide()
-                self:RegisterUnitEvent('UNIT_AURA', 'player')
-                self:SetAttribute('unit', 'player')
+                local unit = self:GetAttribute('unit')
+                self:RegisterUnitEvent('UNIT_AURA', unit)
+                self:SetAttribute('unit', unit) -- triggers internal update
                 local function updateIcons()
-                  local unit = self:GetAttribute('unit')
                   local idx = 1
                   local button = self:GetAttribute('child' .. idx)
                   while button and button:IsShown() do
