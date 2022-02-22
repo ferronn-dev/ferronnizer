@@ -26,6 +26,16 @@
   <Button name='FerronnizerTemplateUnitButton' inherits='SecureUnitButtonTemplate' virtual='true'>
     <Size x='160' y='160' />
     <Scripts>
+      <OnLoad>
+        for event in self.events:gmatch('([^,]+)') do
+          self.Name:RegisterEvent(event)
+          self.Health:RegisterEvent(event)
+          self.Power:RegisterEvent(event)
+          self.Auras:RegisterEvent(event)
+        end
+        self:SetAttribute('unit', self.unit)
+        RegisterUnitWatch(self)
+      </OnLoad>
       <OnEnter>
         local unit = self.unit
         GameTooltip:SetOwner(self, 'ANCHOR_TOP')
@@ -54,7 +64,6 @@
         <Scripts>
           <OnLoad>
             local unit = self:GetParent().unit
-            self:RegisterEvent('PLAYER_LOGIN')
             self:RegisterUnitEvent('UNIT_NAME_UPDATE', unit)
           </OnLoad>
           <OnEvent>
@@ -81,7 +90,6 @@
         <Scripts>
           <OnLoad>
             local unit = self:GetParent().unit
-            self:RegisterEvent('PLAYER_LOGIN')
             self:RegisterUnitEvent('UNIT_HEALTH', unit)
             self:RegisterUnitEvent('UNIT_MAXHEALTH', unit)
           </OnLoad>
@@ -111,7 +119,6 @@
         <Scripts>
           <OnLoad>
             local unit = self:GetParent().unit
-            self:RegisterEvent('PLAYER_LOGIN')
             self:RegisterUnitEvent('UNIT_POWER_UPDATE', unit)
           </OnLoad>
           <OnEvent>
@@ -175,6 +182,7 @@
           <Anchor point='CENTER' x='-200' y='-140' />
         </Anchors>
         <KeyValues>
+          <KeyValue key='events' value='PLAYER_LOGIN' />
           <KeyValue key='unit' value='player' />
         </KeyValues>
       </Button>
@@ -183,22 +191,9 @@
           <Anchor point='CENTER' x='200' y='-140' />
         </Anchors>
         <KeyValues>
+          <KeyValue key='events' value='PLAYER_LOGIN,PLAYER_TARGET_CHANGED' />
           <KeyValue key='unit' value='target' />
         </KeyValues>
-        <Scripts>
-          <OnLoad>
-            self:RegisterEvent('PLAYER_LOGIN')
-            self:RegisterEvent('PLAYER_TARGET_CHANGED')
-            self.Name:RegisterEvent('PLAYER_TARGET_CHANGED')
-            self.Health:RegisterEvent('PLAYER_TARGET_CHANGED')
-            self.Power:RegisterEvent('PLAYER_TARGET_CHANGED')
-            self.Auras:RegisterEvent('PLAYER_TARGET_CHANGED')
-          </OnLoad>
-          <OnEvent>
-            <!-- TODO make this secure -->
-            self:SetShown(UnitExists('target'))
-          </OnEvent>
-        </Scripts>
       </Button>
     </Frames>
   </Frame>
