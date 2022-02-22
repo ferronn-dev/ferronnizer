@@ -11,21 +11,6 @@
         </Texture>
       </Layer>
     </Layers>
-    <Scripts>
-      <OnLoad>
-        self:RegisterEvent('PLAYER_LOGIN')
-        self:RegisterUnitEvent('UNIT_AURA', 'player')
-      </OnLoad>
-      <OnEvent>
-        local _, icon = UnitAura('player', self:GetID(), 'HELPFUL')
-        if icon then
-          self.Icon:SetTexture(icon)
-          self.Icon:Show()
-        else
-          self.Icon:Hide()
-        end
-      </OnEvent>
-    </Scripts>
   </Button>
   <Frame name='FerronnizerRoot' parent='UIParent' setAllPoints='true'>
     <Frames>
@@ -129,6 +114,23 @@
             <Scripts>
               <OnLoad>
                 BuffFrame:Hide()
+                self:RegisterEvent('UNIT_AURA')
+                self:SetAttribute('unit', 'player')
+                local function updateIcons()
+                  local unit = self:GetAttribute('unit')
+                  local idx = 1
+                  local button = self:GetAttribute('child' .. idx)
+                  while button and button:IsShown() do
+                    local index = button:GetAttribute('index')
+                    local filter = button:GetAttribute('filter')
+                    local _, icon = UnitAura(unit, index, filter)
+                    button.Icon:SetTexture(icon)
+                    idx = idx + 1
+                    button = self:GetAttribute('child' .. idx)
+                  end
+                end
+                updateIcons()
+                self:HookScript('OnEvent', updateIcons)
               </OnLoad>
             </Scripts>
           </Frame>
