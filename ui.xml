@@ -28,7 +28,7 @@
     <Scripts>
       <OnEnter>
         local unit = self.unit
-        GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMRIGHT')
+        GameTooltip:SetOwner(self, 'ANCHOR_TOP')
         GameTooltip:SetUnit(unit)
         GameTooltip:AddLine(('XP: %d/%d'):format(UnitXP(unit), UnitXPMax(unit)))
         GameTooltip:Show()

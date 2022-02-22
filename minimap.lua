@@ -54,6 +54,9 @@ G.Eventer({
   PLAYER_ENTERING_WORLD = function()
     G.ReparentFrame(PlayerFrame)
     G.ReparentFrame(TargetFrame)
+    if _G.GameTooltipStatusBar then
+      G.ReparentFrame(_G.GameTooltipStatusBar)
+    end
     _G.CastingBarFrame.ignoreFramePositionManager = true
     CastingBarFrame:ClearAllPoints()
     CastingBarFrame:SetPoint('BOTTOM', 0, 275)
