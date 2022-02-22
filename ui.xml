@@ -88,7 +88,7 @@
           <Anchor point='TOPLEFT' x='0' y='-20' />
         </Anchors>
         <Size x='160' y='20' />
-        <BarTexture file='Interface\TargetingFrame\UI-StatusBar' />
+        <BarTexture file='Interface\Buttons\WHITE8x8' />
         <BarColor r='0.3' g='0.7' b='0' />
         <Layers>
           <Layer>
@@ -118,7 +118,7 @@
           <Anchor point='TOPLEFT' x='0' y='-40' />
         </Anchors>
         <Size x='160' y='20' />
-        <BarTexture file='Interface\TargetingFrame\UI-StatusBar' />
+        <BarTexture file='Interface\Buttons\WHITE8x8' />
         <Layers>
           <Layer>
             <Texture parentKey='Background' setAllPoints='true'>
