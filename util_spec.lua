@@ -31,14 +31,14 @@ describe('utility functions', function()
 
     it('works like a normal eventer outside of combat', function()
       local event = 'SKILL_LINES_CHANGED'
-      local counts = eventer(wow, {event})
+      local counts = eventer(wow, { event })
       wow.state:SendEvent(event)
       assert.same({ [event] = 1 }, counts)
     end)
 
     it('waits till after combat to fire', function()
       local event = 'SKILL_LINES_CHANGED'
-      local counts = eventer(wow, {event})
+      local counts = eventer(wow, { event })
       wow.state:EnterCombat()
       wow.state:SendEvent(event)
       assert.same({}, counts)
@@ -50,7 +50,7 @@ describe('utility functions', function()
 
     it('supports PLAYER_REGEN_ENABLED', function()
       local event = 'PLAYER_REGEN_ENABLED'
-      local counts = eventer(wow, {event})
+      local counts = eventer(wow, { event })
       wow.state:SendEvent(event)
       assert.same({ [event] = 1 }, counts)
     end)

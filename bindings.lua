@@ -25,14 +25,54 @@ local bindings = {
   ['ALT-`'] = 'RAIDTARGETNONE',
 }
 local actionbars = {
-  '1', '2', '3', '4', 'R', 'A',
-  'D', 'F', 'Z', 'X', 'C', 'V',
-  'CTRL-Q', 'CTRL-W', 'CTRL-E', 'CTRL-R', 'CTRL-T', 'CTRL-Y',
-  'CTRL-1', 'CTRL-2', 'CTRL-3', 'CTRL-4', 'CTRL-5', 'CTRL-6',
-  'CTRL-A', 'CTRL-S', 'CTRL-D', 'CTRL-F', 'CTRL-G', 'CTRL-H',
-  'CTRL-Z', 'CTRL-X', 'CTRL-C', 'CTRL-V', 'CTRL-B', 'CTRL-N',
-  'SHIFT-A', 'SHIFT-S', 'SHIFT-D', 'SHIFT-F', 'SHIFT-G', 'SHIFT-H',
-  'SHIFT-Z', 'SHIFT-X', 'SHIFT-C', 'SHIFT-V', 'SHIFT-B', 'SHIFT-N',
+  '1',
+  '2',
+  '3',
+  '4',
+  'R',
+  'A',
+  'D',
+  'F',
+  'Z',
+  'X',
+  'C',
+  'V',
+  'CTRL-Q',
+  'CTRL-W',
+  'CTRL-E',
+  'CTRL-R',
+  'CTRL-T',
+  'CTRL-Y',
+  'CTRL-1',
+  'CTRL-2',
+  'CTRL-3',
+  'CTRL-4',
+  'CTRL-5',
+  'CTRL-6',
+  'CTRL-A',
+  'CTRL-S',
+  'CTRL-D',
+  'CTRL-F',
+  'CTRL-G',
+  'CTRL-H',
+  'CTRL-Z',
+  'CTRL-X',
+  'CTRL-C',
+  'CTRL-V',
+  'CTRL-B',
+  'CTRL-N',
+  'SHIFT-A',
+  'SHIFT-S',
+  'SHIFT-D',
+  'SHIFT-F',
+  'SHIFT-G',
+  'SHIFT-H',
+  'SHIFT-Z',
+  'SHIFT-X',
+  'SHIFT-C',
+  'SHIFT-V',
+  'SHIFT-B',
+  'SHIFT-N',
 }
 local switchers = {
   ['ALT-CTRL-A'] = 'Aura',
@@ -52,7 +92,7 @@ G.Eventer({
     for k, v in pairs(bindings) do
       SetBinding(k, v)
     end
-    for _, c in ipairs({'5', '6', '7', '8', '9', '0', '-', '='}) do
+    for _, c in ipairs({ '5', '6', '7', '8', '9', '0', '-', '=' }) do
       SetBinding(c, nil)
     end
     for i, b in ipairs(actionbars) do

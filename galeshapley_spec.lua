@@ -5,7 +5,6 @@ local stableMarriage = (function()
 end)()
 
 describe('galeshapley', function()
-
   it('works on empty', function()
     assert.same({}, stableMarriage({}, {}))
   end)
@@ -15,7 +14,9 @@ describe('galeshapley', function()
   end)
 
   it('fails on no women', function()
-    assert.error(function() stableMarriage({ a = {} }, {}) end)
+    assert.error(function()
+      stableMarriage({ a = {} }, {})
+    end)
   end)
 
   it('works on singletons', function()
@@ -45,14 +46,22 @@ describe('galeshapley', function()
 
   it('works with pref functions instead', function()
     local men = {
-      function(a, b) return a < b end,
-      function(a, b) return a > b end,
+      function(a, b)
+        return a < b
+      end,
+      function(a, b)
+        return a > b
+      end,
     }
     local women = {
-      function(a, b) return a > b end,
-      function(a, b) return a < b end,
+      function(a, b)
+        return a > b
+      end,
+      function(a, b)
+        return a < b
+      end,
     }
-    assert.same({1, 2}, stableMarriage(men, women))
-    assert.same({2, 1}, stableMarriage(women, men))
+    assert.same({ 1, 2 }, stableMarriage(men, women))
+    assert.same({ 2, 1 }, stableMarriage(women, men))
   end)
 end)

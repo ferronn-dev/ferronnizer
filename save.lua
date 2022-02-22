@@ -23,7 +23,7 @@ local function getTalents()
   for i = 1, GetNumTalentTabs() do
     local tals = {}
     for j = 1, GetNumTalents(i) do
-      table.insert(tals, {GetTalentInfo(i, j)})
+      table.insert(tals, { GetTalentInfo(i, j) })
     end
     table.insert(tabs, tals)
   end
@@ -35,7 +35,7 @@ G.Eventer({
     bags[n] = (function()
       local bag = {}
       for i = 1, GetContainerNumSlots(n) do
-        table.insert(bag, {GetContainerItemInfo(n, i)})
+        table.insert(bag, { GetContainerItemInfo(n, i) })
       end
       return bag
     end)()

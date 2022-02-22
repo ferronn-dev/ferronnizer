@@ -24,7 +24,7 @@ G.AddClassActionSpec('TBC', 2, {
   },
   [7] = {
     mouseover = true,
-    spells = {'Cleanse', 'Purify'},
+    spells = { 'Cleanse', 'Purify' },
   },
   [8] = {
     oneof = {
@@ -79,7 +79,7 @@ G.AddClassActionSpec('TBC', 2, {
     spell = 'Righteous Defense',
   },
   [30] = {
-    spells = {'Divine Shield', 'Divine Protection'},
+    spells = { 'Divine Shield', 'Divine Protection' },
     stopcasting = true,
   },
   [31] = {

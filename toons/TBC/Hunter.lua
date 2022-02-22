@@ -4,7 +4,7 @@ G.AddClassActionSpec('TBC', 3, {
     spell = '!Auto Shot',
   },
   [2] = {
-    spells = {'Aimed Shot', 'Arcane Shot'},
+    spells = { 'Aimed Shot', 'Arcane Shot' },
   },
   [3] = {
     spell = 'Multi-Shot',

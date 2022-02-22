@@ -8,64 +8,80 @@ local buffSlotSpecification = {
         group = 'Arcane Brilliance',
       },
     },
-  },{
+  },
+  {
     buffs = { { spell = 'Dampen Magic' } },
     solo = true,
-  },{
+  },
+  {
     buffs = {
       { spell = 'Demon Armor' },
       { spell = 'Demon Skin' },
     },
     self = true,
-  },{
+  },
+  {
     buffs = {
       {
         spell = 'Divine Spirit',
         group = 'Prayer of Spirit',
         classes = {
-          'Paladin', 'Mage', 'Warlock', 'Priest',
-          'Hunter', 'Druid', 'Shaman',
+          'Paladin',
+          'Mage',
+          'Warlock',
+          'Priest',
+          'Hunter',
+          'Druid',
+          'Shaman',
         },
       },
     },
-  },{
+  },
+  {
     buffs = { { spell = 'Ice Barrier' } },
     self = true,
-  },{
+  },
+  {
     buffs = { { spell = 'Inner Fire' } },
     self = true,
-  },{
+  },
+  {
     buffs = {
       { spell = 'Mage Armor' },
       { spell = 'Ice Armor' },
       { spell = 'Frost Armor' },
     },
     self = true,
-  },{
+  },
+  {
     buffs = { { spell = 'Mana Shield' } },
     self = true,
-  },{
+  },
+  {
     buffs = {
       {
         spell = 'Mark of the Wild',
         group = 'Gift of the Wild',
       },
     },
-  },{
+  },
+  {
     buffs = {
       {
         spell = 'Power Word: Fortitude',
         group = 'Prayer of Fortitude',
       },
     },
-  },{
+  },
+  {
     buffs = {
       {
         spell = 'Shadow Protection',
         group = 'Prayer of Shadow Protection',
       },
     },
-  },{
+  },
+  {
     buffs = { { spell = 'Thorns' } },
   },
 }
@@ -90,7 +106,7 @@ local thebuffdb = (function()
               for i = 1, #spellData do
                 table.insert(ranks, {
                   spell = rankInfo(spellData[i]),
-                  group = groupData[i] and rankInfo(groupData[i]) or nil
+                  group = groupData[i] and rankInfo(groupData[i]) or nil,
                 })
               end
               return ranks
@@ -126,9 +142,9 @@ local function GetUnitBuffs(unit)
 end
 
 local trackingdb = {
-  {spell = 2580, texture = 136025},  -- Find Minerals
-  {spell = 2383, texture = 133939},  -- Find Herbs
-  {spell = 2481, texture = 135725},  -- Find Treasure
+  { spell = 2580, texture = 136025 }, -- Find Minerals
+  { spell = 2383, texture = 133939 }, -- Find Herbs
+  { spell = 2481, texture = 135725 }, -- Find Treasure
 }
 
 local function consumeList(db)
@@ -136,7 +152,7 @@ local function consumeList(db)
   for _, e in ipairs(db) do
     local item, _, spell = unpack(e)
     if spell then
-      table.insert(spells, {spell = spell, item = item})
+      table.insert(spells, { spell = spell, item = item })
     end
   end
   return spells
@@ -152,9 +168,9 @@ local conjuredb = {
 local function canCast(spell, unit)
   local slot = FindSpellBookSlotBySpellID(spell.id)
   return IsSpellKnown(spell.id)
-      and spell.level - 10 <= UnitLevel(unit)
-      and (not spell.reagent or GetItemCount(spell.reagent) > 0)
-      and (not SpellHasRange(slot, 'spell') or IsSpellInRange(slot, 'spell', unit))
+    and spell.level - 10 <= UnitLevel(unit)
+    and (not spell.reagent or GetItemCount(spell.reagent) > 0)
+    and (not SpellHasRange(slot, 'spell') or IsSpellInRange(slot, 'spell', unit))
 end
 
 local function GetBuffToCast(unit)
@@ -199,7 +215,7 @@ local function GetBuffToCast(unit)
 end
 
 local unitsToBuff = (function()
-  local u = {'target', 'player'}
+  local u = { 'target', 'player' }
   for i = 1, 4 do
     table.insert(u, 'party' .. i)
   end

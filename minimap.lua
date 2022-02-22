@@ -64,18 +64,18 @@ G.Eventer({
 
 local function createHealthFrame(np)
   local ht
-  return {'UNIT_HEALTH', 'UNIT_MAXHEALTH'}, function(unit)
+  return { 'UNIT_HEALTH', 'UNIT_MAXHEALTH' }, function(unit)
     if not ht then
       ht = np.UnitFrame.healthBar:CreateFontString()
       ht:SetFontObject(NumberFont_Small)
       ht:SetPoint('CENTER')
     end
     local hp, hpm = UnitHealth(unit), UnitHealthMax(unit)
-    ht:SetText(hp..' / '..hpm)
+    ht:SetText(hp .. ' / ' .. hpm)
   end
 end
 
-local constructors = {createHealthFrame}
+local constructors = { createHealthFrame }
 
 local nameplateData = {}
 

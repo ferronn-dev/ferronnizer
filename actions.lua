@@ -50,23 +50,24 @@ local makeAction = (function()
       return updateItem()
     end
     return function()
-      return updateDB(mealDB), {
-        BAG_UPDATE_DELAYED = function()
-          return updateItem()
-        end,
-        PLAYER_ENTERING_WORLD = function()
-          return updateItem()
-        end,
-        PLAYER_LEVEL_UP = function(level)
-          return updateItem(level)
-        end,
-        PLAYER_REGEN_DISABLED = function()
-          return updateDB(potionDB)
-        end,
-        PLAYER_REGEN_ENABLED = function()
-          return updateDB(mealDB)
-        end,
-      }
+      return updateDB(mealDB),
+        {
+          BAG_UPDATE_DELAYED = function()
+            return updateItem()
+          end,
+          PLAYER_ENTERING_WORLD = function()
+            return updateItem()
+          end,
+          PLAYER_LEVEL_UP = function(level)
+            return updateItem(level)
+          end,
+          PLAYER_REGEN_DISABLED = function()
+            return updateDB(potionDB)
+          end,
+          PLAYER_REGEN_ENABLED = function()
+            return updateDB(mealDB)
+          end,
+        }
     end
   end
   local lang = {
@@ -85,11 +86,12 @@ local makeAction = (function()
         tooltip = { action = num },
         update = { action = num },
       })
-      return init, {
-        ACTIONBAR_SLOT_CHANGED = function(slot)
-          return slot == num and update() or {}
-        end,
-      }
+      return init,
+        {
+          ACTIONBAR_SLOT_CHANGED = function(slot)
+            return slot == num and update() or {}
+          end,
+        }
     end,
     aura = function(action)
       local index, filter = action.aura.index, action.aura.filter
@@ -134,10 +136,11 @@ local makeAction = (function()
         local item = currentItem()
         return { ui = item and { item = item } or { hide = true } }
       end
-      return Mixin(update(), { attr = macro }), {
-        BAG_UPDATE_DELAYED = update,
-        CHAT_MSG_SKILL = update,
-      }
+      return Mixin(update(), { attr = macro }),
+        {
+          BAG_UPDATE_DELAYED = update,
+          CHAT_MSG_SKILL = update,
+        }
     end,
     buff = function(action)
       return {
@@ -231,10 +234,11 @@ local makeAction = (function()
       local slot = action.invslot
       local function update()
         local item = GetInventoryItemID('player', slot)
-        return not item and { attr = '' } or {
-          attr = '/use ' .. slot,
-          ui = { item = item },
-        }
+        return not item and { attr = '' }
+          or {
+            attr = '/use ' .. slot,
+            ui = { item = item },
+          }
       end
       return update(), { PLAYER_EQUIPMENT_CHANGED = update }
     end,
@@ -273,10 +277,10 @@ local makeAction = (function()
         local fcmd, farg, flight = getMount(G.MountFlightDB)
         if gcmd and fcmd then
           local macro = (
-            string.format('%s [nomounted,flyable] %s\n', fcmd, farg) ..
-            string.format('%s [nomounted,noflyable] %s\n', gcmd, garg) ..
-            '/dismount [mounted]'
-          )
+              string.format('%s [nomounted,flyable] %s\n', fcmd, farg)
+              .. string.format('%s [nomounted,noflyable] %s\n', gcmd, garg)
+              .. '/dismount [mounted]'
+            )
           -- TODO update icon etc to use flight mount based on OnUpdate IsFlyableArea
           return Mixin({ attr = macro }, ground)
         elseif gcmd then
@@ -300,14 +304,15 @@ local makeAction = (function()
         attr = '',
         icon = 134400,
       }
-      return init, {
-        GOSSIP_SHOW = function()
-          return { attr = macro }
-        end,
-        GOSSIP_CLOSED = function()
-          return { attr = '' }
-        end,
-      }
+      return init,
+        {
+          GOSSIP_SHOW = function()
+            return { attr = macro }
+          end,
+          GOSSIP_CLOSED = function()
+            return { attr = '' }
+          end,
+        }
     end,
     oneof = function(action)
       local page, spells = action.oneofpage, action.oneof
@@ -414,7 +419,7 @@ local makeAction = (function()
       local shortName = action.spell
       local rankStr = action.rank and ('Rank ' .. action.rank) or nil
       local fullName = shortName .. (rankStr and ('(' .. rankStr .. ')') or '')
-      local macrot = {'/cast'}
+      local macrot = { '/cast' }
       if action.mouseover then
         table.insert(macrot, '[@mouseover,help,nodead][]')
       elseif action.options then
@@ -422,10 +427,11 @@ local makeAction = (function()
       end
       table.insert(macrot, fullName)
       local macro = (
-        (action.dismount ~= false and '/dismount [noflying]\n' or '')..
-        (action.stand ~= false and '/stand\n' or '')..
-        (action.stopcasting and '/stopcasting\n' or '')..
-        table.concat(macrot, ' '))
+          (action.dismount ~= false and '/dismount [noflying]\n' or '')
+          .. (action.stand ~= false and '/stand\n' or '')
+          .. (action.stopcasting and '/stopcasting\n' or '')
+          .. table.concat(macrot, ' ')
+        )
       local function update()
         local spellid = select(7, GetSpellInfo(shortName, rankStr))
         return {
@@ -444,8 +450,10 @@ local makeAction = (function()
     spells = function(action)
       local spells = action.spells
       local prefix = (
-          (action.stopcasting and '/stopcasting\n' or '')..
-          '/cast'..(action.mouseover and ' [@mouseover,help,nodead][] ' or ' '))
+          (action.stopcasting and '/stopcasting\n' or '')
+          .. '/cast'
+          .. (action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')
+        )
       local function update()
         for _, name in ipairs(spells) do
           local id = select(7, GetSpellInfo(name))
@@ -510,7 +518,9 @@ local updateButton = (function()
         if button.SetChecked then
           local k, v = next(checked)
           local fn = assert(checkedLang[k], 'invalid checked program ' .. tostring(k))
-          local chfn = function() return fn(v) end
+          local chfn = function()
+            return fn(v)
+          end
           button:SetChecked(chfn())
           button.chfn = chfn
         end
@@ -613,7 +623,9 @@ local updateButton = (function()
       return function(button, tooltip)
         local k, v = next(tooltip)
         local fn = tooltipLang[k]
-        button.ttfn = fn and function() fn(v) end or nil
+        button.ttfn = fn and function()
+          fn(v)
+        end or nil
       end
     end)(),
     update = (function()
@@ -723,10 +735,11 @@ local function makeActionButtons()
   for row = 1, 4 do
     for col = 1, 12 do
       local button = CreateFrame(
-          'CheckButton',
-          addonName .. 'ActionIconButton' .. (#iconButtons + 1),
-          UIParent,
-          'ActionButtonTemplate, SecureActionButtonTemplate')
+        'CheckButton',
+        addonName .. 'ActionIconButton' .. (#iconButtons + 1),
+        UIParent,
+        'ActionButtonTemplate, SecureActionButtonTemplate'
+      )
       attachToIconGrid(button, row, col)
       button:SetMotionScriptsWhileDisabled(true)
       button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
@@ -749,10 +762,11 @@ local function makeActionButtons()
     for col = 1, 6 do
       local idx = (row - 1) * 6 + col
       local button = CreateFrame(
-          'Button',
-          addonName .. 'ActionTextButton' .. idx,
-          UIParent,
-          'UIPanelButtonTemplate, SecureActionButtonTemplate')
+        'Button',
+        addonName .. 'ActionTextButton' .. idx,
+        UIParent,
+        'UIPanelButtonTemplate, SecureActionButtonTemplate'
+      )
       attachToTextGrid(button, row, col)
       table.insert(textButtons, button)
     end
@@ -862,9 +876,14 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
     for idx, button in ipairs(buttons) do
       button:Hide()
       button:SetID(idx)
-      header:WrapScript(button, 'OnClick', 'return nil, true', [[
+      header:WrapScript(
+        button,
+        'OnClick',
+        'return nil, true',
+        [[
         owner:Run(updatePageOnClick, self:GetID())
-      ]])
+      ]]
+      )
       header:SetFrameRef('tmp', button)
       header:Execute(([[
         tinsert(buttonPages[%q], self:GetFrameRef('tmp'))
@@ -884,7 +903,9 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
   end
 
   RegisterAttributeDriver(header, 'state-petexists', '[@pet,exists] true; false')
-  header:SetAttribute('_onstate-petexists', [=[
+  header:SetAttribute(
+    '_onstate-petexists',
+    [=[
     -- If we just got a pet and it's not a hunter/warlock pet, switch to the pet page.
     -- If we just lost a pet and we're on the pet page, go back to the default page.
     local petExists = newstate == 'true'
@@ -894,7 +915,8 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
     elseif not petExists and owner:GetAttribute('fractionpage') == 'pet' then
       owner:Run(updateActionPage, defaultPage)
     end
-  ]=])
+  ]=]
+  )
 
   header.InsecureActionButtonRefresh = function(_, idx)
     local reset = {
@@ -904,7 +926,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
       color = 1.0,
       cooldown = { reset = true },
       count = { value = -1 },
-      icon = 136235,  -- samwise
+      icon = 136235, -- samwise
       name = '',
       tooltip = { reset = true },
     }
@@ -922,10 +944,15 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
   for page in pairs(actions) do
     local name = page:gsub('^%l', string.upper)
     local switch = CreateFrame('Button', prefix .. name .. 'Switcher', header, 'SecureActionButtonTemplate')
-    header:WrapScript(switch, 'OnClick', 'return nil, true', ([=[
+    header:WrapScript(
+      switch,
+      'OnClick',
+      'return nil, true',
+      ([=[
       local page = %q
       owner:Run(updateActionPage, owner:GetAttribute('fractionpage') == page and defaultPage or page)
-    ]=]):format(page))
+    ]=]):format(page)
+    )
   end
 
   local defaultSwitch = CreateFrame('Button', prefix .. 'DefaultSwitcher', header, 'SecureActionButtonTemplate')
@@ -1115,13 +1142,17 @@ local function makeActions()
               Tauren = 'War Stomp',
               Troll = 'Berserking',
               Undead = 'Will of the Forsaken',
-            })[UnitRace('player')]
+            })[UnitRace(
+              'player'
+            )],
           }
         elseif v.racial2 then
           local spell = ({
             ['Blood Elf'] = 'Mana Tap',
             Undead = 'Cannibalize',
-          })[UnitRace('player')]
+          })[UnitRace(
+            'player'
+          )]
           page[i] = spell and { spell = spell } or nil
         else
           page[i] = v

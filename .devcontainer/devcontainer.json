@@ -2,9 +2,9 @@
 	"name": "Ferronnizer",
 	"build": {
 		"context": "../addonmaker",
-		"dockerfile": "../addonmaker/Dockerfile"
+		"dockerfile": "../addonmaker/Dockerfile.dev"
 	},
-	"postCreateCommand": "sh /addonmaker/main.sh",
+	"postCreateCommand": "pre-commit install && pre-commit run -a && sh /addonmaker/main.sh",
 	"workspaceFolder": "/addon",
 	"workspaceMount": "source=${localWorkspaceFolder},target=/addon,type=bind"
 }

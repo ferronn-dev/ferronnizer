@@ -24,8 +24,10 @@ function G.NonCombatEventer(handlers)
   for ev, handler in pairs(handlers) do
     newHandlers[ev] = function(...)
       if InCombatLockdown() then
-        local args = {...}
-        table.insert(queue, function() handler(unpack(args)) end)
+        local args = { ... }
+        table.insert(queue, function()
+          handler(unpack(args))
+        end)
       else
         handler(...)
       end
@@ -78,7 +80,7 @@ function G.PreClickButton(name, default, func)
       if emote ~= lastemote or now - lastemotetime > 20 then
         lastemote = emote
         lastemotetime = now
-        return '/'..emote..' [@none]'
+        return '/' .. emote .. ' [@none]'
       end
     else
       return default
@@ -102,9 +104,9 @@ do
 
   local function propagateChange()
     local myname = UnitName('player')
-    local members = {myname}
+    local members = { myname }
     for i = 1, GetNumGroupMembers() do
-      local name = UnitName('party'..i)
+      local name = UnitName('party' .. i)
       table.insert(members, name)
     end
     table.sort(members)

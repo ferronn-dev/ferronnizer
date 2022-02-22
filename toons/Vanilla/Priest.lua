@@ -33,7 +33,7 @@ local common = {
   },
   [26] = {
     mouseover = true,
-    spells = {'Abolish Disease', 'Cure Disease'},
+    spells = { 'Abolish Disease', 'Cure Disease' },
   },
   [27] = {
     spell = 'Fade',
@@ -45,7 +45,9 @@ local common = {
       ['Night Elf'] = 'Elune\'s Grace',
       Troll = 'Hex of Weakness',
       Undead = 'Touch of Weakness',
-    })[UnitRace('player')],
+    })[UnitRace(
+      'player'
+    )],
   },
   [29] = {
     spell = 'Mind Control',
@@ -79,7 +81,9 @@ local common = {
       ['Night Elf'] = 'Starshards',
       Troll = 'Shadowguard',
       Undead = 'Devouring Plague',
-    })[UnitRace('player')],
+    })[UnitRace(
+      'player'
+    )],
   },
   [43] = {
     mount = true,
