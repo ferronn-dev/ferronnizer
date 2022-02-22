@@ -11,6 +11,16 @@
         </Texture>
       </Layer>
     </Layers>
+    <Scripts>
+      <OnEnter>
+        GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMRIGHT')
+        GameTooltip:SetUnitAura('player', self:GetAttribute('index'), self:GetAttribute('filter'))
+        GameTooltip:Show()
+      </OnEnter>
+      <OnLeave>
+        GameTooltip:Hide()
+      </OnLeave>
+    </Scripts>
   </Button>
   <Frame name='FerronnizerRoot' parent='UIParent' setAllPoints='true'>
     <Frames>
