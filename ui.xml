@@ -79,7 +79,7 @@
           </OnLoad>
           <OnEvent>
             local unit = self:GetParent().unit
-            self.Text:SetText(UnitName(unit))
+            self.Text:SetText(UnitExists(unit) and UnitLevel(unit) .. ' - ' .. UnitName(unit) or '')
           </OnEvent>
         </Scripts>
       </Frame>
