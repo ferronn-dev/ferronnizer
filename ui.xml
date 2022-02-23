@@ -188,7 +188,12 @@
               end
             end
             updateIcons()
-            self:HookScript('OnEvent', updateIcons)
+            self:HookScript('OnEvent', function(_, event)
+              if event ~= 'UNIT_AURA' then
+                self:SetAttribute('unit', unit) -- force internal update
+              end
+              updateIcons()
+            end)
           </OnLoad>
         </Scripts>
       </Frame>
