@@ -75,11 +75,18 @@
         <Scripts>
           <OnLoad>
             local unit = self:GetParent().unit
+            self:RegisterEvent('PLAYER_LEVEL_UP')
             self:RegisterUnitEvent('UNIT_NAME_UPDATE', unit)
           </OnLoad>
           <OnEvent>
             local unit = self:GetParent().unit
-            self.Text:SetText(UnitExists(unit) and UnitLevel(unit) .. ' - ' .. UnitName(unit) or '')
+            if not UnitExists(unit) then
+              self.Text:SetText('')
+            else
+              local event, arg = ...
+              local level = event == 'PLAYER_LEVEL_UP' and arg or UnitLevel(unit)
+              self.Text:SetText(level .. ' - ' .. UnitName(unit))
+            end
           </OnEvent>
         </Scripts>
       </Frame>
