@@ -163,7 +163,6 @@
         </Attributes>
         <Scripts>
           <OnLoad>
-            BuffFrame:Hide()
             local unit = self:GetParent().unit
             self:RegisterUnitEvent('UNIT_AURA', unit)
             self:SetAttribute('unit', unit) -- also triggers internal update
@@ -201,7 +200,7 @@
   </Button>
   <Frame name='FerronnizerRoot' parent='UIParent' setAllPoints='true'>
     <Frames>
-      <Button parentKey='PlayerFrame' inherits='FerronnizerTemplateUnitButton'>
+      <Button parentKey='Player' inherits='FerronnizerTemplateUnitButton'>
         <Anchors>
           <Anchor point='CENTER' x='-200' y='-140' />
         </Anchors>
@@ -210,7 +209,7 @@
           <KeyValue key='unit' value='player' />
         </KeyValues>
       </Button>
-      <Button parentKey='TargetFrame' inherits='FerronnizerTemplateUnitButton'>
+      <Button parentKey='Target' inherits='FerronnizerTemplateUnitButton'>
         <Anchors>
           <Anchor point='CENTER' x='200' y='-140' />
         </Anchors>
@@ -219,6 +218,15 @@
           <KeyValue key='unit' value='target' />
         </KeyValues>
       </Button>
+      <Frame parentKey='Hidden' hidden='true'>
+        <Scripts>
+          <OnLoad>
+            BuffFrame:SetParent(this)
+            PlayerFrame:SetParent(this)
+            TargetFrame:SetParent(this)
+          </OnLoad>
+        </Scripts>
+      </Frame>
     </Frames>
   </Frame>
 </Ui>

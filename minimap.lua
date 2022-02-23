@@ -32,8 +32,6 @@ G.Eventer({
 -- TODO put this somewhere more appropriate
 G.Eventer({
   PLAYER_ENTERING_WORLD = function()
-    G.ReparentFrame(PlayerFrame)
-    G.ReparentFrame(TargetFrame)
     if _G.GameTooltipStatusBar then
       G.ReparentFrame(_G.GameTooltipStatusBar)
     end
