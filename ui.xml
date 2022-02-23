@@ -221,9 +221,9 @@
       <Frame parentKey='Hidden' hidden='true'>
         <Scripts>
           <OnLoad>
-            BuffFrame:SetParent(this)
-            PlayerFrame:SetParent(this)
-            TargetFrame:SetParent(this)
+            BuffFrame:SetParent(self)
+            PlayerFrame:SetParent(self)
+            TargetFrame:SetParent(self)
           </OnLoad>
         </Scripts>
       </Frame>
