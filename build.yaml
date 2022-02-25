@@ -24,8 +24,6 @@ deps:
   - util.lua
   minimap.lua:
   - util.lua
-  save.lua:
-  - util.lua
   toons.lua:
   - toons/TBC/Druid.lua
   - toons/TBC/Hunter.lua
@@ -86,7 +84,6 @@ deps:
 libs:
   chatthrottlelib: https://repos.curseforge.com/wow/chatthrottlelib/trunk
   libkeybound: https://repos.wowace.com/wow/libkeybound-1-0/trunk
-  libclassicgearplanner: https://github.com/ferronn-dev/LibClassicGearPlanner.git
   libstub: https://repos.wowace.com/wow/libstub/trunk
 roots:
 - actions.lua
@@ -95,7 +92,6 @@ roots:
 - carrot.lua
 - chatframe.lua
 - minimap.lua
-- save.lua
 - tooltips.lua
 - ui.xml
 - vars.lua
