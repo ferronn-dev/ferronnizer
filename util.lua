@@ -1,13 +1,5 @@
 local addonName, G = ...
 
-function G.LocalToServer(t)
-  return t ~= 0 and GetServerTime() + t - GetTime() or 0
-end
-
-function G.ServerToLocal(t)
-  return t ~= 0 and GetTime() + t - GetServerTime() or 0
-end
-
 function G.Eventer(handlers)
   local frame = CreateFrame('Frame')
   for ev in pairs(handlers) do
@@ -16,34 +8,6 @@ function G.Eventer(handlers)
   frame:SetScript('OnEvent', function(_, ev, ...)
     handlers[ev](...)
   end)
-end
-
-function G.NonCombatEventer(handlers)
-  local newHandlers = {}
-  local queue = {}
-  for ev, handler in pairs(handlers) do
-    newHandlers[ev] = function(...)
-      if InCombatLockdown() then
-        local args = { ... }
-        table.insert(queue, function()
-          handler(unpack(args))
-        end)
-      else
-        handler(...)
-      end
-    end
-  end
-  local regen = 'PLAYER_REGEN_ENABLED'
-  newHandlers[regen] = function()
-    for _, callback in ipairs(queue) do
-      callback()
-    end
-    queue = {}
-    if handlers[regen] then
-      handlers[regen]()
-    end
-  end
-  G.Eventer(newHandlers)
 end
 
 do
@@ -97,30 +61,4 @@ function G.PreClickButton(name, default, func)
     end
   end)
   return button
-end
-
-do
-  local partyChangeFuncs = {}
-
-  local function propagateChange()
-    local myname = UnitName('player')
-    local members = { myname }
-    for i = 1, GetNumGroupMembers() do
-      local name = UnitName('party' .. i)
-      table.insert(members, name)
-    end
-    table.sort(members)
-    for _, func in ipairs(partyChangeFuncs) do
-      func(members)
-    end
-  end
-
-  G.NonCombatEventer({
-    PLAYER_ENTERING_WORLD = propagateChange,
-    GROUP_ROSTER_UPDATE = propagateChange,
-  })
-
-  function G.OnPartyChangeSafely(func)
-    table.insert(partyChangeFuncs, func)
-  end
 end
