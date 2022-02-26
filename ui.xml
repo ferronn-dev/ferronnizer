@@ -51,7 +51,10 @@
         local unit = self.unit
         GameTooltip:SetOwner(self, 'ANCHOR_TOP')
         GameTooltip:SetUnit(unit)
-        GameTooltip:AddLine(('XP: %d/%d'):format(UnitXP(unit), UnitXPMax(unit)))
+        if UnitIsUnit(unit, 'player') then
+          GameTooltip:AddLine(('XP: %d/%d'):format(UnitXP(unit), UnitXPMax(unit)))
+          GameTooltip:AddLine(('Rest: %s'):format(tostring(GetXPExhaustion() or 'none')))
+        end
         GameTooltip:Show()
       </OnEnter>
       <OnLeave>
