@@ -81,10 +81,7 @@ deps:
   - tooninit.lua
   vars.lua:
   - util.lua
-libs:
-  chatthrottlelib: https://repos.curseforge.com/wow/chatthrottlelib/trunk
-  libkeybound: https://repos.wowace.com/wow/libkeybound-1-0/trunk
-  libstub: https://repos.wowace.com/wow/libstub/trunk
+libs: {}
 roots:
 - actions.lua
 - bindings.lua

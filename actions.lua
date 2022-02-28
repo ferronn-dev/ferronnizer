@@ -156,9 +156,8 @@ local makeAction = (function()
       local emote = action.emote
       local keyName = 'CLICK ' .. addonName .. 'ActionButton' .. action.index .. ':LeftButton'
       local function update()
-        local key = GetBindingKey(keyName)
-        local keystr = key and (LibStub('LibKeyBound-1.0'):ToShortKey(key) .. ' - ') or ''
-        return { name = keystr .. emote }
+        local key = GetBindingKey(keyName) or ''
+        return { name = key .. emote }
       end
       return Mixin(update(), { attr = '/' .. emote }), { UPDATE_BINDINGS = update }
     end,
@@ -717,7 +716,7 @@ local function makeActionButtons()
       local binder = addonName .. 'ActionButton' .. self:GetID()
       local key = GetBindingKey('CLICK ' .. binder .. ':LeftButton')
       if key then
-        self.HotKey:SetText(LibStub('LibKeyBound-1.0'):ToShortKey(key))
+        self.HotKey:SetText(key)
         self.HotKey:Show()
       else
         self.HotKey:Hide()
