@@ -407,6 +407,7 @@ local makeAction = (function()
         local ranged = GetInventoryItemID('player', 18)
         local item = ammo ~= 0 and ammo or ranged
         return {
+          checked = { spell = 5019 },
           color = 1.0,
           count = item and { item = item } or { value = -1 },
           ui = ranged and { item = ranged } or { hide = true },
@@ -508,7 +509,7 @@ local updateButton = (function()
     checked = (function()
       local checkedLang = {
         spell = function(spell)
-          return IsCurrentSpell(spell)
+          return IsCurrentSpell(spell) or IsAutoRepeatSpell(spell)
         end,
         value = function(value)
           return value
@@ -1065,15 +1066,18 @@ local function setupActions(actions, defaultPage, actionButtons)
       end
     end
   end
+  local checkedHandler = updateHandler('checked')
   local countHandler = updateHandler('count')
   local genericHandlers = {
     BAG_UPDATE_DELAYED = countHandler,
-    CURRENT_SPELL_CAST_CHANGED = updateHandler('checked'),
+    CURRENT_SPELL_CAST_CHANGED = checkedHandler,
     ITEM_DATA_LOAD_RESULT = function(itemID, success)
       stackables[itemID] = success and select(8, GetItemInfo(itemID)) > 1
       countHandler()
     end,
     SPELL_UPDATE_COOLDOWN = updateHandler('cooldown'),
+    START_AUTOREPEAT_SPELL = checkedHandler,
+    STOP_AUTOREPEAT_SPELL = checkedHandler,
   }
   for ev, handler in pairs(genericHandlers) do
     addHandler(ev, handler)
