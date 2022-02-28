@@ -4,9 +4,8 @@ fooddb.lua
 mountdb.lua
 potiondb.lua
 spelldb.lua
-Ferronnizer-BCC.toc
-Ferronnizer-Classic.toc
-Ferronnizer-Mainline.toc
+Ferronnizer_TBC.toc
+Ferronnizer_Vanilla.toc
 Ferronnizer.zip
 .ninja_*
 libs/
