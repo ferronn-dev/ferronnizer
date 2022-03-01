@@ -1,5 +1,9 @@
 local addonName, G = ...
 
+local function formatBindingKey(k)
+  return k:gsub('CTRL%-', 'C'):gsub('SHIFT%-', 'S')
+end
+
 local stackables = {}
 
 local makeAction = (function()
@@ -157,7 +161,7 @@ local makeAction = (function()
       local keyName = 'CLICK ' .. addonName .. 'ActionButton' .. action.index .. ':LeftButton'
       local function update()
         local key = GetBindingKey(keyName) or ''
-        return { name = key .. emote }
+        return { name = formatBindingKey(key) .. ' - ' .. emote }
       end
       return Mixin(update(), { attr = '/' .. emote }), { UPDATE_BINDINGS = update }
     end,
@@ -716,7 +720,7 @@ local function makeActionButtons()
       local binder = addonName .. 'ActionButton' .. self:GetID()
       local key = GetBindingKey('CLICK ' .. binder .. ':LeftButton')
       if key then
-        self.HotKey:SetText(key)
+        self.HotKey:SetText(formatBindingKey(key))
         self.HotKey:Show()
       else
         self.HotKey:Hide()
