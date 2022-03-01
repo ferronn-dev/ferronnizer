@@ -1,6 +1,11 @@
-local _, G = ...
+local addonName, G = ...
 
 G.Eventer({
+  ADDON_ACTION_BLOCKED = function(addon, msg)
+    if addon == addonName then
+      print('Action blocked: ' .. msg)
+    end
+  end,
   PLAYER_LOGIN = function()
     ChatFrame1:ClearAllPoints()
     ChatFrame1:SetClampRectInsets(0, 0, 0, 0)
