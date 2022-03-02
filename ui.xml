@@ -1,8 +1,5 @@
 <Ui>
-  <Button name='FerronnizerTemplateAuraButton' inherits='SecureActionButtonTemplate' virtual='true' registerForClicks='RightButtonUp'>
-    <Attributes>
-      <Attribute name='type2' value='cancelaura' />
-    </Attributes>
+  <Frame name='FerronnizerTemplateAura' virtual='true'>
     <Size x='20' y='20' />
     <Layers>
       <Layer level='ARTWORK'>
@@ -24,16 +21,16 @@
     </Layers>
     <Scripts>
       <OnEnter>
-        local unit = self:GetParent():GetAttribute('unit')
+        local unit = self:GetParent():GetParent().unit
         GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMRIGHT')
-        GameTooltip:SetUnitAura(unit, self:GetAttribute('index'), self:GetAttribute('filter'))
+        GameTooltip:SetUnitAura(unit, self.Index, self.Filter)
         GameTooltip:Show()
       </OnEnter>
       <OnLeave>
         GameTooltip:Hide()
       </OnLeave>
     </Scripts>
-  </Button>
+  </Frame>
   <Button name='FerronnizerTemplateUnitButton' inherits='SecureUnitButtonTemplate' virtual='true'>
     <Size x='160' y='160' />
     <Scripts>
@@ -153,53 +150,51 @@
           </OnEvent>
         </Scripts>
       </StatusBar>
-      <Frame parentKey='Auras' inherits='SecureAuraHeaderTemplate' hidden='false' setAllPoints='true'>
+      <Frame parentKey='Auras'>
         <Anchors>
           <Anchor point='TOPLEFT' x='0' y='-60' />
         </Anchors>
-        <Attributes>
-          <Attribute name='groupBy' value='HELPFUL,HARMFUL' />
-          <Attribute name='minHeight' value='1' />
-          <Attribute name='minWidth' value='1' />
-          <Attribute name='point' value='TOPLEFT' />
-          <Attribute name='sortDirection' value='+' />
-          <Attribute name='sortMethod' value='INDEX' />
-          <Attribute name='template' value='FerronnizerTemplateAuraButton' />
-          <Attribute name='wrapAfter' value='8' />
-          <Attribute name='wrapXOffset' value='0' />
-          <Attribute name='wrapYOffset' value='-20' />
-          <Attribute name='xOffset' value='20' />
-          <Attribute name='yOffset' value='0' />
-        </Attributes>
+        <Size x='160' y='100' />
         <Scripts>
           <OnLoad>
-            local unit = self:GetParent().unit
-            self:RegisterUnitEvent('UNIT_AURA', unit)
-            self:SetAttribute('unit', unit)
-            self:HookScript('OnEvent', function(_, event)
-              if event ~= 'UNIT_AURA' then
-                self:SetAttribute('ferronnizer', 1) -- trigger internal update
+            self:RegisterUnitEvent('UNIT_AURA', self:GetParent().unit)
+            self.Kids = {}
+            for row = 0, 4 do
+              for col = 0, 7 do
+                local frame = CreateFrame('Frame', nil, self, 'FerronnizerTemplateAura', row * 8 + col + 1)
+                frame:SetPoint('TOPLEFT', col * 20, row * 20)
+                table.insert(self.Kids, frame)
               end
-              local idx = 1
-              local button = self:GetAttribute('child' .. idx)
-              while button and button:IsShown() do
-                local index = button:GetAttribute('index')
-                local filter = button:GetAttribute('filter')
-                local _, icon, count, dispelType = UnitAura(unit, index, filter)
-                button.Icon:SetTexture(icon)
-                button.Count:SetText(count and count > 0 and count or '')
+            end
+          </OnLoad>
+          <OnEvent>
+            local unit = self:GetParent().unit
+            local index, filter = 1, 'HELPFUL'
+            for _, frame in ipairs(self.Kids) do
+              local _, icon, count, dispelType = UnitAura(unit, index, filter)
+              if not icon and filter == 'HELPFUL' then
+                index, filter = 1, 'HARMFUL'
+                _, icon, count, dispelType = UnitAura(unit, index, filter)
+              end
+              if not icon then
+                frame.Index, frame.Filter = nil, nil
+                frame:Hide()
+              else
+                frame.Index, frame.Filter = index, filter
+                frame:Show()
+                frame.Icon:SetTexture(icon)
+                frame.Count:SetText(count and count > 0 and count or '')
                 if dispelType then
                   local color = DebuffTypeColor[dispelType]
-                  button.Border:SetVertexColor(color.r, color.g, color.b)
-                  button.Border:Show()
+                  frame.Border:SetVertexColor(color.r, color.g, color.b)
+                  frame.Border:Show()
                 else
-                  button.Border:Hide()
+                  frame.Border:Hide()
                 end
-                idx = idx + 1
-                button = self:GetAttribute('child' .. idx)
               end
-            end)
-          </OnLoad>
+              index = index + 1
+            end
+          </OnEvent>
         </Scripts>
       </Frame>
     </Frames>
