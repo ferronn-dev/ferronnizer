@@ -19,6 +19,9 @@
         </Texture>
       </Layer>
     </Layers>
+    <Frames>
+      <Cooldown parentKey='Cooldown' inherits='CooldownFrameTemplate' reverse='true' />
+    </Frames>
     <Scripts>
       <OnEnter>
         local unit = self:GetParent():GetParent().unit
@@ -171,10 +174,10 @@
             local unit = self:GetParent().unit
             local index, filter = 1, 'HELPFUL'
             for _, frame in ipairs(self.Kids) do
-              local _, icon, count, dispelType = UnitAura(unit, index, filter)
+              local _, icon, count, dispelType, duration, expiration = UnitAura(unit, index, filter)
               if not icon and filter == 'HELPFUL' then
                 index, filter = 1, 'HARMFUL'
-                _, icon, count, dispelType = UnitAura(unit, index, filter)
+                _, icon, count, dispelType, duration, expiration = UnitAura(unit, index, filter)
               end
               if not icon then
                 frame.Index, frame.Filter = nil, nil
@@ -191,6 +194,7 @@
                 else
                   frame.Border:Hide()
                 end
+                frame.Cooldown:SetCooldown(expiration - duration, duration)
               end
               index = index + 1
             end
