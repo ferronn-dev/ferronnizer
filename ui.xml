@@ -86,7 +86,7 @@
             if not UnitExists(unit) then
               self.Text:SetText('')
             else
-              local event, arg = ...
+              local arg = ...
               local level = event == 'PLAYER_LEVEL_UP' and arg or UnitLevel(unit)
               self.Text:SetText(level .. ' - ' .. UnitName(unit))
             end
