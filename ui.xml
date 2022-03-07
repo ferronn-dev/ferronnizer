@@ -222,6 +222,37 @@
           <KeyValue key='events' value='PLAYER_LOGIN' />
           <KeyValue key='unit' value='pet' />
         </KeyValues>
+        <Frames>
+          <!-- Adapted from PetFrame.lua -->
+          <Frame parentKey='Happiness'>
+            <Anchors>
+              <Anchor point='TOPRIGHT' relativePoint='TOPLEFT' x='-10' />
+            </Anchors>
+            <Size x='24' y='23' />
+            <Layers>
+              <Layer>
+                <Texture parentKey='Texture' file='Interface\PetPaperDollFrame\UI-PetHappiness' setAllPoints='true' />
+              </Layer>
+            </Layers>
+            <Scripts>
+              <OnLoad>
+                self:RegisterUnitEvent('UNIT_HAPPINESS', 'pet')
+              </OnLoad>
+              <OnEvent>
+                local happiness = GetPetHappiness()
+                self.Texture:SetTexCoord((function()
+                  if happiness == 1 then
+                    return 0.375, 0.5625, 0, 0.359375
+                  elseif happiness == 2 then
+                    return 0.1875, 0.375, 0, 0.359375
+                  else
+                    return 0, 0.1875, 0, 0.359375
+                  end
+                end)())
+              </OnEvent>
+            </Scripts>
+          </Frame>
+        </Frames>
       </Button>
       <Button parentKey='Target' inherits='FerronnizerTemplateUnitButton'>
         <Anchors>
