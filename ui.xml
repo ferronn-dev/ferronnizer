@@ -214,6 +214,15 @@
           <KeyValue key='unit' value='player' />
         </KeyValues>
       </Button>
+      <Button parentKey='Pet' inherits='FerronnizerTemplateUnitButton'>
+        <Anchors>
+          <Anchor point='RIGHT' relativeKey='$parent.Player' relativePoint='LEFT' />
+        </Anchors>
+        <KeyValues>
+          <KeyValue key='events' value='PLAYER_LOGIN' />
+          <KeyValue key='unit' value='pet' />
+        </KeyValues>
+      </Button>
       <Button parentKey='Target' inherits='FerronnizerTemplateUnitButton'>
         <Anchors>
           <Anchor point='CENTER' x='200' y='-140' />
