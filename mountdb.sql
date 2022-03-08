@@ -1,11 +1,6 @@
 CREATE OR REPLACE TEMPORARY TABLE tmp_mountdb AS
-SELECT
-  itemid,
-  spellid,
-  groundspeed,
-  flightspeed
-FROM
-  ((SELECT
+WITH mounts AS (
+  SELECT
     CAST(parentitemid AS INT64) AS itemid,
     CAST(spellid AS INT64) AS spellid
   FROM
@@ -17,25 +12,40 @@ FROM
     NULL AS itemid,
     CAST(spell AS INT64) AS spellid
   FROM
-    skilllineability)
-  LEFT OUTER JOIN
-    (SELECT
-      CAST(spellid AS INT64) AS spellid,
-      CAST(effectbasepoints AS INT64) AS groundspeed
-    FROM
-      spelleffect
-    WHERE
-      effectaura = "32")
+    skilllineability
+),
+
+ground AS (
+  SELECT
+    CAST(spellid AS INT64) AS spellid,
+    CAST(effectbasepoints AS INT64) AS speed
+  FROM
+    spelleffect
+  WHERE
+    effectaura = "32"
+),
+
+flight AS (
+  SELECT
+    CAST(spellid AS INT64) AS spellid,
+    CAST(effectbasepoints AS INT64) AS speed
+  FROM
+    spelleffect
+  WHERE
+    effectaura = "207"
+)
+
+SELECT
+  mounts.itemid,
+  spellid,
+  ground.speed AS groundspeed,
+  flight.speed AS flightspeed
+FROM
+  mounts
+LEFT OUTER JOIN ground
   USING (spellid)
-  LEFT OUTER JOIN
-    (SELECT
-      CAST(spellid AS INT64) AS spellid,
-      CAST(effectbasepoints AS INT64) AS flightspeed
-    FROM
-      spelleffect
-    WHERE
-      effectaura = "207")
-  USING (spellid));
+LEFT OUTER JOIN flight
+  USING (spellid);
 
 -- MountGroundDB
 SELECT
@@ -48,8 +58,8 @@ WHERE
 ORDER BY
   groundspeed DESC,
   flightspeed DESC NULLS FIRST,
-  itemid NULLS FIRST,
-  spellid;
+  itemid ASC NULLS FIRST,
+  spellid ASC;
 
 -- MountFlightDB
 SELECT
@@ -62,7 +72,7 @@ WHERE
 ORDER BY
   flightspeed DESC,
   groundspeed DESC NULLS LAST,
-  itemid NULLS FIRST,
-  spellid;
+  itemid ASC NULLS FIRST,
+  spellid ASC;
 
 DROP TABLE IF EXISTS tmp_mountdb;

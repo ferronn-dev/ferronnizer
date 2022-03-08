@@ -1,0 +1,5 @@
+[sqlfluff]
+exclude_rules = L032
+
+[sqlfluff:rules]
+tab_space_size = 2

@@ -1,18 +1,25 @@
 SELECT
-  CAST(s.id AS INT64),
-  CAST(s.requiredlevel AS INT64),
-  IF(CAST(s.flags_0_ AS INT64) & 0x2 > 0, CAST(z.spellid AS INT64), NULL)
+  CAST(itemsparse.id AS INT64) AS itemid,
+  CAST(itemsparse.requiredlevel AS INT64) AS level,
+  IF(
+    CAST(itemsparse.flags_0_ AS INT64) & 2 > 0,
+    CAST(spelleffect.spellid AS INT64),
+    NULL
+  ) AS spellid
 FROM
-  itemsparse s
-JOIN
-  itemeffect e
-ON
-  e.parentitemid = s.id
+  itemsparse
+INNER JOIN
+  itemeffect
+  ON
+    itemeffect.parentitemid = itemsparse.id
 LEFT OUTER JOIN
-  spelleffect z
-ON
-  s.id = z.effectitemtype
+  spelleffect
+  ON
+    itemsparse.id = spelleffect.effectitemtype
 WHERE
-  e.spellcategoryid = "11"
+  itemeffect.spellcategoryid = "11"
 ORDER BY
-  CAST(s.itemlevel AS INT64) DESC, 2 DESC, 3 NULLS LAST, 1;
+  CAST(itemsparse.itemlevel AS INT64) DESC,
+  level DESC,
+  spellid ASC NULLS LAST,
+  itemid ASC;

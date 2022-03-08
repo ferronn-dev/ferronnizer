@@ -1,7 +1,9 @@
-SELECT CAST(s.id AS INT64), CAST(s.requiredskillrank AS INT64)
-FROM itemsparse s, itemeffect e, spelleffect z
-WHERE s.id = e.parentitemid
-  AND e.spellcategoryid = '150'
-  AND e.spellid = z.spellid
-  AND z.effect = '6'
-ORDER BY 2 DESC, 1;
+SELECT
+  CAST(itemsparse.id AS INT64) AS id,
+  CAST(itemsparse.requiredskillrank AS INT64) AS rank
+FROM itemsparse, itemeffect, spelleffect
+WHERE itemsparse.id = itemeffect.parentitemid
+  AND itemeffect.spellcategoryid = '150'
+  AND itemeffect.spellid = spelleffect.spellid
+  AND spelleffect.effect = '6'
+ORDER BY rank DESC, id ASC;
