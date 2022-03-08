@@ -300,18 +300,33 @@
           <KeyValue key="unit" value="target"/>
         </KeyValues>
       </Button>
+      <Button parentKey="Focus" inherits="FerronnizerTemplateUnitButton">
+        <Anchors>
+          <Anchor point="CENTER" y="-160"/>
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="events" value="PLAYER_LOGIN,PLAYER_FOCUS_CHANGED"/>
+          <KeyValue key="unit" value="focus"/>
+        </KeyValues>
+      </Button>
       <Frame parentKey="Hidden" hidden="true">
         <Scripts>
           <OnLoad>
-            BuffFrame:SetParent(self)
-            CompactRaidFrameManager:SetParent(self)
-            PartyMemberFrame1:SetParent(self)
-            PartyMemberFrame2:SetParent(self)
-            PartyMemberFrame3:SetParent(self)
-            PartyMemberFrame4:SetParent(self)
-            PlayerFrame:SetParent(self)
-            TargetFrame:SetParent(self)
-            TemporaryEnchantFrame:SetParent(self)
+            local frames = {
+              BuffFrame,
+              CompactRaidFrameManager,
+              FocusFrame,
+              PartyMemberFrame1,
+              PartyMemberFrame2,
+              PartyMemberFrame3,
+              PartyMemberFrame4,
+              PlayerFrame,
+              TargetFrame,
+              TemporaryEnchantFrame,
+            }
+            for _, frame in ipairs(frames) do
+              frame:SetParent(self)
+            end
           </OnLoad>
         </Scripts>
       </Frame>
