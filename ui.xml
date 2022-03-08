@@ -269,6 +269,7 @@
             BuffFrame:SetParent(self)
             PlayerFrame:SetParent(self)
             TargetFrame:SetParent(self)
+            TemporaryEnchantFrame:SetParent(self)
           </OnLoad>
         </Scripts>
       </Frame>
