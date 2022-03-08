@@ -257,11 +257,38 @@
       </Button>
       <Button parentKey="Party1" inherits="FerronnizerTemplateUnitButton" scale="0.5">
         <Anchors>
-          <Anchor point="BOTTOMLEFT" relativeKey="$parent.Player" relativePoint="TOPLEFT" y="50"/>
+          <Anchor point="BOTTOMLEFT" relativeKey="$parent.Player" relativePoint="TOPLEFT" y="-80"/>
         </Anchors>
         <KeyValues>
-          <KeyValue key="events" value="PLAYER_LOGIN"/>
+          <KeyValue key="events" value="PLAYER_LOGIN,GROUP_ROSTER_UPDATE"/>
           <KeyValue key="unit" value="party1"/>
+        </KeyValues>
+      </Button>
+      <Button parentKey="Party2" inherits="FerronnizerTemplateUnitButton" scale="0.5">
+        <Anchors>
+          <Anchor point="BOTTOMLEFT" relativeKey="$parent.Party1" relativePoint="TOPLEFT" y="-80"/>
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="events" value="PLAYER_LOGIN,GROUP_ROSTER_UPDATE"/>
+          <KeyValue key="unit" value="party2"/>
+        </KeyValues>
+      </Button>
+      <Button parentKey="Party3" inherits="FerronnizerTemplateUnitButton" scale="0.5">
+        <Anchors>
+          <Anchor point="BOTTOMLEFT" relativeKey="$parent.Party2" relativePoint="TOPLEFT" y="-80"/>
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="events" value="PLAYER_LOGIN,GROUP_ROSTER_UPDATE"/>
+          <KeyValue key="unit" value="party3"/>
+        </KeyValues>
+      </Button>
+      <Button parentKey="Party4" inherits="FerronnizerTemplateUnitButton" scale="0.5">
+        <Anchors>
+          <Anchor point="BOTTOMLEFT" relativeKey="$parent.Party3" relativePoint="TOPLEFT" y="-80"/>
+        </Anchors>
+        <KeyValues>
+          <KeyValue key="events" value="PLAYER_LOGIN,GROUP_ROSTER_UPDATE"/>
+          <KeyValue key="unit" value="party4"/>
         </KeyValues>
       </Button>
       <Button parentKey="Target" inherits="FerronnizerTemplateUnitButton">
