@@ -1,26 +1,27 @@
+<?xml version="1.0"?>
 <Ui>
-  <Frame name='FerronnizerTemplateAura' virtual='true'>
-    <Size x='20' y='20' />
+  <Frame name="FerronnizerTemplateAura" virtual="true">
+    <Size x="20" y="20"/>
     <Layers>
-      <Layer level='ARTWORK'>
-        <Texture parentKey='Icon' setAllPoints='true'>
-          <TexCoords top='0.07' left='0.07' bottom='0.93' right='0.93' />
+      <Layer level="ARTWORK">
+        <Texture parentKey="Icon" setAllPoints="true">
+          <TexCoords top="0.07" left="0.07" bottom="0.93" right="0.93"/>
         </Texture>
-        <FontString parentKey='Count' inherits='NumberFontNormalSmall'>
+        <FontString parentKey="Count" inherits="NumberFontNormalSmall">
           <Anchors>
-            <Anchor point='BOTTOMRIGHT' />
+            <Anchor point="BOTTOMRIGHT"/>
           </Anchors>
         </FontString>
       </Layer>
-      <Layer level='OVERLAY'>
+      <Layer level="OVERLAY">
         <!-- Taken from BuffFrame.xml -->
-        <Texture parentKey='Border' file='Interface\Buttons\UI-Debuff-Overlays' setAllPoints='true'>
-          <TexCoords left='0.296875' right='0.5703125' top='0' bottom='0.515625' />
+        <Texture parentKey="Border" file="Interface\Buttons\UI-Debuff-Overlays" setAllPoints="true">
+          <TexCoords left="0.296875" right="0.5703125" top="0" bottom="0.515625"/>
         </Texture>
       </Layer>
     </Layers>
     <Frames>
-      <Cooldown parentKey='Cooldown' inherits='CooldownFrameTemplate' reverse='true' />
+      <Cooldown parentKey="Cooldown" inherits="CooldownFrameTemplate" reverse="true"/>
     </Frames>
     <Scripts>
       <OnEnter>
@@ -34,8 +35,8 @@
       </OnLeave>
     </Scripts>
   </Frame>
-  <Button name='FerronnizerTemplateUnitButton' inherits='SecureUnitButtonTemplate' virtual='true'>
-    <Size x='160' y='160' />
+  <Button name="FerronnizerTemplateUnitButton" inherits="SecureUnitButtonTemplate" virtual="true">
+    <Size x="160" y="160"/>
     <Scripts>
       <OnLoad>
         for event in self.events:gmatch('([^,]+)') do
@@ -62,17 +63,17 @@
       </OnLeave>
     </Scripts>
     <Frames>
-      <Frame parentKey='Name'>
+      <Frame parentKey="Name">
         <Anchors>
-          <Anchor point='TOPLEFT' />
+          <Anchor point="TOPLEFT"/>
         </Anchors>
-        <Size x='160' y='20' />
+        <Size x="160" y="20"/>
         <Layers>
           <Layer>
-            <Texture parentKey='Background' setAllPoints='true'>
-              <Color r='0.4' g='0' b='0' />
+            <Texture parentKey="Background" setAllPoints="true">
+              <Color r="0.4" g="0" b="0"/>
             </Texture>
-            <FontString parentKey='Text' inherits='GameFontNormalSmall' justifyH='CENTER' setAllPoints='true' />
+            <FontString parentKey="Text" inherits="GameFontNormalSmall" justifyH="CENTER" setAllPoints="true"/>
           </Layer>
         </Layers>
         <Scripts>
@@ -93,19 +94,19 @@
           </OnEvent>
         </Scripts>
       </Frame>
-      <StatusBar parentKey='Health'>
+      <StatusBar parentKey="Health">
         <Anchors>
-          <Anchor point='TOPLEFT' x='0' y='-20' />
+          <Anchor point="TOPLEFT" x="0" y="-20"/>
         </Anchors>
-        <Size x='160' y='20' />
-        <BarTexture file='Interface\Buttons\WHITE8x8' />
-        <BarColor r='0.0' g='0.5' b='0' />
+        <Size x="160" y="20"/>
+        <BarTexture file="Interface\Buttons\WHITE8x8"/>
+        <BarColor r="0.0" g="0.5" b="0"/>
         <Layers>
           <Layer>
-            <Texture parentKey='Background' setAllPoints='true'>
-              <Color a='0.5' />
+            <Texture parentKey="Background" setAllPoints="true">
+              <Color a="0.5"/>
             </Texture>
-            <FontString parentKey='Text' inherits='GameNormalNumberFont' justifyH='CENTER' setAllPoints='true' />
+            <FontString parentKey="Text" inherits="GameNormalNumberFont" justifyH="CENTER" setAllPoints="true"/>
           </Layer>
         </Layers>
         <Scripts>
@@ -123,18 +124,18 @@
           </OnEvent>
         </Scripts>
       </StatusBar>
-      <StatusBar parentKey='Power'>
+      <StatusBar parentKey="Power">
         <Anchors>
-          <Anchor point='TOPLEFT' x='0' y='-40' />
+          <Anchor point="TOPLEFT" x="0" y="-40"/>
         </Anchors>
-        <Size x='160' y='20' />
-        <BarTexture file='Interface\Buttons\WHITE8x8' />
+        <Size x="160" y="20"/>
+        <BarTexture file="Interface\Buttons\WHITE8x8"/>
         <Layers>
           <Layer>
-            <Texture parentKey='Background' setAllPoints='true'>
-              <Color a='0.5' />
+            <Texture parentKey="Background" setAllPoints="true">
+              <Color a="0.5"/>
             </Texture>
-            <FontString parentKey='Text' inherits='GameNormalNumberFont' justifyH='CENTER' setAllPoints='true' />
+            <FontString parentKey="Text" inherits="GameNormalNumberFont" justifyH="CENTER" setAllPoints="true"/>
           </Layer>
         </Layers>
         <Scripts>
@@ -153,11 +154,11 @@
           </OnEvent>
         </Scripts>
       </StatusBar>
-      <Frame parentKey='Auras'>
+      <Frame parentKey="Auras">
         <Anchors>
-          <Anchor point='TOPLEFT' x='0' y='-60' />
+          <Anchor point="TOPLEFT" x="0" y="-60"/>
         </Anchors>
-        <Size x='160' y='100' />
+        <Size x="160" y="100"/>
         <Scripts>
           <OnLoad>
             self:RegisterUnitEvent('UNIT_AURA', self:GetParent().unit)
@@ -186,7 +187,7 @@
                 frame.Index, frame.Filter = index, filter
                 frame:Show()
                 frame.Icon:SetTexture(icon)
-                frame.Count:SetText(count and count > 0 and count or '')
+                frame.Count:SetText(count and count &gt; 0 and count or '')
                 if dispelType then
                   local color = DebuffTypeColor[dispelType]
                   frame.Border:SetVertexColor(color.r, color.g, color.b)
@@ -203,35 +204,35 @@
       </Frame>
     </Frames>
   </Button>
-  <Frame name='FerronnizerRoot' parent='UIParent' setAllPoints='true'>
+  <Frame name="FerronnizerRoot" parent="UIParent" setAllPoints="true">
     <Frames>
-      <Button parentKey='Player' inherits='FerronnizerTemplateUnitButton'>
+      <Button parentKey="Player" inherits="FerronnizerTemplateUnitButton">
         <Anchors>
-          <Anchor point='CENTER' x='-200' y='-140' />
+          <Anchor point="CENTER" x="-200" y="-140"/>
         </Anchors>
         <KeyValues>
-          <KeyValue key='events' value='PLAYER_LOGIN' />
-          <KeyValue key='unit' value='player' />
+          <KeyValue key="events" value="PLAYER_LOGIN"/>
+          <KeyValue key="unit" value="player"/>
         </KeyValues>
       </Button>
-      <Button parentKey='Pet' inherits='FerronnizerTemplateUnitButton' scale='0.5'>
+      <Button parentKey="Pet" inherits="FerronnizerTemplateUnitButton" scale="0.5">
         <Anchors>
-          <Anchor point='TOPRIGHT' relativeKey='$parent.Player' relativePoint='TOPLEFT' x='-20' />
+          <Anchor point="TOPRIGHT" relativeKey="$parent.Player" relativePoint="TOPLEFT" x="-20"/>
         </Anchors>
         <KeyValues>
-          <KeyValue key='events' value='PLAYER_LOGIN' />
-          <KeyValue key='unit' value='pet' />
+          <KeyValue key="events" value="PLAYER_LOGIN"/>
+          <KeyValue key="unit" value="pet"/>
         </KeyValues>
         <Frames>
           <!-- Adapted from PetFrame.lua -->
-          <Frame parentKey='Happiness'>
+          <Frame parentKey="Happiness">
             <Anchors>
-              <Anchor point='TOPRIGHT' relativePoint='TOPLEFT' x='-10' />
+              <Anchor point="TOPRIGHT" relativePoint="TOPLEFT" x="-10"/>
             </Anchors>
-            <Size x='24' y='23' />
+            <Size x="24" y="23"/>
             <Layers>
               <Layer>
-                <Texture parentKey='Texture' file='Interface\PetPaperDollFrame\UI-PetHappiness' setAllPoints='true' />
+                <Texture parentKey="Texture" file="Interface\PetPaperDollFrame\UI-PetHappiness" setAllPoints="true"/>
               </Layer>
             </Layers>
             <Scripts>
@@ -254,25 +255,25 @@
           </Frame>
         </Frames>
       </Button>
-      <Button parentKey='Party1' inherits='FerronnizerTemplateUnitButton' scale='0.5'>
+      <Button parentKey="Party1" inherits="FerronnizerTemplateUnitButton" scale="0.5">
         <Anchors>
-          <Anchor point='BOTTOMLEFT' relativeKey='$parent.Player' relativePoint='TOPLEFT' y='50' />
+          <Anchor point="BOTTOMLEFT" relativeKey="$parent.Player" relativePoint="TOPLEFT" y="50"/>
         </Anchors>
         <KeyValues>
-          <KeyValue key='events' value='PLAYER_LOGIN' />
-          <KeyValue key='unit' value='party1' />
+          <KeyValue key="events" value="PLAYER_LOGIN"/>
+          <KeyValue key="unit" value="party1"/>
         </KeyValues>
       </Button>
-      <Button parentKey='Target' inherits='FerronnizerTemplateUnitButton'>
+      <Button parentKey="Target" inherits="FerronnizerTemplateUnitButton">
         <Anchors>
-          <Anchor point='CENTER' x='200' y='-140' />
+          <Anchor point="CENTER" x="200" y="-140"/>
         </Anchors>
         <KeyValues>
-          <KeyValue key='events' value='PLAYER_LOGIN,PLAYER_TARGET_CHANGED' />
-          <KeyValue key='unit' value='target' />
+          <KeyValue key="events" value="PLAYER_LOGIN,PLAYER_TARGET_CHANGED"/>
+          <KeyValue key="unit" value="target"/>
         </KeyValues>
       </Button>
-      <Frame parentKey='Hidden' hidden='true'>
+      <Frame parentKey="Hidden" hidden="true">
         <Scripts>
           <OnLoad>
             BuffFrame:SetParent(self)
