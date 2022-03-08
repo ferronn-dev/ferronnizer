@@ -9,7 +9,7 @@ repos:
 - repo: https://github.com/JohnnyMorganz/StyLua
   rev: v0.12.1
   hooks:
-  - id: stylua-system
+  - id: stylua
 - repo: https://github.com/lsst-ts/pre-commit-xmllint
   rev: v1.0.0
   hooks:
@@ -25,7 +25,7 @@ repos:
   hooks:
   - id: addonmaker
     name: addonmaker
-    entry: sh addonmaker/run.sh
+    entry: bash -c 'test "$CI" == "true" || sh addonmaker/run.sh'
     language: system
     pass_filenames: false
 - repo: meta
