@@ -304,6 +304,11 @@
         <Scripts>
           <OnLoad>
             BuffFrame:SetParent(self)
+            CompactRaidFrameManager:SetParent(self)
+            PartyMemberFrame1:SetParent(self)
+            PartyMemberFrame2:SetParent(self)
+            PartyMemberFrame3:SetParent(self)
+            PartyMemberFrame4:SetParent(self)
             PlayerFrame:SetParent(self)
             TargetFrame:SetParent(self)
             TemporaryEnchantFrame:SetParent(self)
