@@ -14,7 +14,8 @@ LEFT OUTER JOIN spelleffect AS iz ON itemsparse.id = iz.effectitemtype
 WHERE itemeffect.spellid != "41620"  -- Bottled Nethergon Vapor
   AND itemeffect.spellcategoryid IN ("4", "1153")
   AND ez.effect = "10"
-ORDER BY CAST(itemsparse.itemlevel AS INT64) DESC;
+ORDER BY
+  CAST(itemsparse.itemlevel AS INT64) DESC, level DESC, itemid ASC, spellid ASC;
 
 -- ManaPotionDB
 SELECT
@@ -32,4 +33,5 @@ LEFT OUTER JOIN spelleffect AS iz ON itemsparse.id = iz.effectitemtype
 WHERE itemeffect.spellid != "41618"  -- Bottled Nethergon Vapor
   AND itemeffect.spellcategoryid IN ("4", "1153")
   AND ez.effect = "30"
-ORDER BY CAST(itemsparse.itemlevel AS INT64) DESC;
+ORDER BY
+  CAST(itemsparse.itemlevel AS INT64) DESC, level DESC, itemid ASC, spellid ASC;
