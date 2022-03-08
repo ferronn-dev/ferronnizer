@@ -204,7 +204,7 @@
       </Frame>
     </Frames>
   </Button>
-  <Frame name="FerronnizerRoot" parent="UIParent" setAllPoints="true">
+  <Frame name="FerronnizerRoot" parent="UIParent" setAllPoints="true" alpha="0.75">
     <Frames>
       <Button parentKey="Player" inherits="FerronnizerTemplateUnitButton">
         <Anchors>
