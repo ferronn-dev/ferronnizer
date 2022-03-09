@@ -4,7 +4,7 @@ G.AddClassActionSpec('TBC', 3, {
     spell = '!Auto Shot',
   },
   [2] = {
-    spells = { 'Aimed Shot', 'Arcane Shot' },
+    spells = { 'Steady Shot', 'Arcane Shot' },
   },
   [3] = {
     spell = 'Multi-Shot',
@@ -104,7 +104,10 @@ G.AddClassActionSpec('TBC', 3, {
     texture = 132270,
   },
   [29] = {
-    spell = 'Steady Shot',
+    spell = 'Aimed Shot',
+  },
+  [31] = {
+    spell = 'Arcane Shot',
   },
   [32] = {
     spell = 'Rapid Fire',
