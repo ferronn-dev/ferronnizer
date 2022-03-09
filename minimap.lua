@@ -43,7 +43,7 @@ G.Eventer({
 
 local function createHealthFrame(np)
   local ht
-  return { 'UNIT_HEALTH', 'UNIT_MAXHEALTH' }, function(unit)
+  return { 'UNIT_HEALTH', 'UNIT_HEALTH_FREQUENT', 'UNIT_MAXHEALTH' }, function(unit)
     if not ht then
       ht = np.UnitFrame.healthBar:CreateFontString()
       ht:SetFontObject(NumberFont_Small)

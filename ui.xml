@@ -113,6 +113,7 @@
           <OnLoad>
             local unit = self:GetParent().unit
             self:RegisterUnitEvent('UNIT_HEALTH', unit)
+            self:RegisterUnitEvent('UNIT_HEALTH_FREQUENT', unit)
             self:RegisterUnitEvent('UNIT_MAXHEALTH', unit)
           </OnLoad>
           <OnEvent>
