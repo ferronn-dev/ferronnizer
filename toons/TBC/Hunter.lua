@@ -103,6 +103,9 @@ G.AddClassActionSpec('TBC', 3, {
     },
     texture = 132270,
   },
+  [29] = {
+    spell = 'Steady Shot',
+  },
   [32] = {
     spell = 'Rapid Fire',
   },
