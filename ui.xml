@@ -332,5 +332,16 @@
         </Scripts>
       </Frame>
     </Frames>
+    <!-- TODO replace this with custom casting bar frame -->
+    <Scripts>
+      <OnLoad>
+        self:RegisterEvent('PLAYER_ENTERING_WORLD')
+      </OnLoad>
+      <OnEvent>
+        CastingBarFrame.ignoreFramePositionManager = true
+        CastingBarFrame:ClearAllPoints()
+        CastingBarFrame:SetPoint('BOTTOM', 0, 275)
+      </OnEvent>
+    </Scripts>
   </Frame>
 </Ui>

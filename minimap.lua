@@ -28,12 +28,3 @@ G.Eventer({
     end
   end),
 })
-
--- TODO put this somewhere more appropriate
-G.Eventer({
-  PLAYER_ENTERING_WORLD = function()
-    _G.CastingBarFrame.ignoreFramePositionManager = true
-    CastingBarFrame:ClearAllPoints()
-    CastingBarFrame:SetPoint('BOTTOM', 0, 275)
-  end,
-})
