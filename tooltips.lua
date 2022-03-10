@@ -1,3 +1,5 @@
+local _, G = ...
+
 local tooltipRefs = {
   GameTooltip,
   ItemRefTooltip,
@@ -83,3 +85,11 @@ for _, t in ipairs(tooltipRefs) do
     hooksecurefunc(t, 'Set' .. k, v)
   end
 end
+
+G.Eventer({
+  PLAYER_ENTERING_WORLD = function()
+    if _G.GameTooltipStatusBar then
+      G.ReparentFrame(_G.GameTooltipStatusBar)
+    end
+  end,
+})

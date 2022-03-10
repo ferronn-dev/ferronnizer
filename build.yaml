@@ -26,6 +26,8 @@ deps:
   - util.lua
   nameplates.lua:
   - util.lua
+  tooltips.lua:
+  - util.lua
   toons.lua:
   - toons/TBC/Druid.lua
   - toons/TBC/Hunter.lua
