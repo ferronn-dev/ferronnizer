@@ -24,6 +24,8 @@ deps:
   - util.lua
   minimap.lua:
   - util.lua
+  nameplates.lua:
+  - util.lua
   toons.lua:
   - toons/TBC/Druid.lua
   - toons/TBC/Hunter.lua
@@ -89,6 +91,7 @@ roots:
 - carrot.lua
 - chatframe.lua
 - minimap.lua
+- nameplates.lua
 - tooltips.lua
 - ui.xml
 - vars.lua
