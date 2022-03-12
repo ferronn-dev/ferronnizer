@@ -9,9 +9,6 @@ G.AddClassActionSpec('TBC', 3, {
   [3] = {
     spell = 'Multi-Shot',
   },
-  [4] = {
-    spell = 'Serpent Sting',
-  },
   [5] = {
     spell = 'Hunter\'s Mark',
   },
@@ -19,7 +16,11 @@ G.AddClassActionSpec('TBC', 3, {
     spell = 'Bestial Wrath',
   },
   [7] = {
-    spell = 'Concussive Shot',
+    oneof = {
+      'Serpent Sting',
+      'Scorpid Sting',
+      'Viper Sting',
+    },
   },
   [8] = {
     spell = 'Raptor Strike',
@@ -46,10 +47,18 @@ G.AddClassActionSpec('TBC', 3, {
     spell = 'Distracting Shot',
   },
   [14] = {
-    spell = 'Scorpid Sting',
+    spell = 'Concussive Shot',
   },
   [15] = {
-    spell = 'Viper Sting',
+    oneof = {
+      'Aspect of the Hawk',
+      'Aspect of the Cheetah',
+      'Aspect of the Pack',
+      'Aspect of the Monkey',
+      'Aspect of the Wild',
+      'Aspect of the Beast',
+      'Aspect of the Viper',
+    },
   },
   [16] = {
     petaction = 1,
@@ -65,16 +74,6 @@ G.AddClassActionSpec('TBC', 3, {
   },
   [20] = {
     invslot = 14,
-  },
-  [21] = {
-    oneof = {
-      [19] = 'Aspect of the Hawk',
-      [20] = 'Aspect of the Cheetah',
-      [21] = 'Aspect of the Pack',
-      [22] = 'Aspect of the Monkey',
-      [23] = 'Aspect of the Wild',
-      [24] = 'Aspect of the Beast',
-    },
   },
   [22] = {
     spell = 'Flare',
