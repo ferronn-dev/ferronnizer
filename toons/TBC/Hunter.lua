@@ -133,6 +133,9 @@ G.AddClassActionSpec('TBC', 3, {
   [36] = {
     racial2 = true,
   },
+  [37] = {
+    spell = 'Intimidation',
+  },
   [43] = {
     mount = true,
   },
