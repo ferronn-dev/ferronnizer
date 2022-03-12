@@ -522,11 +522,7 @@ local updateButton = (function()
         if button.SetChecked then
           local k, v = next(checked)
           local fn = assert(checkedLang[k], 'invalid checked program ' .. tostring(k))
-          local chfn = function()
-            return fn(v)
-          end
-          button:SetChecked(chfn())
-          button.chfn = chfn
+          button:SetChecked(fn(v))
         end
       end
     end)(),
@@ -728,11 +724,6 @@ local function makeActionButtons()
     end,
     OnLeave = function()
       GameTooltip:Hide()
-    end,
-    PostClick = function(self)
-      if self.chfn then
-        self:SetChecked(self.chfn())
-      end
     end,
   }
   local iconButtons = {}
