@@ -46,6 +46,7 @@
           self.Auras:RegisterEvent(event)
         end
         self:SetAttribute('unit', self.unit)
+        self:SetAttribute('*type1', 'target')
         RegisterUnitWatch(self)
       </OnLoad>
       <OnEnter>
