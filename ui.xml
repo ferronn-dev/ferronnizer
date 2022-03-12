@@ -35,7 +35,7 @@
       </OnLeave>
     </Scripts>
   </Frame>
-  <Button name="FerronnizerTemplateUnitButton" inherits="SecureUnitButtonTemplate" virtual="true">
+  <Button name="FerronnizerTemplateUnitButton" inherits="SecureUnitButtonTemplate" virtual="true" registerForClicks="LeftButtonUp,RightButtonUp">
     <Size x="160" y="160"/>
     <Scripts>
       <OnLoad>
@@ -47,6 +47,7 @@
         end
         self:SetAttribute('unit', self.unit)
         self:SetAttribute('*type1', 'target')
+        self:SetAttribute('*type2', 'togglemenu')
         RegisterUnitWatch(self)
       </OnLoad>
       <OnEnter>
