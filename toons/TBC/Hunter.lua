@@ -9,6 +9,9 @@ G.AddClassActionSpec('TBC', 3, {
   [3] = {
     spell = 'Multi-Shot',
   },
+  [4] = {
+    spell = 'Kill Command',
+  },
   [5] = {
     spell = 'Hunter\'s Mark',
   },
