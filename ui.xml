@@ -327,7 +327,7 @@
               TargetFrame,
               TemporaryEnchantFrame,
             }
-            for _, frame in ipairs(frames) do
+            for _, frame in pairs(frames) do
               frame:SetParent(self)
             end
           </OnLoad>
