@@ -6,6 +6,15 @@ G.AddClassActionSpec('Vanilla', 9, {
   [2] = {
     spell = 'Immolate',
   },
+  [3] = {
+    spell = 'Corruption',
+  },
+  [4] = {
+    spell = 'Curse of Weakness',
+  },
+  [33] = {
+    spell = 'Summon Imp',
+  },
   [34] = {
     buff = true,
   },
