@@ -442,6 +442,7 @@ local makeAction = (function()
           attr = spellid and IsSpellKnown(spellid) and macro or '',
           -- Use the spell base name for GetSpellTexture; more likely to work on login.
           icon = GetSpellTexture(shortName),
+          sparkle = action.sparkle and spellid and { aura = spellid },
         }
       end
       local init = Mixin(update(), {
@@ -592,6 +593,19 @@ local updateButton = (function()
     name = function(button, name)
       (button.Name or button.Text):SetText(name)
     end,
+    sparkle = (function()
+      local sparkleLang = {
+        aura = function(aura)
+          return not _G.GetPlayerAuraBySpellID(aura)
+        end,
+      }
+      return function(button, sparkle)
+        local k, v = next(sparkle)
+        local on = assert(sparkleLang[k](v))
+        local fn = on and AutoCastShine_AutoCastStart or AutoCastShine_AutoCastStop
+        fn(button.AutoCastShine)
+      end
+    end)(),
     tooltip = (function()
       local tooltipLang = {
         action = function(action)
@@ -1077,6 +1091,7 @@ local function setupActions(actions, defaultPage, actionButtons)
     SPELL_UPDATE_COOLDOWN = updateHandler('cooldown'),
     START_AUTOREPEAT_SPELL = checkedHandler,
     STOP_AUTOREPEAT_SPELL = checkedHandler,
+    UNIT_AURA = updateHandler('sparkle'),
   }
   for ev, handler in pairs(genericHandlers) do
     addHandler(ev, handler)

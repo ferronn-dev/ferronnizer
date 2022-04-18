@@ -34,6 +34,7 @@ G.AddClassActionSpec('Vanilla', 1, {
     spell = 'Execute',
   },
   [13] = {
+    sparkle = true,
     spell = 'Battle Shout',
   },
   [14] = {
