@@ -596,12 +596,18 @@ local updateButton = (function()
     sparkle = (function()
       local sparkleLang = {
         aura = function(aura)
-          return not _G.GetPlayerAuraBySpellID(aura)
+          for i = 1, 40 do
+            local spellid = select(10, UnitAura('player', i))
+            if spellid == aura then
+              return false
+            end
+          end
+          return true
         end,
       }
       return function(button, sparkle)
         local k, v = next(sparkle)
-        local on = assert(sparkleLang[k](v))
+        local on = assert(sparkleLang[k])(v)
         local fn = on and AutoCastShine_AutoCastStart or AutoCastShine_AutoCastStop
         fn(button.AutoCastShine)
       end
