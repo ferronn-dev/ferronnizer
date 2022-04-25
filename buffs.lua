@@ -274,7 +274,9 @@ G.PreClickButton('BuffButton', '', function()
       if subtext then
         spellName = spellName .. '(' .. subtext .. ')'
       end
-      print('Casting ' .. spellName .. ' on ' .. UnitName(unit) .. '.')
+      if not UnitIsUnit('player', unit) then
+        print('Casting ' .. spellName .. ' on ' .. UnitName(unit) .. '.')
+      end
       return '/stand\n/cancelform\n/cast [@' .. unit .. ']' .. spellName
     end
   end
