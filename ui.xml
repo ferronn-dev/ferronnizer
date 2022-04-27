@@ -169,7 +169,7 @@
             for row = 0, 4 do
               for col = 0, 7 do
                 local frame = CreateFrame('Frame', nil, self, 'FerronnizerTemplateAura', row * 8 + col + 1)
-                frame:SetPoint('TOPLEFT', col * 20, row * 20)
+                frame:SetPoint('TOPLEFT', col * 20, row * -20)
                 table.insert(self.Kids, frame)
               end
             end
