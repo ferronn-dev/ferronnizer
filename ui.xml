@@ -72,9 +72,7 @@
         <Size x="160" y="20"/>
         <Layers>
           <Layer>
-            <Texture parentKey="Background" setAllPoints="true">
-              <Color r="0.4" g="0" b="0"/>
-            </Texture>
+            <Texture parentKey="Background" setAllPoints="true"/>
             <FontString parentKey="Text" inherits="GameFontNormalSmall" justifyH="CENTER" setAllPoints="true"/>
           </Layer>
         </Layers>
@@ -92,6 +90,7 @@
               local arg = ...
               local level = event == 'PLAYER_LEVEL_UP' and arg or UnitLevel(unit)
               self.Text:SetText(level .. ' - ' .. UnitName(unit))
+              self.Background:SetColorTexture(GetClassColor(UnitClassBase(unit)))
             end
           </OnEvent>
         </Scripts>
@@ -102,12 +101,8 @@
         </Anchors>
         <Size x="160" y="20"/>
         <BarTexture file="Interface\Buttons\WHITE8x8"/>
-        <BarColor r="0.0" g="0.5" b="0"/>
         <Layers>
           <Layer>
-            <Texture parentKey="Background" setAllPoints="true">
-              <Color a="0.5"/>
-            </Texture>
             <FontString parentKey="Text" inherits="GameNormalNumberFont" justifyH="CENTER" setAllPoints="true"/>
           </Layer>
         </Layers>
@@ -123,6 +118,7 @@
             local value, max = UnitHealth(unit), UnitHealthMax(unit)
             self:SetMinMaxValues(0, max)
             self:SetValue(value)
+            self:SetStatusBarColor(GetClassColor(UnitClassBase(unit)))
             self.Text:SetText(value .. ' / ' .. max)
           </OnEvent>
         </Scripts>
