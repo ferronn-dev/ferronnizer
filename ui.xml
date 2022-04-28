@@ -36,7 +36,7 @@
     </Scripts>
   </Frame>
   <Button name="FerronnizerTemplateUnitButton" inherits="SecureUnitButtonTemplate" virtual="true" registerForClicks="LeftButtonUp,RightButtonUp">
-    <Size x="160" y="160"/>
+    <Size x="160" y="60"/>
     <Scripts>
       <OnLoad>
         for event in self.events:gmatch('([^,]+)') do
