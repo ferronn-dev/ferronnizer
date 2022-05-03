@@ -1,10 +1,10 @@
-local addonName, G = ...
+local _, G = ...
 
 local entries = {
   game_time = {
     init = '',
     update = function()
-      return GameTime_GetTime(false)
+      return _G.GameTime_GetTime(false)
     end,
   },
   player_level = {
@@ -26,7 +26,7 @@ local updates = {}
 local values = {}
 
 function G.DataWatch(name, callback)
-  assert(callbacks[k], 'invalid watch for ' .. tostring(name))
+  assert(callbacks[name], 'invalid watch for ' .. tostring(name))
   table.insert(callbacks[name], callback)
 end
 
