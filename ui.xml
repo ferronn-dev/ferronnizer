@@ -308,27 +308,6 @@
           <KeyValue key="unit" value="focus"/>
         </KeyValues>
       </Button>
-      <Frame parentKey="Hidden" hidden="true">
-        <Scripts>
-          <OnLoad>
-            local frames = {
-              BuffFrame,
-              CompactRaidFrameManager,
-              FocusFrame,
-              PartyMemberFrame1,
-              PartyMemberFrame2,
-              PartyMemberFrame3,
-              PartyMemberFrame4,
-              PlayerFrame,
-              TargetFrame,
-              TemporaryEnchantFrame,
-            }
-            for _, frame in pairs(frames) do
-              frame:SetParent(self)
-            end
-          </OnLoad>
-        </Scripts>
-      </Frame>
     </Frames>
     <!-- TODO replace this with custom casting bar frame -->
     <Scripts>

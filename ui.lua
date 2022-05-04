@@ -21,3 +21,24 @@ root.Clock = (function()
   f.Text = fs
   return f
 end)()
+
+root.Hidden = (function()
+  local frames = {
+    _G.BuffFrame,
+    _G.CompactRaidFrameManager,
+    _G.FocusFrame,
+    _G.PartyMemberFrame1,
+    _G.PartyMemberFrame2,
+    _G.PartyMemberFrame3,
+    _G.PartyMemberFrame4,
+    _G.PlayerFrame,
+    _G.TargetFrame,
+    _G.TemporaryEnchantFrame,
+  }
+  local f = CreateFrame('Frame', root)
+  f:Hide()
+  for _, frame in pairs(frames) do
+    frame:SetParent(f)
+  end
+  return f
+end)()

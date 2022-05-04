@@ -9,11 +9,13 @@ local function loadUi()
             SetJustifyV = function() end,
           }
         end,
+        Hide = function() end,
         SetPoint = function() end,
         SetSize = function() end,
       }
     end,
     FerronnizerRoot = {},
+    pairs = pairs,
   }
   globalEnv._G = globalEnv
   local addonEnv = {
@@ -27,5 +29,6 @@ describe('ui', function()
   it('loads', function()
     local root = loadUi()
     assert.Not.Nil(root.Clock)
+    assert.Not.Nil(root.Hidden)
   end)
 end)
