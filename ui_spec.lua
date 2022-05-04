@@ -20,10 +20,12 @@ local function loadUi()
     DataWatch = function() end,
   }
   setfenv(loadfile('ui.lua'), globalEnv)('', addonEnv)
+  return globalEnv.FerronnizerRoot
 end
 
 describe('ui', function()
   it('loads', function()
-    loadUi()
+    local root = loadUi()
+    assert.Not.Nil(root.Clock)
   end)
 end)
