@@ -7,18 +7,41 @@ local entries = {
       return _G.GameTime_GetTime(false)
     end,
   },
-  player_level = {
-    init = UnitLevel('player'),
-    events = {
-      PLAYER_LEVEL_UP = function(level)
-        return level
-      end,
-    },
-  },
-  player_name = {
-    init = UnitName('player'),
-  },
 }
+
+local unitTokens = {
+  'focus',
+  'party1',
+  'party2',
+  'party3',
+  'party4',
+  'pet',
+  'player',
+  'target',
+}
+for _, unit in ipairs(unitTokens) do
+  local unitEntries = {
+    level = {
+      init = UnitLevel(unit),
+      events = {
+        UNIT_NAME_UPDATE = function()
+          return UnitLevel(unit)
+        end,
+      },
+    },
+    name = {
+      init = UnitName(unit),
+      events = {
+        UNIT_NAME_UPDATE = function()
+          return UnitName(unit)
+        end,
+      },
+    },
+  }
+  for k, v in pairs(unitEntries) do
+    entries[unit .. '_' .. k] = v
+  end
+end
 
 local callbacks = {}
 local handlers = {}
