@@ -20,44 +20,41 @@ local entries = {
 }
 
 local unitTokens = {
-  'focus',
-  'party1',
-  'party2',
-  'party3',
-  'party4',
-  'pet',
-  'player',
-  'target',
+  focus = { 'PLAYER_FOCUS_CHANGED' },
+  party1 = { 'GROUP_ROSTER_UPDATE' },
+  party2 = { 'GROUP_ROSTER_UPDATE' },
+  party3 = { 'GROUP_ROSTER_UPDATE' },
+  party4 = { 'GROUP_ROSTER_UPDATE' },
+  pet = {},
+  player = {},
+  target = { 'PLAYER_TARGET_CHANGED' },
 }
-for _, unit in ipairs(unitTokens) do
-  local unitEntries = {
-    level = {
-      init = UnitLevel(unit),
-      events = {
-        UNIT_NAME_UPDATE = function(u)
-          if u ~= unit then
-            return false
-          else
-            return true, UnitLevel(unit)
-          end
-        end,
-      },
-    },
-    name = {
-      init = UnitName(unit),
-      events = {
-        UNIT_NAME_UPDATE = function(u)
-          if u ~= unit then
-            return false
-          else
-            return true, UnitName(unit)
-          end
-        end,
-      },
-    },
-  }
-  for k, v in pairs(unitEntries) do
-    entries[unit .. '_' .. k] = v
+local unitFuncs = {
+  level = UnitLevel,
+  name = UnitName,
+}
+for unit, events in pairs(unitTokens) do
+  for name, func in pairs(unitFuncs) do
+    local unconditional = function()
+      return true, func(unit)
+    end
+    local handlers = {
+      PLAYER_LOGIN = unconditional,
+      UNIT_NAME_UPDATE = function(u)
+        if u ~= unit then
+          return false
+        else
+          return true, func(unit)
+        end
+      end,
+    }
+    for _, event in ipairs(events) do
+      handlers[event] = unconditional
+    end
+    entries[unit .. '_' .. name] = {
+      init = func(unit),
+      events = handlers,
+    }
   end
 end
 
