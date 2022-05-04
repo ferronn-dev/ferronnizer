@@ -63,6 +63,7 @@ end
 
 local callbacks = {}
 local handlers = {}
+local pending = {}
 local updates = {}
 local values = {}
 
@@ -85,9 +86,7 @@ end
 local function process(name, useValue, newValue)
   if useValue and values[name] ~= newValue then
     values[name] = newValue
-    for _, cb in ipairs(callbacks[name]) do
-      cb(newValue)
-    end
+    pending[name] = true
   end
 end
 
@@ -103,5 +102,12 @@ end
 frame:SetScript('OnUpdate', function()
   for k, v in pairs(updates) do
     process(k, v())
+  end
+  for name in pairs(pending) do
+    local value = values[name]
+    for _, callback in ipairs(callbacks[name]) do
+      callback(value)
+    end
+    pending[name] = nil
   end
 end)
