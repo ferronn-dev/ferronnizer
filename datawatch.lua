@@ -4,7 +4,7 @@ local entries = {
   game_time = {
     init = '',
     update = function()
-      return _G.GameTime_GetTime(false)
+      return true, _G.GameTime_GetTime(false)
     end,
   },
 }
@@ -24,16 +24,24 @@ for _, unit in ipairs(unitTokens) do
     level = {
       init = UnitLevel(unit),
       events = {
-        UNIT_NAME_UPDATE = function()
-          return UnitLevel(unit)
+        UNIT_NAME_UPDATE = function(u)
+          if u ~= unit then
+            return false
+          else
+            return true, UnitLevel(unit)
+          end
         end,
       },
     },
     name = {
       init = UnitName(unit),
       events = {
-        UNIT_NAME_UPDATE = function()
-          return UnitName(unit)
+        UNIT_NAME_UPDATE = function(u)
+          if u ~= unit then
+            return false
+          else
+            return true, UnitName(unit)
+          end
         end,
       },
     },
@@ -64,8 +72,8 @@ for k, v in pairs(entries) do
   end
 end
 
-local function process(name, newValue)
-  if values[name] ~= newValue then
+local function process(name, useValue, newValue)
+  if useValue and values[name] ~= newValue then
     values[name] = newValue
     for _, cb in ipairs(callbacks[name]) do
       cb(newValue)
