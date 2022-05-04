@@ -26,14 +26,17 @@ local function newDataWatch()
     end,
     ipairs = ipairs,
     pairs = pairs,
+    select = select,
     table = table,
     tostring = tostring,
+    type = type,
     UnitLevel = function(unit)
       return data.units[unit] and data.units[unit].level
     end,
     UnitName = function(unit)
       return data.units[unit] and data.units[unit].name
     end,
+    unpack = unpack,
   }
   globalEnv._G = globalEnv
   local addonEnv = {}
@@ -92,5 +95,25 @@ describe('datawatch', function()
     onUpdate()
     assert.same('PlayerName', player_name)
     assert.Nil(focus_name)
+  end)
+
+  it('handles multiwatch', function()
+    local watch, onEvent, onUpdate, data = newDataWatch()
+    local player_name = 'foo'
+    local game_time = 'bar'
+    watch('player_name', 'game_time', function(name, time)
+      player_name = name
+      game_time = time
+    end)
+    assert.same('PlayerName', player_name)
+    assert.same('', game_time)
+    onUpdate()
+    assert.same('PlayerName', player_name)
+    assert.same('4:20', game_time)
+    data.units.player.name = 'Hello'
+    onEvent('UNIT_NAME_UPDATE', 'player')
+    onUpdate()
+    assert.same('Hello', player_name)
+    assert.same('4:20', game_time)
   end)
 end)
