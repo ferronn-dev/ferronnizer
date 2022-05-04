@@ -83,6 +83,9 @@ deps:
   - tooninit.lua
   toons/Vanilla/Warrior.lua:
   - tooninit.lua
+  ui.lua:
+  - datawatch.lua
+  - ui.xml
   vars.lua:
   - util.lua
 libs: {}
@@ -95,7 +98,7 @@ roots:
 - minimap.lua
 - nameplates.lua
 - tooltips.lua
-- ui.xml
+- ui.lua
 - vars.lua
 sql:
   bandagedb.sql:

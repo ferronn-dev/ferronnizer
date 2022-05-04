@@ -329,26 +329,6 @@
           </OnLoad>
         </Scripts>
       </Frame>
-      <Frame parentKey="Clock">
-        <Anchors>
-          <Anchor point="TOPRIGHT"/>
-        </Anchors>
-        <Size x="30" y="12"/>
-        <Layers>
-          <Layer>
-            <FontString parentKey="Text" inherits="GameFontNormalSmall" justifyH="RIGHT" justifyV="TOP" setAllPoints="true"/>
-          </Layer>
-        </Layers>
-        <Scripts>
-          <OnUpdate>
-            local old = self.Text:GetText()
-            local new = GameTime_GetTime(false)
-            if old ~= new then
-              self.Text:SetText(new)
-            end
-          </OnUpdate>
-        </Scripts>
-      </Frame>
     </Frames>
     <!-- TODO replace this with custom casting bar frame -->
     <Scripts>

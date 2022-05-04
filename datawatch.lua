@@ -1,5 +1,15 @@
 local _, G = ...
 
+-- TODO update addonmaker
+local hacks = {
+  GameTime_GetTime = function() end,
+}
+for k, v in pairs(hacks) do
+  if _G[k] == nil then
+    _G[k] = v
+  end
+end
+
 local entries = {
   game_time = {
     init = '',
