@@ -45,7 +45,7 @@ describe('datawatch', function()
     watch('game_time', function(x)
       game_time = x
     end)
-    assert.same('foo', game_time)
+    assert.same('', game_time)
     onUpdate()
     assert.same('4:20', game_time)
     data.game_time = '5:35'

@@ -28,6 +28,7 @@ local values = {}
 function G.DataWatch(name, callback)
   assert(callbacks[name], 'invalid watch for ' .. tostring(name))
   table.insert(callbacks[name], callback)
+  callback(values[name])
 end
 
 for k, v in pairs(entries) do
