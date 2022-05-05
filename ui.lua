@@ -8,29 +8,31 @@ if root == nil then
 end
 
 for _, v in pairs(root) do
-  v.Name = (function()
-    local f = CreateFrame('Frame', v)
-    f:SetPoint('TOPLEFT')
-    f:SetSize(160, 20)
-    local fs = f:CreateFontString(nil, 'ARTWORK', 'GameFontNormalSmall')
-    fs:SetAllPoints()
-    fs:SetJustifyH('CENTER')
-    G.DataWatch(v.unit .. '_level', v.unit .. '_name', function(level, name)
-      fs:SetText(level .. ' - ' .. name)
-    end)
-    f.Text = fs
-    local t = f:CreateTexture()
-    t:SetAllPoints()
-    G.DataWatch(v.unit .. '_class', function(class)
-      t:SetColorTexture(GetClassColor(class))
-    end)
-    f.Background = t
-    return f
-  end)()
+  if type(v) == 'table' then
+    v.Name = (function()
+      local f = CreateFrame('Frame', nil, v)
+      f:SetPoint('TOPLEFT')
+      f:SetSize(160, 20)
+      local fs = f:CreateFontString(nil, 'ARTWORK', 'GameFontNormalSmall')
+      fs:SetAllPoints()
+      fs:SetJustifyH('CENTER')
+      G.DataWatch(v.unit .. '_level', v.unit .. '_name', function(level, name)
+        fs:SetText(level .. ' - ' .. (name or ''))
+      end)
+      f.Text = fs
+      local t = f:CreateTexture()
+      t:SetAllPoints()
+      G.DataWatch(v.unit .. '_class', function(class)
+        t:SetColorTexture(GetClassColor(class))
+      end)
+      f.Background = t
+      return f
+    end)()
+  end
 end
 
 root.Clock = (function()
-  local f = CreateFrame('Frame', root)
+  local f = CreateFrame('Frame', nil, root)
   f:SetPoint('TOPRIGHT')
   f:SetSize(30, 12)
   local fs = f:CreateFontString(nil, 'BACKGROUND', 'GameFontNormalSmall')
@@ -57,7 +59,7 @@ root.Hidden = (function()
     _G.TargetFrame,
     _G.TemporaryEnchantFrame,
   }
-  local f = CreateFrame('Frame', root)
+  local f = CreateFrame('Frame', nil, root)
   f:Hide()
   for _, frame in pairs(frames) do
     frame:SetParent(f)

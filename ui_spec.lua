@@ -25,6 +25,7 @@ local function loadUi()
       Target = { unit = 'target' },
     },
     pairs = pairs,
+    type = type,
   }
   globalEnv._G = globalEnv
   local addonEnv = {
