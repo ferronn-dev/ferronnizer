@@ -9,12 +9,21 @@ local function loadUi()
             SetJustifyV = function() end,
           }
         end,
+        CreateTexture = function()
+          return {
+            SetAllPoints = function() end,
+          }
+        end,
         Hide = function() end,
         SetPoint = function() end,
         SetSize = function() end,
       }
     end,
-    FerronnizerRoot = {},
+    FerronnizerRoot = {
+      Focus = { unit = 'focus' },
+      Player = { unit = 'player' },
+      Target = { unit = 'target' },
+    },
     pairs = pairs,
   }
   globalEnv._G = globalEnv

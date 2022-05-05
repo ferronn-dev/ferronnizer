@@ -40,7 +40,6 @@
     <Scripts>
       <OnLoad>
         for event in self.events:gmatch('([^,]+)') do
-          self.Name:RegisterEvent(event)
           self.Health:RegisterEvent(event)
           self.Power:RegisterEvent(event)
           self.Auras:RegisterEvent(event)
@@ -65,36 +64,6 @@
       </OnLeave>
     </Scripts>
     <Frames>
-      <Frame parentKey="Name">
-        <Anchors>
-          <Anchor point="TOPLEFT"/>
-        </Anchors>
-        <Size x="160" y="20"/>
-        <Layers>
-          <Layer>
-            <Texture parentKey="Background" setAllPoints="true"/>
-            <FontString parentKey="Text" inherits="GameFontNormalSmall" justifyH="CENTER" setAllPoints="true"/>
-          </Layer>
-        </Layers>
-        <Scripts>
-          <OnLoad>
-            local unit = self:GetParent().unit
-            self:RegisterEvent('PLAYER_LEVEL_UP')
-            self:RegisterUnitEvent('UNIT_NAME_UPDATE', unit)
-          </OnLoad>
-          <OnEvent>
-            local unit = self:GetParent().unit
-            if not UnitExists(unit) then
-              self.Text:SetText('')
-            else
-              local arg = ...
-              local level = event == 'PLAYER_LEVEL_UP' and arg or UnitLevel(unit)
-              self.Text:SetText(level .. ' - ' .. UnitName(unit))
-              self.Background:SetColorTexture(GetClassColor(UnitClassBase(unit)))
-            end
-          </OnEvent>
-        </Scripts>
-      </Frame>
       <StatusBar parentKey="Health">
         <Anchors>
           <Anchor point="TOPLEFT" x="0" y="-20"/>
