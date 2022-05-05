@@ -3,6 +3,7 @@ local function newDataWatch()
     game_time = '4:20',
     units = {
       player = {
+        class = 'WARRIOR',
         level = 60,
         name = 'PlayerName',
       },
@@ -30,6 +31,9 @@ local function newDataWatch()
     table = table,
     tostring = tostring,
     type = type,
+    UnitClassBase = function(unit)
+      return data.units[unit] and data.units[unit].class
+    end,
     UnitLevel = function(unit)
       return data.units[unit] and data.units[unit].level
     end,
@@ -91,6 +95,19 @@ describe('datawatch', function()
     onUpdate()
     assert.same('PlayerName', player_name)
     assert.Nil(focus_name)
+  end)
+
+  it('handles unit class', function()
+    local watch, onEvent, onUpdate, data = newDataWatch()
+    local player_class = 'foo'
+    watch('player_class', function(class)
+      player_class = class
+    end)
+    assert.same('WARRIOR', player_class)
+    data.units.player.class = 'DRUID'
+    onEvent('PLAYER_LOGIN')
+    onUpdate()
+    assert.same('DRUID', player_class)
   end)
 
   it('handles multiwatch', function()

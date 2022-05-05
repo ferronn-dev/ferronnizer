@@ -29,25 +29,37 @@ local unitTokens = {
   player = {},
   target = { 'PLAYER_TARGET_CHANGED' },
 }
-local unitFuncs = {
-  level = UnitLevel,
-  name = UnitName,
+local unitEntries = {
+  class = {
+    func = UnitClassBase,
+  },
+  level = {
+    func = UnitLevel,
+    event = 'UNIT_NAME_UPDATE',
+  },
+  name = {
+    func = UnitName,
+    event = 'UNIT_NAME_UPDATE',
+  },
 }
 for unit, events in pairs(unitTokens) do
-  for name, func in pairs(unitFuncs) do
+  for name, entry in pairs(unitEntries) do
+    local func = entry.func
     local unconditional = function()
       return true, func(unit)
     end
     local handlers = {
       PLAYER_LOGIN = unconditional,
-      UNIT_NAME_UPDATE = function(u)
+    }
+    if entry.event then
+      handlers[entry.event] = function(u)
         if u ~= unit then
           return false
         else
           return true, func(unit)
         end
-      end,
-    }
+      end
+    end
     for _, event in ipairs(events) do
       handlers[event] = unconditional
     end
