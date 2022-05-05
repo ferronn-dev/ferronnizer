@@ -32,14 +32,23 @@ local unitTokens = {
 local unitEntries = {
   class = {
     func = UnitClassBase,
+    events = {},
+  },
+  health = {
+    func = UnitHealth,
+    events = { 'UNIT_HEALTH', 'UNIT_HEALTH_FREQUENT' },
   },
   level = {
     func = UnitLevel,
-    event = 'UNIT_NAME_UPDATE',
+    events = { 'UNIT_NAME_UPDATE' },
+  },
+  max_health = {
+    func = UnitHealthMax,
+    events = { 'UNIT_MAXHEALTH' },
   },
   name = {
     func = UnitName,
-    event = 'UNIT_NAME_UPDATE',
+    events = { 'UNIT_NAME_UPDATE' },
   },
 }
 for unit, events in pairs(unitTokens) do
@@ -51,8 +60,8 @@ for unit, events in pairs(unitTokens) do
     local handlers = {
       PLAYER_LOGIN = unconditional,
     }
-    if entry.event then
-      handlers[entry.event] = function(u)
+    for _, event in ipairs(entry.events) do
+      handlers[event] = function(u)
         if u ~= unit then
           return false
         else

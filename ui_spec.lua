@@ -17,6 +17,7 @@ local function loadUi()
         Hide = function() end,
         SetPoint = function() end,
         SetSize = function() end,
+        SetStatusBarTexture = function() end,
       }
     end,
     FerronnizerRoot = {

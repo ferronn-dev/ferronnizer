@@ -40,7 +40,6 @@
     <Scripts>
       <OnLoad>
         for event in self.events:gmatch('([^,]+)') do
-          self.Health:RegisterEvent(event)
           self.Power:RegisterEvent(event)
           self.Auras:RegisterEvent(event)
         end
@@ -64,34 +63,6 @@
       </OnLeave>
     </Scripts>
     <Frames>
-      <StatusBar parentKey="Health">
-        <Anchors>
-          <Anchor point="TOPLEFT" x="0" y="-20"/>
-        </Anchors>
-        <Size x="160" y="20"/>
-        <BarTexture file="Interface\Buttons\WHITE8x8"/>
-        <Layers>
-          <Layer>
-            <FontString parentKey="Text" inherits="GameNormalNumberFont" justifyH="CENTER" setAllPoints="true"/>
-          </Layer>
-        </Layers>
-        <Scripts>
-          <OnLoad>
-            local unit = self:GetParent().unit
-            self:RegisterUnitEvent('UNIT_HEALTH', unit)
-            self:RegisterUnitEvent('UNIT_HEALTH_FREQUENT', unit)
-            self:RegisterUnitEvent('UNIT_MAXHEALTH', unit)
-          </OnLoad>
-          <OnEvent>
-            local unit = self:GetParent().unit
-            local value, max = UnitHealth(unit), UnitHealthMax(unit)
-            self:SetMinMaxValues(0, max)
-            self:SetValue(value)
-            self:SetStatusBarColor(GetClassColor(UnitClassBase(unit)))
-            self.Text:SetText(value .. ' / ' .. max)
-          </OnEvent>
-        </Scripts>
-      </StatusBar>
       <StatusBar parentKey="Power">
         <Anchors>
           <Anchor point="TOPLEFT" x="0" y="-40"/>

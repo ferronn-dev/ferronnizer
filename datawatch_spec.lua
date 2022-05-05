@@ -4,6 +4,8 @@ local function newDataWatch()
     units = {
       player = {
         class = 'WARRIOR',
+        health = 3000,
+        healthMax = 3500,
         level = 60,
         name = 'PlayerName',
       },
@@ -33,6 +35,12 @@ local function newDataWatch()
     type = type,
     UnitClassBase = function(unit)
       return data.units[unit] and data.units[unit].class
+    end,
+    UnitHealth = function(unit)
+      return data.units[unit] and data.units[unit].health
+    end,
+    UnitHealthMax = function(unit)
+      return data.units[unit] and data.units[unit].healthMax
     end,
     UnitLevel = function(unit)
       return data.units[unit] and data.units[unit].level

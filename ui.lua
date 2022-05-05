@@ -28,6 +28,29 @@ for _, v in pairs(root) do
       f.Background = t
       return f
     end)()
+    v.Health = (function()
+      local f = CreateFrame('StatusBar', nil, v)
+      f:SetPoint('TOPLEFT', 0, -20)
+      f:SetSize(160, 20)
+      f:SetStatusBarTexture('Interface\\Buttons\\WHITE8x8')
+      G.DataWatch(v.unit .. '_class', function(class)
+        f:SetStatusBarColor(GetClassColor(class))
+      end)
+      G.DataWatch(v.unit .. '_health', function(health)
+        f:SetValue(health)
+      end)
+      G.DataWatch(v.unit .. '_max_health', function(maxHealth)
+        f:SetMinMaxValues(0, maxHealth)
+      end)
+      local fs = f:CreateFontString(nil, 'ARTWORK', 'GameNormalNumberFont')
+      fs:SetAllPoints()
+      fs:SetJustifyH('CENTER')
+      G.DataWatch(v.unit .. '_health', v.unit .. '_max_health', function(health, healthMax)
+        fs:SetText(health .. ' / ' .. healthMax)
+      end)
+      f.Text = fs
+      return f
+    end)()
   end
 end
 
