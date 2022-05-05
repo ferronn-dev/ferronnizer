@@ -8,6 +8,9 @@ local function newDataWatch()
         healthMax = 3500,
         level = 60,
         name = 'PlayerName',
+        power = 50,
+        powerMax = 100,
+        powerType = 'RAGE',
       },
     },
   }
@@ -47,6 +50,15 @@ local function newDataWatch()
     end,
     UnitName = function(unit)
       return data.units[unit] and data.units[unit].name
+    end,
+    UnitPower = function(unit)
+      return data.units[unit] and data.units[unit].power
+    end,
+    UnitPowerMax = function(unit)
+      return data.units[unit] and data.units[unit].powerMax
+    end,
+    UnitPowerType = function(unit)
+      return data.units[unit] and data.units[unit].powerType
     end,
     unpack = unpack,
   }

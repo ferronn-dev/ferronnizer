@@ -51,6 +51,30 @@ for _, v in pairs(root) do
       f.Text = fs
       return f
     end)()
+    v.Power = (function()
+      local f = CreateFrame('StatusBar', nil, v)
+      f:SetPoint('TOPLEFT', 0, -40)
+      f:SetSize(160, 20)
+      f:SetStatusBarTexture('Interface\\Buttons\\WHITE8x8')
+      G.DataWatch(v.unit .. '_power_type', function(powerType)
+        local color = PowerBarColor[powerType or 'MANA']
+        f:SetStatusBarColor(color.r, color.g, color.b)
+      end)
+      G.DataWatch(v.unit .. '_power', function(power)
+        f:SetValue(power)
+      end)
+      G.DataWatch(v.unit .. '_max_power', function(maxPower)
+        f:SetMinMaxValues(0, maxPower)
+      end)
+      local fs = f:CreateFontString(nil, 'ARTWORK', 'GameNormalNumberFont')
+      fs:SetAllPoints()
+      fs:SetJustifyH('CENTER')
+      G.DataWatch(v.unit .. '_power', v.unit .. '_max_power', function(power, powerMax)
+        fs:SetText(power .. ' / ' .. powerMax)
+      end)
+      f.Text = fs
+      return f
+    end)()
   end
 end
 

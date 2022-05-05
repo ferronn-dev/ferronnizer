@@ -46,9 +46,23 @@ local unitEntries = {
     func = UnitHealthMax,
     events = { 'UNIT_MAXHEALTH' },
   },
+  max_power = {
+    func = UnitPowerMax,
+    events = { 'UNIT_POWER_UPDATE' },
+  },
   name = {
     func = UnitName,
     events = { 'UNIT_NAME_UPDATE' },
+  },
+  power = {
+    func = UnitPower,
+    events = { 'UNIT_POWER_UPDATE' },
+  },
+  power_type = {
+    func = function(unit)
+      return select(2, UnitPowerType(unit))
+    end,
+    events = { 'UNIT_POWER_UPDATE' },
   },
 }
 for unit, events in pairs(unitTokens) do
