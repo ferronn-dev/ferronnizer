@@ -105,3 +105,18 @@ root.Hidden = (function()
   end
   return f
 end)()
+
+G.Eventer({
+  PLAYER_ENTERING_WORLD = function()
+    local Quartz3CastBarPlayer = _G.Quartz3CastBarPlayer
+    if Quartz3CastBarPlayer then
+      Quartz3CastBarPlayer:ClearAllPoints()
+      Quartz3CastBarPlayer:SetPoint('BOTTOM', Minimap, 'TOP')
+    else
+      local CastingBarFrame = _G.CastingBarFrame
+      CastingBarFrame.ignoreFramePositionManager = true
+      CastingBarFrame:ClearAllPoints()
+      CastingBarFrame:SetPoint('BOTTOM', 0, 275)
+    end
+  end,
+})

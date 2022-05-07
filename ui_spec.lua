@@ -31,6 +31,7 @@ local function loadUi()
   globalEnv._G = globalEnv
   local addonEnv = {
     DataWatch = function() end,
+    Eventer = function() end,
   }
   setfenv(loadfile('ui.lua'), globalEnv)('', addonEnv)
   return globalEnv.FerronnizerRoot
