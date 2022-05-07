@@ -70,6 +70,31 @@ for _, v in pairs(root) do
   end
 end
 
+if root.Pet then
+  root.Pet.Happiness = (function()
+    -- Adapted from PetFrame.lua
+    local f = CreateFrame('Frame', nil, root.Pet)
+    f:SetPoint('TOPRIGHT', root.Pet, 'TOPLEFT', -10, 0)
+    f:SetSize(24, 23)
+    local t = f:CreateTexture()
+    t:SetAllPoints()
+    t:SetTexture('Interface\\PetPaperDollFrame\\UI-PetHappiness')
+    G.DataWatch('pet_happiness', function(happiness)
+      t:SetTexCoord((function()
+        if happiness == 1 then
+          return 0.375, 0.5625, 0, 0.359375
+        elseif happiness == 2 then
+          return 0.1875, 0.375, 0, 0.359375
+        else
+          return 0, 0.1875, 0, 0.359375
+        end
+      end)())
+    end)
+    f.Texture = t
+    return f
+  end)()
+end
+
 root.Clock = (function()
   local f = CreateFrame('Frame', nil, root)
   f:SetPoint('TOPRIGHT')

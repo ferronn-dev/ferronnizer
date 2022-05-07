@@ -3,6 +3,7 @@ local _, G = ...
 -- TODO update addonmaker
 local hacks = {
   GameTime_GetTime = function() end,
+  GetPetHappiness = function() end,
 }
 for k, v in pairs(hacks) do
   if _G[k] == nil then
@@ -16,6 +17,18 @@ local entries = {
     update = function()
       return true, _G.GameTime_GetTime(false)
     end,
+  },
+  pet_happiness = {
+    init = '',
+    events = {
+      UNIT_HAPPINESS = function(u)
+        if u ~= 'pet' then
+          return false
+        else
+          return true, _G.GetPetHappiness()
+        end
+      end,
+    },
   },
 }
 
