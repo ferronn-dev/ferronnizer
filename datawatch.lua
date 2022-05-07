@@ -21,14 +21,16 @@ local entries = {
 
 local unitTokens = {
   focus = { 'PLAYER_FOCUS_CHANGED' },
-  party1 = { 'GROUP_ROSTER_UPDATE' },
-  party2 = { 'GROUP_ROSTER_UPDATE' },
-  party3 = { 'GROUP_ROSTER_UPDATE' },
-  party4 = { 'GROUP_ROSTER_UPDATE' },
   pet = {},
   player = {},
   target = { 'PLAYER_TARGET_CHANGED' },
 }
+for i = 1, 4 do
+  unitTokens['party' .. i] = { 'GROUP_ROSTER_UPDATE' }
+end
+for i = 1, 40 do
+  unitTokens['nameplate' .. i] = { 'NAME_PLATE_UNIT_ADDED' }
+end
 local unitEntries = {
   class = {
     func = UnitClassBase,

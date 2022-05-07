@@ -25,6 +25,7 @@ deps:
   minimap.lua:
   - util.lua
   nameplates.lua:
+  - datawatch.lua
   - util.lua
   tooltips.lua:
   - util.lua
