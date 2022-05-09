@@ -9,11 +9,14 @@ local function loadUi()
             SetJustifyH = function() end,
             SetJustifyV = function() end,
             SetPoint = function() end,
+            SetSize = function() end,
           }
         end,
         CreateTexture = function()
           return {
             SetAllPoints = function() end,
+            SetPoint = function() end,
+            SetSize = function() end,
             SetTexCoord = function() end,
             SetTexture = function() end,
           }

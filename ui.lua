@@ -105,24 +105,25 @@ for _, uf in ipairs(unitFrames) do
     GameTooltip:Hide()
   end)
 
-  v.Name = (function()
-    local f = CreateFrame('Frame', nil, v)
-    f:SetPoint('TOPLEFT')
-    f:SetSize(160, 20)
-    local fs = f:CreateFontString(nil, 'ARTWORK', 'GameFontNormalSmall')
-    fs:SetAllPoints()
+  v.NameText = (function()
+    local fs = v:CreateFontString(nil, 'ARTWORK', 'GameFontNormalSmall')
+    fs:SetPoint('TOPLEFT')
+    fs:SetSize(160, 20)
     fs:SetJustifyH('CENTER')
     G.DataWatch(unit .. '_level', unit .. '_name', function(level, name)
       fs:SetText(level .. ' - ' .. (name or ''))
     end)
-    f.Text = fs
-    local t = f:CreateTexture()
-    t:SetAllPoints()
+    return fs
+  end)()
+
+  v.NameBackground = (function()
+    local t = v:CreateTexture()
+    t:SetPoint('TOPLEFT')
+    t:SetSize(160, 20)
     G.DataWatch(unit .. '_class', function(class)
       t:SetColorTexture(GetClassColor(class))
     end)
-    f.Background = t
-    return f
+    return t
   end)()
 
   v.Health = (function()
