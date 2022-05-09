@@ -6,6 +6,7 @@ local function loadUi()
         CreateFontString = function()
           return {
             SetAllPoints = function() end,
+            SetFontObject = function() end,
             SetJustifyH = function() end,
             SetJustifyV = function() end,
             SetPoint = function() end,
