@@ -17,8 +17,9 @@ local function loadUi()
           }
         end,
         Hide = function() end,
-        RegisterForClicks = function() end,
         RegisterEvent = function() end,
+        RegisterForClicks = function() end,
+        RegisterUnitEvent = function() end,
         SetAllPoints = function() end,
         SetAlpha = function() end,
         SetAttribute = function() end,
@@ -37,6 +38,7 @@ local function loadUi()
     ipairs = ipairs,
     pairs = pairs,
     RegisterUnitWatch = function() end,
+    table = table,
     type = type,
     unpack = unpack,
   }
