@@ -55,7 +55,7 @@ local unitEntries = {
   },
   level = {
     func = UnitLevel,
-    events = { 'UNIT_NAME_UPDATE' },
+    events = { 'UNIT_LEVEL' },
   },
   max_health = {
     func = UnitHealthMax,
