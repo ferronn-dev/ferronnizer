@@ -8,11 +8,13 @@ local function loadUi()
             SetAllPoints = function() end,
             SetJustifyH = function() end,
             SetJustifyV = function() end,
+            SetPoint = function() end,
           }
         end,
         CreateTexture = function()
           return {
             SetAllPoints = function() end,
+            SetTexCoord = function() end,
             SetTexture = function() end,
           }
         end,
@@ -24,6 +26,7 @@ local function loadUi()
         SetAlpha = function() end,
         SetAttribute = function() end,
         SetPoint = function() end,
+        SetReverse = function() end,
         SetScale = function() end,
         SetScript = function() end,
         SetSize = function() end,

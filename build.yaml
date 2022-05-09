@@ -86,7 +86,6 @@ deps:
   - tooninit.lua
   ui.lua:
   - datawatch.lua
-  - ui.xml
   - util.lua
   vars.lua:
   - util.lua

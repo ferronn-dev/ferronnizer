@@ -179,8 +179,28 @@ for _, uf in ipairs(unitFrames) do
     f.Kids = {}
     for row = 0, 4 do
       for col = 0, 7 do
-        local frame = CreateFrame('Frame', nil, f, 'FerronnizerTemplateAura', row * 8 + col + 1)
+        local frame = CreateFrame('Frame', nil, f, nil, row * 8 + col + 1)
         frame:SetPoint('TOPLEFT', col * 20, row * -20)
+        frame:SetSize(20, 20)
+        frame.Cooldown = CreateFrame('Cooldown', nil, frame, 'CooldownFrameTemplate')
+        frame.Cooldown:SetReverse(true)
+        frame.Icon = frame:CreateTexture(nil, 'ARTWORK')
+        frame.Icon:SetAllPoints()
+        frame.Icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+        frame.Count = frame:CreateFontString(nil, 'ARTWORK', 'NumberFontNormalSmall')
+        frame.Count:SetPoint('BOTTOMRIGHT')
+        frame.Border = frame:CreateTexture(nil, 'OVERLAY')
+        frame.Border:SetAllPoints()
+        frame.Border:SetTexture('Interface\\Buttons\\UI-Debuff-Overlays')
+        frame.Border:SetTexCoord(0.296875, 0.5703125, 0, 0.515625)
+        frame:SetScript('OnEnter', function(self)
+          GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMRIGHT')
+          GameTooltip:SetUnitAura(v.unit, self.Index, self.Filter)
+          GameTooltip:Show()
+        end)
+        frame:SetScript('OnLeave', function()
+          GameTooltip:Hide()
+        end)
         table.insert(f.Kids, frame)
       end
     end
