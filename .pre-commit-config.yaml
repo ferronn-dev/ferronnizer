@@ -2,7 +2,6 @@ repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.0.1
   hooks:
-  - id: check-xml
   - id: check-yaml
   - id: end-of-file-fixer
   - id: trailing-whitespace
@@ -10,10 +9,6 @@ repos:
   rev: v0.12.1
   hooks:
   - id: stylua
-- repo: https://github.com/lsst-ts/pre-commit-xmllint
-  rev: v1.0.0
-  hooks:
-  - id: format-xmllint
 - repo: https://github.com/sqlfluff/sqlfluff
   rev: 0.11.0
   hooks:
