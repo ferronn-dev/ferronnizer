@@ -34,7 +34,7 @@ local entries = {
 
 local unitTokens = {
   focus = { 'PLAYER_FOCUS_CHANGED' },
-  pet = {},
+  pet = { 'UNIT_PET' },
   player = {},
   target = { 'PLAYER_TARGET_CHANGED' },
 }
