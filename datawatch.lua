@@ -51,6 +51,26 @@ local entries = {
   },
 }
 
+local function getAuras(unit, filter)
+  local t = {}
+  local index = 1
+  while true do
+    local _, icon, count, dispelType, duration, expiration = UnitAura(unit, index, filter)
+    if not icon then
+      break
+    end
+    table.insert(t, {
+      count = count,
+      dispelType = dispelType,
+      duration = duration,
+      expiration = expiration,
+      icon = icon,
+    })
+    index = index + 1
+  end
+  return t
+end
+
 local unitTokens = {
   focus = { 'PLAYER_FOCUS_CHANGED' },
   pet = { 'UNIT_PET' },
@@ -64,9 +84,21 @@ for i = 1, 40 do
   unitTokens['nameplate' .. i] = { 'NAME_PLATE_UNIT_ADDED' }
 end
 local unitEntries = {
+  buffs = {
+    func = function(unit)
+      return getAuras(unit, 'HELPFUL')
+    end,
+    events = { 'UNIT_AURA' },
+  },
   class = {
     func = UnitClassBase,
     events = {},
+  },
+  debuffs = {
+    func = function(unit)
+      return getAuras(unit, 'HARMFUL')
+    end,
+    events = { 'UNIT_AURA' },
   },
   health = {
     func = UnitHealth,

@@ -44,6 +44,7 @@ local function newDataWatch()
     table = table,
     tostring = tostring,
     type = type,
+    UnitAura = function() end,
     UnitClassBase = function(unit)
       return data.units[unit] and data.units[unit].class
     end,

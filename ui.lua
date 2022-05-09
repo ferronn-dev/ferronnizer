@@ -29,7 +29,6 @@ local unitFrames = {
     anchor = function()
       return { 'BOTTOMLEFT', root.Player, 'TOPLEFT', 0, 20 }
     end,
-    event = 'GROUP_ROSTER_UPDATE',
     parentKey = 'Party1',
     scale = 0.5,
     unit = 'party1',
@@ -38,7 +37,6 @@ local unitFrames = {
     anchor = function()
       return { 'BOTTOMLEFT', root.Party1, 'TOPLEFT', 0, 20 }
     end,
-    event = 'GROUP_ROSTER_UPDATE',
     parentKey = 'Party2',
     scale = 0.5,
     unit = 'party2',
@@ -47,7 +45,6 @@ local unitFrames = {
     anchor = function()
       return { 'BOTTOMLEFT', root.Party2, 'TOPLEFT', 0, 20 }
     end,
-    event = 'GROUP_ROSTER_UPDATE',
     parentKey = 'Party3',
     scale = 0.5,
     unit = 'party3',
@@ -56,7 +53,6 @@ local unitFrames = {
     anchor = function()
       return { 'BOTTOMLEFT', root.Party3, 'TOPLEFT', 0, 20 }
     end,
-    event = 'GROUP_ROSTER_UPDATE',
     parentKey = 'Party4',
     scale = 0.5,
     unit = 'party4',
@@ -65,7 +61,6 @@ local unitFrames = {
     anchor = function()
       return { 'CENTER', 200, -140 }
     end,
-    event = 'PLAYER_TARGET_CHANGED',
     parentKey = 'Target',
     unit = 'target',
   },
@@ -73,7 +68,6 @@ local unitFrames = {
     anchor = function()
       return { 'CENTER', 0, -160 }
     end,
-    event = 'PLAYER_FOCUS_CHANGED',
     parentKey = 'Focus',
     unit = 'focus',
   },
@@ -169,11 +163,6 @@ for _, uf in ipairs(unitFrames) do
     local f = CreateFrame('Frame', nil, v)
     f:SetPoint('TOPLEFT', 0, -60)
     f:SetSize(160, 100)
-    f:RegisterUnitEvent('UNIT_AURA', unit)
-    f:RegisterEvent('PLAYER_LOGIN')
-    if uf.event then
-      f:RegisterEvent(uf.event)
-    end
     f.Kids = {}
     for row = 0, 4 do
       for col = 0, 7 do
@@ -202,30 +191,30 @@ for _, uf in ipairs(unitFrames) do
         table.insert(f.Kids, frame)
       end
     end
-    f:SetScript('OnEvent', function(self)
-      local index, filter = 1, 'HELPFUL'
-      for _, frame in ipairs(self.Kids) do
-        local _, icon, count, dispelType, duration, expiration = UnitAura(unit, index, filter)
-        if not icon and filter == 'HELPFUL' then
-          index, filter = 1, 'HARMFUL'
-          _, icon, count, dispelType, duration, expiration = UnitAura(unit, index, filter)
+    G.DataWatch(unit .. '_buffs', unit .. '_debuffs', function(buffs, debuffs)
+      local index, auras = 1, buffs
+      for _, frame in ipairs(f.Kids) do
+        local aura = auras[index]
+        if not aura and auras == buffs then
+          index, auras = 1, debuffs
+          aura = auras[index]
         end
-        if not icon then
+        if not aura then
           frame.Index, frame.Filter = nil, nil
           frame:Hide()
         else
-          frame.Index, frame.Filter = index, filter
+          frame.Index, frame.Filter = index, auras == buffs and 'HELPFUL' or 'HARMFUL'
           frame:Show()
-          frame.Icon:SetTexture(icon)
-          frame.Count:SetText(count and count > 0 and count or '')
-          if dispelType then
-            local color = DebuffTypeColor[dispelType]
+          frame.Icon:SetTexture(aura.icon)
+          frame.Count:SetText(aura.count and aura.count > 0 and aura.count or '')
+          if aura.dispelType then
+            local color = DebuffTypeColor[aura.dispelType]
             frame.Border:SetVertexColor(color.r, color.g, color.b)
             frame.Border:Show()
           else
             frame.Border:Hide()
           end
-          frame.Cooldown:SetCooldown(expiration - duration, duration)
+          frame.Cooldown:SetCooldown(aura.expiration - aura.duration, aura.duration)
         end
         index = index + 1
       end
