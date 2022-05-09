@@ -30,6 +30,25 @@ local entries = {
       end,
     },
   },
+  skill_table = {
+    init = {},
+    events = (function()
+      local function compute()
+        local t = {}
+        for i = 1, GetNumSkillLines() do
+          local name, _, _, value = GetSkillLineInfo(i)
+          if name == PROFESSIONS_FIRST_AID then
+            t['firstaid'] = value
+          end
+        end
+        return true, t
+      end
+      return {
+        CHAT_MSG_SKILL = compute,
+        PLAYER_LOGIN = compute,
+      }
+    end)(),
+  },
 }
 
 local unitTokens = {

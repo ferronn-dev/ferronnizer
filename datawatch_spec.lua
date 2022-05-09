@@ -1,6 +1,7 @@
 local function newDataWatch()
   local data = {
     game_time = '4:20',
+    skilllines = {},
     units = {
       player = {
         class = 'WARRIOR',
@@ -30,8 +31,15 @@ local function newDataWatch()
     GameTime_GetTime = function()
       return data.game_time
     end,
+    GetNumSkillLines = function()
+      return #data.skilllines
+    end,
+    GetSkillLineInfo = function(i)
+      return unpack(data.skilllines[i])
+    end,
     ipairs = ipairs,
     pairs = pairs,
+    PROFESSIONS_FIRST_AID = 'First Aid',
     select = select,
     table = table,
     tostring = tostring,
@@ -148,5 +156,28 @@ describe('datawatch', function()
     onUpdate()
     assert.same('Hello', player_name)
     assert.same('4:20', game_time)
+  end)
+
+  it('handles skill_table', function()
+    local watch, onEvent, onUpdate, data = newDataWatch()
+    local skill_table
+    watch('skill_table', function(t)
+      skill_table = t
+    end)
+    assert.same({}, skill_table)
+    data.skilllines = {
+      {},
+      { 'First Aid', nil, nil, 42 },
+    }
+    onEvent('PLAYER_LOGIN')
+    onUpdate()
+    assert.same({ firstaid = 42 }, skill_table)
+    data.skilllines = {
+      {},
+      { 'First Aid', nil, nil, 43 },
+    }
+    onEvent('CHAT_MSG_SKILL')
+    onUpdate()
+    assert.same({ firstaid = 43 }, skill_table)
   end)
 end)
