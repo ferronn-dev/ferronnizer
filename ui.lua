@@ -80,20 +80,19 @@ local unitFrames = {
 }
 
 for _, uf in ipairs(unitFrames) do
+  local unit = uf.unit
   local v = CreateFrame('Button', nil, root, 'SecureUnitButtonTemplate')
   root[uf.parentKey] = v
-  v.unit = uf.unit
   v:SetPoint(unpack(uf.anchor()))
   v:SetSize(160, 60)
   v:SetScale(uf.scale or 1)
-  v:SetAttribute('unit', uf.unit)
+  v:SetAttribute('unit', unit)
   v:SetAttribute('*type1', 'target')
   v:SetAttribute('*type2', 'togglemenu')
   RegisterUnitWatch(v)
   v:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
 
   v:SetScript('OnEnter', function()
-    local unit = uf.unit
     GameTooltip:SetOwner(v, 'ANCHOR_TOP')
     GameTooltip:SetUnit(unit)
     if UnitIsUnit(unit, 'player') then
@@ -113,13 +112,13 @@ for _, uf in ipairs(unitFrames) do
     local fs = f:CreateFontString(nil, 'ARTWORK', 'GameFontNormalSmall')
     fs:SetAllPoints()
     fs:SetJustifyH('CENTER')
-    G.DataWatch(v.unit .. '_level', v.unit .. '_name', function(level, name)
+    G.DataWatch(unit .. '_level', unit .. '_name', function(level, name)
       fs:SetText(level .. ' - ' .. (name or ''))
     end)
     f.Text = fs
     local t = f:CreateTexture()
     t:SetAllPoints()
-    G.DataWatch(v.unit .. '_class', function(class)
+    G.DataWatch(unit .. '_class', function(class)
       t:SetColorTexture(GetClassColor(class))
     end)
     f.Background = t
@@ -131,13 +130,13 @@ for _, uf in ipairs(unitFrames) do
     f:SetPoint('TOPLEFT', 0, -20)
     f:SetSize(160, 20)
     f:SetStatusBarTexture('Interface\\Buttons\\WHITE8x8')
-    G.DataWatch(v.unit .. '_class', function(class)
+    G.DataWatch(unit .. '_class', function(class)
       f:SetStatusBarColor(GetClassColor(class))
     end)
     local fs = f:CreateFontString(nil, 'ARTWORK', 'GameNormalNumberFont')
     fs:SetAllPoints()
     fs:SetJustifyH('CENTER')
-    G.DataWatch(v.unit .. '_health', v.unit .. '_max_health', function(health, healthMax)
+    G.DataWatch(unit .. '_health', unit .. '_max_health', function(health, healthMax)
       f:SetMinMaxValues(0, healthMax)
       f:SetValue(health)
       fs:SetText(health .. ' / ' .. healthMax)
@@ -151,14 +150,14 @@ for _, uf in ipairs(unitFrames) do
     f:SetPoint('TOPLEFT', 0, -40)
     f:SetSize(160, 20)
     f:SetStatusBarTexture('Interface\\Buttons\\WHITE8x8')
-    G.DataWatch(v.unit .. '_power_type', function(powerType)
+    G.DataWatch(unit .. '_power_type', function(powerType)
       local color = PowerBarColor[powerType or 'MANA']
       f:SetStatusBarColor(color.r, color.g, color.b)
     end)
     local fs = f:CreateFontString(nil, 'ARTWORK', 'GameNormalNumberFont')
     fs:SetAllPoints()
     fs:SetJustifyH('CENTER')
-    G.DataWatch(v.unit .. '_power', v.unit .. '_max_power', function(power, powerMax)
+    G.DataWatch(unit .. '_power', unit .. '_max_power', function(power, powerMax)
       f:SetMinMaxValues(0, powerMax)
       f:SetValue(power)
       fs:SetText(power .. ' / ' .. powerMax)
@@ -171,7 +170,7 @@ for _, uf in ipairs(unitFrames) do
     local f = CreateFrame('Frame', nil, v)
     f:SetPoint('TOPLEFT', 0, -60)
     f:SetSize(160, 100)
-    f:RegisterUnitEvent('UNIT_AURA', v.unit)
+    f:RegisterUnitEvent('UNIT_AURA', unit)
     f:RegisterEvent('PLAYER_LOGIN')
     if uf.event then
       f:RegisterEvent(uf.event)
@@ -195,7 +194,7 @@ for _, uf in ipairs(unitFrames) do
         frame.Border:SetTexCoord(0.296875, 0.5703125, 0, 0.515625)
         frame:SetScript('OnEnter', function(self)
           GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMRIGHT')
-          GameTooltip:SetUnitAura(v.unit, self.Index, self.Filter)
+          GameTooltip:SetUnitAura(unit, self.Index, self.Filter)
           GameTooltip:Show()
         end)
         frame:SetScript('OnLeave', function()
@@ -205,7 +204,6 @@ for _, uf in ipairs(unitFrames) do
       end
     end
     f:SetScript('OnEvent', function(self)
-      local unit = self:GetParent().unit
       local index, filter = 1, 'HELPFUL'
       for _, frame in ipairs(self.Kids) do
         local _, icon, count, dispelType, duration, expiration = UnitAura(unit, index, filter)
