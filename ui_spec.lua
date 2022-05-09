@@ -1,7 +1,8 @@
 local function loadUi()
-  local globalEnv = {
-    CreateFrame = function()
-      return {
+  local globalEnv
+  globalEnv = {
+    CreateFrame = function(_, name)
+      local f = {
         CreateFontString = function()
           return {
             SetAllPoints = function() end,
@@ -12,21 +13,32 @@ local function loadUi()
         CreateTexture = function()
           return {
             SetAllPoints = function() end,
+            SetTexture = function() end,
           }
         end,
         Hide = function() end,
+        RegisterForClicks = function() end,
+        RegisterEvent = function() end,
+        SetAllPoints = function() end,
+        SetAlpha = function() end,
+        SetAttribute = function() end,
         SetPoint = function() end,
+        SetScale = function() end,
+        SetScript = function() end,
         SetSize = function() end,
         SetStatusBarTexture = function() end,
       }
+      if name then
+        globalEnv[name] = f
+      end
+      return f
     end,
-    FerronnizerRoot = {
-      Focus = { unit = 'focus' },
-      Player = { unit = 'player' },
-      Target = { unit = 'target' },
-    },
+    GetXPExhaustion = function() end,
+    ipairs = ipairs,
     pairs = pairs,
+    RegisterUnitWatch = function() end,
     type = type,
+    unpack = unpack,
   }
   globalEnv._G = globalEnv
   local addonEnv = {

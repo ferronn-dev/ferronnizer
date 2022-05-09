@@ -35,157 +35,52 @@
       </OnLeave>
     </Scripts>
   </Frame>
-  <Button name="FerronnizerTemplateUnitButton" inherits="SecureUnitButtonTemplate" virtual="true" registerForClicks="LeftButtonUp,RightButtonUp">
-    <Size x="160" y="60"/>
+  <Frame name="FerronnizerTemplateAuras" virtual="true">
+    <Anchors>
+      <Anchor point="TOPLEFT" x="0" y="-60"/>
+    </Anchors>
+    <Size x="160" y="100"/>
     <Scripts>
       <OnLoad>
-        for event in self.events:gmatch('([^,]+)') do
-          self.Auras:RegisterEvent(event)
+        self:RegisterUnitEvent('UNIT_AURA', self:GetParent().unit)
+        self.Kids = {}
+        for row = 0, 4 do
+          for col = 0, 7 do
+            local frame = CreateFrame('Frame', nil, self, 'FerronnizerTemplateAura', row * 8 + col + 1)
+            frame:SetPoint('TOPLEFT', col * 20, row * -20)
+            table.insert(self.Kids, frame)
+          end
         end
-        self:SetAttribute('unit', self.unit)
-        self:SetAttribute('*type1', 'target')
-        self:SetAttribute('*type2', 'togglemenu')
-        RegisterUnitWatch(self)
       </OnLoad>
-      <OnEnter>
-        local unit = self.unit
-        GameTooltip:SetOwner(self, 'ANCHOR_TOP')
-        GameTooltip:SetUnit(unit)
-        if UnitIsUnit(unit, 'player') then
-          GameTooltip:AddLine(('XP: %d/%d'):format(UnitXP(unit), UnitXPMax(unit)))
-          GameTooltip:AddLine(('Rest: %s'):format(tostring(GetXPExhaustion() or 'none')))
+      <OnEvent>
+        local unit = self:GetParent().unit
+        local index, filter = 1, 'HELPFUL'
+        for _, frame in ipairs(self.Kids) do
+          local _, icon, count, dispelType, duration, expiration = UnitAura(unit, index, filter)
+          if not icon and filter == 'HELPFUL' then
+            index, filter = 1, 'HARMFUL'
+            _, icon, count, dispelType, duration, expiration = UnitAura(unit, index, filter)
+          end
+          if not icon then
+            frame.Index, frame.Filter = nil, nil
+            frame:Hide()
+          else
+            frame.Index, frame.Filter = index, filter
+            frame:Show()
+            frame.Icon:SetTexture(icon)
+            frame.Count:SetText(count and count &gt; 0 and count or '')
+            if dispelType then
+              local color = DebuffTypeColor[dispelType]
+              frame.Border:SetVertexColor(color.r, color.g, color.b)
+              frame.Border:Show()
+            else
+              frame.Border:Hide()
+            end
+            frame.Cooldown:SetCooldown(expiration - duration, duration)
+          end
+          index = index + 1
         end
-        GameTooltip:Show()
-      </OnEnter>
-      <OnLeave>
-        GameTooltip:Hide()
-      </OnLeave>
+      </OnEvent>
     </Scripts>
-    <Frames>
-      <Frame parentKey="Auras">
-        <Anchors>
-          <Anchor point="TOPLEFT" x="0" y="-60"/>
-        </Anchors>
-        <Size x="160" y="100"/>
-        <Scripts>
-          <OnLoad>
-            self:RegisterUnitEvent('UNIT_AURA', self:GetParent().unit)
-            self.Kids = {}
-            for row = 0, 4 do
-              for col = 0, 7 do
-                local frame = CreateFrame('Frame', nil, self, 'FerronnizerTemplateAura', row * 8 + col + 1)
-                frame:SetPoint('TOPLEFT', col * 20, row * -20)
-                table.insert(self.Kids, frame)
-              end
-            end
-          </OnLoad>
-          <OnEvent>
-            local unit = self:GetParent().unit
-            local index, filter = 1, 'HELPFUL'
-            for _, frame in ipairs(self.Kids) do
-              local _, icon, count, dispelType, duration, expiration = UnitAura(unit, index, filter)
-              if not icon and filter == 'HELPFUL' then
-                index, filter = 1, 'HARMFUL'
-                _, icon, count, dispelType, duration, expiration = UnitAura(unit, index, filter)
-              end
-              if not icon then
-                frame.Index, frame.Filter = nil, nil
-                frame:Hide()
-              else
-                frame.Index, frame.Filter = index, filter
-                frame:Show()
-                frame.Icon:SetTexture(icon)
-                frame.Count:SetText(count and count &gt; 0 and count or '')
-                if dispelType then
-                  local color = DebuffTypeColor[dispelType]
-                  frame.Border:SetVertexColor(color.r, color.g, color.b)
-                  frame.Border:Show()
-                else
-                  frame.Border:Hide()
-                end
-                frame.Cooldown:SetCooldown(expiration - duration, duration)
-              end
-              index = index + 1
-            end
-          </OnEvent>
-        </Scripts>
-      </Frame>
-    </Frames>
-  </Button>
-  <Frame name="FerronnizerRoot" parent="UIParent" setAllPoints="true" alpha="0.75">
-    <Frames>
-      <Button parentKey="Player" inherits="FerronnizerTemplateUnitButton">
-        <Anchors>
-          <Anchor point="CENTER" x="-200" y="-140"/>
-        </Anchors>
-        <KeyValues>
-          <KeyValue key="events" value="PLAYER_LOGIN"/>
-          <KeyValue key="unit" value="player"/>
-        </KeyValues>
-      </Button>
-      <Button parentKey="Pet" inherits="FerronnizerTemplateUnitButton" scale="0.5">
-        <Anchors>
-          <Anchor point="TOPRIGHT" relativeKey="$parent.Player" relativePoint="TOPLEFT" x="-20"/>
-        </Anchors>
-        <KeyValues>
-          <KeyValue key="events" value="PLAYER_LOGIN"/>
-          <KeyValue key="unit" value="pet"/>
-        </KeyValues>
-      </Button>
-      <Button parentKey="Party1" inherits="FerronnizerTemplateUnitButton" scale="0.5">
-        <Anchors>
-          <Anchor point="BOTTOMLEFT" relativeKey="$parent.Player" relativePoint="TOPLEFT" y="20"/>
-        </Anchors>
-        <KeyValues>
-          <KeyValue key="events" value="PLAYER_LOGIN,GROUP_ROSTER_UPDATE"/>
-          <KeyValue key="unit" value="party1"/>
-        </KeyValues>
-      </Button>
-      <Button parentKey="Party2" inherits="FerronnizerTemplateUnitButton" scale="0.5">
-        <Anchors>
-          <Anchor point="BOTTOMLEFT" relativeKey="$parent.Party1" relativePoint="TOPLEFT" y="20"/>
-        </Anchors>
-        <KeyValues>
-          <KeyValue key="events" value="PLAYER_LOGIN,GROUP_ROSTER_UPDATE"/>
-          <KeyValue key="unit" value="party2"/>
-        </KeyValues>
-      </Button>
-      <Button parentKey="Party3" inherits="FerronnizerTemplateUnitButton" scale="0.5">
-        <Anchors>
-          <Anchor point="BOTTOMLEFT" relativeKey="$parent.Party2" relativePoint="TOPLEFT" y="20"/>
-        </Anchors>
-        <KeyValues>
-          <KeyValue key="events" value="PLAYER_LOGIN,GROUP_ROSTER_UPDATE"/>
-          <KeyValue key="unit" value="party3"/>
-        </KeyValues>
-      </Button>
-      <Button parentKey="Party4" inherits="FerronnizerTemplateUnitButton" scale="0.5">
-        <Anchors>
-          <Anchor point="BOTTOMLEFT" relativeKey="$parent.Party3" relativePoint="TOPLEFT" y="20"/>
-        </Anchors>
-        <KeyValues>
-          <KeyValue key="events" value="PLAYER_LOGIN,GROUP_ROSTER_UPDATE"/>
-          <KeyValue key="unit" value="party4"/>
-        </KeyValues>
-      </Button>
-      <Button parentKey="Target" inherits="FerronnizerTemplateUnitButton">
-        <Anchors>
-          <Anchor point="CENTER" x="200" y="-140"/>
-        </Anchors>
-        <KeyValues>
-          <KeyValue key="events" value="PLAYER_LOGIN,PLAYER_TARGET_CHANGED"/>
-          <KeyValue key="unit" value="target"/>
-        </KeyValues>
-      </Button>
-      <Button parentKey="Focus" inherits="FerronnizerTemplateUnitButton">
-        <Anchors>
-          <Anchor point="CENTER" y="-160"/>
-        </Anchors>
-        <KeyValues>
-          <KeyValue key="events" value="PLAYER_LOGIN,PLAYER_FOCUS_CHANGED"/>
-          <KeyValue key="unit" value="focus"/>
-        </KeyValues>
-      </Button>
-    </Frames>
   </Frame>
 </Ui>
