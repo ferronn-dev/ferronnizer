@@ -220,6 +220,18 @@ for _, uf in ipairs(unitFrames) do
   end)()
 end
 
+root.Player.Health.Resting = (function()
+  local t = root.Player.Health:CreateTexture(nil, 'OVERLAY')
+  t:SetTexture('Interface\\CharacterFrame\\UI-StateIcon')
+  t:SetTexCoord(0, 0.5, 0, 0.421875)
+  t:SetPoint('TOPLEFT')
+  t:SetSize(31, 33)
+  G.DataWatch('player_resting', function(resting)
+    t:SetShown(resting)
+  end)
+  return t
+end)()
+
 root.Pet.Happiness = (function()
   -- Adapted from PetFrame.lua
   local t = root.Pet:CreateTexture()

@@ -4,6 +4,7 @@ local _, G = ...
 local hacks = {
   GameTime_GetTime = function() end,
   GetPetHappiness = function() end,
+  IsResting = function() end,
 }
 for k, v in pairs(hacks) do
   if _G[k] == nil then
@@ -27,6 +28,14 @@ local entries = {
         else
           return true, _G.GetPetHappiness()
         end
+      end,
+    },
+  },
+  player_resting = {
+    init = _G.IsResting(),
+    events = {
+      PLAYER_UPDATE_RESTING = function()
+        return true, _G.IsResting()
       end,
     },
   },
