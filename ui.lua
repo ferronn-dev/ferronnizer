@@ -7,14 +7,14 @@ root:SetAlpha(0.75)
 local unitFrames = {
   {
     anchor = function()
-      return { 'CENTER', -200, -140 }
+      return 'CENTER', -200, -140
     end,
     parentKey = 'Player',
     unit = 'player',
   },
   {
     anchor = function()
-      return { 'TOPRIGHT', root.Player, 'TOPLEFT', -20, 0 }
+      return 'TOPRIGHT', root.Player, 'TOPLEFT', -20, 0
     end,
     parentKey = 'Pet',
     scale = 0.5,
@@ -22,7 +22,7 @@ local unitFrames = {
   },
   {
     anchor = function()
-      return { 'BOTTOMLEFT', root.Player, 'TOPLEFT', 0, 20 }
+      return 'BOTTOMLEFT', root.Player, 'TOPLEFT', 0, 20
     end,
     parentKey = 'Party1',
     scale = 0.5,
@@ -30,7 +30,7 @@ local unitFrames = {
   },
   {
     anchor = function()
-      return { 'BOTTOMLEFT', root.Party1, 'TOPLEFT', 0, 20 }
+      return 'BOTTOMLEFT', root.Party1, 'TOPLEFT', 0, 20
     end,
     parentKey = 'Party2',
     scale = 0.5,
@@ -38,7 +38,7 @@ local unitFrames = {
   },
   {
     anchor = function()
-      return { 'BOTTOMLEFT', root.Party2, 'TOPLEFT', 0, 20 }
+      return 'BOTTOMLEFT', root.Party2, 'TOPLEFT', 0, 20
     end,
     parentKey = 'Party3',
     scale = 0.5,
@@ -46,7 +46,7 @@ local unitFrames = {
   },
   {
     anchor = function()
-      return { 'BOTTOMLEFT', root.Party3, 'TOPLEFT', 0, 20 }
+      return 'BOTTOMLEFT', root.Party3, 'TOPLEFT', 0, 20
     end,
     parentKey = 'Party4',
     scale = 0.5,
@@ -54,14 +54,14 @@ local unitFrames = {
   },
   {
     anchor = function()
-      return { 'CENTER', 200, -140 }
+      return 'CENTER', 200, -140
     end,
     parentKey = 'Target',
     unit = 'target',
   },
   {
     anchor = function()
-      return { 'CENTER', 0, -160 }
+      return 'CENTER', 0, -160
     end,
     parentKey = 'Focus',
     unit = 'focus',
@@ -72,7 +72,7 @@ for _, uf in ipairs(unitFrames) do
   local unit = uf.unit
   local v = CreateFrame('Button', nil, root, 'SecureUnitButtonTemplate')
   root[uf.parentKey] = v
-  v:SetPoint(unpack(uf.anchor()))
+  v:SetPoint(uf.anchor())
   v:SetSize(160, 60)
   v:SetScale(uf.scale or 1)
   v:SetAttribute('unit', unit)
