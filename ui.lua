@@ -111,7 +111,7 @@ for _, uf in ipairs(unitFrames) do
 
   v.Health.Name = (function()
     local fs = v.Health:CreateFontString()
-    fs:SetFontObject('GameFontNormalSmall')
+    fs:SetFontObject('GameFontDisable')
     fs:SetPoint('TOPLEFT', v.Health)
     fs:SetPoint('BOTTOMRIGHT', v.Health, 'RIGHT')
     fs:SetJustifyH('CENTER')
@@ -123,7 +123,7 @@ for _, uf in ipairs(unitFrames) do
 
   v.Health.Text = (function()
     local fs = v.Health:CreateFontString()
-    fs:SetFontObject('GameNormalNumberFont')
+    fs:SetFontObject('GameFontDisable')
     fs:SetPoint('TOPLEFT', v.Health, 'LEFT')
     fs:SetPoint('BOTTOMRIGHT', v.Health)
     fs:SetJustifyH('CENTER')
@@ -142,7 +142,8 @@ for _, uf in ipairs(unitFrames) do
       local color = PowerBarColor[powerType or 'MANA']
       f:SetStatusBarColor(color.r, color.g, color.b)
     end)
-    local fs = f:CreateFontString(nil, 'ARTWORK', 'GameNormalNumberFont')
+    local fs = f:CreateFontString()
+    fs:SetFontObject('GameFontDisable')
     fs:SetAllPoints()
     fs:SetJustifyH('CENTER')
     G.DataWatch(unit .. '_power', unit .. '_max_power', function(power, powerMax)
@@ -169,7 +170,8 @@ for _, uf in ipairs(unitFrames) do
         frame.Icon = frame:CreateTexture(nil, 'ARTWORK')
         frame.Icon:SetAllPoints()
         frame.Icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-        frame.Count = frame:CreateFontString(nil, 'ARTWORK', 'NumberFontNormalSmall')
+        frame.Count = frame:CreateFontString()
+        frame.Count:SetFontObject('NumberFontNormalSmall')
         frame.Count:SetPoint('BOTTOMRIGHT')
         frame.Border = frame:CreateTexture(nil, 'OVERLAY')
         frame.Border:SetAllPoints()
