@@ -1,10 +1,5 @@
 local _, G = ...
 
--- TODO remove this addonmaker workaround
-if not _G.GetXPExhaustion then
-  return
-end
-
 local root = CreateFrame('Frame', 'FerronnizerRoot', UIParent)
 root:SetAllPoints()
 root:SetAlpha(0.75)
