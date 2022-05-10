@@ -220,6 +220,18 @@ for _, uf in ipairs(unitFrames) do
   end)()
 end
 
+root.Player.Health.OnHateList = (function()
+  local t = root.Player.Health:CreateTexture(nil, 'OVERLAY')
+  t:SetTexture('Interface\\CharacterFrame\\UI-StateIcon')
+  t:SetTexCoord(0.5, 1.0, 0, 0.484375)
+  t:SetPoint('TOPRIGHT')
+  t:SetSize(32, 32)
+  G.DataWatch('player_on_hate_list', function(onHateList)
+    t:SetShown(onHateList)
+  end)
+  return t
+end)()
+
 root.Player.Health.Resting = (function()
   local t = root.Player.Health:CreateTexture(nil, 'OVERLAY')
   t:SetTexture('Interface\\CharacterFrame\\UI-StateIcon')

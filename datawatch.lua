@@ -31,6 +31,17 @@ local entries = {
       end,
     },
   },
+  player_on_hate_list = {
+    init = false,
+    events = {
+      PLAYER_REGEN_DISABLED = function()
+        return true, true
+      end,
+      PLAYER_REGEN_ENABLED = function()
+        return true, false
+      end,
+    },
+  },
   player_resting = {
     init = _G.IsResting(),
     events = {
