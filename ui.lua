@@ -225,11 +225,9 @@ end
 
 root.Pet.Happiness = (function()
   -- Adapted from PetFrame.lua
-  local f = CreateFrame('Frame', nil, root.Pet)
-  f:SetPoint('TOPRIGHT', root.Pet, 'TOPLEFT', -10, 0)
-  f:SetSize(24, 23)
-  local t = f:CreateTexture()
-  t:SetAllPoints()
+  local t = root.Pet:CreateTexture()
+  t:SetPoint('TOPRIGHT', root.Pet, 'TOPLEFT', -10, 0)
+  t:SetSize(24, 23)
   t:SetTexture('Interface\\PetPaperDollFrame\\UI-PetHappiness')
   G.DataWatch('pet_happiness', function(happiness)
     t:SetTexCoord((function()
@@ -242,8 +240,7 @@ root.Pet.Happiness = (function()
       end
     end)())
   end)
-  f.Texture = t
-  return f
+  return t
 end)()
 
 root.Clock = (function()
