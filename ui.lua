@@ -84,7 +84,7 @@ for _, uf in ipairs(unitFrames) do
   v:SetScript('OnEnter', function()
     GameTooltip:SetOwner(v, 'ANCHOR_TOP')
     GameTooltip:SetUnit(unit)
-    if UnitIsUnit(unit, 'player') then
+    if UnitIsUnit(unit, 'player') and UnitLevel('player') < _G.GetMaxPlayerLevel() then
       GameTooltip:AddLine(('XP: %d/%d'):format(UnitXP(unit), UnitXPMax(unit)))
       GameTooltip:AddLine(('Rest: %s'):format(tostring(_G.GetXPExhaustion() or 'none')))
     end
