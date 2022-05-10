@@ -247,18 +247,15 @@ root.Pet.Happiness = (function()
 end)()
 
 root.Clock = (function()
-  local f = CreateFrame('Frame', nil, root)
-  f:SetPoint('TOPRIGHT')
-  f:SetSize(30, 12)
-  local fs = f:CreateFontString(nil, 'BACKGROUND', 'GameFontNormalSmall')
-  fs:SetAllPoints()
+  local fs = root:CreateFontString()
+  fs:SetFontObject('GameFontNormalSmall')
+  fs:SetPoint('TOPRIGHT')
   fs:SetJustifyH('RIGHT')
   fs:SetJustifyV('TOP')
   G.DataWatch('game_time', function(s)
     fs:SetText(s)
   end)
-  f.Text = fs
-  return f
+  return fs
 end)()
 
 root.Hidden = (function()
