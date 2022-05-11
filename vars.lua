@@ -85,6 +85,7 @@ local cvars = {
   statusText = 1,
   statusTextDisplay = 'NUMERIC',
   taintlog = 1,
+  timeMgrUseLocalTime = 1,
   UnitNameEnemyMinionName = 1,
   UnitNameEnemyPlayerName = 1,
   UnitNameFriendlyMinionName = 1,
