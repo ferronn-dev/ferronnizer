@@ -25,7 +25,6 @@ local unitFrames = {
       return 'BOTTOMLEFT', root.Player, 'TOPLEFT', 0, 20
     end,
     parentKey = 'Party1',
-    scale = 0.5,
     unit = 'party1',
   },
   {
@@ -33,7 +32,6 @@ local unitFrames = {
       return 'BOTTOMLEFT', root.Party1, 'TOPLEFT', 0, 20
     end,
     parentKey = 'Party2',
-    scale = 0.5,
     unit = 'party2',
   },
   {
@@ -41,7 +39,6 @@ local unitFrames = {
       return 'BOTTOMLEFT', root.Party2, 'TOPLEFT', 0, 20
     end,
     parentKey = 'Party3',
-    scale = 0.5,
     unit = 'party3',
   },
   {
@@ -49,7 +46,6 @@ local unitFrames = {
       return 'BOTTOMLEFT', root.Party3, 'TOPLEFT', 0, 20
     end,
     parentKey = 'Party4',
-    scale = 0.5,
     unit = 'party4',
   },
   {
