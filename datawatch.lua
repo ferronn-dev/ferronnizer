@@ -258,6 +258,26 @@ frame:SetScript('OnUpdate', function()
   end
 end)
 
+local numFrameWatches = 0
+
+function G.AddFrameWatch(f)
+  assert(f:GetScript('OnEnter') == nil)
+  assert(f:GetScript('OnLeave') == nil)
+  numFrameWatches = numFrameWatches + 1
+  local tag = '_framewatch_' .. numFrameWatches
+  watches[tag] = {}
+  values[tag] = false
+  f:SetScript('OnEnter', function()
+    values[tag] = true
+    pending[tag] = true
+  end)
+  f:SetScript('OnLeave', function()
+    values[tag] = false
+    pending[tag] = true
+  end)
+  return tag
+end
+
 function G.DataWatch(...)
   local n = select('#', ...)
   local func = select(n, ...)

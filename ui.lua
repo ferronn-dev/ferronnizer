@@ -4,6 +4,25 @@ local root = CreateFrame('Frame', 'FerronnizerRoot', UIParent)
 root:SetAllPoints()
 root:SetAlpha(0.75)
 
+local function tooltipify(frame, anchor, ...)
+  local n = select('#', ...)
+  local fn = select(n, ...)
+  local args = {}
+  for i = 1, n - 1 do
+    table.insert(args, (select(i, ...)))
+  end
+  table.insert(args, function(mouseover, ...)
+    local tooltip = GameTooltip
+    if mouseover then
+      tooltip:SetOwner(frame, anchor)
+      fn(tooltip, ...)
+    elseif tooltip:IsOwned(frame) then
+      tooltip:Hide()
+    end
+  end)
+  G.DataWatch(G.AddFrameWatch(frame), unpack(args))
+end
+
 local unitFrames = {
   {
     anchor = function()
@@ -77,18 +96,27 @@ for _, uf in ipairs(unitFrames) do
   RegisterUnitWatch(v)
   v:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
 
-  v:SetScript('OnEnter', function()
-    GameTooltip:SetOwner(v, 'ANCHOR_TOP')
-    GameTooltip:SetUnit(unit)
-    if UnitIsUnit(unit, 'player') and UnitLevel('player') < _G.GetMaxPlayerLevel() then
-      GameTooltip:AddLine(('XP: %d/%d'):format(UnitXP(unit), UnitXPMax(unit)))
-      GameTooltip:AddLine(('Rest: %s'):format(tostring(_G.GetXPExhaustion() or 'none')))
-    end
-    GameTooltip:Show()
-  end)
-  v:SetScript('OnLeave', function()
-    GameTooltip:Hide()
-  end)
+  if unit == 'player' then
+    tooltipify(
+      v,
+      'ANCHOR_TOP',
+      'player_level',
+      'max_player_level',
+      'player_xp',
+      'player_max_xp',
+      function(tooltip, level, levelMax, xp, xpMax)
+        tooltip:SetUnit(unit)
+        if level < levelMax then
+          tooltip:AddLine(('XP: %d/%d'):format(xp, xpMax))
+          tooltip:AddLine(('Rest: %s'):format(tostring(_G.GetXPExhaustion() or 'none')))
+        end
+      end
+    )
+  else
+    tooltipify(v, 'ANCHOR_TOP', function(tooltip)
+      tooltip:SetUnit(unit)
+    end)
+  end
 
   v.Health = (function()
     local f = CreateFrame('StatusBar', nil, v)

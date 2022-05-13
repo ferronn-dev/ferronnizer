@@ -45,12 +45,14 @@ local function loadUi()
     ipairs = ipairs,
     pairs = pairs,
     RegisterUnitWatch = function() end,
+    select = select,
     table = table,
     type = type,
     unpack = unpack,
   }
   globalEnv._G = globalEnv
   local addonEnv = {
+    AddFrameWatch = function() end,
     DataWatch = function() end,
     Eventer = function() end,
   }
