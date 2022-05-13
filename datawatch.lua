@@ -136,6 +136,11 @@ local unitEntries = {
     func = UnitPowerMax,
     events = { 'UNIT_POWER_UPDATE' },
   },
+  max_xp = {
+    func = UnitXPMax,
+    events = { 'PLAYER_XP_UPDATE' },
+    units = { player = true },
+  },
   name = {
     func = UnitName,
     events = { 'UNIT_NAME_UPDATE' },
@@ -150,32 +155,39 @@ local unitEntries = {
     end,
     events = { 'UNIT_POWER_UPDATE' },
   },
+  xp = {
+    func = UnitXP,
+    events = { 'PLAYER_XP_UPDATE' },
+    units = { player = true },
+  },
 }
 for unit, events in pairs(unitTokens) do
   for name, entry in pairs(unitEntries) do
-    local func = entry.func
-    local unconditional = function()
-      return true, func(unit)
-    end
-    local handlers = {
-      PLAYER_LOGIN = unconditional,
-    }
-    for _, event in ipairs(entry.events) do
-      handlers[event] = function(u)
-        if u ~= unit then
-          return false
-        else
-          return true, func(unit)
+    if not entry.units or entry.units[unit] then
+      local func = entry.func
+      local unconditional = function()
+        return true, func(unit)
+      end
+      local handlers = {
+        PLAYER_LOGIN = unconditional,
+      }
+      for _, event in ipairs(entry.events) do
+        handlers[event] = function(u)
+          if u ~= unit then
+            return false
+          else
+            return true, func(unit)
+          end
         end
       end
+      for _, event in ipairs(events) do
+        handlers[event] = unconditional
+      end
+      entries[unit .. '_' .. name] = {
+        init = func(unit),
+        events = handlers,
+      }
     end
-    for _, event in ipairs(events) do
-      handlers[event] = unconditional
-    end
-    entries[unit .. '_' .. name] = {
-      init = func(unit),
-      events = handlers,
-    }
   end
 end
 

@@ -69,6 +69,12 @@ local function newDataWatch()
     UnitPowerType = function(unit)
       return data.units[unit] and data.units[unit].powerType
     end,
+    UnitXP = function(unit)
+      return data.units[unit] and data.units[unit].xp
+    end,
+    UnitXPMax = function(unit)
+      return data.units[unit] and data.units[unit].xpMax
+    end,
     unpack = unpack,
   }
   globalEnv._G = globalEnv
