@@ -3,6 +3,7 @@ local _, G = ...
 -- TODO update addonmaker
 local hacks = {
   GameTime_GetTime = function() end,
+  GetMaxPlayerLevel = function() end,
   GetPetHappiness = function() end,
   IsResting = function() end,
 }
@@ -18,6 +19,14 @@ local entries = {
     update = function()
       return true, _G.GameTime_GetTime(false)
     end,
+  },
+  max_player_level = {
+    init = _G.GetMaxPlayerLevel(),
+    events = {
+      PLAYER_MAX_LEVEL_UPDATE = function()
+        return true, _G.GetMaxPlayerLevel()
+      end,
+    },
   },
   pet_happiness = {
     init = '',
