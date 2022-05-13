@@ -16,6 +16,7 @@ local function tooltipify(frame, anchor, ...)
     if mouseover then
       tooltip:SetOwner(frame, anchor)
       fn(tooltip, ...)
+      tooltip:Show()
     elseif tooltip:IsOwned(frame) then
       tooltip:Hide()
     end
