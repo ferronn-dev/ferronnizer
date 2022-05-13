@@ -120,6 +120,9 @@ G.AddClassActionSpec('Vanilla', 8, {
   [43] = {
     mount = true,
   },
+  [44] = {
+    bandage = true,
+  },
   [45] = {
     eat = true,
   },
