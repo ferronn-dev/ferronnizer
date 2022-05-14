@@ -5,6 +5,7 @@ local hacks = {
   GameTime_GetTime = function() end,
   GetMaxPlayerLevel = function() end,
   GetPetHappiness = function() end,
+  GetServerTime = function() end,
   IsResting = function() end,
 }
 for k, v in pairs(hacks) do
@@ -58,6 +59,12 @@ local entries = {
         return true, _G.IsResting()
       end,
     },
+  },
+  server_time = {
+    init = GetServerTime(),
+    update = function()
+      return true, GetServerTime()
+    end,
   },
   skill_table = {
     init = {},
