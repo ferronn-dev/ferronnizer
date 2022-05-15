@@ -7,6 +7,7 @@ local hacks = {
   GetPetHappiness = function() end,
   GetServerTime = function() end,
   IsResting = function() end,
+  UnitGetIncomingHeals = function() end,
 }
 for k, v in pairs(hacks) do
   if _G[k] == nil then
@@ -139,6 +140,10 @@ local unitEntries = {
   health = {
     func = UnitHealth,
     events = { 'UNIT_HEALTH', 'UNIT_HEALTH_FREQUENT' },
+  },
+  incoming_heals = {
+    func = _G.UnitGetIncomingHeals,
+    events = { 'UNIT_HEAL_PREDICTION' },
   },
   level = {
     func = UnitLevel,
