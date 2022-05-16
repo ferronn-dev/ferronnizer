@@ -10,6 +10,7 @@ local hacks = {
   UnitGetIncomingHeals = function()
     return 0
   end,
+  UnitIsConnected = function() end,
 }
 for k, v in pairs(hacks) do
   if _G[k] == nil then
@@ -132,6 +133,12 @@ local unitEntries = {
   class = {
     func = UnitClassBase,
     events = {},
+  },
+  connected = {
+    func = function(unit)
+      return _G.UnitIsConnected(unit) ~= false
+    end,
+    events = { 'UNIT_CONNECTION' },
   },
   debuffs = {
     func = function(unit)

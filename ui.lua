@@ -141,7 +141,7 @@ for _, uf in ipairs(unitFrames) do
     t:SetTexture('Interface\\Buttons\\WHITE8x8')
     t:SetVertexColor(1, 1, 1)
     G.DataWatch(unit .. '_incoming_heals', unit .. '_max_health', function(incomingHeals, healthMax)
-      if incomingHeals == 0 or healthMax == 0 then
+      if not incomingHeals or incomingHeals == 0 or not healthMax or healthMax == 0 then
         t:Hide()
       else
         t:SetWidth(160 * incomingHeals / healthMax)
@@ -171,8 +171,8 @@ for _, uf in ipairs(unitFrames) do
     fs:SetPoint('TOPRIGHT', v.Name, 'BOTTOMRIGHT')
     fs:SetHeight(20)
     fs:SetJustifyH('CENTER')
-    G.DataWatch(unit .. '_health', unit .. '_max_health', function(health, healthMax)
-      fs:SetText(health .. ' / ' .. healthMax)
+    G.DataWatch(unit .. '_health', unit .. '_max_health', unit .. '_connected', function(health, healthMax, isConnected)
+      fs:SetText(isConnected and health .. ' / ' .. healthMax or '<Offline>')
     end)
     return fs
   end)()
