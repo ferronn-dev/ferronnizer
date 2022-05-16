@@ -367,3 +367,21 @@ G.Eventer({
     end
   end,
 })
+
+if _G.ChatFrame1 then
+  local lastxp, lastxpmax
+  G.DataWatch('player_xp', 'player_max_xp', function(xp, xpmax)
+    local delta
+    if lastxpmax == nil then
+      delta = 0
+    elseif lastxpmax == xpmax then
+      delta = xp - lastxp
+    else
+      delta = lastxpmax - lastxp + xp
+    end
+    if delta > 0 then
+      _G.CombatText_AddMessage('+ ' .. delta .. ' XP', _G.COMBAT_TEXT_SCROLL_FUNCTION, 0, 0, 1)
+    end
+    lastxp, lastxpmax = xp, xpmax
+  end)
+end
