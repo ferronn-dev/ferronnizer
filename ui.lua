@@ -176,10 +176,13 @@ for _, uf in ipairs(unitFrames) do
       unit .. '_max_health',
       unit .. '_connected',
       unit .. '_alive',
-      function(health, healthMax, isConnected, isAlive)
+      unit .. '_has_incoming_resurrection',
+      function(health, healthMax, isConnected, isAlive, hasIncomingRes)
         local s
         if not isConnected then
           s = '< Offline >'
+        elseif hasIncomingRes then
+          s = '< Resurrecting >'
         elseif not isAlive then
           s = '< Dead >'
         else

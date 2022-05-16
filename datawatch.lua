@@ -10,6 +10,7 @@ local hacks = {
   UnitGetIncomingHeals = function()
     return 0
   end,
+  UnitHasIncomingResurrection = function() end,
   UnitIsConnected = function() end,
   UnitIsDeadOrGhost = function() end,
 }
@@ -152,6 +153,10 @@ local unitEntries = {
       return getAuras(unit, 'HARMFUL')
     end,
     events = { 'UNIT_AURA' },
+  },
+  has_incoming_resurrection = {
+    func = _G.UnitHasIncomingResurrection,
+    events = { 'INCOMING_RESURRECT_CHANGED' },
   },
   health = {
     func = UnitHealth,
