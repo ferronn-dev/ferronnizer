@@ -120,25 +120,26 @@ for _, uf in ipairs(unitFrames) do
   end
 
   v.Health = (function()
-    local f = CreateFrame('StatusBar', nil, v)
-    f:SetPoint('TOPLEFT')
-    f:SetSize(160, 40)
-    f:SetStatusBarTexture('Interface\\Buttons\\WHITE8x8')
+    local t = v:CreateTexture()
+    t:SetPoint('TOPLEFT')
+    t:SetHeight(40)
+    t:SetTexture('Interface\\Buttons\\WHITE8x8')
     G.DataWatch(unit .. '_class', function(class)
-      f:SetStatusBarColor(GetClassColor(class))
+      t:SetVertexColor(GetClassColor(class))
     end)
     G.DataWatch(unit .. '_health', unit .. '_max_health', function(health, healthMax)
-      f:SetMinMaxValues(0, healthMax)
-      f:SetValue(health)
+      local r = healthMax and healthMax > 0 and health / healthMax or 1
+      t:SetWidth(160 * r)
     end)
-    return f
+    return t
   end)()
 
-  v.Health.Name = (function()
-    local fs = v.Health:CreateFontString()
+  v.Name = (function()
+    local fs = v:CreateFontString()
     fs:SetFontObject('GameFontDisable')
-    fs:SetPoint('TOPLEFT', v.Health)
-    fs:SetPoint('BOTTOMRIGHT', v.Health, 'RIGHT')
+    fs:SetPoint('TOPLEFT')
+    fs:SetPoint('TOPRIGHT')
+    fs:SetHeight(20)
     fs:SetJustifyH('CENTER')
     G.DataWatch(unit .. '_level', unit .. '_name', function(level, name)
       fs:SetText(level .. ' - ' .. (name or ''))
@@ -146,11 +147,12 @@ for _, uf in ipairs(unitFrames) do
     return fs
   end)()
 
-  v.Health.Text = (function()
-    local fs = v.Health:CreateFontString()
+  v.HealthText = (function()
+    local fs = v:CreateFontString()
     fs:SetFontObject('GameFontDisable')
-    fs:SetPoint('TOPLEFT', v.Health, 'LEFT')
-    fs:SetPoint('BOTTOMRIGHT', v.Health)
+    fs:SetPoint('TOPLEFT', v.Name, 'BOTTOMLEFT')
+    fs:SetPoint('TOPRIGHT', v.Name, 'BOTTOMRIGHT')
+    fs:SetHeight(20)
     fs:SetJustifyH('CENTER')
     G.DataWatch(unit .. '_health', unit .. '_max_health', function(health, healthMax)
       fs:SetText(health .. ' / ' .. healthMax)
@@ -240,8 +242,8 @@ for _, uf in ipairs(unitFrames) do
   end)()
 end
 
-root.Player.Health.OnHateList = (function()
-  local t = root.Player.Health:CreateTexture(nil, 'OVERLAY')
+root.Player.OnHateList = (function()
+  local t = root.Player:CreateTexture(nil, 'OVERLAY')
   t:SetTexture('Interface\\CharacterFrame\\UI-StateIcon')
   t:SetTexCoord(0.5, 1.0, 0, 0.484375)
   t:SetPoint('TOPRIGHT')
@@ -252,8 +254,8 @@ root.Player.Health.OnHateList = (function()
   return t
 end)()
 
-root.Player.Health.Resting = (function()
-  local t = root.Player.Health:CreateTexture(nil, 'OVERLAY')
+root.Player.Resting = (function()
+  local t = root.Player:CreateTexture(nil, 'OVERLAY')
   t:SetTexture('Interface\\CharacterFrame\\UI-StateIcon')
   t:SetTexCoord(0, 0.5, 0, 0.421875)
   t:SetPoint('TOPLEFT')

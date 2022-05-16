@@ -7,6 +7,7 @@ local function loadUi()
           return {
             SetAllPoints = function() end,
             SetFontObject = function() end,
+            SetHeight = function() end,
             SetJustifyH = function() end,
             SetJustifyV = function() end,
             SetPoint = function() end,
@@ -16,6 +17,7 @@ local function loadUi()
         CreateTexture = function()
           return {
             SetAllPoints = function() end,
+            SetHeight = function() end,
             SetPoint = function() end,
             SetSize = function() end,
             SetTexCoord = function() end,
