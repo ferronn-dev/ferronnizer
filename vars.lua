@@ -21,6 +21,7 @@ local cvars = {
   floatingCombatTextAuraFade = 1,
   floatingCombatTextAuras = 1,
   floatingCombatTextCombatDamage = 1,
+  floatingCombatTextCombatHealing = 1,
   floatingCombatTextCombatLogPeriodicSpells = 1,
   floatingCombatTextCombatState = 1,
   floatingCombatTextComboPoints = 1,
