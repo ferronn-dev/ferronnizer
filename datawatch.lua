@@ -11,6 +11,7 @@ local hacks = {
     return 0
   end,
   UnitIsConnected = function() end,
+  UnitIsDeadOrGhost = function() end,
 }
 for k, v in pairs(hacks) do
   if _G[k] == nil then
@@ -124,6 +125,12 @@ for i = 1, 40 do
   unitTokens['nameplate' .. i] = { 'NAME_PLATE_UNIT_ADDED' }
 end
 local unitEntries = {
+  alive = {
+    func = function(unit)
+      return not UnitIsDeadOrGhost(unit)
+    end,
+    events = { 'UNIT_HEALTH' },
+  },
   buffs = {
     func = function(unit)
       return getAuras(unit, 'HELPFUL')

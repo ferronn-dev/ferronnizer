@@ -171,9 +171,23 @@ for _, uf in ipairs(unitFrames) do
     fs:SetPoint('TOPRIGHT', v.Name, 'BOTTOMRIGHT')
     fs:SetHeight(20)
     fs:SetJustifyH('CENTER')
-    G.DataWatch(unit .. '_health', unit .. '_max_health', unit .. '_connected', function(health, healthMax, isConnected)
-      fs:SetText(isConnected and health .. ' / ' .. healthMax or '<Offline>')
-    end)
+    G.DataWatch(
+      unit .. '_health',
+      unit .. '_max_health',
+      unit .. '_connected',
+      unit .. '_alive',
+      function(health, healthMax, isConnected, isAlive)
+        local s
+        if not isConnected then
+          s = '< Offline >'
+        elseif not isAlive then
+          s = '< Dead >'
+        else
+          s = health .. ' / ' .. healthMax
+        end
+        fs:SetText(s)
+      end
+    )
     return fs
   end)()
 
