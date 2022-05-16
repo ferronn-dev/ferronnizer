@@ -134,6 +134,23 @@ for _, uf in ipairs(unitFrames) do
     return t
   end)()
 
+  v.IncomingHeals = (function()
+    local t = v:CreateTexture()
+    t:SetPoint('TOPLEFT', v.Health, 'TOPRIGHT')
+    t:SetPoint('BOTTOMLEFT', v.Health, 'BOTTOMRIGHT')
+    t:SetTexture('Interface\\Buttons\\WHITE8x8')
+    t:SetVertexColor(1, 1, 1)
+    G.DataWatch(unit .. '_incoming_heals', unit .. '_max_health', function(incomingHeals, healthMax)
+      if incomingHeals == 0 or healthMax == 0 then
+        t:Hide()
+      else
+        t:SetWidth(160 * incomingHeals / healthMax)
+        t:Show()
+      end
+    end)
+    return t
+  end)()
+
   v.Name = (function()
     local fs = v:CreateFontString()
     fs:SetFontObject('GameFontDisable')

@@ -22,6 +22,7 @@ local function loadUi()
             SetSize = function() end,
             SetTexCoord = function() end,
             SetTexture = function() end,
+            SetVertexColor = function() end,
           }
         end,
         Hide = function() end,

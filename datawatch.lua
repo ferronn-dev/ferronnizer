@@ -7,7 +7,9 @@ local hacks = {
   GetPetHappiness = function() end,
   GetServerTime = function() end,
   IsResting = function() end,
-  UnitGetIncomingHeals = function() end,
+  UnitGetIncomingHeals = function()
+    return 0
+  end,
 }
 for k, v in pairs(hacks) do
   if _G[k] == nil then
