@@ -66,6 +66,17 @@ local entries = {
       end,
     },
   },
+  ready_check_in_progress = {
+    init = false,
+    events = {
+      READY_CHECK = function()
+        return true, true
+      end,
+      READY_CHECK_FINISHED = function()
+        return true, false
+      end,
+    },
+  },
   server_time = {
     init = GetServerTime(),
     update = function()
