@@ -3,9 +3,11 @@ local _, G = ...
 -- TODO update addonmaker
 local hacks = {
   GameTime_GetTime = function() end,
+  GetInventoryItemTexture = function() end,
   GetMaxPlayerLevel = function() end,
   GetPetHappiness = function() end,
   GetServerTime = function() end,
+  GetWeaponEnchantInfo = function() end,
   IsResting = function() end,
   UnitGetIncomingHeals = function()
     return 0
@@ -165,6 +167,16 @@ local unitEntries = {
     end,
     events = { 'UNIT_AURA' },
   },
+  equipment = {
+    events = { 'PLAYER_EQUIPMENT_CHANGED' },
+    func = function(unit)
+      local result = {}
+      for i = 0, 18 do
+        result[i] = GetInventoryItemTexture(unit, i)
+      end
+      return result
+    end,
+  },
   has_incoming_resurrection = {
     func = _G.UnitHasIncomingResurrection,
     events = { 'INCOMING_RESURRECT_CHANGED' },
@@ -207,6 +219,31 @@ local unitEntries = {
       return select(2, UnitPowerType(unit))
     end,
     events = { 'UNIT_POWER_UPDATE' },
+  },
+  weapon_enchants = {
+    func = (function()
+      local function doProcess(hasEnchant, expiration, charges, enchantID)
+        if hasEnchant then
+          return {
+            charges = charges,
+            enchantID = enchantID,
+            expiration = expiration,
+          }
+        end
+      end
+      local function process(...)
+        return {
+          [16] = doProcess(...),
+          [17] = doProcess(select(5, ...)),
+          [18] = doProcess(select(9, ...)),
+        }
+      end
+      return function()
+        return process(_G.GetWeaponEnchantInfo())
+      end
+    end)(),
+    events = { 'UNIT_INVENTORY_CHANGED' },
+    units = { player = true },
   },
   xp = {
     func = UnitXP,
