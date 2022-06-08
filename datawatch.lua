@@ -29,6 +29,17 @@ for k, v in pairs(hacks) do
 end
 
 local entries = {
+  bank_open = {
+    init = false,
+    events = {
+      BANKFRAME_CLOSED = function()
+        return true, false
+      end,
+      BANKFRAME_OPENED = function()
+        return true, true
+      end,
+    },
+  },
   game_time = {
     init = '',
     update = function()
