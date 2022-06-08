@@ -3,12 +3,18 @@ local _, G = ...
 -- TODO update addonmaker
 local hacks = {
   GameTime_GetTime = function() end,
+  GetContainerNumSlots = function()
+    return 0
+  end,
+  GetContainerItemLink = function() end,
   GetInventoryItemTexture = function() end,
   GetMaxPlayerLevel = function() end,
   GetPetHappiness = function() end,
   GetServerTime = function() end,
   GetWeaponEnchantInfo = function() end,
   IsResting = function() end,
+  NUM_BAG_SLOTS = 4,
+  NUM_BANKBAGSLOTS = 6,
   UnitGetIncomingHeals = function()
     return 0
   end,
@@ -105,6 +111,47 @@ local entries = {
     end)(),
   },
 }
+
+local bags = {
+  bag0 = _G.BACKPACK_CONTAINER,
+  bank0 = _G.BANK_CONTAINER,
+}
+for i = 1, NUM_BAG_SLOTS do
+  bags['bag' .. i] = i
+end
+for i = 1, _G.NUM_BANKBAGSLOTS do
+  bags['bank' .. i] = NUM_BAG_SLOTS + i
+end
+for name, bagid in pairs(bags) do
+  entries[name] = {
+    init = {},
+    events = (function()
+      local function doUpdate()
+        local t = {}
+        for slot = 1, GetContainerNumSlots(bagid) do
+          local link = _G.GetContainerItemLink(bagid, slot)
+          if link then
+            table.insert(t, link)
+          end
+        end
+        return true, t
+      end
+      local update = false
+      return {
+        BAG_UPDATE = function(id)
+          update = update or (id == bagid)
+        end,
+        BAG_UPDATE_DELAYED = function()
+          if update then
+            update = false
+            return doUpdate()
+          end
+        end,
+        PLAYER_LOGIN = doUpdate,
+      }
+    end)(),
+  }
+end
 
 local function getAuras(unit, filter)
   local t = {}
