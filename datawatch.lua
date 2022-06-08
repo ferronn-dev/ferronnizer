@@ -7,7 +7,7 @@ local hacks = {
     return 0
   end,
   GetContainerItemLink = function() end,
-  GetInventoryItemTexture = function() end,
+  GetInventoryItemLink = function() end,
   GetMaxPlayerLevel = function() end,
   GetPetHappiness = function() end,
   GetServerTime = function() end,
@@ -230,10 +230,11 @@ local unitEntries = {
     func = function(unit)
       local result = {}
       for i = 0, 18 do
-        result[i] = GetInventoryItemTexture(unit, i)
+        result[i] = GetInventoryItemLink(unit, i)
       end
       return result
     end,
+    units = { player = true },
   },
   has_incoming_resurrection = {
     func = _G.UnitHasIncomingResurrection,
