@@ -62,6 +62,7 @@ local hacks = {
   GetTrackingTexture = function() end,
   GetWeaponEnchantInfo = function() end,
   GetZoneText = function() end,
+  IsMounted = function() end,
   IsResting = function() end,
   IsStealthed = function() end,
   NUM_BAG_SLOTS = 4,
@@ -113,6 +114,16 @@ local entries = {
     events = {
       PLAYER_MAX_LEVEL_UPDATE = function()
         return true, _G.GetMaxPlayerLevel()
+      end,
+    },
+  },
+  mounted = {
+    events = {
+      PLAYER_LOGIN = function()
+        return true, IsMounted()
+      end,
+      PLAYER_MOUNT_DISPLAY_CHANGED = function()
+        return true, IsMounted()
       end,
     },
   },

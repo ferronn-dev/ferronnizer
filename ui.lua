@@ -363,6 +363,9 @@ root.Info = (function()
   f('stealthed', function(value)
     return 'Stealthed: ' .. tostring(value)
   end)
+  f('mounted', function(value)
+    return 'Mounted: ' .. tostring(value)
+  end)
   return t
 end)()
 
