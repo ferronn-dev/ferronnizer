@@ -1,5 +1,52 @@
 local _, G = ...
 
+local function newtopic()
+  local fns = {}
+  local last
+  local function publish(value)
+    last = value
+    for _, fn in ipairs(fns) do
+      fn(value)
+    end
+  end
+  local function subscribe(fn)
+    table.insert(fns, fn)
+    return last
+  end
+  return publish, subscribe
+end
+
+local multisub, pushsubs = (function()
+  local pending = {}
+  local pushes = {}
+  local values = {}
+  local function multisub(subs, fn)
+    for _, sub in ipairs(subs) do
+      values[sub] = sub(function(value)
+        if values[sub] ~= value then
+          values[sub] = value
+          pending[fn] = true
+        end
+      end)
+    end
+    pushes[fn] = function()
+      local t = {}
+      for i, sub in ipairs(subs) do
+        t[i] = values[sub]
+      end
+      fn(unpack(t, 1, #subs))
+    end
+    pushes[fn]()
+  end
+  local function pushsubs()
+    for fn in pairs(pending) do
+      pending[fn] = nil
+      pushes[fn]()
+    end
+  end
+  return multisub, pushsubs
+end)()
+
 -- TODO update addonmaker
 local hacks = {
   GameTime_GetTime = function() end,
@@ -393,36 +440,24 @@ for unit, events in pairs(unitTokens) do
 end
 
 local handlers = {}
-local pending = {}
+local topics = {}
 local updates = {}
-local values = {}
-local watches = {}
-local watchnames = {}
 
 for k, v in pairs(entries) do
-  watches[k] = {}
-  updates[k] = v.update
-  values[k] = v.init
+  local pub, sub = newtopic()
+  topics[k] = sub
+  updates[pub] = v.update
+  pub(v.init)
   for e, h in pairs(v.events or {}) do
     handlers[e] = handlers[e] or {}
-    handlers[e][k] = h
+    handlers[e][pub] = h
   end
 end
 
-local function process(name, useValue, newValue)
-  if useValue and values[name] ~= newValue then
-    values[name] = newValue
-    pending[name] = true
+local function process(pub, useValue, newValue)
+  if useValue then
+    pub(newValue)
   end
-end
-
-local function invoke(func)
-  local names = watchnames[func]
-  local vals = {}
-  for i, name in ipairs(names) do
-    vals[i] = values[name]
-  end
-  func(unpack(vals, 1, #names))
 end
 
 local frame = CreateFrame('Frame')
@@ -438,16 +473,7 @@ frame:SetScript('OnUpdate', function()
   for k, v in pairs(updates) do
     process(k, v())
   end
-  local funcs = {}
-  for name in pairs(pending) do
-    for _, func in ipairs(watches[name]) do
-      funcs[func] = true
-    end
-    pending[name] = nil
-  end
-  for func in pairs(funcs) do
-    invoke(func)
-  end
+  pushsubs()
 end)
 
 local numFrameWatches = 0
@@ -457,15 +483,13 @@ function G.AddFrameWatch(f)
   assert(f:GetScript('OnLeave') == nil)
   numFrameWatches = numFrameWatches + 1
   local tag = '_framewatch_' .. numFrameWatches
-  watches[tag] = {}
-  values[tag] = false
+  local pub, sub = newtopic()
+  topics[tag] = sub
   f:SetScript('OnEnter', function()
-    values[tag] = true
-    pending[tag] = true
+    pub(true)
   end)
   f:SetScript('OnLeave', function()
-    values[tag] = false
-    pending[tag] = true
+    pub(false)
   end)
   return tag
 end
@@ -474,14 +498,11 @@ function G.DataWatch(...)
   local n = select('#', ...)
   local func = select(n, ...)
   assert(type(func) == 'function')
-  local names = {}
+  local subs = {}
   for i = 1, n - 1 do
     local name = select(i, ...)
     assert(type(name) == 'string')
-    assert(watches[name], 'invalid watch for ' .. tostring(name))
-    table.insert(watches[name], func)
-    table.insert(names, name)
+    table.insert(subs, (assert(topics[name], 'invalid topic ' .. tostring(name))))
   end
-  watchnames[func] = names
-  invoke(func)
+  multisub(subs, func)
 end
