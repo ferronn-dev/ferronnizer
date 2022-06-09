@@ -11,7 +11,9 @@ local hacks = {
   GetMaxPlayerLevel = function() end,
   GetPetHappiness = function() end,
   GetServerTime = function() end,
+  GetSubZoneText = function() end,
   GetWeaponEnchantInfo = function() end,
+  GetZoneText = function() end,
   IsResting = function() end,
   NUM_BAG_SLOTS = 4,
   NUM_BANKBAGSLOTS = 6,
@@ -45,6 +47,17 @@ local entries = {
     update = function()
       return true, _G.GameTime_GetTime(false)
     end,
+  },
+  mailbox_open = {
+    init = false,
+    events = {
+      MAIL_CLOSED = function()
+        return true, false
+      end,
+      MAIL_SHOW = function()
+        return true, true
+      end,
+    },
   },
   max_player_level = {
     init = _G.GetMaxPlayerLevel(),
@@ -120,6 +133,34 @@ local entries = {
         PLAYER_LOGIN = compute,
       }
     end)(),
+  },
+  subzone = {
+    init = _G.GetSubZoneText(),
+    events = {
+      ZONE_CHANGED = function()
+        return true, _G.GetSubZoneText()
+      end,
+      ZONE_CHANGED_INDOORS = function()
+        return true, _G.GetSubZoneText()
+      end,
+      ZONE_CHANGED_NEW_AREA = function()
+        return true, _G.GetSubZoneText()
+      end,
+    },
+  },
+  zone = {
+    init = _G.GetZoneText(),
+    events = {
+      ZONE_CHANGED = function()
+        return true, _G.GetZoneText()
+      end,
+      ZONE_CHANGED_INDOORS = function()
+        return true, _G.GetZoneText()
+      end,
+      ZONE_CHANGED_NEW_AREA = function()
+        return true, _G.GetZoneText()
+      end,
+    },
   },
 }
 

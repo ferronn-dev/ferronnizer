@@ -320,6 +320,46 @@ root.Pet.Happiness = (function()
   return t
 end)()
 
+root.Info = (function()
+  local t = {}
+  local last
+  local function f(...)
+    local fs = root:CreateFontString()
+    fs:SetFontObject('GameFontNormalSmall')
+    if last then
+      fs:SetPoint('TOPLEFT', last, 'BOTTOMLEFT')
+    else
+      fs:SetPoint('TOPLEFT')
+    end
+    fs:SetJustifyH('LEFT')
+    fs:SetJustifyV('TOP')
+    last = fs
+    table.insert(t, fs)
+    local args = { ... }
+    local fn = args[#args]
+    args[#args] = function(...)
+      fs:SetText(fn(...))
+    end
+    G.DataWatch(unpack(args))
+  end
+  f('player_xp', 'player_max_xp', function(xp, max)
+    return 'XP: ' .. tostring(xp) .. ' / ' .. tostring(max)
+  end)
+  f('bank_open', function(value)
+    return 'Bank open: ' .. tostring(value)
+  end)
+  f('mailbox_open', function(value)
+    return 'Mailbox open: ' .. tostring(value)
+  end)
+  f('zone', function(value)
+    return 'Zone: ' .. tostring(value)
+  end)
+  f('subzone', function(value)
+    return 'Subzone: ' .. tostring(value)
+  end)
+  return t
+end)()
+
 root.Clock = (function()
   local fs = root:CreateFontString()
   fs:SetFontObject('GameFontNormalSmall')
