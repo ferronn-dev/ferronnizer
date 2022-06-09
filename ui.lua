@@ -357,6 +357,9 @@ root.Info = (function()
   f('subzone', function(value)
     return 'Subzone: ' .. tostring(value)
   end)
+  f('tracking_texture', function(value)
+    return 'Tracking texture: ' .. tostring(value)
+  end)
   return t
 end)()
 

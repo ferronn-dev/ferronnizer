@@ -12,6 +12,7 @@ local hacks = {
   GetPetHappiness = function() end,
   GetServerTime = function() end,
   GetSubZoneText = function() end,
+  GetTrackingTexture = function() end,
   GetWeaponEnchantInfo = function() end,
   GetZoneText = function() end,
   IsResting = function() end,
@@ -145,6 +146,16 @@ local entries = {
       end,
       ZONE_CHANGED_NEW_AREA = function()
         return true, _G.GetSubZoneText()
+      end,
+    },
+  },
+  tracking_texture = {
+    events = {
+      MINIMAP_UPDATE_TRACKING = function()
+        return true, GetTrackingTexture()
+      end,
+      PLAYER_LOGIN = function()
+        return true, GetTrackingTexture()
       end,
     },
   },
