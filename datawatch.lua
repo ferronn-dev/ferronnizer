@@ -63,6 +63,7 @@ local hacks = {
   GetWeaponEnchantInfo = function() end,
   GetZoneText = function() end,
   IsResting = function() end,
+  IsStealthed = function() end,
   NUM_BAG_SLOTS = 4,
   NUM_BANKBAGSLOTS = 6,
   UnitGetIncomingHeals = function()
@@ -181,6 +182,16 @@ local entries = {
         PLAYER_LOGIN = compute,
       }
     end)(),
+  },
+  stealthed = {
+    events = {
+      PLAYER_LOGIN = function()
+        return true, _G.IsStealthed()
+      end,
+      UPDATE_STEALTH = function()
+        return true, _G.IsStealthed()
+      end,
+    },
   },
   subzone = {
     init = _G.GetSubZoneText(),

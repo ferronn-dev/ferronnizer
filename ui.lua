@@ -360,6 +360,9 @@ root.Info = (function()
   f('tracking_texture', function(value)
     return 'Tracking texture: ' .. tostring(value)
   end)
+  f('stealthed', function(value)
+    return 'Stealthed: ' .. tostring(value)
+  end)
   return t
 end)()
 
