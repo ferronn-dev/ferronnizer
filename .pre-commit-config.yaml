@@ -20,7 +20,7 @@ repos:
   hooks:
   - id: addonmaker
     name: addonmaker
-    entry: bash -c 'test "$CI" == "true" || sh addonmaker/run.sh'
+    entry: bash -c 'if which docker; then sh addonmaker/run.sh; fi'
     language: system
     pass_filenames: false
 - repo: meta
