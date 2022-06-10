@@ -109,7 +109,7 @@ for _, uf in ipairs(unitFrames) do
         tooltip:SetUnit(unit)
         if level < levelMax then
           tooltip:AddLine(('XP: %d/%d'):format(xp, xpMax))
-          tooltip:AddLine(('Rest: %s'):format(tostring(_G.GetXPExhaustion() or 'none')))
+          tooltip:AddLine(('Rest: %s'):format(tostring(GetXPExhaustion() or 'none')))
         end
       end
     )
@@ -380,7 +380,7 @@ root.Info = (function()
     return string.format('Speed: %.2f', value)
   end)
   f('money', function(value)
-    return 'Money: ' .. _G.GetCoinTextureString(value)
+    return 'Money: ' .. GetCoinTextureString(value)
   end)
   return t
 end)()
@@ -399,16 +399,16 @@ end)()
 
 root.Hidden = (function()
   local frames = {
-    _G.BuffFrame,
-    _G.CompactRaidFrameManager,
-    _G.FocusFrame,
-    _G.PartyMemberFrame1,
-    _G.PartyMemberFrame2,
-    _G.PartyMemberFrame3,
-    _G.PartyMemberFrame4,
-    _G.PlayerFrame,
-    _G.TargetFrame,
-    _G.TemporaryEnchantFrame,
+    BuffFrame,
+    CompactRaidFrameManager,
+    FocusFrame,
+    PartyMemberFrame1,
+    PartyMemberFrame2,
+    PartyMemberFrame3,
+    PartyMemberFrame4,
+    PlayerFrame,
+    TargetFrame,
+    TemporaryEnchantFrame,
   }
   local f = CreateFrame('Frame', nil, root)
   f:Hide()
@@ -425,7 +425,6 @@ G.Eventer({
       Quartz3CastBarPlayer:ClearAllPoints()
       Quartz3CastBarPlayer:SetPoint('BOTTOM', Minimap, 'TOP')
     else
-      local CastingBarFrame = _G.CastingBarFrame
       CastingBarFrame.ignoreFramePositionManager = true
       CastingBarFrame:ClearAllPoints()
       CastingBarFrame:SetPoint('BOTTOM', 0, 275)
@@ -433,20 +432,18 @@ G.Eventer({
   end,
 })
 
-if _G.ChatFrame1 then
-  local lastxp, lastxpmax
-  G.DataWatch('player_xp', 'player_max_xp', function(xp, xpmax)
-    local delta
-    if lastxpmax == nil then
-      delta = 0
-    elseif lastxpmax == xpmax then
-      delta = xp - lastxp
-    else
-      delta = lastxpmax - lastxp + xp
-    end
-    if delta > 0 then
-      _G.CombatText_AddMessage('+ ' .. delta .. ' XP', _G.COMBAT_TEXT_SCROLL_FUNCTION, 0, 0, 1)
-    end
-    lastxp, lastxpmax = xp, xpmax
-  end)
-end
+local lastxp, lastxpmax
+G.DataWatch('player_xp', 'player_max_xp', function(xp, xpmax)
+  local delta
+  if lastxpmax == nil then
+    delta = 0
+  elseif lastxpmax == xpmax then
+    delta = xp - lastxp
+  else
+    delta = lastxpmax - lastxp + xp
+  end
+  if delta > 0 then
+    CombatText_AddMessage('+ ' .. delta .. ' XP', COMBAT_TEXT_SCROLL_FUNCTION, 0, 0, 1)
+  end
+  lastxp, lastxpmax = xp, xpmax
+end)
