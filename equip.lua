@@ -4,72 +4,47 @@ local scan = (function()
   local scanner = CreateFrame('GameTooltip', name, nil, 'SharedTooltipTemplate')
   scanner:SetOwner(WorldFrame, 'ANCHOR_NONE')
 
+  local function num(field, patt)
+    return {
+      pattern = patt,
+      func = function(t, n)
+        t[field] = (t[field] or 0) + tonumber(n)
+      end,
+    }
+  end
+
+  local function snum(field, patt)
+    return {
+      pattern = patt,
+      func = function(t, s, n)
+        t[field] = (t[field] or 0) + (s == '-' and -1 or 1) * tonumber(n)
+      end,
+    }
+  end
+
   local patterns = {
-    {
-      pattern = '([+-])(%d+) (%a+)',
-      func = (function()
-        local supported = {
-          Agility = true,
-          Intellect = true,
-          Spirit = true,
-          Stamina = true,
-          Strength = true,
-        }
-        return function(t, p, v, s)
-          if supported[s] then
-            t[s] = (p == '+' and 1 or -1) * tonumber(v)
-          end
-        end
-      end)(),
-    },
-    {
-      pattern = '%((%d+).(%d) damage per second%)',
-      func = function(t, dps1, dps2)
-        t.DPS = tonumber(dps1 .. '.' .. dps2)
-      end,
-    },
-    {
-      pattern = '(%d+) Armor',
-      func = function(t, armor)
-        t.Armor = tonumber(armor)
-      end,
-    },
-    {
-      pattern = '%+(%d+) Healing Spells',
-      func = function(t, hp)
-        t.HealingPower = tonumber(hp)
-      end,
-    },
-    {
-      pattern = 'Equip: Increases damage and healing done by magical spells and effects by up to (%d+).',
-      func = function(t, sp)
-        t.SpellPower = tonumber(sp)
-      end,
-    },
-    {
-      pattern = 'Equip: Increases healing done by spells and effects by up to (%d+).',
-      func = function(t, hp)
-        t.HealingPower = tonumber(hp)
-      end,
-    },
-    {
-      pattern = 'Equip: Improves your chance to get a critical strike with spells by (%d)%%.',
-      func = function(t, sc)
-        t.SpellCrit = tonumber(sc)
-      end,
-    },
-    {
-      pattern = 'Equip: Restores (%d+) mana per 5 sec.',
-      func = function(t, mp5)
-        t.MP5 = tonumber(mp5)
-      end,
-    },
-    {
-      pattern = 'Equip: Restores (%d+) health per 5 sec.',
-      func = function(t, hp5)
-        t.HP5 = tonumber(hp5)
-      end,
-    },
+    snum('Agility', '([+-])(%d+) Agility'),
+    snum('AttackPower', '([+-])(%d+) Attack Power'),
+    snum('Defense', '([+-])(%d+) Defense'),
+    snum('Defense', 'Increased Defense ([+-])(%d+)'),
+    snum('FireResistance', '([+-])(%d+) Fire Resistance'),
+    snum('FrostResistance', '([+-])(%d+) Frost Resistance'),
+    snum('HealingPower', '([+-])(%d+) Healing Spells'),
+    snum('HealingPower', 'Healing Spells ([+-])(%d+)'),
+    snum('Intellect', '([+-])(%d+) Intellect'),
+    snum('ShadowResistance', '([+-])(%d+) Shadow Resistance'),
+    snum('Spirit', '([+-])(%d+) Spirit'),
+    snum('Stamina', '([+-])(%d+) Stamina'),
+    snum('Strength', '([+-])(%d+) Strength'),
+    num('Armor', '(%d+) Armor'),
+    num('DPS', '%(([%d%.]+) damage per second%)'),
+    num('HealingPower', 'Equip: Increases healing done by spells and effects by up to (%d+).'),
+    num('PhysicalCrit', 'Equip: Improves your chance to get a critical strike by (%d+)%%.'),
+    num('PhysicalHit', 'Equip: Improves your chance to hit by (%d+)%%.'),
+    num('HP5', 'Equip: Restores (%d+) health per 5 sec.'),
+    num('MP5', 'Equip: Restores (%d+) mana per 5 sec.'),
+    num('SpellCrit', 'Equip: Improves your chance to get a critical strike with spells by (%d+)%%.'),
+    num('SpellPower', 'Equip: Increases damage and healing done by magical spells and effects by up to (%d+).'),
   }
 
   local function process(func, stats, arg, ...)
