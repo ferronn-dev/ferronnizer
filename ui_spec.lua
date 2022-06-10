@@ -5,6 +5,7 @@ local function loadUi()
       local f = {
         CreateFontString = function()
           return {
+            GetTextColor = function() end,
             SetAllPoints = function() end,
             SetFontObject = function() end,
             SetHeight = function() end,
@@ -12,6 +13,7 @@ local function loadUi()
             SetJustifyV = function() end,
             SetPoint = function() end,
             SetSize = function() end,
+            SetTextColor = function() end,
           }
         end,
         CreateTexture = function()

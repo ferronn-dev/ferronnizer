@@ -337,8 +337,18 @@ root.Info = (function()
     table.insert(t, fs)
     local args = { ... }
     local fn = args[#args]
+    local timer
+    local r, g, b = fs:GetTextColor()
     args[#args] = function(...)
+      if timer then
+        timer:Cancel()
+      end
       fs:SetText(fn(...))
+      fs:SetTextColor(0, 1, 0)
+      timer = C_Timer.NewTimer(3, function()
+        fs:SetTextColor(r, g, b)
+        timer = nil
+      end)
     end
     G.DataWatch(unpack(args))
   end
