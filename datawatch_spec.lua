@@ -5,34 +5,13 @@ local function newDataWatch()
     units = {
       player = {
         class = 'WARRIOR',
-        health = 3000,
-        healthMax = 3500,
-        level = 60,
         name = 'PlayerName',
-        power = 50,
-        powerMax = 100,
-        powerType = 'RAGE',
       },
     },
   }
-  local scripts = {}
   wow.env.Mixin(wow.env, {
-    assert = assert,
-    CreateFrame = function()
-      return {
-        RegisterEvent = function() end,
-        SetScript = function(self, name, script)
-          scripts[name] = function(...)
-            return script(self, ...)
-          end
-        end,
-      }
-    end,
     GameTime_GetTime = function()
       return data.game_time
-    end,
-    GetMoney = function()
-      return 0
     end,
     GetNumSkillLines = function()
       return #data.skilllines
@@ -40,58 +19,22 @@ local function newDataWatch()
     GetSkillLineInfo = function(i)
       return unpack(data.skilllines[i])
     end,
-    GetSubZoneText = function()
-      return 'subzone'
-    end,
-    GetUnitSpeed = function()
-      return 0
-    end,
-    GetZoneText = function()
-      return 'zone'
-    end,
-    ipairs = ipairs,
-    pairs = pairs,
-    PROFESSIONS_FIRST_AID = 'First Aid',
-    select = select,
-    table = table,
-    tostring = tostring,
-    type = type,
-    UnitAura = function() end,
     UnitClassBase = function(unit)
       return data.units[unit] and data.units[unit].class
-    end,
-    UnitHealth = function(unit)
-      return data.units[unit] and data.units[unit].health
-    end,
-    UnitHealthMax = function(unit)
-      return data.units[unit] and data.units[unit].healthMax
-    end,
-    UnitLevel = function(unit)
-      return data.units[unit] and data.units[unit].level
     end,
     UnitName = function(unit)
       return data.units[unit] and data.units[unit].name
     end,
-    UnitPower = function(unit)
-      return data.units[unit] and data.units[unit].power
-    end,
-    UnitPowerMax = function(unit)
-      return data.units[unit] and data.units[unit].powerMax
-    end,
-    UnitPowerType = function(unit)
-      return data.units[unit] and data.units[unit].powerType
-    end,
-    UnitXP = function(unit)
-      return data.units[unit] and data.units[unit].xp
-    end,
-    UnitXPMax = function(unit)
-      return data.units[unit] and data.units[unit].xpMax
-    end,
-    unpack = unpack,
   })
   local addonEnv = {}
-  setfenv(loadfile('datawatch.lua'), wow.env)('', addonEnv)
-  return addonEnv.DataWatch, scripts.OnEvent, scripts.OnUpdate, data
+  local frame = setfenv(loadfile('datawatch.lua'), wow.env)('', addonEnv)
+  local function onEvent(...)
+    return frame:GetScript('OnEvent')(frame, ...)
+  end
+  local function onUpdate(...)
+    return frame:GetScript('OnUpdate')(frame, ...)
+  end
+  return addonEnv.DataWatch, onEvent, onUpdate, data
 end
 
 describe('datawatch', function()
