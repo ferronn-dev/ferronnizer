@@ -3,7 +3,8 @@
 		"dockerfile": "Dockerfile"
 	},
 	"features": {
-		"docker-in-docker": {}
+		"docker-in-docker": {},
+		"github-cli": {}
 	},
 	"initializeCommand": "git submodule update --init --recursive",
 	"name": "ferronn-dev/ferronnizer",
