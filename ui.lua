@@ -105,11 +105,12 @@ for _, uf in ipairs(unitFrames) do
       'max_player_level',
       'player_xp',
       'player_max_xp',
-      function(tooltip, level, levelMax, xp, xpMax)
+      'rested_xp',
+      function(tooltip, level, levelMax, xp, xpMax, xpRested)
         tooltip:SetUnit(unit)
         if level < levelMax then
           tooltip:AddLine(('XP: %d/%d'):format(xp, xpMax))
-          tooltip:AddLine(('Rest: %s'):format(tostring(GetXPExhaustion() or 'none')))
+          tooltip:AddLine(('Rest: %d'):format(xpRested))
         end
       end
     )

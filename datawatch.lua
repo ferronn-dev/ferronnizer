@@ -147,6 +147,14 @@ local entries = {
       end,
     },
   },
+  rested_xp = {
+    init = 0,
+    events = {
+      UPDATE_EXHAUSTION = function()
+        return true, GetXPExhaustion() or 0
+      end,
+    },
+  },
   server_time = {
     init = GetServerTime(),
     update = function()
