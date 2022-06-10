@@ -379,6 +379,9 @@ root.Info = (function()
   f('speed', function(value)
     return string.format('Speed: %.2f', value)
   end)
+  f('money', function(value)
+    return 'Money: ' .. _G.GetCoinTextureString(value)
+  end)
   return t
 end)()
 

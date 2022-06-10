@@ -118,6 +118,17 @@ local entries = {
       end,
     },
   },
+  money = {
+    init = 0,
+    events = {
+      PLAYER_LOGIN = function()
+        return true, GetMoney()
+      end,
+      PLAYER_MONEY = function()
+        return true, GetMoney()
+      end,
+    },
+  },
   mounted = {
     events = {
       PLAYER_LOGIN = function()

@@ -31,6 +31,9 @@ local function newDataWatch()
     GameTime_GetTime = function()
       return data.game_time
     end,
+    GetMoney = function()
+      return 0
+    end,
     GetNumSkillLines = function()
       return #data.skilllines
     end,
