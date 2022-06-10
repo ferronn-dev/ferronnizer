@@ -376,6 +376,9 @@ root.Info = (function()
   f('mounted', function(value)
     return 'Mounted: ' .. tostring(value)
   end)
+  f('speed', function(value)
+    return string.format('Speed: %.2f', value)
+  end)
   return t
 end)()
 

@@ -49,6 +49,7 @@ end)()
 
 -- TODO update addonmaker
 local hacks = {
+  BASE_MOVEMENT_SPEED = 7,
   GameTime_GetTime = function() end,
   GetContainerNumSlots = function()
     return 0
@@ -193,6 +194,12 @@ local entries = {
         PLAYER_LOGIN = compute,
       }
     end)(),
+  },
+  speed = {
+    init = 0,
+    update = function()
+      return true, GetUnitSpeed('player') * 100 / _G.BASE_MOVEMENT_SPEED
+    end,
   },
   stealthed = {
     events = {

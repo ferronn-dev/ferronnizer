@@ -37,6 +37,9 @@ local function newDataWatch()
     GetSkillLineInfo = function(i)
       return unpack(data.skilllines[i])
     end,
+    GetUnitSpeed = function()
+      return 0
+    end,
     ipairs = ipairs,
     pairs = pairs,
     PROFESSIONS_FIRST_AID = 'First Aid',
