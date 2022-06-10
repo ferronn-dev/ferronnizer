@@ -6,19 +6,19 @@ local scan = (function()
 
   local function num(field, patt)
     return {
+      func = tonumber,
+      field = field,
       pattern = patt,
-      func = function(t, n)
-        t[field] = (t[field] or 0) + tonumber(n)
-      end,
     }
   end
 
   local function snum(field, patt)
     return {
-      pattern = patt,
-      func = function(t, s, n)
-        t[field] = (t[field] or 0) + (s == '-' and -1 or 1) * tonumber(n)
+      func = function(s, n)
+        return (s == '-' and -1 or 1) * tonumber(n)
       end,
+      field = field,
+      pattern = patt,
     }
   end
 
@@ -47,9 +47,9 @@ local scan = (function()
     num('SpellPower', 'Equip: Increases damage and healing done by magical spells and effects by up to (%d+).'),
   }
 
-  local function process(func, stats, arg, ...)
+  local function process(func, arg, ...)
     if arg then
-      func(stats, arg, ...)
+      return func(arg, ...)
     end
   end
 
@@ -64,7 +64,10 @@ local scan = (function()
     for i = 1, scanner:NumLines() do
       local text = _G[leftPrefix .. i]:GetText()
       for _, p in ipairs(patterns) do
-        process(p.func, stats, text:match(p.pattern))
+        local v = process(p.func, text:match(p.pattern))
+        if v then
+          stats[p.field] = (stats[p.field] or 0) + v
+        end
       end
     end
     scanner:ClearLines()
