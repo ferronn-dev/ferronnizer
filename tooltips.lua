@@ -88,8 +88,6 @@ end
 
 G.Eventer({
   PLAYER_ENTERING_WORLD = function()
-    if _G.GameTooltipStatusBar then
-      G.ReparentFrame(_G.GameTooltipStatusBar)
-    end
+    G.ReparentFrame(GameTooltipStatusBar)
   end,
 })
