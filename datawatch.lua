@@ -59,10 +59,8 @@ local hacks = {
   GetMaxPlayerLevel = function() end,
   GetPetHappiness = function() end,
   GetServerTime = function() end,
-  GetSubZoneText = function() end,
   GetTrackingTexture = function() end,
   GetWeaponEnchantInfo = function() end,
-  GetZoneText = function() end,
   IsMounted = function() end,
   IsResting = function() end,
   IsStealthed = function() end,
@@ -223,16 +221,16 @@ local entries = {
     },
   },
   subzone = {
-    init = _G.GetSubZoneText(),
+    init = GetSubZoneText(),
     events = {
       ZONE_CHANGED = function()
-        return true, _G.GetSubZoneText()
+        return true, GetSubZoneText()
       end,
       ZONE_CHANGED_INDOORS = function()
-        return true, _G.GetSubZoneText()
+        return true, GetSubZoneText()
       end,
       ZONE_CHANGED_NEW_AREA = function()
-        return true, _G.GetSubZoneText()
+        return true, GetSubZoneText()
       end,
     },
   },
@@ -247,16 +245,16 @@ local entries = {
     },
   },
   zone = {
-    init = _G.GetZoneText(),
+    init = GetZoneText(),
     events = {
       ZONE_CHANGED = function()
-        return true, _G.GetZoneText()
+        return true, GetZoneText()
       end,
       ZONE_CHANGED_INDOORS = function()
-        return true, _G.GetZoneText()
+        return true, GetZoneText()
       end,
       ZONE_CHANGED_NEW_AREA = function()
-        return true, _G.GetZoneText()
+        return true, GetZoneText()
       end,
     },
   },

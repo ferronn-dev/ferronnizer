@@ -40,8 +40,14 @@ local function newDataWatch()
     GetSkillLineInfo = function(i)
       return unpack(data.skilllines[i])
     end,
+    GetSubZoneText = function()
+      return 'subzone'
+    end,
     GetUnitSpeed = function()
       return 0
+    end,
+    GetZoneText = function()
+      return 'zone'
     end,
     ipairs = ipairs,
     pairs = pairs,
