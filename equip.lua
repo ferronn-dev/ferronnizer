@@ -78,8 +78,13 @@ local scan = (function()
     end
   end
 
-  return function(slot)
-    scanner:SetInventoryItem('player', slot)
+  local cache = {}
+  return function(link)
+    local cached = cache[link]
+    if cached then
+      return cached
+    end
+    scanner:SetHyperlink(link)
     local stats = {}
     for i = 1, scanner:NumLines() do
       local text = _G[leftPrefix .. i]:GetText()
@@ -88,14 +93,18 @@ local scan = (function()
       end
     end
     scanner:ClearLines()
+    cache[link] = stats
     return stats
   end
 end)()
 
 local t = {}
 for i = 0, 19 do
-  for k, v in pairs(scan(i)) do
-    t[k] = (t[k] or 0) + v
+  local link = GetInventoryItemLink('player', i)
+  if link then
+    for k, v in pairs(scan(link)) do
+      t[k] = (t[k] or 0) + v
+    end
   end
 end
 DevTools_Dump(t)
