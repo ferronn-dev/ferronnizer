@@ -96,6 +96,7 @@ roots:
 - buffs.lua
 - carrot.lua
 - chatframe.lua
+- equip.lua
 - minimap.lua
 - nameplates.lua
 - tooltips.lua
