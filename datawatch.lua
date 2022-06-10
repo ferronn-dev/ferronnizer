@@ -47,38 +47,6 @@ local multisub, pushsubs = (function()
   return multisub, pushsubs
 end)()
 
--- TODO update addonmaker
-local hacks = {
-  BASE_MOVEMENT_SPEED = 7,
-  GameTime_GetTime = function() end,
-  GetContainerNumSlots = function()
-    return 0
-  end,
-  GetContainerItemLink = function() end,
-  GetInventoryItemLink = function() end,
-  GetMaxPlayerLevel = function() end,
-  GetPetHappiness = function() end,
-  GetServerTime = function() end,
-  GetTrackingTexture = function() end,
-  GetWeaponEnchantInfo = function() end,
-  IsMounted = function() end,
-  IsResting = function() end,
-  IsStealthed = function() end,
-  NUM_BAG_SLOTS = 4,
-  NUM_BANKBAGSLOTS = 6,
-  UnitGetIncomingHeals = function()
-    return 0
-  end,
-  UnitHasIncomingResurrection = function() end,
-  UnitIsConnected = function() end,
-  UnitIsDeadOrGhost = function() end,
-}
-for k, v in pairs(hacks) do
-  if _G[k] == nil then
-    _G[k] = v
-  end
-end
-
 local entries = {
   bank_open = {
     init = false,
@@ -94,7 +62,7 @@ local entries = {
   game_time = {
     init = '',
     update = function()
-      return true, _G.GameTime_GetTime(false)
+      return true, GameTime_GetTime(false)
     end,
   },
   mailbox_open = {
@@ -109,10 +77,10 @@ local entries = {
     },
   },
   max_player_level = {
-    init = _G.GetMaxPlayerLevel(),
+    init = GetMaxPlayerLevel(),
     events = {
       PLAYER_MAX_LEVEL_UPDATE = function()
-        return true, _G.GetMaxPlayerLevel()
+        return true, GetMaxPlayerLevel()
       end,
     },
   },
@@ -144,7 +112,7 @@ local entries = {
         if u ~= 'pet' then
           return false
         else
-          return true, _G.GetPetHappiness()
+          return true, GetPetHappiness()
         end
       end,
     },
@@ -161,10 +129,10 @@ local entries = {
     },
   },
   player_resting = {
-    init = _G.IsResting(),
+    init = IsResting(),
     events = {
       PLAYER_UPDATE_RESTING = function()
-        return true, _G.IsResting()
+        return true, IsResting()
       end,
     },
   },
@@ -207,16 +175,16 @@ local entries = {
   speed = {
     init = 0,
     update = function()
-      return true, GetUnitSpeed('player') * 100 / _G.BASE_MOVEMENT_SPEED
+      return true, GetUnitSpeed('player') * 100 / BASE_MOVEMENT_SPEED
     end,
   },
   stealthed = {
     events = {
       PLAYER_LOGIN = function()
-        return true, _G.IsStealthed()
+        return true, IsStealthed()
       end,
       UPDATE_STEALTH = function()
-        return true, _G.IsStealthed()
+        return true, IsStealthed()
       end,
     },
   },
@@ -261,13 +229,13 @@ local entries = {
 }
 
 local bags = {
-  bag0 = _G.BACKPACK_CONTAINER,
-  bank0 = _G.BANK_CONTAINER,
+  bag0 = BACKPACK_CONTAINER,
+  bank0 = BANK_CONTAINER,
 }
 for i = 1, NUM_BAG_SLOTS do
   bags['bag' .. i] = i
 end
-for i = 1, _G.NUM_BANKBAGSLOTS do
+for i = 1, NUM_BANKBAGSLOTS do
   bags['bank' .. i] = NUM_BAG_SLOTS + i
 end
 for name, bagid in pairs(bags) do
@@ -277,7 +245,7 @@ for name, bagid in pairs(bags) do
       local function doUpdate()
         local t = {}
         for slot = 1, GetContainerNumSlots(bagid) do
-          local link = _G.GetContainerItemLink(bagid, slot)
+          local link = GetContainerItemLink(bagid, slot)
           if link then
             table.insert(t, link)
           end
@@ -352,7 +320,7 @@ local unitEntries = {
   },
   connected = {
     func = function(unit)
-      return _G.UnitIsConnected(unit) ~= false
+      return UnitIsConnected(unit) ~= false
     end,
     events = { 'UNIT_CONNECTION' },
   },
@@ -374,7 +342,7 @@ local unitEntries = {
     units = { player = true },
   },
   has_incoming_resurrection = {
-    func = _G.UnitHasIncomingResurrection,
+    func = UnitHasIncomingResurrection,
     events = { 'INCOMING_RESURRECT_CHANGED' },
   },
   health = {
@@ -382,7 +350,7 @@ local unitEntries = {
     events = { 'UNIT_HEALTH', 'UNIT_HEALTH_FREQUENT' },
   },
   incoming_heals = {
-    func = _G.UnitGetIncomingHeals,
+    func = UnitGetIncomingHeals,
     events = { 'UNIT_HEAL_PREDICTION' },
   },
   level = {
@@ -435,7 +403,7 @@ local unitEntries = {
         }
       end
       return function()
-        return process(_G.GetWeaponEnchantInfo())
+        return process(GetWeaponEnchantInfo())
       end
     end)(),
     events = { 'UNIT_INVENTORY_CHANGED' },

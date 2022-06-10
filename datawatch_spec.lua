@@ -16,7 +16,7 @@ local function newDataWatch()
     },
   }
   local scripts = {}
-  local globalEnv = {
+  wow.env.Mixin(wow.env, {
     assert = assert,
     CreateFrame = function()
       return {
@@ -88,10 +88,9 @@ local function newDataWatch()
       return data.units[unit] and data.units[unit].xpMax
     end,
     unpack = unpack,
-  }
-  globalEnv._G = globalEnv
+  })
   local addonEnv = {}
-  setfenv(loadfile('datawatch.lua'), globalEnv)('', addonEnv)
+  setfenv(loadfile('datawatch.lua'), wow.env)('', addonEnv)
   return addonEnv.DataWatch, scripts.OnEvent, scripts.OnUpdate, data
 end
 
