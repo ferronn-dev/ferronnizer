@@ -12,30 +12,20 @@ local scan = (function()
     }
   end
 
-  local function snum(field, patt)
-    return {
-      func = function(s, n)
-        return (s == '-' and -1 or 1) * tonumber(n)
-      end,
-      field = field,
-      pattern = patt,
-    }
-  end
-
   local patterns = {
-    snum('Agility', '([+-])(%d+) Agility'),
-    snum('AttackPower', '([+-])(%d+) Attack Power'),
-    snum('Defense', '([+-])(%d+) Defense'),
-    snum('Defense', 'Increased Defense ([+-])(%d+)'),
-    snum('FireResistance', '([+-])(%d+) Fire Resistance'),
-    snum('FrostResistance', '([+-])(%d+) Frost Resistance'),
-    snum('HealingPower', '([+-])(%d+) Healing Spells'),
-    snum('HealingPower', 'Healing Spells ([+-])(%d+)'),
-    snum('Intellect', '([+-])(%d+) Intellect'),
-    snum('ShadowResistance', '([+-])(%d+) Shadow Resistance'),
-    snum('Spirit', '([+-])(%d+) Spirit'),
-    snum('Stamina', '([+-])(%d+) Stamina'),
-    snum('Strength', '([+-])(%d+) Strength'),
+    num('Agility', '([+-]%d+) Agility'),
+    num('AttackPower', '([+-]%d+) Attack Power'),
+    num('Defense', '([+-]%d+) Defense'),
+    num('Defense', 'Increased Defense ([+-]%d+)'),
+    num('FireResistance', '([+-]%d+) Fire Resistance'),
+    num('FrostResistance', '([+-]%d+) Frost Resistance'),
+    num('HealingPower', '([+-]%d+) Healing Spells'),
+    num('HealingPower', 'Healing Spells ([+-]%d+)'),
+    num('Intellect', '([+-]%d+) Intellect'),
+    num('ShadowResistance', '([+-]%d+) Shadow Resistance'),
+    num('Spirit', '([+-]%d+) Spirit'),
+    num('Stamina', '([+-]%d+) Stamina'),
+    num('Strength', '([+-]%d+) Strength'),
     num('Armor', '(%d+) Armor'),
     num('DPS', '%(([%d%.]+) damage per second%)'),
     num('HealingPower', 'Equip: Increases healing done by spells and effects by up to (%d+).'),
