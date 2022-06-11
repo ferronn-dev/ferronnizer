@@ -27,7 +27,8 @@ local function newDataWatch()
     end,
   })
   local addonEnv = {}
-  local frame = setfenv(loadfile('datawatch.lua'), wow.env)('', addonEnv)
+  setfenv(loadfile('datawatch.lua'), wow.env)('', addonEnv)
+  local frame = addonEnv._datawatch.frame
   local function onEvent(...)
     return frame:GetScript('OnEvent')(frame, ...)
   end
@@ -140,5 +141,73 @@ describe('datawatch', function()
     onEvent('CHAT_MSG_SKILL')
     onUpdate()
     assert.same({ firstaid = 43 }, skill_table)
+  end)
+
+  describe('newtopic', function()
+    it('works', function()
+      local log = {}
+      local pub, sub = wow.addon._datawatch.newtopic()
+      local s1 = sub(function(v)
+        table.insert(log, 's1c:' .. tostring(v))
+      end)
+      table.insert(log, 's1r:' .. tostring(s1))
+      pub(42)
+      local s2 = sub(function(v)
+        table.insert(log, 's2c:' .. tostring(v))
+      end)
+      table.insert(log, 's2r:' .. tostring(s2))
+      pub(99)
+      assert.same('s1r:nil,s1c:42,s2r:42,s1c:99,s2c:99', table.concat(log, ','))
+    end)
+  end)
+
+  describe('multisub', function()
+    local function fns()
+      local tt = wow.addon._datawatch
+      return tt.newtopic, tt.multisub, tt.pushsubs
+    end
+    it('works', function()
+      local newtopic, multisub, pushsubs = fns()
+      local pub1, sub1 = newtopic()
+      local pub2, sub2 = newtopic()
+      pub1(12)
+      pub2(34)
+      local a1, a2
+      multisub({ sub1, sub2 }, function(v1, v2)
+        a1 = v1
+        a2 = v2
+      end)
+      assert.same(12, a1)
+      assert.same(34, a2)
+      local b1, b2
+      multisub({ sub1, sub2 }, function(v1, v2)
+        b1 = v1
+        b2 = v2
+      end)
+      assert.same(12, b1)
+      assert.same(34, b2)
+      pub1(56)
+      pub2(78)
+      assert.same(12, a1)
+      assert.same(34, a2)
+      assert.same(12, b1)
+      assert.same(34, b2)
+      pushsubs()
+      assert.same(56, a1)
+      assert.same(78, a2)
+      assert.same(56, b1)
+      assert.same(78, b2)
+      pub1(nil)
+      pub2(nil)
+      assert.same(56, a1)
+      assert.same(78, a2)
+      assert.same(56, b1)
+      assert.same(78, b2)
+      pushsubs()
+      assert.same(nil, a1)
+      assert.same(nil, a2)
+      assert.same(nil, b1)
+      assert.same(nil, b2)
+    end)
   end)
 end)

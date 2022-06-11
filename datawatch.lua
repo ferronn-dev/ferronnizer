@@ -20,14 +20,21 @@ local multisub, pushsubs = (function()
   local pending = {}
   local pushes = {}
   local values = {}
+  local subfns = {}
   local function multisub(subs, fn)
     for _, sub in ipairs(subs) do
-      values[sub] = sub(function(value)
-        if values[sub] ~= value then
-          values[sub] = value
-          pending[fn] = true
-        end
-      end)
+      if not subfns[sub] then
+        subfns[sub] = {}
+        values[sub] = sub(function(value)
+          if values[sub] ~= value then
+            values[sub] = value
+            for _, f in ipairs(subfns[sub]) do
+              pending[f] = true
+            end
+          end
+        end)
+      end
+      table.insert(subfns[sub], fn)
     end
     pushes[fn] = function()
       local t = {}
@@ -521,4 +528,9 @@ function G.DataWatch(...)
   multisub(subs, func)
 end
 
-return frame -- for testing
+G._datawatch = { -- for testing
+  frame = frame,
+  multisub = multisub,
+  newtopic = newtopic,
+  pushsubs = pushsubs,
+}
