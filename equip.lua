@@ -1,3 +1,5 @@
+local _, G = ...
+
 local scan = (function()
   local name = 'FerronnizerScannerTooltip'
   local leftPrefix = name .. 'TextLeft'
@@ -66,13 +68,12 @@ local scan = (function()
   end
 end)()
 
-local t = {}
-for i = 0, 19 do
-  local link = GetInventoryItemLink('player', i)
-  if link then
+G.DataWatch('equipment', function(equipment)
+  local t = {}
+  for _, link in pairs(equipment) do
     for k, v in pairs(scan(link)) do
       t[k] = (t[k] or 0) + v
     end
   end
-end
-DevTools_Dump(t)
+  DevTools_Dump(t)
+end)

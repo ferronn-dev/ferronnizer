@@ -66,6 +66,24 @@ local entries = {
       end,
     },
   },
+  equipment = (function()
+    local cache = {}
+    return {
+      init = {},
+      events = {
+        PLAYER_EQUIPMENT_CHANGED = function(slot)
+          cache[slot] = GetInventoryItemLink('player', slot)
+          return true, Mixin({}, cache)
+        end,
+        PLAYER_LOGIN = function()
+          for slot = 0, 19 do
+            cache[slot] = GetInventoryItemLink('player', slot)
+          end
+          return true, Mixin({}, cache)
+        end,
+      },
+    }
+  end)(),
   game_time = {
     init = '',
     update = function()
@@ -157,6 +175,9 @@ local entries = {
   rested_xp = {
     init = 0,
     events = {
+      PLAYER_LOGIN = function()
+        return true, GetXPExhaustion() or 0
+      end,
       UPDATE_EXHAUSTION = function()
         return true, GetXPExhaustion() or 0
       end,
@@ -344,17 +365,6 @@ local unitEntries = {
       return getAuras(unit, 'HARMFUL')
     end,
     events = { 'UNIT_AURA' },
-  },
-  equipment = {
-    events = { 'PLAYER_EQUIPMENT_CHANGED' },
-    func = function(unit)
-      local result = {}
-      for i = 0, 18 do
-        result[i] = GetInventoryItemLink(unit, i)
-      end
-      return result
-    end,
-    units = { player = true },
   },
   has_incoming_resurrection = {
     func = UnitHasIncomingResurrection,

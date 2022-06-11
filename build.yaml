@@ -22,6 +22,8 @@ deps:
   - util.lua
   chatframe.lua:
   - util.lua
+  equip.lua:
+  - datawatch.lua
   minimap.lua:
   - util.lua
   nameplates.lua:

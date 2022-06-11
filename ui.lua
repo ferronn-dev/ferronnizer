@@ -383,6 +383,9 @@ root.Info = (function()
   f('money', function(value)
     return 'Money: ' .. GetCoinTextureString(value)
   end)
+  f('rested_xp', function(value)
+    return 'Rested XP: ' .. value
+  end)
   return t
 end)()
 
