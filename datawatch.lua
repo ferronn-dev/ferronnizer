@@ -483,6 +483,18 @@ local mktopic, gettopic = (function()
   return mktopic, gettopic
 end)()
 
+local updateHack = (function() -- TODO generalize multipub
+  local pubx = mktopic('pos_x')
+  local puby = mktopic('pos_y')
+  pubx(0)
+  puby(0)
+  return function()
+    local posy, posx = UnitPosition('player')
+    pubx(posx)
+    puby(posy)
+  end
+end)()
+
 local handlers = {}
 local updates = {}
 
@@ -512,6 +524,7 @@ for e in pairs(handlers) do
   frame:RegisterEvent(e)
 end
 frame:SetScript('OnUpdate', function()
+  updateHack()
   for k, v in pairs(updates) do
     process(k, v())
   end
