@@ -439,6 +439,7 @@ G.Eventer({
   end,
 })
 
+LoadAddOn('Blizzard_CombatText')
 local lastxp, lastxpmax
 G.DataWatch('player_xp', 'player_max_xp', function(xp, xpmax)
   local delta
