@@ -470,13 +470,24 @@ for unit, events in pairs(unitTokens) do
   end
 end
 
+local mktopic, gettopic = (function()
+  local topics = {}
+  local function mktopic(name)
+    local pub, sub = newtopic()
+    topics[name] = sub
+    return pub
+  end
+  local function gettopic(name)
+    return (assert(topics[name], 'invalid topic ' .. tostring(name)))
+  end
+  return mktopic, gettopic
+end)()
+
 local handlers = {}
-local topics = {}
 local updates = {}
 
 for k, v in pairs(entries) do
-  local pub, sub = newtopic()
-  topics[k] = sub
+  local pub = mktopic(k)
   updates[pub] = v.update
   pub(v.init)
   for e, h in pairs(v.events or {}) do
@@ -514,8 +525,7 @@ function G.AddFrameWatch(f)
   assert(f:GetScript('OnLeave') == nil)
   numFrameWatches = numFrameWatches + 1
   local tag = '_framewatch_' .. numFrameWatches
-  local pub, sub = newtopic()
-  topics[tag] = sub
+  local pub = mktopic(tag)
   f:SetScript('OnEnter', function()
     pub(true)
   end)
@@ -533,7 +543,7 @@ function G.DataWatch(...)
   for i = 1, n - 1 do
     local name = select(i, ...)
     assert(type(name) == 'string')
-    table.insert(subs, (assert(topics[name], 'invalid topic ' .. tostring(name))))
+    table.insert(subs, gettopic(name))
   end
   multisub(subs, func)
 end
