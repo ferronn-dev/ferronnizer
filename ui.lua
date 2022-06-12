@@ -387,7 +387,7 @@ root.Info = (function()
     return 'Rested XP: ' .. value
   end)
   f('pos_x', 'pos_y', function(x, y)
-    return string.format('Position: %d,%d', x, y)
+    return string.format('Position: %.2f, %.2f', x, y)
   end)
   return t
 end)()

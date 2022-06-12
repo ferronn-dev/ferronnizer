@@ -489,9 +489,10 @@ local updateHack = (function() -- TODO generalize multipub
   pubx(0)
   puby(0)
   return function()
-    local posy, posx = UnitPosition('player')
-    pubx(posx)
-    puby(posy)
+    local map = C_Map.GetBestMapForUnit('player')
+    local pos = C_Map.GetPlayerMapPosition(map, 'player')
+    pubx(pos.x * 100)
+    puby(pos.y * 100)
   end
 end)()
 
