@@ -16,6 +16,7 @@ local scan = (function()
 
   local patterns = {
     num('Agility', '([+-]%d+) Agility'),
+    num('ArcaneResistance', '([+-]%d+) Arcane Resistance'),
     num('AttackPower', '([+-]%d+) Attack Power'),
     num('Defense', '([+-]%d+) Defense'),
     num('Defense', 'Increased Defense ([+-]%d+)'),
@@ -24,6 +25,7 @@ local scan = (function()
     num('HealingPower', '([+-]%d+) Healing Spells'),
     num('HealingPower', 'Healing Spells ([+-]%d+)'),
     num('Intellect', '([+-]%d+) Intellect'),
+    num('NatureResistance', '([+-]%d+) Nature Resistance'),
     num('ShadowResistance', '([+-]%d+) Shadow Resistance'),
     num('Spirit', '([+-]%d+) Spirit'),
     num('Stamina', '([+-]%d+) Stamina'),
@@ -49,7 +51,7 @@ local scan = (function()
   return function(link)
     local cached = cache[link]
     if cached then
-      return cached
+      return Mixin({}, cached)
     end
     scanner:SetHyperlink(link)
     local stats = {}
@@ -68,6 +70,16 @@ local scan = (function()
   end
 end)()
 
+local function statdiff(a, b)
+  local t = Mixin({}, b)
+  for k, v in pairs(a) do
+    local x = (t[k] or 0) - v
+    t[k] = (x ~= 0) and x or nil
+  end
+  return t
+end
+
+local last
 G.DataWatch('equipment', function(equipment)
   local t = {}
   for _, link in pairs(equipment) do
@@ -75,5 +87,10 @@ G.DataWatch('equipment', function(equipment)
       t[k] = (t[k] or 0) + v
     end
   end
-  DevTools_Dump(t)
+  if last then
+    print('== start stat diff ==')
+    DevTools_Dump(statdiff(last, t))
+    print('=== end stat diff ===')
+  end
+  last = t
 end)
