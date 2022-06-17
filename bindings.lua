@@ -3,6 +3,7 @@ local isMainline = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local bindings = {
   ['`'] = 'TOGGLEAUTORUN',
   ['G'] = 'MM_FOLLOWME',
+  ['T'] = 'FERRONNIZER_TRADE',
   ['CTRL-`'] = isMainline and 'ALLTHETHINGS_TOGGLEMINILIST' or 'ATTC_TOGGLEMINILIST',
   ['CTRL-TAB'] = 'TOGGLEMINIMAP',
   ['ALT-B'] = 'OPENALLBAGS',

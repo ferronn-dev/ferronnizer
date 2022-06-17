@@ -1,0 +1,5 @@
+<Bindings>
+  <Binding name="FERRONNIZER_TRADE">
+    InitiateTrade('party1')
+  </Binding>
+</Bindings>
