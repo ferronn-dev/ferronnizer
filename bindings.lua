@@ -2,6 +2,7 @@ local addonName, G = ...
 local isMainline = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
 local bindings = {
   ['`'] = 'TOGGLEAUTORUN',
+  ['G'] = 'MM_FOLLOWME',
   ['CTRL-`'] = isMainline and 'ALLTHETHINGS_TOGGLEMINILIST' or 'ATTC_TOGGLEMINILIST',
   ['CTRL-TAB'] = 'TOGGLEMINIMAP',
   ['ALT-B'] = 'OPENALLBAGS',
