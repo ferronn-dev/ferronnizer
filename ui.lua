@@ -291,17 +291,23 @@ root.Player.OnHateList = (function()
   return t
 end)()
 
-root.Player.Resting = (function()
-  local t = root.Player:CreateTexture(nil, 'OVERLAY')
+local function mkResting(unit, parent)
+  local t = parent:CreateTexture(nil, 'OVERLAY')
   t:SetTexture('Interface\\CharacterFrame\\UI-StateIcon')
   t:SetTexCoord(0, 0.5, 0, 0.421875)
   t:SetPoint('TOPLEFT')
   t:SetSize(31, 33)
-  G.DataWatch('player_resting', function(resting)
+  G.DataWatch(unit .. '_resting', function(resting)
     t:SetShown(resting)
   end)
   return t
-end)()
+end
+
+mkResting('player', root.Player)
+mkResting('party1', root.Party1)
+mkResting('party2', root.Party2)
+mkResting('party3', root.Party3)
+mkResting('party4', root.Party4)
 
 root.Pet.Happiness = (function()
   -- Adapted from PetFrame.lua

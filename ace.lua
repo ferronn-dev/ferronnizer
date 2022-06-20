@@ -14,17 +14,15 @@ LibStub('AceConfig-3.0'):RegisterOptionsTable(addonName, {
         get = function()
           return state
         end,
-        set = (function()
+        set = function(_, value)
           local root = _G.FerronnizerRoot
           local hidden = root.Hidden
-          return function(_, value)
-            state = value
-            CompactRaidFrameManager:SetParent(state and hidden or UIParent)
-            for i = 1, 4 do
-              root['Party' .. i]:SetParent(state and root or hidden)
-            end
+          state = value
+          CompactRaidFrameManager:SetParent(state and hidden or UIParent)
+          for i = 1, 4 do
+            root['Party' .. i]:SetParent(state and root or hidden)
           end
-        end)(),
+        end,
       }
     end)(),
   },
@@ -35,10 +33,17 @@ ace:RegisterChatCommand(slash, function(input)
   handleCommand(ace, slash, addonName, input)
 end)
 
+local pubs = {}
+for i = 1, 4 do
+  table.insert(pubs, G.RegisterDataWatch(('party%d_resting'):format(i)))
+end
 ace:RegisterComm(addonName, function(_, value, _, sender)
-  print(('%s is following %s.'):format(sender, value))
+  for i = 1, 4 do
+    if UnitIsUnit(sender, 'party' .. i) then
+      pubs[i](value == 'true')
+    end
+  end
 end)
-
-G.DataWatch('following', function(value)
+G.DataWatch('player_resting', function(value)
   ace:SendCommMessage(addonName, tostring(value), 'PARTY')
 end)

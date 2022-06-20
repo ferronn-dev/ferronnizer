@@ -582,6 +582,8 @@ function G.DataWatch(...)
   multisub(subs, func)
 end
 
+G.RegisterDataWatch = mktopic
+
 G._datawatch = { -- for testing
   frame = frame,
   multisub = multisub,
