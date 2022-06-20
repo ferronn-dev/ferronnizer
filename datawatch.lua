@@ -1,4 +1,4 @@
-local _, G = ...
+local addonName, G = ...
 
 local function newtopic()
   local fns = {}
@@ -314,6 +314,16 @@ for name, bagid in pairs(bags) do
     end)(),
   }
 end
+
+local UnitAura = (function()
+  local LibClassicDurations = LibStub('LibClassicDurations', true)
+  if LibClassicDurations then
+    LibClassicDurations:Register(addonName)
+    return LibClassicDurations.UnitAuraWrapper
+  else
+    return UnitAura
+  end
+end)()
 
 local function getAuras(unit, filter)
   local t = {}

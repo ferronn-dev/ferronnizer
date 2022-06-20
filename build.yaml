@@ -29,6 +29,8 @@ deps:
   - util.lua
   chatframe.lua:
   - util.lua
+  datawatch.lua:
+  - libs/LibClassicDurations/npcAbilities.lua
   equip.lua:
   - datawatch.lua
   libs/AceComm-3.0/AceComm-3.0.lua:
@@ -42,6 +44,14 @@ deps:
   - libs/AceConfig-3.0/AceConfigRegistry-3.0/AceConfigRegistry-3.0.lua
   libs/AceConfig-3.0/AceConfigRegistry-3.0/AceConfigRegistry-3.0.lua:
   - libs/CallbackHandler-1.0/CallbackHandler-1.0.lua
+  libs/LibClassicDurations/classAbilities.lua:
+  - libs/LibClassicDurations/core.lua
+  libs/LibClassicDurations/core.lua:
+  - libs/CallbackHandler-1.0/CallbackHandler-1.0.lua
+  libs/LibClassicDurations/diminishingReturns.lua:
+  - libs/LibClassicDurations/classAbilities.lua
+  libs/LibClassicDurations/npcAbilities.lua:
+  - libs/LibClassicDurations/diminishingReturns.lua
   minimap.lua:
   - util.lua
   nameplates.lua:
@@ -116,6 +126,7 @@ libs:
   AceConsole-3.0: https://repos.wowace.com/wow/ace3/trunk/AceConsole-3.0
   AceSerializer-3.0: https://repos.wowace.com/wow/ace3/trunk/AceSerializer-3.0
   CallbackHandler-1.0:  https://repos.wowace.com/wow/callbackhandler/trunk/CallbackHandler-1.0
+  LibClassicDurations: https://repos.curseforge.com/wow/libclassicdurations
   LibStub: https://repos.wowace.com/wow/libstub/trunk
 roots:
 - ace.lua
