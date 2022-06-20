@@ -1,6 +1,7 @@
-local addonName = ...
+local addonName, G = ...
 
-local ace = LibStub('AceAddon-3.0'):NewAddon(addonName, 'AceConsole-3.0')
+local ace = LibStub('AceAddon-3.0'):NewAddon(addonName, 'AceComm-3.0', 'AceConsole-3.0', 'AceSerializer-3.0')
+
 LibStub('AceConfig-3.0'):RegisterOptionsTable(addonName, {
   type = 'group',
   args = {
@@ -32,4 +33,12 @@ local slash = 'ferronnizer'
 local handleCommand = LibStub('AceConfigCmd-3.0').HandleCommand
 ace:RegisterChatCommand(slash, function(input)
   handleCommand(ace, slash, addonName, input)
+end)
+
+ace:RegisterComm(addonName, function(_, value, _, sender)
+  print(('%s is following %s.'):format(sender, value))
+end)
+
+G.DataWatch('following', function(value)
+  ace:SendCommMessage(addonName, tostring(value), 'PARTY')
 end)
