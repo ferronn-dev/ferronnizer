@@ -391,6 +391,9 @@ root.Info = (function()
   f('pos_x', 'pos_y', function(x, y)
     return string.format('Position: %.2f, %.2f', x, y)
   end)
+  f('following', function(unit)
+    return 'Following: ' .. tostring(unit)
+  end)
   return t
 end)()
 
