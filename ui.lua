@@ -100,13 +100,14 @@ for _, uf in ipairs(unitFrames) do
   if unit == 'player' then
     tooltipify(
       v,
-      'ANCHOR_TOP',
+      'ANCHOR_NONE',
       'player_level',
       'max_player_level',
       'player_xp',
       'player_max_xp',
       'rested_xp',
       function(tooltip, level, levelMax, xp, xpMax, xpRested)
+        tooltip:SetPoint('RIGHT', v, 'LEFT')
         tooltip:SetUnit(unit)
         if level < levelMax then
           tooltip:AddLine(('XP: %d/%d'):format(xp, xpMax))
@@ -115,7 +116,8 @@ for _, uf in ipairs(unitFrames) do
       end
     )
   else
-    tooltipify(v, 'ANCHOR_TOP', function(tooltip)
+    tooltipify(v, 'ANCHOR_NONE', function(tooltip)
+      tooltip:SetPoint('RIGHT', v, 'LEFT')
       tooltip:SetUnit(unit)
     end)
   end
