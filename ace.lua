@@ -33,28 +33,39 @@ ace:RegisterChatCommand(slash, function(input)
   handleCommand(ace, slash, addonName, input)
 end)
 
+local commWatches = {
+  'on_hate_list',
+  'resting',
+}
+
 local pubs = {}
 for i = 1, 4 do
   local prefix = 'party' .. i .. '_'
-  table.insert(pubs, {
-    on_hate_list = G.RegisterDataWatch(prefix .. 'on_hate_list'),
-    resting = G.RegisterDataWatch(prefix .. 'resting'),
-  })
+  local t = {}
+  for _, w in ipairs(commWatches) do
+    t[w] = G.RegisterDataWatch(prefix .. w)
+  end
+  table.insert(pubs, t)
 end
 ace:RegisterComm(addonName, function(_, msg, _, sender)
   for i = 1, 4 do
     if UnitIsUnit(sender, 'party' .. i) then
       local _, t = assert(ace:Deserialize(msg))
-      local p = pubs[i]
-      p.on_hate_list(t.on_hate_list)
-      p.resting(t.resting)
+      for k, v in pairs(pubs[i]) do
+        v(t[k])
+      end
     end
   end
 end)
-G.DataWatch('player_on_hate_list', 'player_resting', function(on_hate_list, resting)
-  local msg = ace:Serialize({
-    on_hate_list = on_hate_list,
-    resting = resting,
-  })
-  ace:SendCommMessage(addonName, msg, 'PARTY')
+local wargs = {}
+for _, w in ipairs(commWatches) do
+  table.insert(wargs, 'player_' .. w)
+end
+table.insert(wargs, function(...)
+  local t = {}
+  for i, w in ipairs(commWatches) do
+    t[w] = select(i, ...)
+  end
+  ace:SendCommMessage(addonName, ace:Serialize(t), 'PARTY')
 end)
+G.DataWatch(unpack(wargs))
