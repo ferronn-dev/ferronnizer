@@ -31,6 +31,7 @@ local unitFrames = {
     end,
     parentKey = 'Player',
     unit = 'player',
+    widgets = true,
   },
   {
     anchor = function()
@@ -46,6 +47,7 @@ local unitFrames = {
     end,
     parentKey = 'Party1',
     unit = 'party1',
+    widgets = true,
   },
   {
     anchor = function()
@@ -53,6 +55,7 @@ local unitFrames = {
     end,
     parentKey = 'Party2',
     unit = 'party2',
+    widgets = true,
   },
   {
     anchor = function()
@@ -60,6 +63,7 @@ local unitFrames = {
     end,
     parentKey = 'Party3',
     unit = 'party3',
+    widgets = true,
   },
   {
     anchor = function()
@@ -67,6 +71,7 @@ local unitFrames = {
     end,
     parentKey = 'Party4',
     unit = 'party4',
+    widgets = true,
   },
   {
     anchor = function()
@@ -197,6 +202,32 @@ for _, uf in ipairs(unitFrames) do
     return fs
   end)()
 
+  if uf.widgets then
+    v.OnHateList = (function()
+      local t = v:CreateTexture(nil, 'OVERLAY')
+      t:SetTexture('Interface\\CharacterFrame\\UI-StateIcon')
+      t:SetTexCoord(0.5, 1.0, 0, 0.484375)
+      t:SetPoint('TOPRIGHT')
+      t:SetSize(32, 32)
+      G.DataWatch(unit .. '_on_hate_list', function(onHateList)
+        t:SetShown(onHateList)
+      end)
+      return t
+    end)()
+
+    v.Resting = (function()
+      local t = v:CreateTexture(nil, 'OVERLAY')
+      t:SetTexture('Interface\\CharacterFrame\\UI-StateIcon')
+      t:SetTexCoord(0, 0.5, 0, 0.421875)
+      t:SetPoint('TOPLEFT')
+      t:SetSize(31, 33)
+      G.DataWatch(unit .. '_resting', function(resting)
+        t:SetShown(resting)
+      end)
+      return t
+    end)()
+  end
+
   v.Power = (function()
     local f = CreateFrame('StatusBar', nil, v)
     f:SetPoint('TOPLEFT', 0, -40)
@@ -278,36 +309,6 @@ for _, uf in ipairs(unitFrames) do
     return f
   end)()
 end
-
-root.Player.OnHateList = (function()
-  local t = root.Player:CreateTexture(nil, 'OVERLAY')
-  t:SetTexture('Interface\\CharacterFrame\\UI-StateIcon')
-  t:SetTexCoord(0.5, 1.0, 0, 0.484375)
-  t:SetPoint('TOPRIGHT')
-  t:SetSize(32, 32)
-  G.DataWatch('player_on_hate_list', function(onHateList)
-    t:SetShown(onHateList)
-  end)
-  return t
-end)()
-
-local function mkResting(unit, parent)
-  local t = parent:CreateTexture(nil, 'OVERLAY')
-  t:SetTexture('Interface\\CharacterFrame\\UI-StateIcon')
-  t:SetTexCoord(0, 0.5, 0, 0.421875)
-  t:SetPoint('TOPLEFT')
-  t:SetSize(31, 33)
-  G.DataWatch(unit .. '_resting', function(resting)
-    t:SetShown(resting)
-  end)
-  return t
-end
-
-mkResting('player', root.Player)
-mkResting('party1', root.Party1)
-mkResting('party2', root.Party2)
-mkResting('party3', root.Party3)
-mkResting('party4', root.Party4)
 
 root.Pet.Happiness = (function()
   -- Adapted from PetFrame.lua

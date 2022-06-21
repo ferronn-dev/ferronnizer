@@ -35,15 +35,26 @@ end)
 
 local pubs = {}
 for i = 1, 4 do
-  table.insert(pubs, G.RegisterDataWatch(('party%d_resting'):format(i)))
+  local prefix = 'party' .. i .. '_'
+  table.insert(pubs, {
+    on_hate_list = G.RegisterDataWatch(prefix .. 'on_hate_list'),
+    resting = G.RegisterDataWatch(prefix .. 'resting'),
+  })
 end
-ace:RegisterComm(addonName, function(_, value, _, sender)
+ace:RegisterComm(addonName, function(_, msg, _, sender)
   for i = 1, 4 do
     if UnitIsUnit(sender, 'party' .. i) then
-      pubs[i](value == 'true')
+      local _, t = assert(ace:Deserialize(msg))
+      local p = pubs[i]
+      p.on_hate_list(t.on_hate_list)
+      p.resting(t.resting)
     end
   end
 end)
-G.DataWatch('player_resting', function(value)
-  ace:SendCommMessage(addonName, tostring(value), 'PARTY')
+G.DataWatch('player_on_hate_list', 'player_resting', function(on_hate_list, resting)
+  local msg = ace:Serialize({
+    on_hate_list = on_hate_list,
+    resting = resting,
+  })
+  ace:SendCommMessage(addonName, msg, 'PARTY')
 end)
