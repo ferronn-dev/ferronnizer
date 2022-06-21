@@ -34,6 +34,7 @@ ace:RegisterChatCommand(slash, function(input)
 end)
 
 local commWatches = {
+  'following',
   'on_hate_list',
   'resting',
 }

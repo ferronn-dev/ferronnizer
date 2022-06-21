@@ -84,16 +84,6 @@ local entries = {
       },
     }
   end)(),
-  following = {
-    events = {
-      AUTOFOLLOW_BEGIN = function(unit)
-        return true, unit
-      end,
-      AUTOFOLLOW_END = function()
-        return true, nil
-      end,
-    },
-  },
   game_time = {
     init = '',
     update = function()
@@ -149,6 +139,16 @@ local entries = {
         else
           return true, GetPetHappiness()
         end
+      end,
+    },
+  },
+  player_following = {
+    events = {
+      AUTOFOLLOW_BEGIN = function(unit)
+        return true, unit
+      end,
+      AUTOFOLLOW_END = function()
+        return true, nil
       end,
     },
   },
