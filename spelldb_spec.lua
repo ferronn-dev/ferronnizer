@@ -13,6 +13,9 @@ describe('spell db', function()
       ['Pick Pocket'] = true,
       ['Stealth'] = true,
     }
+    if wow.env.WOW_PROJECT_ID == 2 then
+      knownBad.Fishing = true
+    end
     local seenBad = {}
     for fullname, spec in pairs(wow.addon.ClassActionSpecs) do
       for _, actions in ipairs(spec) do

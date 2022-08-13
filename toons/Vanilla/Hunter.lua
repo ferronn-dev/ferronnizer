@@ -127,6 +127,9 @@ G.AddClassActionSpec('Vanilla', 3, {
   [36] = {
     racial2 = true,
   },
+  [37] = {
+    spell = 'Fishing',
+  },
   [43] = {
     mount = true,
   },
