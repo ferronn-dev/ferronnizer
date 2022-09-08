@@ -4,7 +4,7 @@ G.AddClassActionSpec('Vanilla', 1, {
     spell = 'Heroic Strike',
   },
   [2] = {
-    spell = 'Cleave',
+    spell = 'Rend',
   },
   [3] = {
     spell = 'Sunder Armor',
@@ -25,7 +25,7 @@ G.AddClassActionSpec('Vanilla', 1, {
     shoot = true,
   },
   [9] = {
-    spell = 'Rend',
+    spell = 'Cleave',
   },
   [10] = {
     spell = 'Slam',
