@@ -747,12 +747,13 @@ local function makeActionButtons()
     end,
   }
   local iconButtons = {}
+  local parent = CreateFrame('Frame', addonName .. 'ActionRoot', _G[addonName .. 'Root'])
   for row = 1, 4 do
     for col = 1, 12 do
       local button = CreateFrame(
         'CheckButton',
         addonName .. 'ActionIconButton' .. (#iconButtons + 1),
-        UIParent,
+        parent,
         'ActionButtonTemplate, SecureActionButtonTemplate'
       )
       attachToIconGrid(button, row, col)
@@ -781,7 +782,7 @@ local function makeActionButtons()
       local button = CreateFrame(
         'Button',
         addonName .. 'ActionTextButton' .. idx,
-        UIParent,
+        parent,
         'UIPanelButtonTemplate, SecureActionButtonTemplate'
       )
       attachToTextGrid(button, row, col)

@@ -16,6 +16,7 @@ deps:
   - potiondb.lua
   - spelldb.lua
   - toons.lua
+  - ui.lua
   - util.lua
   bindings.lua:
   - actions.lua
