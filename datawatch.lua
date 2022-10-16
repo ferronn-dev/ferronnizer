@@ -59,10 +59,10 @@ local entries = {
     init = false,
     events = {
       BANKFRAME_CLOSED = function()
-        return true, false
+        return false
       end,
       BANKFRAME_OPENED = function()
-        return true, true
+        return true
       end,
     },
   },
@@ -73,13 +73,13 @@ local entries = {
       events = {
         PLAYER_EQUIPMENT_CHANGED = function(slot)
           cache[slot] = GetInventoryItemLink('player', slot)
-          return true, Mixin({}, cache)
+          return Mixin({}, cache)
         end,
         PLAYER_LOGIN = function()
           for slot = 0, 19 do
             cache[slot] = GetInventoryItemLink('player', slot)
           end
-          return true, Mixin({}, cache)
+          return Mixin({}, cache)
         end,
       },
     }
@@ -87,17 +87,17 @@ local entries = {
   game_time = {
     init = '',
     update = function()
-      return true, GameTime_GetTime(false)
+      return GameTime_GetTime(false)
     end,
   },
   mailbox_open = {
     init = false,
     events = {
       MAIL_CLOSED = function()
-        return true, false
+        return false
       end,
       MAIL_SHOW = function()
-        return true, true
+        return true
       end,
     },
   },
@@ -105,7 +105,7 @@ local entries = {
     init = GetMaxPlayerLevel(),
     events = {
       PLAYER_MAX_LEVEL_UPDATE = function()
-        return true, GetMaxPlayerLevel()
+        return GetMaxPlayerLevel()
       end,
     },
   },
@@ -113,20 +113,20 @@ local entries = {
     init = 0,
     events = {
       PLAYER_LOGIN = function()
-        return true, GetMoney()
+        return GetMoney()
       end,
       PLAYER_MONEY = function()
-        return true, GetMoney()
+        return GetMoney()
       end,
     },
   },
   mounted = {
     events = {
       PLAYER_LOGIN = function()
-        return true, IsMounted()
+        return IsMounted()
       end,
       PLAYER_MOUNT_DISPLAY_CHANGED = function()
-        return true, IsMounted()
+        return IsMounted()
       end,
     },
   },
@@ -134,10 +134,8 @@ local entries = {
     init = '',
     events = {
       UNIT_HAPPINESS = function(u)
-        if u ~= 'pet' then
-          return false
-        else
-          return true, GetPetHappiness()
+        if u == 'pet' then
+          return GetPetHappiness()
         end
       end,
     },
@@ -145,10 +143,10 @@ local entries = {
   player_following = {
     events = {
       AUTOFOLLOW_BEGIN = function(unit)
-        return true, unit
+        return unit
       end,
       AUTOFOLLOW_END = function()
-        return true, nil
+        return nil
       end,
     },
   },
@@ -156,10 +154,10 @@ local entries = {
     init = false,
     events = {
       PLAYER_REGEN_DISABLED = function()
-        return true, true
+        return true
       end,
       PLAYER_REGEN_ENABLED = function()
-        return true, false
+        return false
       end,
     },
   },
@@ -167,7 +165,7 @@ local entries = {
     init = IsResting(),
     events = {
       PLAYER_UPDATE_RESTING = function()
-        return true, IsResting()
+        return IsResting()
       end,
     },
   },
@@ -175,10 +173,10 @@ local entries = {
     init = false,
     events = {
       READY_CHECK = function()
-        return true, true
+        return true
       end,
       READY_CHECK_FINISHED = function()
-        return true, false
+        return false
       end,
     },
   },
@@ -186,17 +184,17 @@ local entries = {
     init = 0,
     events = {
       PLAYER_LOGIN = function()
-        return true, GetXPExhaustion() or 0
+        return GetXPExhaustion() or 0
       end,
       UPDATE_EXHAUSTION = function()
-        return true, GetXPExhaustion() or 0
+        return GetXPExhaustion() or 0
       end,
     },
   },
   server_time = {
     init = GetServerTime(),
     update = function()
-      return true, GetServerTime()
+      return GetServerTime()
     end,
   },
   skill_table = {
@@ -210,7 +208,7 @@ local entries = {
             t['firstaid'] = value
           end
         end
-        return true, t
+        return t
       end
       return {
         CHAT_MSG_SKILL = compute,
@@ -221,16 +219,16 @@ local entries = {
   speed = {
     init = 0,
     update = function()
-      return true, GetUnitSpeed('player') * 100 / BASE_MOVEMENT_SPEED
+      return GetUnitSpeed('player') * 100 / BASE_MOVEMENT_SPEED
     end,
   },
   stealthed = {
     events = {
       PLAYER_LOGIN = function()
-        return true, IsStealthed()
+        return IsStealthed()
       end,
       UPDATE_STEALTH = function()
-        return true, IsStealthed()
+        return IsStealthed()
       end,
     },
   },
@@ -238,23 +236,23 @@ local entries = {
     init = GetSubZoneText(),
     events = {
       ZONE_CHANGED = function()
-        return true, GetSubZoneText()
+        return GetSubZoneText()
       end,
       ZONE_CHANGED_INDOORS = function()
-        return true, GetSubZoneText()
+        return GetSubZoneText()
       end,
       ZONE_CHANGED_NEW_AREA = function()
-        return true, GetSubZoneText()
+        return GetSubZoneText()
       end,
     },
   },
   tracking_texture = {
     events = {
       MINIMAP_UPDATE_TRACKING = function()
-        return true, GetTrackingTexture()
+        return GetTrackingTexture()
       end,
       PLAYER_LOGIN = function()
-        return true, GetTrackingTexture()
+        return GetTrackingTexture()
       end,
     },
   },
@@ -262,13 +260,13 @@ local entries = {
     init = GetZoneText(),
     events = {
       ZONE_CHANGED = function()
-        return true, GetZoneText()
+        return GetZoneText()
       end,
       ZONE_CHANGED_INDOORS = function()
-        return true, GetZoneText()
+        return GetZoneText()
       end,
       ZONE_CHANGED_NEW_AREA = function()
-        return true, GetZoneText()
+        return GetZoneText()
       end,
     },
   },
@@ -296,7 +294,7 @@ for name, bagid in pairs(bags) do
             table.insert(t, link)
           end
         end
-        return true, t
+        return t
       end
       local update = false
       return {
@@ -465,17 +463,15 @@ for unit, events in pairs(unitTokens) do
     if not entry.units or entry.units[unit] then
       local func = entry.func
       local unconditional = function()
-        return true, func(unit)
+        return func(unit)
       end
       local handlers = {
         PLAYER_LOGIN = unconditional,
       }
       for _, event in ipairs(entry.events) do
         handlers[event] = function(u)
-          if u ~= unit then
-            return false
-          else
-            return true, func(unit)
+          if u == unit then
+            return func(unit)
           end
         end
       end
@@ -529,9 +525,9 @@ for k, v in pairs(entries) do
   end
 end
 
-local function process(pub, useValue, newValue)
-  if useValue then
-    pub(newValue)
+local function process(pub, ...)
+  if select('#', ...) > 0 then
+    pub(...)
   end
 end
 
