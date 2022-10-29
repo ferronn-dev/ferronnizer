@@ -21,6 +21,7 @@ jobs:
         imageName: ghcr.io/ferronn-dev/ferronnizer-devcontainer
         refFilterForPush: refs/heads/main
         runCmd: true
+    - uses: docker/setup-buildx-action@v1
     - name: Cache Docker layers
       uses: actions/cache@v2
       with:
