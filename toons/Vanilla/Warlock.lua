@@ -12,6 +12,18 @@ G.AddClassActionSpec('Vanilla', 9, {
   [4] = {
     spell = 'Curse of Weakness',
   },
+  [6] = {
+    spell = 'Life Tap',
+  },
+  [16] = {
+    petaction = 1,
+  },
+  [17] = {
+    petaction = 2,
+  },
+  [18] = {
+    petaction = 3,
+  },
   [33] = {
     spell = 'Summon Imp',
   },
