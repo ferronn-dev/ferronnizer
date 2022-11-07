@@ -18,6 +18,9 @@ G.AddClassActionSpec('Vanilla', 9, {
   [6] = {
     spell = 'Life Tap',
   },
+  [8] = {
+    spell = 'Health Funnel',
+  },
   [9] = {
     spell = 'Fear',
   },
