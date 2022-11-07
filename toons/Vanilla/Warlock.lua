@@ -39,6 +39,9 @@ G.AddClassActionSpec('Vanilla', 9, {
   [18] = {
     petaction = 3,
   },
+  [32] = {
+    spell = 'Summon Voidwalker',
+  },
   [33] = {
     spell = 'Summon Imp',
   },
