@@ -12,8 +12,20 @@ G.AddClassActionSpec('Vanilla', 9, {
   [4] = {
     spell = 'Curse of Weakness',
   },
+  [5] = {
+    spell = 'Drain Soul',
+  },
   [6] = {
     spell = 'Life Tap',
+  },
+  [9] = {
+    spell = 'Fear',
+  },
+  [10] = {
+    spell = 'Curse of Agony',
+  },
+  [15] = {
+    spell = 'Create Healthstone (Minor)',
   },
   [16] = {
     petaction = 1,
