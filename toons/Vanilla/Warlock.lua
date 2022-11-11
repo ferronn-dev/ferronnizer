@@ -18,6 +18,9 @@ G.AddClassActionSpec('Vanilla', 9, {
   [6] = {
     spell = 'Life Tap',
   },
+  [7] = {
+    spell = 'Drain Life',
+  },
   [8] = {
     spell = 'Health Funnel',
   },
@@ -38,6 +41,9 @@ G.AddClassActionSpec('Vanilla', 9, {
   },
   [18] = {
     petaction = 3,
+  },
+  [24] = {
+    spell = 'Curse of Recklessness',
   },
   [32] = {
     spell = 'Summon Voidwalker',
