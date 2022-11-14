@@ -22,13 +22,22 @@ G.AddClassActionSpec('Vanilla', 9, {
     spell = 'Drain Life',
   },
   [8] = {
-    spell = 'Health Funnel',
+    spell = '!Shoot',
   },
   [9] = {
     spell = 'Fear',
   },
   [10] = {
     spell = 'Curse of Agony',
+  },
+  [11] = {
+    spell = 'Health Funnel',
+  },
+  [12] = {
+    spell = 'Searing Pain',
+  },
+  [14] = {
+    spell = 'Create Soulstone (Minor)',
   },
   [15] = {
     spell = 'Create Healthstone (Minor)',
@@ -41,6 +50,9 @@ G.AddClassActionSpec('Vanilla', 9, {
   },
   [18] = {
     petaction = 3,
+  },
+  [23] = {
+    spell = 'Unending Breath',
   },
   [24] = {
     spell = 'Curse of Recklessness',
