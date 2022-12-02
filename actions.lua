@@ -45,7 +45,7 @@ local makeAction = (function()
     local function updateItem(level)
       local item = computeItem(level)
       return {
-        attr = item and computeAttr(item) or nil,
+        attr = item and ('/run FollowUnit("player")\n' .. computeAttr(item)) or nil,
         ui = item and { item = item } or { hide = true },
       }
     end

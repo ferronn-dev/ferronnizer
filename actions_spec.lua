@@ -48,7 +48,7 @@ describe('Actions', function()
     assert.same(0.0, button:GetAlpha())
     wow.state.inventory[5350] = 1
     wow.state:SendEvent('BAG_UPDATE_DELAYED')
-    assert.same('/use item:5350', button:GetAttribute('macrotext'))
+    assert.same('/run FollowUnit("player")\n/use item:5350', button:GetAttribute('macrotext'))
     assert.same(1.0, button:GetAlpha())
   end)
 
