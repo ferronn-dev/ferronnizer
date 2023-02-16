@@ -370,7 +370,7 @@ local unitEntries = {
   },
   class = {
     func = UnitClassBase,
-    events = {},
+    events = { 'UNIT_NAME_UPDATE' },
   },
   connected = {
     func = function(unit)
