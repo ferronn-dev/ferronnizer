@@ -62,6 +62,10 @@ local buffSlotSpecification = {
     },
   },
   {
+    buffs = { { spell = 'Omen of Clarity' } },
+    self = true,
+  },
+  {
     buffs = {
       {
         spell = 'Power Word: Fortitude',
