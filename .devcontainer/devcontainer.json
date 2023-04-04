@@ -6,7 +6,7 @@
 		"docker-in-docker": {},
 		"github-cli": {}
 	},
-	"initializeCommand": "git submodule update --init --recursive",
 	"name": "ferronn-dev/ferronnizer",
-	"postCreateCommand": "pre-commit install && pre-commit run -a"
+	"postCreateCommand": "pre-commit install --install-hooks",
+	"remoteUser": "vscode"
 }
