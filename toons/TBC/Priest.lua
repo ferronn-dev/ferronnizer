@@ -110,9 +110,7 @@ G.AddClassActionSpec('TBC', 5, {
       ['Night Elf'] = 'Elune\'s Grace',
       Troll = 'Hex of Weakness',
       Undead = 'Touch of Weakness',
-    })[UnitRace(
-      'player'
-    )],
+    })[UnitRace('player')],
   },
   [29] = {
     spell = 'Mind Control',

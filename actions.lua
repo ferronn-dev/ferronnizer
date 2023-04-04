@@ -280,10 +280,10 @@ local makeAction = (function()
         local fcmd, farg, flight = getMount(G.MountFlightDB)
         if gcmd and fcmd then
           local macro = (
-              string.format('%s [nomounted,flyable] %s\n', fcmd, farg)
-              .. string.format('%s [nomounted,noflyable] %s\n', gcmd, garg)
-              .. '/dismount [mounted]'
-            )
+            string.format('%s [nomounted,flyable] %s\n', fcmd, farg)
+            .. string.format('%s [nomounted,noflyable] %s\n', gcmd, garg)
+            .. '/dismount [mounted]'
+          )
           -- TODO update icon etc to use flight mount based on OnUpdate IsFlyableArea
           return Mixin({ attr = macro }, ground)
         elseif gcmd then
@@ -431,11 +431,11 @@ local makeAction = (function()
       end
       table.insert(macrot, fullName)
       local macro = (
-          (action.dismount ~= false and '/dismount [noflying]\n' or '')
-          .. (action.stand ~= false and '/stand\n' or '')
-          .. (action.stopcasting and '/stopcasting\n' or '')
-          .. table.concat(macrot, ' ')
-        )
+        (action.dismount ~= false and '/dismount [noflying]\n' or '')
+        .. (action.stand ~= false and '/stand\n' or '')
+        .. (action.stopcasting and '/stopcasting\n' or '')
+        .. table.concat(macrot, ' ')
+      )
       local function update()
         local spellid = select(7, GetSpellInfo(shortName, rankStr))
         return {
@@ -455,10 +455,10 @@ local makeAction = (function()
     spells = function(action)
       local spells = action.spells
       local prefix = (
-          (action.stopcasting and '/stopcasting\n' or '')
-          .. '/cast'
-          .. (action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')
-        )
+        (action.stopcasting and '/stopcasting\n' or '')
+        .. '/cast'
+        .. (action.mouseover and ' [@mouseover,help,nodead][] ' or ' ')
+      )
       local function update()
         for _, name in ipairs(spells) do
           local id = select(7, GetSpellInfo(name))
@@ -1164,17 +1164,13 @@ local function makeActions()
               Tauren = 'War Stomp',
               Troll = 'Berserking',
               Undead = 'Will of the Forsaken',
-            })[UnitRace(
-              'player'
-            )],
+            })[UnitRace('player')],
           }
         elseif v.racial2 then
           local spell = ({
             ['Blood Elf'] = 'Mana Tap',
             Undead = 'Cannibalize',
-          })[UnitRace(
-            'player'
-          )]
+          })[UnitRace('player')]
           page[i] = spell and { spell = spell } or nil
         else
           page[i] = v

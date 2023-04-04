@@ -6,9 +6,9 @@ repos:
   - id: end-of-file-fixer
   - id: trailing-whitespace
 - repo: https://github.com/JohnnyMorganz/StyLua
-  rev: v0.12.1
+  rev: v0.17.0
   hooks:
-  - id: stylua-system
+  - id: stylua-github
 - repo: https://github.com/sqlfluff/sqlfluff
   rev: 0.11.0
   hooks:
