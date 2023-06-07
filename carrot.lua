@@ -1,31 +1,42 @@
 local _, G = ...
 
-local carrots = { 25653, 11122 }
+local carrots = {
+  [8] = { 2432 },
+  [10] = { 2434 },
+  [13] = { 25653, 11122 },
+}
 
-local nonCarrot = nil
+local nonCarrots = {}
 
-local function equipCarrot()
-  local equipped = GetInventoryItemID('player', 13)
-  for _, t in ipairs(carrots) do
-    if equipped == t then
+local function equipCarrot(slot, itemids)
+  local equipped = GetInventoryItemID('player', slot)
+  for _, itemid in ipairs(itemids) do
+    if equipped == itemid then
       return
-    elseif GetItemCount(t) > 0 then
-      nonCarrot = equipped
-      return EquipItemByName(t, 13)
+    elseif GetItemCount(itemid) > 0 then
+      nonCarrots[slot] = equipped
+      EquipItemByName(itemid, slot)
+      return
     end
   end
 end
 
-local function unequipCarrot()
-  if nonCarrot then
-    EquipItemByName(nonCarrot, 13)
-    nonCarrot = nil
+local function equipCarrots()
+  for slot, itemids in pairs(carrots) do
+    equipCarrot(slot, itemids)
   end
+end
+
+local function unequipCarrots()
+  for slot, itemid in pairs(nonCarrots) do
+    EquipItemByName(itemid, slot)
+  end
+  wipe(nonCarrots)
 end
 
 local function carrotIfMounted()
   if not InCombatLockdown() then
-    return (IsMounted() and equipCarrot or unequipCarrot)()
+    return (IsMounted() and equipCarrots or unequipCarrots)()
   end
 end
 
