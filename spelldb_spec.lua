@@ -15,6 +15,8 @@ describe('spell db', function()
     }
     if wow.env.WOW_PROJECT_ID == 2 then
       knownBad.Fishing = true
+      knownBad.Innervate = true
+      knownBad['Nature\'s Swiftness'] = true
     end
     local seenBad = {}
     for fullname, spec in pairs(wow.addon.ClassActionSpecs) do

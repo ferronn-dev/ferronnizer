@@ -1,28 +1,28 @@
 local _, G = ...
 G.AddClassActionSpec('Vanilla', 11, {
   [1] = {
-    shapeshift = { 'Maul', '', 'Claw' },
+    shapeshift = { [0] = 'Wrath', 'Maul', '', 'Claw' },
   },
   [2] = {
-    shapeshift = { 'Swipe', '', 'Shred' },
+    shapeshift = { [0] = 'Moonfire', 'Swipe', '', 'Shred' },
   },
   [3] = {
-    shapeshift = { 'Bash', '', 'Rake' },
+    shapeshift = { [0] = 'Starfire', 'Bash', '', 'Rake' },
   },
   [4] = {
-    shapeshift = { 'Demoralizing Roar', '', 'Ferocious Bite' },
+    shapeshift = { [0] = 'Hurricane', 'Demoralizing Roar', '', 'Ferocious Bite' },
   },
   [5] = {
-    shapeshift = { 'Feral Charge', '', 'Prowl' },
+    shapeshift = { [0] = 'Entangling Roots', 'Feral Charge', '', 'Prowl' },
   },
   [6] = {
-    shapeshift = { 'Enrage', '', 'Ravage' },
+    shapeshift = { [0] = 'Hibernate', 'Enrage', '', 'Ravage' },
   },
   [7] = {
-    shapeshift = { 'Challenging Roar', '', 'Pounce' },
+    shapeshift = { [0] = 'Barkskin', 'Challenging Roar', '', 'Pounce' },
   },
   [8] = {
-    shapeshift = { 'Frenzied Regeneration', '', 'Rip' },
+    shapeshift = { [0] = 'Faerie Fire', 'Frenzied Regeneration', '', 'Rip' },
   },
   [9] = {
     shapeshift = { 'Growl', 'Dash' },
@@ -42,6 +42,36 @@ G.AddClassActionSpec('Vanilla', 11, {
   [14] = {
     spell = 'Rejuvenation',
   },
+  [15] = {
+    spell = 'Regrowth',
+  },
+  [16] = {
+    spell = 'Tranquility',
+  },
+  [17] = {
+    spells = { 'Abolish Poison', 'Cure Poison' },
+  },
+  [18] = {
+    spell = 'Remove Curse',
+  },
+  [19] = {
+    spell = 'Soothe Animal',
+  },
+  [20] = {
+    spell = 'Innervate',
+  },
+  [21] = {
+    spell = 'Nature\'s Swiftness',
+  },
+  [22] = {
+    spell = 'Gift of the Wild',
+  },
+  [23] = {
+    spell = 'Mark of the Wild',
+  },
+  [24] = {
+    spell = 'Thorns',
+  },
   [25] = {
     spells = { 'Dire Bear Form', 'Bear Form' },
   },
@@ -54,14 +84,21 @@ G.AddClassActionSpec('Vanilla', 11, {
   [28] = {
     spell = 'Aquatic Form',
   },
+  [33] = {
+    spell = 'Rebirth',
+  },
   [34] = {
     buff = true,
+    reagent = 17026,
   },
   [35] = {
     racial = true,
   },
   [36] = {
     racial2 = true,
+  },
+  [41] = {
+    spell = 'Teleport: Moonglade',
   },
   [42] = {
     item = 6948,
