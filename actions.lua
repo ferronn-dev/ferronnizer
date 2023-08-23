@@ -538,7 +538,7 @@ local updateButton = (function()
           return GetActionCooldown(action)
         end,
         item = function(item)
-          return GetItemCooldown(item)
+          return C_Container.GetItemCooldown(item)
         end,
         petaction = function(petaction)
           return GetPetActionCooldown(petaction)

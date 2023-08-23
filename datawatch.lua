@@ -288,8 +288,8 @@ for name, bagid in pairs(bags) do
     events = (function()
       local function doUpdate()
         local t = {}
-        for slot = 1, GetContainerNumSlots(bagid) do
-          local link = GetContainerItemLink(bagid, slot)
+        for slot = 1, C_Container.GetContainerNumSlots(bagid) do
+          local link = C_Container.GetContainerItemLink(bagid, slot)
           if link then
             table.insert(t, link)
           end

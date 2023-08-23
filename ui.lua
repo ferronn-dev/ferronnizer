@@ -133,7 +133,8 @@ for _, uf in ipairs(unitFrames) do
     t:SetHeight(40)
     t:SetTexture('Interface\\Buttons\\WHITE8x8')
     G.DataWatch(unit .. '_class', function(class)
-      t:SetVertexColor(GetClassColor(class))
+      local r, g, b = GetClassColor(class)
+      t:SetVertexColor(r, g, b)
     end)
     G.DataWatch(unit .. '_health', unit .. '_max_health', function(health, healthMax)
       local r = healthMax and healthMax > 0 and health / healthMax or 1
