@@ -17,6 +17,7 @@ describe('spell db', function()
       knownBad.Fishing = true
       knownBad.Innervate = true
       knownBad['Nature\'s Swiftness'] = true
+      knownBad['Sweeping Strikes'] = true
     end
     local seenBad = {}
     for fullname, spec in pairs(wow.addon.ClassActionSpecs) do

@@ -64,6 +64,9 @@ G.AddClassActionSpec('Vanilla', 1, {
   [26] = {
     shapeshift = { 'Mocking Blow', 'Taunt', 'Intercept' },
   },
+  [27] = {
+    spell = 'Sweeping Strikes',
+  },
   [33] = {
     shapeshift = { 'Retaliation', 'Shield Wall', 'Recklessness' },
   },
