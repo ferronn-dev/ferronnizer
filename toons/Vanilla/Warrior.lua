@@ -67,6 +67,9 @@ G.AddClassActionSpec('Vanilla', 1, {
   [27] = {
     spell = 'Sweeping Strikes',
   },
+  [28] = {
+    spell = 'Mortal Strike',
+  },
   [33] = {
     shapeshift = { 'Retaliation', 'Shield Wall', 'Recklessness' },
   },
@@ -78,6 +81,9 @@ G.AddClassActionSpec('Vanilla', 1, {
   },
   [36] = {
     racial2 = true,
+  },
+  [37] = {
+    spell = 'Fishing',
   },
   [43] = {
     mount = true,
