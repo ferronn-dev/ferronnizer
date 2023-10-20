@@ -55,6 +55,7 @@ local cvars = {
   raidOptionIsShown = 0,
   rotateMinimap = 0,
   scriptErrors = 1,
+  ShowAllSpellRanks = 1,
   showLoadingScreenTips = 1,
   showLootSpam = 1,
   showMinimapClock = 0,
