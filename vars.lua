@@ -107,7 +107,7 @@ G.Eventer({
     SetConsoleKey('F12')
     C_Timer.After(15, function()
       hooksecurefunc('SetCVar', function(key, value)
-        print('SetCVar(' .. key .. ',' .. value .. ')')
+        print('SetCVar(' .. key .. ',' .. tostring(value) .. ')')
       end)
     end)
   end,
