@@ -49,6 +49,9 @@ G.AddClassActionSpec('Vanilla', 1, {
   [17] = {
     spell = 'Intimidating Shout',
   },
+  [18] = {
+    spell = 'Recklessness',
+  },
   [19] = {
     spell = 'Battle Stance',
   },
