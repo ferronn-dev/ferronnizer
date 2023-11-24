@@ -32,8 +32,6 @@ deps:
   - util.lua
   datawatch.lua:
   - libs/LibClassicDurations/npcAbilities.lua
-  equip.lua:
-  - datawatch.lua
   libs/AceComm-3.0/AceComm-3.0.lua:
   - libs/AceComm-3.0/ChatThrottleLib.lua
   - libs/CallbackHandler-1.0/CallbackHandler-1.0.lua
@@ -110,7 +108,6 @@ roots:
 - buffs.lua
 - carrot.lua
 - chatframe.lua
-- equip.lua
 - minimap.lua
 - nameplates.lua
 - tooltips.lua
