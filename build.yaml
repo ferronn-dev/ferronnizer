@@ -108,6 +108,7 @@ roots:
 - buffs.lua
 - carrot.lua
 - chatframe.lua
+- gear.lua
 - minimap.lua
 - nameplates.lua
 - tooltips.lua
