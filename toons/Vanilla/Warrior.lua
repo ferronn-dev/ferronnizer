@@ -1,10 +1,10 @@
 local _, G = ...
 G.AddClassActionSpec('Vanilla', 1, {
   [1] = {
-    spell = 'Heroic Strike',
+    spells = { 'Mortal Strike', 'Bloodthirst' },
   },
   [2] = {
-    spell = 'Rend',
+    spell = 'Heroic Strike',
   },
   [3] = {
     spell = 'Sunder Armor',
@@ -32,6 +32,9 @@ G.AddClassActionSpec('Vanilla', 1, {
   },
   [11] = {
     spell = 'Execute',
+  },
+  [12] = {
+    spell = 'Rend',
   },
   [13] = {
     sparkle = true,
@@ -65,10 +68,13 @@ G.AddClassActionSpec('Vanilla', 1, {
     shapeshift = { 'Mocking Blow', 'Taunt', 'Intercept' },
   },
   [27] = {
-    spell = 'Sweeping Strikes',
+    spells = { 'Sweeping Strikes', 'Death Wish' },
   },
-  [28] = {
-    spell = 'Mortal Strike',
+  [31] = {
+    invslot = 13,
+  },
+  [32] = {
+    invslot = 14,
   },
   [33] = {
     shapeshift = { 'Retaliation', 'Shield Wall', 'Recklessness' },
