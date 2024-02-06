@@ -651,7 +651,7 @@ local updateButton = (function()
     update = (function()
       local function updateColor(isFooInRange, isUsableFoo)
         local function getColor(foo)
-          if isFooInRange(foo, 'target') == 0 then
+          if not InCombatLockdown() and isFooInRange(foo, 'target') == 0 then
             return 0.8, 0.1, 0.1
           end
           local isUsable, notEnoughMana = isUsableFoo(foo)
