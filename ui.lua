@@ -431,6 +431,7 @@ end)()
 root.Hidden = (function()
   local frames = {
     BuffFrame,
+    _G.ComboFrame,
     CompactRaidFrameManager,
     FocusFrame,
     PartyMemberFrame1,
