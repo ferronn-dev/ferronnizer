@@ -36,6 +36,45 @@ G.AddClassActionSpec('Vanilla', 4, {
   [14] = {
     spell = 'Sprint',
   },
+  [15] = {
+    spell = 'Ambush',
+  },
+  [16] = {
+    spell = 'Cheap Shot',
+  },
+  [17] = {
+    spell = 'Expose Armor',
+  },
+  [18] = {
+    spell = 'Garrote',
+  },
+  [19] = {
+    spell = 'Kidney Shot',
+  },
+  [20] = {
+    spell = 'Rupture',
+  },
+  [21] = {
+    spell = 'Blade Flurry',
+  },
+  [22] = {
+    spell = 'Feint',
+  },
+  [23] = {
+    spell = 'Disarm Trap',
+  },
+  [24] = {
+    spell = 'Distract',
+  },
+  [25] = {
+    spell = 'Vanish',
+  },
+  [26] = {
+    spell = 'Pick Lock',
+  },
+  [27] = {
+    spell = 'Poisons',
+  },
   [34] = {
     buff = true,
   },

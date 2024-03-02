@@ -3,14 +3,18 @@ describe('spell db', function()
     local knownBad = {
       ['!Auto Shot'] = true,
       ['!Shoot'] = true,
+      ['Blade Flurry'] = true,
       ['Cold Snap'] = true,
       ['Desperate Prayer'] = true,
+      ['Disarm Trap'] = true,
       ['Divine Intervention'] = true,
       ['Divine Favor'] = true,
       ['Evocation'] = true,
       ['Inner Focus'] = true,
       ['Lay on Hands'] = true,
+      ['Pick Lock'] = true,
       ['Pick Pocket'] = true,
+      ['Poisons'] = true,
       ['Stealth'] = true,
     }
     if wow.env.WOW_PROJECT_ID == 2 then
