@@ -75,6 +75,9 @@ G.AddClassActionSpec('Vanilla', 4, {
   [27] = {
     spell = 'Poisons',
   },
+  [28] = {
+    spell = 'Blind',
+  },
   [34] = {
     buff = true,
   },
@@ -83,6 +86,9 @@ G.AddClassActionSpec('Vanilla', 4, {
   },
   [36] = {
     racial2 = true,
+  },
+  [37] = {
+    spell = 'Fishing',
   },
   [43] = {
     mount = true,
