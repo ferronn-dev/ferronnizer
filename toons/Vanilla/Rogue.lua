@@ -78,6 +78,9 @@ G.AddClassActionSpec('Vanilla', 4, {
   [28] = {
     spell = 'Blind',
   },
+  [29] = {
+    spell = 'Adrenaline Rush',
+  },
   [34] = {
     buff = true,
   },

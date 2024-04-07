@@ -3,6 +3,7 @@ describe('spell db', function()
     local knownBad = {
       ['!Auto Shot'] = true,
       ['!Shoot'] = true,
+      ['Adrenaline Rush'] = true,
       ['Blade Flurry'] = true,
       ['Cold Snap'] = true,
       ['Desperate Prayer'] = true,
