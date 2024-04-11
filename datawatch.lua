@@ -406,7 +406,7 @@ local unitEntries = {
   },
   max_power = {
     func = UnitPowerMax,
-    events = { 'UNIT_POWER_UPDATE' },
+    events = { 'UNIT_DISPLAYPOWER', 'UNIT_POWER_UPDATE' },
   },
   max_xp = {
     func = UnitXPMax,
@@ -419,13 +419,13 @@ local unitEntries = {
   },
   power = {
     func = UnitPower,
-    events = { 'UNIT_POWER_UPDATE' },
+    events = { 'UNIT_DISPLAYPOWER', 'UNIT_POWER_UPDATE' },
   },
   power_type = {
     func = function(unit)
       return select(2, UnitPowerType(unit))
     end,
-    events = { 'UNIT_POWER_UPDATE' },
+    events = { 'UNIT_DISPLAYPOWER' },
   },
   weapon_enchants = {
     func = (function()

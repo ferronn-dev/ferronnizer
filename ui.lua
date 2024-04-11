@@ -246,8 +246,10 @@ for _, uf in ipairs(unitFrames) do
     f:SetSize(160, 20)
     f:SetStatusBarTexture('Interface\\Buttons\\WHITE8x8')
     G.DataWatch(unit .. '_power_type', function(powerType)
-      local color = PowerBarColor[powerType or 'MANA']
-      f:SetStatusBarColor(color.r, color.g, color.b)
+      C_Timer.After(0, function()
+        local color = PowerBarColor[powerType or 'MANA']
+        f:SetStatusBarColor(color.r, color.g, color.b)
+      end)
     end)
     local fs = f:CreateFontString()
     fs:SetFontObject('GameFontDisable')
