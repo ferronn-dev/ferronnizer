@@ -278,7 +278,7 @@ G.PreClickButton('BuffButton', function()
         print('Casting ' .. spellName .. ' on ' .. UnitName(unit) .. '.')
       end
       return {
-        macrotext = '/cancelform\n/cast [@' .. unit .. ']' .. spellName,
+        macrotext = '/cast [@' .. unit .. ']' .. spellName,
         type = 'macro',
       }
     end
