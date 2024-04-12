@@ -33,26 +33,9 @@ function G.PreClickButton(name, default, func)
   local button = CreateFrame('Button', addonName .. name, nil, 'SecureActionButtonTemplate')
   button:SetAttribute('type', 'macro')
   button:SetAttribute('macrotext', default)
-  local lastemote = nil
-  local lastemotetime = 0
-  local function macrotext()
-    local macro, emote = func()
-    if macro then
-      return macro
-    elseif emote then
-      local now = GetTime()
-      if emote ~= lastemote or now - lastemotetime > 20 then
-        lastemote = emote
-        lastemotetime = now
-        return '/' .. emote .. ' [@none]'
-      end
-    else
-      return default
-    end
-  end
   button:HookScript('PreClick', function(self)
     if not InCombatLockdown() then
-      self:SetAttribute('macrotext', macrotext() or '')
+      self:SetAttribute('macrotext', func() or '')
     end
   end)
   button:HookScript('OnClick', function(self)
