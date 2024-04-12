@@ -35,7 +35,7 @@ describe('Actions', function()
       },
     })
     wow.env.mooActionIconButton1:Click()
-    local macro = ('/dismount [noflying]\n/stand\n' .. '/cast [@mouseover,help,nodead][] Greater Heal(Rank 5)')
+    local macro = ('/dismount [noflying]\n' .. '/cast [@mouseover,help,nodead][] Greater Heal(Rank 5)')
     assert.same({ { macro = macro } }, wow.state.commands)
   end)
 
@@ -92,7 +92,7 @@ describe('Actions', function()
       },
     })
     wow.env.mooActionIconButton41:Click()
-    local macro = ('/dismount [noflying]\n/stand\n/stopcasting\n' .. '/cast [@mouseover,help,nodead][] Lay on Hands')
+    local macro = ('/dismount [noflying]\n/stopcasting\n' .. '/cast [@mouseover,help,nodead][] Lay on Hands')
     assert.same({ { macro = macro } }, wow.state.commands)
   end)
 

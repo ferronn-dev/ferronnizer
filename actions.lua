@@ -180,7 +180,7 @@ local makeAction = (function()
           actionText = actionText .. rn
           table.insert(spellset, {
             action = {
-              attr = '/dismount [noflying]\n/stand\n/cast [@mouseover,help,nodead][] ' .. fullName,
+              attr = '/dismount [noflying]\n/cast [@mouseover,help,nodead][] ' .. fullName,
               icon = GetSpellTexture(spell),
               name = actionText,
               ui = { spell = fullName },
@@ -432,7 +432,6 @@ local makeAction = (function()
       table.insert(macrot, fullName)
       local macro = (
         (action.dismount ~= false and '/dismount [noflying]\n' or '')
-        .. (action.stand ~= false and '/stand\n' or '')
         .. (action.stopcasting and '/stopcasting\n' or '')
         .. table.concat(macrot, ' ')
       )
@@ -1294,7 +1293,6 @@ local function makeActions()
         table.insert(page, {
           dismount = false,
           spell = spell,
-          stand = false,
         })
       end
       return page
