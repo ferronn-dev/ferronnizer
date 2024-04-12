@@ -9,14 +9,11 @@ describe('BuffButton', function()
   local function assertNoCast()
     wow.env.mooBuffButton:Click()
     assert.same('', wow.state.printed)
-    assert.same({ { macro = '' } }, wow.state.commands)
+    assert.same({}, wow.state.commands)
   end
 
   it('does nothing by default', function()
-    local button = wow.env.mooBuffButton
     assertNoCast()
-    assert.same('macro', button:GetAttribute('type'))
-    assert.same('', button:GetAttribute('macrotext'))
   end)
 
   it('issues no commands in combat', function()

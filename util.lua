@@ -29,18 +29,22 @@ function G.Updater(period, fn)
   end)
 end
 
-function G.PreClickButton(name, default, func)
+function G.PreClickButton(name, func)
   local button = CreateFrame('Button', addonName .. name, nil, 'SecureActionButtonTemplate')
-  button:SetAttribute('type', 'macro')
-  button:SetAttribute('macrotext', default)
+  local t
   button:HookScript('PreClick', function(self)
     if not InCombatLockdown() then
-      self:SetAttribute('macrotext', func() or '')
+      t = func() or {}
+      for k, v in pairs(t) do
+        self:SetAttribute(k, v)
+      end
     end
   end)
   button:HookScript('OnClick', function(self)
     if not InCombatLockdown() then
-      self:SetAttribute('macrotext', default)
+      for k in pairs(t) do
+        self:SetAttribute(k, nil)
+      end
     end
   end)
   return button

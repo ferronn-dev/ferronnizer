@@ -265,7 +265,7 @@ local function GetSpellToCast()
   end
 end
 
-G.PreClickButton('BuffButton', '', function()
+G.PreClickButton('BuffButton', function()
   local spell, unit = GetSpellToCast()
   if spell and GetSpellCooldown(spell) == 0 and not select(2, IsUsableSpell(spell)) then
     local spellName, _, _, castTime = GetSpellInfo(spell)
@@ -277,7 +277,10 @@ G.PreClickButton('BuffButton', '', function()
       if not UnitIsUnit('player', unit) then
         print('Casting ' .. spellName .. ' on ' .. UnitName(unit) .. '.')
       end
-      return '/stand\n/cancelform\n/cast [@' .. unit .. ']' .. spellName
+      return {
+        macrotext = '/stand\n/cancelform\n/cast [@' .. unit .. ']' .. spellName,
+        type = 'macro',
+      }
     end
   end
 end)
