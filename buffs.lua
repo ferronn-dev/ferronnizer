@@ -270,16 +270,13 @@ G.PreClickButton('BuffButton', function()
   if spell and GetSpellCooldown(spell) == 0 and not select(2, IsUsableSpell(spell)) then
     local spellName, _, _, castTime = GetSpellInfo(spell)
     if castTime == 0 or GetUnitSpeed('player') == 0 then
-      local subtext = GetSpellSubtext(spell)
-      if subtext then
-        spellName = spellName .. '(' .. subtext .. ')'
-      end
       if not UnitIsUnit('player', unit) then
         print('Casting ' .. spellName .. ' on ' .. UnitName(unit) .. '.')
       end
       return {
-        macrotext = '/cast [@' .. unit .. ']' .. spellName,
-        type = 'macro',
+        spell = spell,
+        type = 'spell',
+        unit = unit,
       }
     end
   end

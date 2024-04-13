@@ -1,9 +1,8 @@
 describe('BuffButton', function()
   local function assertCastSpell(spell)
     wow.env.mooBuffButton:Click()
-    local macro = '/cast [@player]spell' .. spell
     assert.same('Casting spell' .. spell .. ' on Kewhand.\n', wow.state.printed)
-    assert.same({ { macro = macro } }, wow.state.commands)
+    assert.same({ { spell = spell, unit = 'player' } }, wow.state.commands)
   end
 
   local function assertNoCast()
