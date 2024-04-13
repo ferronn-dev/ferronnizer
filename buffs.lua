@@ -265,7 +265,39 @@ local function GetSpellToCast()
   end
 end
 
+local poisons = { -- TODO get this from db2 instead
+  'Instant Poison VI',
+  'Instant Poison V',
+  'Instant Poison IV',
+  'Instant Poison III',
+  'Instant Poison II',
+  'Instant Poison I',
+}
+
+local function GetTempEnchant()
+  if UnitClass('player') ~= 'Rogue' then
+    return
+  end
+  local mainHas, _, _, _, offHas = GetWeaponEnchantInfo()
+  if mainHas and offHas then
+    return
+  end
+  local poison = nil
+  for _, p in ipairs(poisons) do
+    poison = poison or GetItemCount(p) > 0 and p
+  end
+  return poison, mainHas and 17 or 16
+end
+
 G.PreClickButton('BuffButton', function()
+  local item, slot = GetTempEnchant()
+  if item then
+    return {
+      item = item,
+      ['target-slot'] = slot,
+      type = 'item',
+    }
+  end
   local spell, unit = GetSpellToCast()
   if spell and GetSpellCooldown(spell) == 0 and not select(2, IsUsableSpell(spell)) then
     local spellName, _, _, castTime = GetSpellInfo(spell)
