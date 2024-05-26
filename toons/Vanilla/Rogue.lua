@@ -81,6 +81,12 @@ G.AddClassActionSpec('Vanilla', 4, {
   [29] = {
     spell = 'Adrenaline Rush',
   },
+  [31] = {
+    invslot = 13,
+  },
+  [32] = {
+    invslot = 14,
+  },
   [34] = {
     buff = true,
   },
