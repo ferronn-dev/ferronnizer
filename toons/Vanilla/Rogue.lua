@@ -4,10 +4,10 @@ G.AddClassActionSpec('Vanilla', 4, {
     spell = 'Sinister Strike',
   },
   [2] = {
-    spell = 'Eviscerate',
+    spell = 'Slice and Dice',
   },
   [3] = {
-    spell = 'Backstab',
+    spell = 'Eviscerate',
   },
   [4] = {
     spell = 'Pick Pocket',
@@ -22,7 +22,7 @@ G.AddClassActionSpec('Vanilla', 4, {
     spell = 'Kick',
   },
   [8] = {
-    spell = 'Slice and Dice',
+    spell = 'Backstab',
   },
   [9] = {
     shoot = true,
