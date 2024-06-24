@@ -25,7 +25,7 @@ G.AddClassActionSpec('Vanilla', 11, {
     shapeshift = { [0] = 'Faerie Fire', 'Frenzied Regeneration', '', 'Rip' },
   },
   [9] = {
-    shapeshift = { 'Growl', 'Dash' },
+    shapeshift = { 'Growl', '', 'Dash' },
   },
   [10] = {
     spell = 'Cower',
