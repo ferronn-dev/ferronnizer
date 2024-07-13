@@ -72,6 +72,9 @@ local common = {
   [36] = {
     racial2 = true,
   },
+  [37] = {
+    spell = 'Fishing',
+  },
   [39] = {
     spell = ({
       Dwarf = 'Fear Ward',
