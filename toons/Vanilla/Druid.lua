@@ -22,28 +22,40 @@ G.AddClassActionSpec('Vanilla', 11, {
     shapeshift = { [0] = 'Barkskin', 'Challenging Roar', '', 'Pounce' },
   },
   [8] = {
-    shapeshift = { [0] = 'Faerie Fire', 'Frenzied Regeneration', '', 'Rip' },
+    shapeshift = { 'Frenzied Regeneration', '', 'Rip' },
   },
   [9] = {
     shapeshift = { 'Growl', '', 'Dash' },
   },
   [10] = {
-    spell = 'Cower',
+    shapeshift = { [3] = 'Cower' },
   },
   [11] = {
-    spell = 'Tiger\'s Fury',
+    shapeshift = { [3] = 'Tiger\'s Fury' },
   },
   [12] = {
-    shapeshift = { 'Faerie Fire (Feral)', '', 'Faerie Fire (Feral)' },
+    shapeshift = { [0] = 'Faerie Fire', 'Faerie Fire (Feral)', '', 'Faerie Fire (Feral)' },
   },
   [13] = {
-    spell = 'Healing Touch',
+    healset = {
+      ranks = { 1.0 },
+      spells = { 'Healing Touch' },
+    },
+    rank = 1,
   },
   [14] = {
-    spell = 'Rejuvenation',
+    healset = {
+      ranks = { 1.0 },
+      spells = { 'Rejuvenation' },
+    },
+    rank = 1,
   },
   [15] = {
-    spell = 'Regrowth',
+    healset = {
+      ranks = { 1.0 },
+      spells = { 'Regrowth' },
+    },
+    rank = 1,
   },
   [16] = {
     spell = 'Tranquility',
