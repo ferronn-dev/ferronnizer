@@ -84,6 +84,12 @@ G.AddClassActionSpec('Vanilla', 11, {
   [28] = {
     spell = 'Aquatic Form',
   },
+  [31] = {
+    invslot = 13,
+  },
+  [32] = {
+    invslot = 14,
+  },
   [33] = {
     spell = 'Rebirth',
   },
