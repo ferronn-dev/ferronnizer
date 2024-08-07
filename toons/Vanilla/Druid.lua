@@ -1,16 +1,16 @@
 local _, G = ...
 G.AddClassActionSpec('Vanilla', 11, {
   [1] = {
-    shapeshift = { [0] = 'Wrath', 'Maul', '', 'Claw' },
+    shapeshift = { [0] = 'Healing Touch(Rank 7)', 'Maul', '', 'Claw' },
   },
   [2] = {
-    shapeshift = { [0] = 'Moonfire', 'Swipe', '', 'Shred' },
+    shapeshift = { [0] = 'Healing Touch(Rank 4)', 'Swipe', '', 'Shred' },
   },
   [3] = {
-    shapeshift = { [0] = 'Starfire', 'Bash', '', 'Rake' },
+    shapeshift = { [0] = 'Healing Touch(Rank 3)', 'Bash', '', 'Rake' },
   },
   [4] = {
-    shapeshift = { [0] = 'Hurricane', 'Demoralizing Roar', '', 'Ferocious Bite' },
+    shapeshift = { [0] = 'Healing Touch(Rank 2)', 'Demoralizing Roar', '', 'Ferocious Bite' },
   },
   [5] = {
     shapeshift = { [0] = 'Entangling Roots', 'Feral Charge', '', 'Prowl' },
@@ -22,16 +22,16 @@ G.AddClassActionSpec('Vanilla', 11, {
     shapeshift = { [0] = 'Barkskin', 'Challenging Roar', '', 'Pounce' },
   },
   [8] = {
-    shapeshift = { 'Frenzied Regeneration', '', 'Rip' },
+    shapeshift = { [0] = 'Wrath', 'Frenzied Regeneration', '', 'Rip' },
   },
   [9] = {
-    shapeshift = { 'Growl', '', 'Dash' },
+    shapeshift = { [0] = 'Moonfire', 'Growl', '', 'Dash' },
   },
   [10] = {
-    shapeshift = { [3] = 'Cower' },
+    shapeshift = { [0] = 'Starfire', [3] = 'Cower' },
   },
   [11] = {
-    shapeshift = { [3] = 'Tiger\'s Fury' },
+    shapeshift = { [0] = 'Hurricane', [3] = 'Tiger\'s Fury' },
   },
   [12] = {
     shapeshift = { [0] = 'Faerie Fire', 'Faerie Fire (Feral)', '', 'Faerie Fire (Feral)' },
