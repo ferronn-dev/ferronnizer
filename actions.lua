@@ -384,7 +384,7 @@ local makeAction = (function()
       local shapes = action.shapeshift
       local macro = '/cast'
       for shape, spell in pairs(shapes) do
-        macro = macro .. (' [form:%d] %s;'):format(shape, spell)
+        macro = macro .. (' [form:%d,@mouseover,help,nodead][form:%d] %s;'):format(shape, shape, spell)
       end
       local function update()
         local shape = GetShapeshiftForm()
