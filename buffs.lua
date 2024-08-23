@@ -84,6 +84,10 @@ local buffSlotSpecification = {
   {
     buffs = { { spell = 'Thorns' } },
   },
+  {
+    buffs = { { spell = 'Trueshot Aura' } },
+    self = true,
+  },
 }
 
 local thebuffdb = (function()
