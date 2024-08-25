@@ -110,6 +110,7 @@ G.AddClassActionSpec('Vanilla', 8, {
   },
   [34] = {
     buff = true,
+    reagent = 17020,
   },
   [35] = {
     racial = true,
