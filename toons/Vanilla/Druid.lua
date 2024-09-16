@@ -61,15 +61,18 @@ G.AddClassActionSpec('Vanilla', 11, {
     spell = 'Tranquility',
   },
   [17] = {
+    mouseover = true,
     spells = { 'Abolish Poison', 'Cure Poison' },
   },
   [18] = {
+    mouseover = true,
     spell = 'Remove Curse',
   },
   [19] = {
     spell = 'Soothe Animal',
   },
   [20] = {
+    mouseover = true,
     spell = 'Innervate',
   },
   [21] = {
@@ -79,9 +82,11 @@ G.AddClassActionSpec('Vanilla', 11, {
     spell = 'Gift of the Wild',
   },
   [23] = {
+    mouseover = true,
     spell = 'Mark of the Wild',
   },
   [24] = {
+    mouseover = true,
     spell = 'Thorns',
   },
   [25] = {
@@ -103,6 +108,7 @@ G.AddClassActionSpec('Vanilla', 11, {
     invslot = 14,
   },
   [33] = {
+    mouseover = true,
     spell = 'Rebirth',
   },
   [34] = {
