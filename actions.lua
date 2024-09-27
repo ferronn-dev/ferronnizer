@@ -690,7 +690,7 @@ local updateButton = (function()
 end)()
 
 local function makeActionButtons()
-  local attachToIconGrid, attachToTextGrid = (function()
+  local attachToGrid = (function()
     local width, height = 36, 18
     local frames = {}
     for _ = 1, 96 do
@@ -710,19 +710,12 @@ local function makeActionButtons()
     end
     frames[90]:SetPoint('BOTTOMRIGHT', UIParent, 'BOTTOM')
     frames[91]:SetPoint('BOTTOMLEFT', UIParent, 'BOTTOM')
-    local function icon(frame, row, col)
+    return function(frame, row, col)
       local index = (row - 1) * 24 + col
       frame:ClearAllPoints()
       frame:SetPoint('TOPLEFT', frames[index], 'TOPLEFT')
       frame:SetPoint('BOTTOMRIGHT', frames[index + 12], 'BOTTOMRIGHT')
     end
-    local function text(frame, row, col)
-      local index = (row - 1) * 12 + (col - 1) * 2 + 1
-      frame:ClearAllPoints()
-      frame:SetPoint('TOPLEFT', frames[index], 'TOPLEFT')
-      frame:SetPoint('BOTTOMRIGHT', frames[index + 1], 'BOTTOMRIGHT')
-    end
-    return icon, text
   end)()
   local scripts = {
     OnEnter = function(self)
@@ -745,17 +738,17 @@ local function makeActionButtons()
       GameTooltip:Hide()
     end,
   }
-  local iconButtons = {}
+  local buttons = {}
   local parent = CreateFrame('Frame', addonName .. 'ActionRoot', _G[addonName .. 'Root'])
   for row = 1, 4 do
     for col = 1, 12 do
       local button = CreateFrame(
         'CheckButton',
-        addonName .. 'ActionIconButton' .. (#iconButtons + 1),
+        addonName .. 'ActionButton' .. (#buttons + 1),
         parent,
         'ActionButtonTemplate, SecureActionButtonTemplate'
       )
-      attachToIconGrid(button, row, col)
+      attachToGrid(button, row, col)
       button:SetMotionScriptsWhileDisabled(true)
       button.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
       button.HotKey:SetFont(button.HotKey:GetFont(), 13, 'OUTLINE')
@@ -771,40 +764,22 @@ local function makeActionButtons()
       for k, v in pairs(scripts) do
         button:SetScript(k, v)
       end
-      table.insert(iconButtons, button)
+      table.insert(buttons, button)
     end
   end
-  local textButtons = {}
-  for row = 1, 8 do
-    for col = 1, 6 do
-      local idx = (row - 1) * 6 + col
-      local button = CreateFrame(
-        'Button',
-        addonName .. 'ActionTextButton' .. idx,
-        parent,
-        'UIPanelButtonTemplate, SecureActionButtonTemplate'
-      )
-      attachToTextGrid(button, row, col)
-      table.insert(textButtons, button)
-    end
-  end
-  return {
-    icon = iconButtons,
-    text = textButtons,
-  }
+  return buttons
 end
 
 local actionPage = 'invalid'
 local actionButtonState = {}
 
-local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
+local function setupHeader(actions, defaultPage, actionButtons)
   local prefix = addonName .. 'ActionButton'
   local header = CreateFrame('Frame', prefix .. 'Header', UIParent, 'SecureHandlerStateTemplate')
   header:Execute(([[defaultPage = %q]]):format(defaultPage))
   header:Execute([[
     actionPages = newtable()
-    buttonPages = newtable()
-    keybinders = newtable()
+    buttons = newtable()
     updateActionButton = [=[
       local idx = ...
       local currentPage = owner:GetAttribute('fractionpage')
@@ -820,7 +795,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
       else
         type_, macrotext = 'macro', attr
       end
-      local button = buttonPages[actionPage.buttonPage][idx]
+      local button = buttons[idx]
       button:SetAttribute('type', type_)
       button:SetAttribute('action', action)
       button:SetAttribute('macrotext', macrotext)
@@ -845,22 +820,8 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
       local currentPage = owner:GetAttribute('fractionpage')
       if page ~= currentPage then
         owner:CallMethod('InsecureUpdateActionPage', page)
-        local newButtonPage = actionPages[page].buttonPage
-        if currentPage then
-          local oldButtonPage = actionPages[currentPage].buttonPage
-          if oldButtonPage ~= newButtonPage then
-            for _, button in ipairs(buttonPages[oldButtonPage]) do
-              button:Hide()
-            end
-          end
-        end
         owner:SetAttribute('fractionpage', page)
-        for i, keybinder in ipairs(keybinders) do
-          local button = buttonPages[newButtonPage][i]
-          local macrotext = button and ('/click ' .. button:GetName()) or ''
-          keybinder:SetAttribute('macrotext', macrotext)
-        end
-        for buttonid, button in ipairs(buttonPages[newButtonPage]) do
+        for buttonid, button in ipairs(buttons) do
           owner:Run(updateActionButton, buttonid)
         end
       end
@@ -876,47 +837,27 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
 
   for name, page in pairs(actions) do
     header:Execute(([[
-      local name, buttonPage, nextActionPage = %q, %q, %q
+      local name, nextActionPage = %q, %q
       local t = newtable()
       t.attrs = newtable()
-      t.buttonPage = buttonPage
       t.nextActionPage = nextActionPage
       actionPages[name] = t
-    ]]):format(name, page.buttonPage, page.nextActionPage))
+    ]]):format(name, page.nextActionPage))
   end
 
-  for buttonPageName, buttons in pairs(actionButtons) do
-    header:Execute(([[
-      local buttonPageName = %q
-      buttonPages[buttonPageName] = buttonPages[buttonPageName] or newtable()
-    ]]):format(buttonPageName))
-    for idx, button in ipairs(buttons) do
-      button:Hide()
-      button:SetID(idx)
-      header:WrapScript(
-        button,
-        'OnClick',
-        'return nil, true',
-        [[
-        owner:Run(updatePageOnClick, self:GetID())
-      ]]
-      )
-      header:SetFrameRef('tmp', button)
-      header:Execute(([[
-        tinsert(buttonPages[%q], self:GetFrameRef('tmp'))
-      ]]):format(buttonPageName))
-    end
-  end
-
-  local len = 0
-  for _, buttons in pairs(actionButtons) do
-    len = math.max(len, #buttons)
-  end
-  for i = 1, len do
-    local button = CreateFrame('Button', prefix .. i, nil, 'SecureActionButtonTemplate')
-    button:SetAttribute('type', 'macro')
+  for idx, button in ipairs(actionButtons) do
+    button:Hide()
+    button:SetID(idx)
+    header:WrapScript(
+      button,
+      'OnClick',
+      'return nil, true',
+      [[
+      owner:Run(updatePageOnClick, self:GetID())
+    ]]
+    )
     header:SetFrameRef('tmp', button)
-    header:Execute([[tinsert(keybinders, self:GetFrameRef('tmp'))]])
+    header:Execute([[tinsert(buttons, self:GetFrameRef('tmp'))]])
   end
 
   RegisterAttributeDriver(header, 'state-petexists', '[@pet,exists] true; false')
@@ -947,7 +888,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
       name = '',
       tooltip = { reset = true },
     }
-    updateButton(getActionButton(idx), Mixin(reset, actionButtonState[actionPage][idx]))
+    updateButton(actionButtons[idx], Mixin(reset, actionButtonState[actionPage][idx]))
   end
   header.InsecureUpdateActionPage = function(_, newPage)
     actionPage = newPage
@@ -983,11 +924,7 @@ local function setupHeader(actions, defaultPage, actionButtons, getActionButton)
 end
 
 local function setupActions(actions, defaultPage, actionButtons)
-  local function getActionButton(idx)
-    local buttonPage = actions[actionPage].buttonPage
-    return actionButtons[buttonPage][idx]
-  end
-  local updateAttr = setupHeader(actions, defaultPage, actionButtons, getActionButton)
+  local updateAttr = setupHeader(actions, defaultPage, actionButtons)
   local maybeSetAttr, drainPendingAttrs = (function()
     local pendingAttrs = {}
     local function maybeSetAttr(pageName, idx, attr)
@@ -1051,7 +988,7 @@ local function setupActions(actions, defaultPage, actionButtons)
       end
       Mixin(actionButtonState[pageName][idx], update)
       if pageName == actionPage then
-        updateButton(getActionButton(idx), update)
+        updateButton(actionButtons[idx], update)
       end
     end
   end)()
@@ -1077,7 +1014,7 @@ local function setupActions(actions, defaultPage, actionButtons)
     return function()
       for idx, state in pairs(actionButtonState[actionPage]) do
         if state[name] then
-          updateButton(getActionButton(idx), { [name] = state[name] })
+          updateButton(actionButtons[idx], { [name] = state[name] })
         end
       end
     end
@@ -1205,49 +1142,6 @@ local function makeActions()
       end
       return page
     end)(),
-    emote = (function()
-      local emotes = {
-        'lol',
-        'thank',
-        'cheer',
-        'wave',
-        'hello',
-        'train',
-        'rude',
-        'congratulate',
-        'moo',
-        'oom',
-        'attacktarget',
-        'charge',
-        'mourn',
-        'tickle',
-        'roar',
-        'rofl',
-        'hug',
-        'kiss',
-        'love',
-        'hungry',
-        'thirsty',
-        'ready',
-        'sleep',
-        'sigh',
-        'nod',
-        'no',
-        'threaten',
-        'silly',
-        'question',
-        'welcome',
-        'hail',
-      }
-      local page = {}
-      for i, emote in ipairs(emotes) do
-        table.insert(page, {
-          emote = emote,
-          index = i,
-        })
-      end
-      return page
-    end)(),
     noncombat = (function()
       local page = {}
       for i = 1, 10 do
@@ -1304,7 +1198,6 @@ local function makeActions()
     for k, v in pairs(actionPages) do
       t[k] = {
         actions = v,
-        buttonPage = k == 'emote' and 'text' or 'icon',
         nextActionPage = k == 'pet' and k or defaultPage,
       }
     end
@@ -1312,7 +1205,6 @@ local function makeActions()
       local n = 'fraction' .. i
       t[n] = {
         actions = v,
-        buttonPage = 'icon',
         nextActionPage = n,
       }
     end

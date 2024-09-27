@@ -34,7 +34,7 @@ describe('Actions', function()
         spell = 'Greater Heal',
       },
     })
-    wow.env.mooActionIconButton1:Click()
+    wow.env.mooActionButton1:Click()
     local macro = ('/dismount [noflying]\n' .. '/cast [@mouseover,help,nodead][] Greater Heal(Rank 5)')
     assert.same({ { macro = macro } }, wow.state.commands)
   end)
@@ -43,7 +43,7 @@ describe('Actions', function()
     init(wow, {
       [46] = { drink = true },
     })
-    local button = wow.env.mooActionIconButton46
+    local button = wow.env.mooActionButton46
     assert.same('', button:GetAttribute('macrotext'))
     assert.same(0.0, button:GetAlpha())
     wow.state.inventory[5350] = 1
@@ -54,16 +54,16 @@ describe('Actions', function()
 
   it('makes the right amount of buttons', function()
     init(wow, {})
-    assert.Not.Nil(wow.env.mooActionIconButton1)
-    assert.Not.Nil(wow.env.mooActionIconButton48)
-    assert.Nil(wow.env.mooActionIconButton49)
+    assert.Not.Nil(wow.env.mooActionButton1)
+    assert.Not.Nil(wow.env.mooActionButton48)
+    assert.Nil(wow.env.mooActionButton49)
   end)
 
   it('invokes macros on click', function()
     init(wow, {
       [34] = { buff = true },
     })
-    wow.env.mooActionIconButton34:Click()
+    wow.env.mooActionButton34:Click()
     local macro = '/click PallyPowerAuto RightButton\n/click mooBuffButton'
     assert.same({ { macro = macro } }, wow.state.commands)
   end)
@@ -91,7 +91,7 @@ describe('Actions', function()
         spell = 'Lay on Hands',
       },
     })
-    wow.env.mooActionIconButton41:Click()
+    wow.env.mooActionButton41:Click()
     local macro = ('/dismount [noflying]\n/stopcasting\n' .. '/cast [@mouseover,help,nodead][] Lay on Hands')
     assert.same({ { macro = macro } }, wow.state.commands)
   end)
@@ -110,7 +110,7 @@ describe('Actions', function()
   it('has non-combat macrotexts that are not too long', function()
     init(wow, everything)
     for i = 1, 48 do
-      local t = wow.env['mooActionIconButton' .. i]:GetAttribute('macrotext')
+      local t = wow.env['mooActionButton' .. i]:GetAttribute('macrotext')
       assert.True(not t or t:len() < 1024, i)
     end
   end)
@@ -119,7 +119,7 @@ describe('Actions', function()
     init(wow, everything)
     wow.state:EnterCombat()
     for i = 1, 48 do
-      local t = wow.env['mooActionIconButton' .. i]:GetAttribute('macrotext')
+      local t = wow.env['mooActionButton' .. i]:GetAttribute('macrotext')
       assert.True(not t or t:len() < 1024, i)
     end
   end)
@@ -128,8 +128,8 @@ describe('Actions', function()
     init(wow, {
       [43] = { mount = true },
     })
-    assert.False(wow.env.mooActionIconButton43:IsShown())
-    assert.False(wow.env.mooActionIconButton44:IsShown())
+    assert.False(wow.env.mooActionButton43:IsShown())
+    assert.False(wow.env.mooActionButton44:IsShown())
   end)
 
   it('shows mount button when a mount is available', function()
@@ -137,8 +137,8 @@ describe('Actions', function()
     init(wow, {
       [43] = { mount = true },
     })
-    assert.True(wow.env.mooActionIconButton43:IsShown())
-    assert.False(wow.env.mooActionIconButton44:IsShown())
+    assert.True(wow.env.mooActionButton43:IsShown())
+    assert.False(wow.env.mooActionButton44:IsShown())
   end)
 
   it('does not crash OnUpdate', function()
@@ -150,14 +150,14 @@ describe('Actions', function()
     init(wow, {
       [1] = { spell = 'Greater Heal' },
     })
-    assert.False(wow.env.mooActionIconButton1:IsShown())
+    assert.False(wow.env.mooActionButton1:IsShown())
     wow.state:EnterCombat()
-    assert.False(wow.env.mooActionIconButton1:IsShown())
+    assert.False(wow.env.mooActionButton1:IsShown())
     wow.state.knownSpells = { 23456 }
     wow.state:SendEvent('SPELLS_CHANGED')
-    assert.False(wow.env.mooActionIconButton1:IsShown())
+    assert.False(wow.env.mooActionButton1:IsShown())
     wow.state:LeaveCombat()
-    assert.True(wow.env.mooActionIconButton1:IsShown())
+    assert.True(wow.env.mooActionButton1:IsShown())
   end)
 
   it('changes pages', function()
@@ -168,14 +168,14 @@ describe('Actions', function()
         },
       },
     })
-    assert.True(wow.env.mooActionIconButton1:IsShown())
-    assert.False(wow.env.mooActionIconButton2:IsShown())
-    wow.env.mooActionIconButton1:Click()
-    assert.False(wow.env.mooActionIconButton1:IsShown())
-    assert.True(wow.env.mooActionIconButton2:IsShown())
-    wow.env.mooActionIconButton2:Click()
-    assert.True(wow.env.mooActionIconButton1:IsShown())
-    assert.False(wow.env.mooActionIconButton2:IsShown())
+    assert.True(wow.env.mooActionButton1:IsShown())
+    assert.False(wow.env.mooActionButton2:IsShown())
+    wow.env.mooActionButton1:Click()
+    assert.False(wow.env.mooActionButton1:IsShown())
+    assert.True(wow.env.mooActionButton2:IsShown())
+    wow.env.mooActionButton2:Click()
+    assert.True(wow.env.mooActionButton1:IsShown())
+    assert.False(wow.env.mooActionButton2:IsShown())
     assert.same({
       { macro = '#page:fraction1x1x' },
       { macro = '/lol' },
@@ -185,7 +185,7 @@ describe('Actions', function()
   it('sets correct attributes on actions', function()
     wow.state.actions[42] = true
     init(wow, { { action = 42 } })
-    local button = wow.env.mooActionIconButton1
+    local button = wow.env.mooActionButton1
     assert.same('action', button:GetAttribute('type'))
     assert.same(42, button:GetAttribute('action'))
   end)
@@ -193,14 +193,14 @@ describe('Actions', function()
   it('sets correct attributes on petactions', function()
     wow.state.petactions[2] = { nil, 'texture', false }
     init(wow, { { petaction = 2 } })
-    local button = wow.env.mooActionIconButton1
+    local button = wow.env.mooActionButton1
     assert.same('pet', button:GetAttribute('type'))
     assert.same(2, button:GetAttribute('action'))
   end)
 
   it('sets button text', function()
     init(wow, { { macro = '/lol', actionText = 'Laugh' } })
-    assert.same('Laugh', wow.env.mooActionIconButton1.Name:GetText())
+    assert.same('Laugh', wow.env.mooActionButton1.Name:GetText())
   end)
 
   it('sets button text through paging', function()
@@ -208,7 +208,7 @@ describe('Actions', function()
       actionText = 'Parent',
       page = { { actionText = 'Child', macro = '/lol' } },
     } })
-    local button = wow.env.mooActionIconButton1
+    local button = wow.env.mooActionButton1
     assert.same('Parent', button.Name:GetText())
     button:Click()
     assert.same('Child', button.Name:GetText())
@@ -218,7 +218,7 @@ describe('Actions', function()
 
   it('changes inventory counts', function()
     init(wow, { { buff = true, reagent = 12345 } })
-    local button = wow.env.mooActionIconButton1
+    local button = wow.env.mooActionButton1
     wow.state.inventory[12345] = 7
     wow.state:SendEvent('BAG_UPDATE_DELAYED')
     assert.same('7', button.Count:GetText())
@@ -236,8 +236,8 @@ describe('Actions', function()
         },
       },
     })
-    local buffButton = wow.env.mooActionIconButton1
-    local pageButton = wow.env.mooActionIconButton2
+    local buffButton = wow.env.mooActionButton1
+    local pageButton = wow.env.mooActionButton2
     wow.state.inventory[12345] = 7
     wow.state:SendEvent('BAG_UPDATE_DELAYED')
     assert.same('7', buffButton.Count:GetText())
@@ -254,7 +254,6 @@ describe('Actions', function()
     init(wow, everything)
     assert.Not.Nil(wow.env.mooActionButtonAction1Switcher)
     assert.Not.Nil(wow.env.mooActionButtonAction2Switcher)
-    assert.Not.Nil(wow.env.mooActionButtonEmoteSwitcher)
     assert.Not.Nil(wow.env.mooActionButtonFraction1Switcher)
     assert.Not.Nil(wow.env.mooActionButtonFraction1x11xSwitcher)
     assert.Not.Nil(wow.env.mooActionButtonPetSwitcher)
@@ -266,7 +265,7 @@ describe('Actions', function()
     wow.addon.ClassActionSpecs[2] = { { [37] = { buff = true } } }
     wow.state:SendEvent('PLAYER_LOGIN')
     wow.state:SendEvent('PLAYER_ENTERING_WORLD')
-    assert.True(wow.env.mooActionIconButton37:IsShown())
+    assert.True(wow.env.mooActionButton37:IsShown())
   end)
 
   describe('healset type', function()
@@ -289,7 +288,7 @@ describe('Actions', function()
     it('defaults to empty', function()
       init(wow, actionSpec)
       for i = 1, 6 do
-        assert.False(wow.env['mooActionIconButton' .. i]:IsShown())
+        assert.False(wow.env['mooActionButton' .. i]:IsShown())
       end
     end)
     it('only sets top rank when one spell is known', function()
@@ -297,7 +296,7 @@ describe('Actions', function()
       init(wow, actionSpec)
       local buttonNames = { [1] = 'LH2', [4] = 'FH4' }
       for i = 1, 6 do
-        local button = wow.env['mooActionIconButton' .. i]
+        local button = wow.env['mooActionButton' .. i]
         local buttonName = buttonNames[i]
         if buttonName then
           assert.True(button:IsShown(), buttonName)
@@ -322,7 +321,7 @@ describe('Actions', function()
       }
       init(wow, actionSpec)
       for i, rank in ipairs({ 4, 3, 2, 5, 2, 1 }) do
-        local button = wow.env['mooActionIconButton' .. i]
+        local button = wow.env['mooActionButton' .. i]
         assert.True(button:IsShown())
         assert.same(('(Rank %d)'):format(rank), button:GetAttribute('macrotext'):sub(-8), i)
       end

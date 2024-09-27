@@ -78,7 +78,6 @@ local actionbars = {
 local switchers = {
   ['ALT-CTRL-A'] = 'Aura',
   ['ALT-CTRL-W'] = 'Noncombat',
-  ['ALT-CTRL-E'] = 'Emote',
   ['CTRL-SHIFT-1'] = 'Profession',
   ['CTRL-SHIFT-2'] = 'Pet',
   ['F1'] = 'Default',
