@@ -18,7 +18,7 @@ local scriptHooks = {
     local shown = t.shownMoneyFrames
     if price and price > 0 and not (shown and shown > 0) then
       local count = 1
-      local m = GetMouseFocus()
+      local m = GetMouseFoci()[1]
       if m and type(m.count) == 'number' and m.count > 1 then
         count = m.count
       end
