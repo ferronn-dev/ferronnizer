@@ -3,4 +3,7 @@
     InitiateTrade('party1')
     AcceptTrade()
   </Binding>
+  <Binding name="FERRONNIZER_TOGGLEMINIMAP">
+    Minimap:SetShown(not Minimap:IsShown())
+  </Binding>
 </Bindings>
