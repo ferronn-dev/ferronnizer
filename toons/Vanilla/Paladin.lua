@@ -118,6 +118,9 @@ G.AddClassActionSpec('Vanilla', 2, {
   [36] = {
     racial2 = true,
   },
+  [37] = {
+    spell = 'Fishing',
+  },
   [41] = {
     mouseover = true,
     spell = 'Lay on Hands',

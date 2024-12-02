@@ -1,9 +1,12 @@
 <Bindings>
-  <Binding name="FERRONNIZER_TRADE">
+  <Binding name="FERRONNIZER_TRADEPARTY1">
     InitiateTrade('party1')
     AcceptTrade()
   </Binding>
   <Binding name="FERRONNIZER_TOGGLEMINIMAP">
     Minimap:SetShown(not Minimap:IsShown())
+  </Binding>
+  <Binding name="FERRONNIZER_FOLLOWPARTY1">
+    FollowUnit('party1')
   </Binding>
 </Bindings>

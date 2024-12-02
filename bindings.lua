@@ -1,8 +1,8 @@
 local addonName, G = ...
 local bindings = {
   ['`'] = 'TOGGLEAUTORUN',
-  ['G'] = 'MM_FOLLOWME',
-  ['T'] = 'FERRONNIZER_TRADE',
+  ['G'] = 'FERRONNIZER_FOLLOWPARTY1',
+  ['T'] = 'FERRONNIZER_TRADEPARTY1',
   ['CTRL-`'] = 'ALLTHETHINGS_TOGGLEMINILIST',
   ['SHIFT-TAB'] = 'FERRONNIZER_TOGGLEMINIMAP',
   ['ALT-B'] = 'OPENALLBAGS',
