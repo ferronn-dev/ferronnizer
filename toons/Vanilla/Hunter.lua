@@ -79,6 +79,9 @@ G.AddClassActionSpec('Vanilla', 3, {
   [22] = {
     spell = 'Flare',
   },
+  [23] = {
+    spell = 'Intimidation',
+  },
   [25] = {
     spell = 'Disengage',
   },
