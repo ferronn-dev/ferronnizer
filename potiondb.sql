@@ -11,7 +11,8 @@ FROM itemsparse
 INNER JOIN itemeffect ON itemsparse.id = itemeffect.parentitemid
 INNER JOIN spelleffect AS ez ON itemeffect.spellid = ez.spellid
 LEFT OUTER JOIN spelleffect AS iz ON itemsparse.id = iz.effectitemtype
-WHERE itemeffect.spellid != "41620"  -- Bottled Nethergon Vapor
+WHERE
+  itemeffect.spellid != "41620"  -- Bottled Nethergon Vapor
   AND itemeffect.spellcategoryid IN ("4", "1153")
   AND ez.effect = "10"
 ORDER BY
@@ -30,7 +31,8 @@ FROM itemsparse
 INNER JOIN itemeffect ON itemsparse.id = itemeffect.parentitemid
 INNER JOIN spelleffect AS ez ON itemeffect.spellid = ez.spellid
 LEFT OUTER JOIN spelleffect AS iz ON itemsparse.id = iz.effectitemtype
-WHERE itemeffect.spellid != "41618"  -- Bottled Nethergon Vapor
+WHERE
+  itemeffect.spellid != "41618"  -- Bottled Nethergon Vapor
   AND itemeffect.spellcategoryid IN ("4", "1153")
   AND ez.effect = "30"
 ORDER BY

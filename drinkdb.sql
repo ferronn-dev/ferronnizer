@@ -11,7 +11,7 @@ FROM
 INNER JOIN
   itemeffect
   ON
-    itemeffect.parentitemid = itemsparse.id
+    itemsparse.id = itemeffect.parentitemid
 LEFT OUTER JOIN
   spelleffect
   ON

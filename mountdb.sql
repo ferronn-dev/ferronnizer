@@ -37,15 +37,15 @@ flight AS (
 
 SELECT
   mounts.itemid,
-  spellid,
+  mounts.spellid,
   ground.speed AS groundspeed,
   flight.speed AS flightspeed
 FROM
   mounts
 LEFT OUTER JOIN ground
-  USING (spellid)
+  ON mounts.spellid = ground.spellid
 LEFT OUTER JOIN flight
-  USING (spellid);
+  ON mounts.spellid = flight.spellid;
 
 -- MountGroundDB
 SELECT
