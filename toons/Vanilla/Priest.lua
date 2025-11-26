@@ -172,12 +172,21 @@ local dps = Mixin({
   [3] = {
     spell = 'Shadow Word: Pain',
   },
+  [4] = {
+    spell = 'Mind Flay',
+  },
+  [5] = {
+    spell = 'Vampiric Embrace',
+  },
   [7] = {
     mouseover = true,
     spell = 'Power Word: Shield',
   },
   [8] = {
     shoot = true,
+  },
+  [12] = {
+    spell = 'Shadowform',
   },
   [13] = {
     healset = dpsSlowHeal,

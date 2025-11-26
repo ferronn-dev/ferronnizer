@@ -16,6 +16,7 @@ describe('spell db', function()
       ['Pick Lock'] = true,
       ['Pick Pocket'] = true,
       ['Poisons'] = true,
+      ['Shadowform'] = true,
       ['Stealth'] = true,
     }
     if wow.env.WOW_PROJECT_ID == 2 then
