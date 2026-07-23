@@ -758,8 +758,9 @@ local function makeActionButtons()
       button:SetNormalTexture('Interface\\Buttons\\UI-Quickslot2')
       button.NormalTexture:SetTexCoord(0, 0, 0, 0)
       button.cooldown:SetSwipeColor(0, 0, 0)
-      button.AutoCastable:SetScale(1.2)
-      button.AutoCastShine:SetScale(1.2)
+      if button.AutoCastOverlay then -- addonmaker is evil
+        button.AutoCastOverlay:SetScale(1.2)
+      end
       button:RegisterEvent('UPDATE_BINDINGS')
       for k, v in pairs(scripts) do
         button:SetScript(k, v)

@@ -432,8 +432,12 @@ end)()
 
 root.Hidden = (function()
   local frames = {
-    BuffFrame,
+    _G.BagsBar,
     _G.ComboFrame,
+    _G.MainActionBar,
+    _G.MainStatusTrackingBarContainer,
+    _G.MicroMenuContainer,
+    BuffFrame,
     CompactRaidFrameManager,
     FocusFrame,
     PartyMemberFrame1,
@@ -466,7 +470,9 @@ G.Eventer({
   end,
 })
 
-LoadAddOn('Blizzard_CombatText')
+if _G.C_AddOns then -- addonmaker is evil
+  _G.C_AddOns.LoadAddOn('Blizzard_CombatText')
+end
 local lastxp, lastxpmax
 G.DataWatch('player_xp', 'player_max_xp', function(xp, xpmax)
   local delta
