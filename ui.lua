@@ -309,8 +309,7 @@ for _, uf in ipairs(unitFrames) do
           frame.Icon:SetTexture(aura.icon)
           frame.Count:SetText(aura.count and aura.count > 0 and aura.count or '')
           if aura.dispelType then
-            local color = DebuffTypeColor[aura.dispelType]
-            frame.Border:SetVertexColor(color.r, color.g, color.b)
+            AuraUtil.SetAuraBorderColor(frame.Border, aura.dispelType)
             frame.Border:Show()
           else
             frame.Border:Hide()
