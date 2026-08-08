@@ -483,7 +483,7 @@ G.DataWatch('player_xp', 'player_max_xp', function(xp, xpmax)
     delta = lastxpmax - lastxp + xp
   end
   if delta > 0 then
-    CombatText_AddMessage('+ ' .. delta .. ' XP', COMBAT_TEXT_SCROLL_FUNCTION, 0, 0, 1)
+    _G.CombatText:AddMessage('+ ' .. delta .. ' XP', _G.CombatTextUtil.StandardScroll, 0, 0, 1)
   end
   lastxp, lastxpmax = xp, xpmax
 end)
